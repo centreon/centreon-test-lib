@@ -1,0 +1,28 @@
+{
+    "name": "centreon/centreon-test-lib",
+    "description": "Library using for Behat test and PHPUnit test",
+    "version": "1.0.0",
+    "type": "library",
+    "keywords": ["testing", "centreon", "phpunit", "behat"],
+    "require": {
+        "behat/behat": "^3.0",
+        "phpunit/phpunit": "^4.8"
+    },
+    "suggest": {
+        "behat/mink": "Browser controller/emulator abstraction for PHP",
+        "behat/mink-selenium2-driver": "Mink driver using Selenium"
+    },
+    "license": "Apache-2",
+    "authors": [
+        {
+            "name": "Maximilien Bersoult",
+            "email": "mbersoult@centreon.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Centreon\\Test\\Behat\\": "src/behat",
+            "Centreon\\Test\\Mock\\": "src/mock"
+        }
+    }
+}

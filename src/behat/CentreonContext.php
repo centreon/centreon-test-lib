@@ -1,0 +1,65 @@
+<?php
+/**
+ * Copyright 2016 Centreon
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+namespace Centreon\Test\Behat;
+
+class CentreonContext extends UtilsContext
+{
+    /**
+     * Constructor
+     *
+     * @param array $parameters The list of parameters given in behat.yml
+     */
+    public function __construct($paramaters = array())
+    {
+        parent::__construct($paramaters);
+    }
+    
+    /**
+     * Login to Centreon
+     *
+     * @Given I am logged in
+     */
+    public function iAmLogged()
+    {
+        /* Prepare credentials */
+        $user = 'admin';
+        $password = 'centreon';
+        if (isset($this->parameters['centreon_user'])) {
+            $user = $this->parameters['centreon_user'];
+        }
+        if (isset($this->parameters['centreon_password'])) {
+            $password = $this->paramaters['centreon_password'];
+        }
+        
+        $this->minkContext->visit('/');
+        
+        /* Login to Centreon */
+        $page = $this->session->getPage();
+        $userField = $this->findOrExcept('css', 'input[name="useralias"]');
+        $userField->setValue($user);
+        $passwordField = $this->findOrExcept('css', 'input[name="password"]');
+        $passwordField->setValue($password);
+        $formLogin = $this->findOrExcept('css', 'form[name="login"]');
+        $formLogin->submit();
+        $this->spin(
+            function ($context) use ($page) {
+                return $page->has('css', 'a[href="main.php?p=103"]');
+            },
+            30
+        );
+    }
+}
