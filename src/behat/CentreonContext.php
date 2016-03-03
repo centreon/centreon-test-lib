@@ -45,15 +45,15 @@ class CentreonContext extends UtilsContext
             $password = $this->paramaters['centreon_password'];
         }
         
-        $this->minkContext->visit('/');
+        $this->visit('/');
         
         /* Login to Centreon */
-        $page = $this->session->getPage();
-        $userField = $this->findOrExcept('css', 'input[name="useralias"]');
+        $page = $this->getSession()->getPage();
+        $userField = $this->assertFind('css', 'input[name="useralias"]');
         $userField->setValue($user);
-        $passwordField = $this->findOrExcept('css', 'input[name="password"]');
+        $passwordField = $this->assertFind('css', 'input[name="password"]');
         $passwordField->setValue($password);
-        $formLogin = $this->findOrExcept('css', 'form[name="login"]');
+        $formLogin = $this->assertFind('css', 'form[name="login"]');
         $formLogin->submit();
         $this->spin(
             function ($context) use ($page) {

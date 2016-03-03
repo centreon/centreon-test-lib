@@ -16,7 +16,7 @@
  */
 namespace Centreon\Test\Behat;
 
-use Behat\Behat\Context\Context;
+use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 
@@ -46,8 +46,8 @@ class UtilsContext extends RawMinkContext
     {
         if (!$scope->getTestResult()->isPassed()) {
             $filename = $scope->getSuite()->getName() . '-' . date('Y-m-d') . '.png';
-            $filepath = isset($this->parameters['save_images']) : $this->parameters['save_images'] ? null;
-            $this->minkContext->saveScreenshot($filename, $filepath);
+            $filepath = isset($this->parameters['save_images']) ? $this->parameters['save_images'] : null;
+            $this->saveScreenshot($filename, $filepath);
         }
     }
     
@@ -81,11 +81,21 @@ class UtilsContext extends RawMinkContext
      */
     protected function assertFind($type, $pattern, $msg = 'Element not found.')
     {
-        $page = $this->session->getPage();
-        $element = $page->find($type, $path);
+        $page = $this->getSession()->getPage();
+        $element = $page->find($type, $pattern);
         if (is_null($element)) {
             throw \Exception($msg);
         }
         return $element;
+    }
+    
+    /**
+     * Visit a page
+     *
+     * @param string $page The url page to visit
+     */
+    protected function visit($page)
+    {
+        $this->visitPath($page);
     }
 }
