@@ -84,7 +84,7 @@ class UtilsContext extends RawMinkContext
         $page = $this->getSession()->getPage();
         $element = $page->find($type, $pattern);
         if (is_null($element)) {
-            throw \Exception($msg);
+            throw new \Exception($msg);
         }
         return $element;
     }
