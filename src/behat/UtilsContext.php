@@ -19,25 +19,13 @@ namespace Centreon\Test\Behat;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\MinkExtension\RawMinkContext;
 
-class UtilsContext extends Context
+class UtilsContext extends RawMinkContext
 {
     /**
      * @var array List of context parameters
      */
     protected $parameters;
-    
-    /**
-     * @var RawMinkContext The mink context
-     */
-    protected $minkContext;
-    
-    /**
-     * @var Session The browser session
-     */
-    protected $session;
-    
     
     /**
      * Constructor
@@ -50,18 +38,6 @@ class UtilsContext extends Context
     }
     
     /**
-     * Initialize mink session
-     *
-     * @BeforeScenario
-     */
-    public function getMinkSession(BeforeScenarioScope $scope)
-    {
-        $environment = $scope->getEnvironment();
-        $this->minkContext = $environment->getContext('Behat\MinkExtension\Context\RawMinkContext');
-        $this->session = $this->minkContext->getSession();
-    }
-    
-    /**
      * Take a screenshot on error
      *
      * @AfterStep
@@ -71,7 +47,7 @@ class UtilsContext extends Context
         if (!$scope->getTestResult()->isPassed()) {
             $filename = $scope->getSuite()->getName() . '-' . date('Y-m-d') . '.png';
             $filepath = isset($this->parameters['save_images']) : $this->parameters['save_images'] ? null;
-            $this->minkContext->saveScreenshot();
+            $this->minkContext->saveScreenshot($filename, $filepath);
         }
     }
     
@@ -103,7 +79,7 @@ class UtilsContext extends Context
      * @param string $msg The exception message
      * @return Behat\Mink\Element\NodeElement The element
      */
-    protected function findOrExcept($type, $pattern, $msg = 'Element not found.')
+    protected function assertFind($type, $pattern, $msg = 'Element not found.')
     {
         $page = $this->session->getPage();
         $element = $page->find($type, $path);
