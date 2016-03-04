@@ -48,7 +48,7 @@ class CentreonContext extends UtilsContext
      *
      * @Given I am logged in
      */
-    public function iAmLogged()
+    public function iAmLoggedIn()
     {
         /* Prepare credentials */
         $user = 'admin';
@@ -76,5 +76,16 @@ class CentreonContext extends UtilsContext
             },
             30
         );
+    }
+
+    /**
+     * Make sure we have a Centreon server and log in.
+     *
+     * @Given I am logged in a Centreon server
+     */
+    public function iAmLoggedInACentreonServer()
+    {
+        aCentreonServer();
+        iAmLoggedIn();
     }
 }
