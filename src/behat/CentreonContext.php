@@ -85,7 +85,7 @@ class CentreonContext extends UtilsContext
      */
     public function iAmLoggedInACentreonServer()
     {
-        aCentreonServer();
-        iAmLoggedIn();
+        $this->aCentreonServer();
+        $this->iAmLoggedIn();
     }
 }
