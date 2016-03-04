@@ -18,6 +18,8 @@ namespace Centreon\Test\Behat;
 
 class CentreonContext extends UtilsContext
 {
+    protected $container;
+
     /**
      * Constructor
      *
@@ -27,7 +29,20 @@ class CentreonContext extends UtilsContext
     {
         parent::__construct($paramaters);
     }
-    
+
+    /**
+     *  @Given a Centreon server
+     */
+    public function aCentreonServer()
+    {
+        $image = getenv('CENTREON_WEB_IMAGE');
+        if (!empty($image))
+        {
+            $this->container = new CentreonContainer($image);
+            $this->setMinkParameter('base_url', 'http://localhost:' . $this->container->getPort());
+        }
+    }
+
     /**
      * Login to Centreon
      *
@@ -44,9 +59,9 @@ class CentreonContext extends UtilsContext
         if (isset($this->parameters['centreon_password'])) {
             $password = $this->paramaters['centreon_password'];
         }
-        
+
         $this->visit('/');
-        
+
         /* Login to Centreon */
         $page = $this->getSession()->getPage();
         $userField = $this->assertFind('css', 'input[name="useralias"]');
