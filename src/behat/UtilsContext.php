@@ -26,7 +26,7 @@ class UtilsContext extends RawMinkContext
      * @var array List of context parameters
      */
     protected $parameters;
-    
+
     /**
      * Constructor
      *
@@ -36,7 +36,7 @@ class UtilsContext extends RawMinkContext
     {
         $this->parameters = $parameters;
     }
-    
+
     /**
      * Take a screenshot on error
      *
@@ -50,7 +50,7 @@ class UtilsContext extends RawMinkContext
             $this->saveScreenshot($filename, $filepath);
         }
     }
-    
+
     /**
      * Waiting an action
      *
@@ -70,25 +70,28 @@ class UtilsContext extends RawMinkContext
         }
         throw new \Exception($timeoutMsg);
     }
-    
+
     /**
      * Find an element on current page, if the element is not found throw an exception
      *
      * @param string $type The type for find
      * @param string $pattern The pattern for find
-     * @param string $msg The exception message
+     * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element
      */
-    protected function assertFind($type, $pattern, $msg = 'Element not found.')
+    protected function assertFind($type, $pattern, $msg = '')
     {
         $page = $this->getSession()->getPage();
         $element = $page->find($type, $pattern);
         if (is_null($element)) {
-            throw new \Exception($msg);
+            if (empty($msg))
+                throw new \Exception("Element was not found (type '$type', pattern '$pattern').");
+            else
+                throw new \Exception($msg);
         }
         return $element;
     }
-    
+
     /**
      * Visit a page
      *
