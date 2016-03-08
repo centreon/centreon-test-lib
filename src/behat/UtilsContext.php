@@ -93,6 +93,46 @@ class UtilsContext extends RawMinkContext
     }
 
     /**
+     * Find a button on current page. If the button is not found, throw an exception.
+     *
+     * @param string $locator Button ID, value or alt.
+     * @param string $msg The exception message. If empty, use a default message.
+     * @return Behat\Mink\Element\NodeElement The element.
+     */
+    protected function assertFindButton($locator, $msg = '')
+    {
+        $button = $this->getSession()->getPage()->findButton($locator);
+        if (is_null($button))
+        {
+            if (empty($msg))
+                throw new \Exception("Button '$locator' was not found.");
+            else
+                throw new \Exception($msg);
+        }
+        return $button;
+    }
+
+    /**
+     * Find a form field on current page. If the field is not found, throw an exception.
+     *
+     * @param string $locate Input ID, name or label.
+     * @param string $msg The exception message. If empty, use a default message.
+     * @return Behat\Mink\Element\NodeElement The element.
+     */
+    protected function assertFindField($locator, $msg = '')
+    {
+        $field = $this->getSession()->getPage()->findField($locator);
+        if (is_null($field))
+        {
+            if (empty($msg))
+                throw new \Exception("Field '$locator' was not found.");
+            else
+                throw new \Exception($msg);
+        }
+        return $field;
+    }
+
+    /**
      * Visit a page
      *
      * @param string $page The url page to visit
