@@ -98,7 +98,7 @@ class UtilsContext extends RawMinkContext
         $element = $parent->find($type, $pattern);
         if (is_null($element)) {
             if (empty($msg))
-                throw new \Exception("Element was not found (type '$type', pattern '$pattern').");
+                throw new \Exception("Element was not found (type '$type', pattern '" . print_r($pattern, TRUE) . "').");
             else
                 throw new \Exception($msg);
         }
