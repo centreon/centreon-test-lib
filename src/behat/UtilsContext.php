@@ -74,15 +74,28 @@ class UtilsContext extends RawMinkContext
     /**
      * Find an element on current page, if the element is not found throw an exception
      *
-     * @param string $type The type for find
-     * @param string $pattern The pattern for find
+     * @param string $type The type for find.
+     * @param string $pattern The pattern for find.
      * @param string $msg The exception message. If empty, use a default message.
-     * @return Behat\Mink\Element\NodeElement The element
+     * @return Behat\Mink\Element\NodeElement The element.
      */
     protected function assertFind($type, $pattern, $msg = '')
     {
-        $page = $this->getSession()->getPage();
-        $element = $page->find($type, $pattern);
+        return $this->assertFindIn($this->getSession()->getPage(), $type, $pattern, $msg);
+    }
+
+    /**
+     * Find an element in a parent element, if the element is not found throw an exception
+     *
+     * @param Behat\Mink\Element\NodeElement $parent Returned element will be a child of $parent.
+     * @param string $type The type for find.
+     * @param string $pattern The pattern for find.
+     * @param string $msg The exception message. If empty, use a default message.
+     * @return Behat\Mink\Element\NodeElement The element.
+     */
+    protected function assertFindIn($parent, $type, $pattern, $msg = '')
+    {
+        $element = $parent->find($type, $pattern);
         if (is_null($element)) {
             if (empty($msg))
                 throw new \Exception("Element was not found (type '$type', pattern '$pattern').");
@@ -101,7 +114,20 @@ class UtilsContext extends RawMinkContext
      */
     protected function assertFindButton($locator, $msg = '')
     {
-        $button = $this->getSession()->getPage()->findButton($locator);
+        return $this->assertFindButtonIn($this->getSession()->getPage(), $locator, $msg);
+    }
+
+    /**
+     * Find a button in a prent element. If the button is not found, throw an exception.
+     *
+     * @param Behat\Mink\Element\NodeElement $parent Returned element will be a child of $parent.
+     * @param string $locator Button ID, value or alt.
+     * @param string $msg The exception message. If empty, use a default message.
+     * @return Behat\Mink\Element\NodeElement The element.
+     */
+    protected function assertFindButtonIn($parent, $locator, $msg = '')
+    {
+        $button = $parent->findButton($locator);
         if (is_null($button))
         {
             if (empty($msg))
@@ -121,7 +147,20 @@ class UtilsContext extends RawMinkContext
      */
     protected function assertFindField($locator, $msg = '')
     {
-        $field = $this->getSession()->getPage()->findField($locator);
+        return $this->assertFindFieldIn($this->getSession()->getPage(), $locator, $msg);
+    }
+
+    /**
+     * Find a form field on current page. If the field is not found, throw an exception.
+     *
+     * @param Behat\Mink\Element\NodeElement $parent Returned element will be a child of $parent.
+     * @param string $locate Input ID, name or label.
+     * @param string $msg The exception message. If empty, use a default message.
+     * @return Behat\Mink\Element\NodeElement The element.
+     */
+    protected function assertFindFieldIn($parent, $locator, $msg = '')
+    {
+        $field = $parent->findField($locator);
         if (is_null($field))
         {
             if (empty($msg))
