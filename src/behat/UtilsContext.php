@@ -172,6 +172,39 @@ class UtilsContext extends RawMinkContext
     }
 
     /**
+     * Find a link on current page. If the link is not found, throw an exception.
+     *
+     * @param string $locate Text of link.
+     * @param string $msg The exception message. If empty, use a default message.
+     * @return Behat\Mink\Element\NodeElement The element.
+     */
+    protected function assertFindLink($locator, $msg = '')
+    {
+        return $this->assertFindLinkIn($this->getSession()->getPage(), $locator, $msg);
+    }
+
+    /**
+     * Find a form link on current page. If the link is not found, throw an exception.
+     *
+     * @param Behat\Mink\Element\NodeElement $parent Returned element will be a child of $parent.
+     * @param string $locate Text of link.
+     * @param string $msg The exception message. If empty, use a default message.
+     * @return Behat\Mink\Element\NodeElement The element.
+     */
+    protected function assertFindLinkIn($parent, $locator, $msg = '')
+    {
+        $link = $parent->findLink($locator);
+        if (is_null($link))
+        {
+            if (empty($msg))
+                throw new \Exception("Link '$locator' was not found.");
+            else
+                throw new \Exception($msg);
+        }
+        return $link;
+    }
+
+    /**
      * Visit a page
      *
      * @param string $page The url page to visit
