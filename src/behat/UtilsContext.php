@@ -41,6 +41,7 @@ class UtilsContext extends RawMinkContext
     public function __construct($parameters = array())
     {
         $this->parameters = $parameters;
+        $this->end_closures = array();
     }
 
     /**
