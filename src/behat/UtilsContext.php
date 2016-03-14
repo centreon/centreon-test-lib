@@ -50,7 +50,7 @@ class UtilsContext extends RawMinkContext
      */
     public function terminate()
     {
-       foreach ($this->$end_closures as $closure)
+       foreach ($this->end_closures as $closure)
        {
           try
           {
