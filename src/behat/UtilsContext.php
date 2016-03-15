@@ -45,9 +45,19 @@ class UtilsContext extends RawMinkContext
     }
 
     /**
+     *  Add a termination closure.
+     *
+     *  @param $closure Closure that will be called within terminate().
+     */
+    public function addClosure($closure)
+    {
+        array_push($this->end_closures, $closure);
+    }
+
+    /**
      *  Terminate the context.
      *
-     *  @AfterScenario 
+     *  @AfterScenario
      */
     public function terminate()
     {
@@ -96,7 +106,7 @@ class UtilsContext extends RawMinkContext
      * @param int $wait The timeout in seconds
      * @param string $timeoutMsg The custom message on timeout
      */
-    protected function spin($closure, $wait = 60, $timeoutMsg = 'Load timeout')
+    public function spin($closure, $wait = 60, $timeoutMsg = 'Load timeout')
     {
         for ($i = 0; $i < $wait; $i++) {
             try {
@@ -117,7 +127,7 @@ class UtilsContext extends RawMinkContext
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      */
-    protected function assertFind($type, $pattern, $msg = '')
+    public function assertFind($type, $pattern, $msg = '')
     {
         return $this->assertFindIn($this->getSession()->getPage(), $type, $pattern, $msg);
     }
@@ -131,7 +141,7 @@ class UtilsContext extends RawMinkContext
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      */
-    protected function assertFindIn($parent, $type, $pattern, $msg = '')
+    public function assertFindIn($parent, $type, $pattern, $msg = '')
     {
         $element = $parent->find($type, $pattern);
         if (is_null($element)) {
@@ -150,7 +160,7 @@ class UtilsContext extends RawMinkContext
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      */
-    protected function assertFindButton($locator, $msg = '')
+    public function assertFindButton($locator, $msg = '')
     {
         return $this->assertFindButtonIn($this->getSession()->getPage(), $locator, $msg);
     }
@@ -163,7 +173,7 @@ class UtilsContext extends RawMinkContext
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      */
-    protected function assertFindButtonIn($parent, $locator, $msg = '')
+    public function assertFindButtonIn($parent, $locator, $msg = '')
     {
         $button = $parent->findButton($locator);
         if (is_null($button))
@@ -183,7 +193,7 @@ class UtilsContext extends RawMinkContext
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      */
-    protected function assertFindField($locator, $msg = '')
+    public function assertFindField($locator, $msg = '')
     {
         return $this->assertFindFieldIn($this->getSession()->getPage(), $locator, $msg);
     }
@@ -196,7 +206,7 @@ class UtilsContext extends RawMinkContext
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      */
-    protected function assertFindFieldIn($parent, $locator, $msg = '')
+    public function assertFindFieldIn($parent, $locator, $msg = '')
     {
         $field = $parent->findField($locator);
         if (is_null($field))
@@ -216,7 +226,7 @@ class UtilsContext extends RawMinkContext
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      */
-    protected function assertFindLink($locator, $msg = '')
+    public function assertFindLink($locator, $msg = '')
     {
         return $this->assertFindLinkIn($this->getSession()->getPage(), $locator, $msg);
     }
@@ -229,7 +239,7 @@ class UtilsContext extends RawMinkContext
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      */
-    protected function assertFindLinkIn($parent, $locator, $msg = '')
+    public function assertFindLinkIn($parent, $locator, $msg = '')
     {
         $link = $parent->findLink($locator);
         if (is_null($link))
@@ -247,7 +257,7 @@ class UtilsContext extends RawMinkContext
      *
      * @param string $page The url page to visit
      */
-    protected function visit($page)
+    public function visit($page)
     {
         $this->visitPath($page);
     }
