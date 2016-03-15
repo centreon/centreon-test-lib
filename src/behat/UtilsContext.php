@@ -27,6 +27,12 @@ class UtilsContext extends RawMinkContext
      */
     protected $parameters;
 
+   /**
+    *  @var array List of closure to be executed
+    *             in the context destruction.
+    */
+    protected $end_closures;
+
     /**
      * Constructor
      *
@@ -35,6 +41,38 @@ class UtilsContext extends RawMinkContext
     public function __construct($parameters = array())
     {
         $this->parameters = $parameters;
+        $this->end_closures = array();
+    }
+
+    /**
+     *  Terminate the context.
+     *
+     *  @AfterScenario 
+     */
+    public function terminate()
+    {
+       foreach ($this->end_closures as $closure)
+       {
+          try
+          {
+            $closure();
+          }
+          catch (Exception $e)
+          {
+             echo 'Exception in context termination : ',  $e->getMessage(), "\n";
+          }
+       }
+    }
+
+    /**
+     *  Set the value returned by the confirmbox.
+     */
+    public function setConfirmBox($bool)
+    {
+      if ($bool == true)
+        $this->getSession()->getDriver()->executeScript('window.confirm = function(){return true;}');
+      else
+        $this->getSession()->getDriver()->executeScript('window.confirm = function(){return false;}');
     }
 
     /**
