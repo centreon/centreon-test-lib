@@ -40,6 +40,7 @@ class CentreonContext extends UtilsContext
         {
             $this->container = new CentreonContainer($image);
             $this->setMinkParameter('base_url', 'http://localhost:' . $this->container->getPort() . '/centreon');
+            $this->enableClosures(FALSE);
         }
     }
 

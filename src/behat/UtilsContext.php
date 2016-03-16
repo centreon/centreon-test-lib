@@ -33,6 +33,8 @@ class UtilsContext extends RawMinkContext
     */
     protected $end_closures;
 
+    private $enable_closures;
+
     /**
      * Constructor
      *
@@ -42,6 +44,7 @@ class UtilsContext extends RawMinkContext
     {
         $this->parameters = $parameters;
         $this->end_closures = array();
+        $this->enable_closures = TRUE;
     }
 
     /**
@@ -55,23 +58,32 @@ class UtilsContext extends RawMinkContext
     }
 
     /**
+     *  Set whether or not closures should be called at termination.
+     *
+     *  @param $enable TRUE or FALSE.
+     */
+    public function enableClosures($enable = TRUE)
+    {
+        $this->enable_closures = $enable;
+    }
+
+    /**
      *  Terminate the context.
      *
      *  @AfterScenario
      */
     public function terminate()
     {
-       foreach ($this->end_closures as $closure)
-       {
-          try
-          {
-            $closure();
-          }
-          catch (Exception $e)
-          {
-             echo 'Exception in context termination : ',  $e->getMessage(), "\n";
-          }
-       }
+        if ($this->enable_closures) {
+            foreach ($this->end_closures as $closure) {
+                try {
+                    $closure();
+                }
+                catch (Exception $e) {
+                    echo 'Exception in context termination : ',  $e->getMessage(), "\n";
+                }
+            }
+        }
     }
 
     /**
