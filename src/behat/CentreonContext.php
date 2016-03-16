@@ -31,6 +31,19 @@ class CentreonContext extends UtilsContext
     }
 
     /**
+     *  Unset container.
+     *
+     *  This will effectively stop and remove the container attached to
+     *  this context if one was launched.
+     *
+     *  @AfterScenario
+     */
+    public function unsetContainer()
+    {
+        unset($this->container);
+    }
+
+    /**
      *  @Given a Centreon server
      */
     public function aCentreonServer()
