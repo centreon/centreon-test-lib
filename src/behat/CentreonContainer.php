@@ -54,6 +54,17 @@ class CentreonContainer
     }
 
     /**
+     *  Execute a command within a container.
+     *
+     *  @param string $cmd Command to execute.
+     */
+    public function execute($cmd)
+    {
+        exec('docker exec ' . $this->container_id . ' ' . $cmd, $output, $return_var);
+        return array('output' => $output, 'exit_code' => $return_var);
+    }
+
+    /**
      *  Get the port to which users can connect and access Centreon Web.
      */
     public function getPort()
