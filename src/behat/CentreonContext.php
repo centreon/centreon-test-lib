@@ -102,4 +102,28 @@ class CentreonContext extends UtilsContext
         $this->aCentreonServer();
         $this->iAmLoggedIn();
     }
+
+    /**
+     *  Execute a command.
+     *
+     *  @param string $cmd Command to execute.
+     */
+    public function execute($dockerCmd, $shellCmd = "")
+    {
+        if (empty($shellCmd)) {
+            $shellCmd = $dockerCmd;
+        }
+
+        if (isset($this->container)) {
+            $returnCmd = $this->container->execute($dockerCmd);
+        } else {
+            exec($shellCmd, $output, $returnVar);
+            $returnCmd = array(
+                'output' => $output,
+                'exit_code' => $returnVar
+            );
+        }
+
+        return $returnCmd;
+    }
 }

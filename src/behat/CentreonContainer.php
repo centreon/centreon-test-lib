@@ -60,8 +60,12 @@ class CentreonContainer
      */
     public function execute($cmd)
     {
-        exec('docker exec ' . $this->container_id . ' ' . $cmd, $output, $return_var);
-        return array('output' => $output, 'exit_code' => $return_var);
+        exec('docker exec ' . $this->container_id . ' ' . $cmd, $output, $returnVar);
+
+        return array(
+            'output' => $output,
+            'exit_code' => $returnVar
+        );
     }
 
     /**
