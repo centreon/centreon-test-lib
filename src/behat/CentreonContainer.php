@@ -69,6 +69,17 @@ class CentreonContainer
     }
 
     /**
+     *  Copy file or directory from localhost to container.
+     *
+     *  @param string $src Source file or directory.
+     *  @param string $dst Destination directory
+     */
+    public function copy($src, $dst)
+    {
+        exec('docker cp ' . $src . ' ' . $dst);
+    }
+
+    /**
      *  Get the port to which users can connect and access Centreon Web.
      */
     public function getPort()
