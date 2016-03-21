@@ -30,7 +30,7 @@ class CentreonContainer
      */
     public function __construct($image)
     {
-        $this->container_id = shell_exec('docker run -t -d -p 80 "' . $image . '" | tr -d "\n"');
+        $this->container_id = shell_exec('docker run -t -d -p 80 -p 7555 "' . $image . '" | tr -d "\n"');
         if (empty($this->container_id))
             throw new \Exception('Could not run Centreon Web container');
         $ch = curl_init('http://localhost:' . $this->getPort());
@@ -61,6 +61,8 @@ class CentreonContainer
     public function execute($cmd)
     {
         exec('docker exec ' . $this->container_id . ' ' . $cmd, $output, $returnVar);
+//        exec('docker exec ' . $this->container_id . ' ls /usr/local/src/', $output, $returnVar);
+//var_dump($output);
 
         return array(
             'output' => $output,
@@ -76,11 +78,9 @@ class CentreonContainer
      */
     public function copyFromHost($src, $dst)
     {
-        shell_exec('docker exec -d ' . $this->container_id . ' \'sh -c "cd `dirname ' . $dst . '`; nc -l 7555 | tar x"\'');
+        exec('docker exec -d ' . $this->container_id . ' sh -c "cd `dirname ' . $dst . '`; nc -l 7555 | tar x"', $output, $return);
         $ipAddress = trim(shell_exec("docker inspect -f '{{ .NetworkSettings.IPAddress }}' " . $this->container_id));
-        shell_exec('tar c ' . $src . ' | nc ' . $ipAddress . ' 7555');
-        //shell_exec('tar c ../centreon-export | nc 172.17.0.46 7555');
-//        exec('docker cp ' . $src . ' ' . $this->container_id . ':' . $dst);
+        shell_exec('cd `dirname ' . $src . '`; tar c `basename ' . $src . '` | nc ' . $ipAddress . ' 7555');
     }
 
     /**
