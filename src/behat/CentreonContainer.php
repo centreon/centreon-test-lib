@@ -74,9 +74,13 @@ class CentreonContainer
      *  @param string $src Source file or directory.
      *  @param string $dst Destination directory
      */
-    public function copy($src, $dst)
+    public function copyFromHost($src, $dst)
     {
-        exec('docker cp ' . $src . ' ' . $dst);
+        shell_exec('docker exec -d ' . $this->container_id . ' \'sh -c "cd `dirname ' . $dst . '`; nc -l 7555 | tar x"\'');
+        $ipAddress = trim(shell_exec("docker inspect -f '{{ .NetworkSettings.IPAddress }}' " . $this->container_id));
+        shell_exec('tar c ' . $src . ' | nc ' . $ipAddress . ' 7555');
+        //shell_exec('tar c ../centreon-export | nc 172.17.0.46 7555');
+//        exec('docker cp ' . $src . ' ' . $this->container_id . ':' . $dst);
     }
 
     /**
