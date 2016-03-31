@@ -76,7 +76,7 @@ class CentreonContainer
      */
     public function copyFromHost($src, $dst)
     {
-        exec('docker exec -d -t ' . $this->container_id . ' sh -c "cd `dirname ' . $dst . '`; nc -l 7555 | tar x"', $output, $return);
+        exec('docker exec -d -t ' . $this->container_id . ' sh -c "cd ' . $dst . ' ; nc -l 7555 | tar x"', $output, $return);
         sleep(1);
         $ipAddress = trim(shell_exec("docker inspect -f '{{ .NetworkSettings.IPAddress }}' " . $this->container_id));
         shell_exec('cd `dirname ' . $src . '`; tar c `basename ' . $src . '` | nc ' . $ipAddress . ' 7555');
