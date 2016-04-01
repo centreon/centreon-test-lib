@@ -58,6 +58,20 @@ class CentreonContext extends UtilsContext
     }
 
     /**
+     *  @Given a freshly installed Centreon server
+     */
+    public function aFreshlyInstalledCentreonServer()
+    {
+        $image = getenv('CENTREON_WEB_FRESH_IMAGE');
+        if (!empty($image))
+        {
+            $this->container = new CentreonContainer($image);
+            $this->setMinkParameter('base_url', 'http://localhost:' . $this->container->getPort() . '/centreon');
+            $this->enableClosures(FALSE);
+        }
+    }
+
+    /**
      * Login to Centreon
      *
      * @Given I am logged in
@@ -100,6 +114,17 @@ class CentreonContext extends UtilsContext
     public function iAmLoggedInACentreonServer()
     {
         $this->aCentreonServer();
+        $this->iAmLoggedIn();
+    }
+
+    /**
+     * Make sure we have a freshly installed Centreon server and log in.
+     *
+     * @Given I am logged in a freshly installed Centreon server
+     */
+    public function iAmLoggedInAFreshlyInstalledCentreonServer()
+    {
+        $this->aFreshlyInstalledCentreonServer();
         $this->iAmLoggedIn();
     }
 
