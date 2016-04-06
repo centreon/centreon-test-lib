@@ -33,7 +33,7 @@ class RestContext implements Context
      *
      * @param array $parameters The list of parameters for the context
      */
-    public function __construct($parameters)
+    public function __construct($parameters = array())
     {
         $this->parameters = $parameters;
     }
