@@ -17,6 +17,7 @@
 namespace Centreon\Test\Behat;
 
 use Behat\Behat\Context\Context;
+use GuzzleHttp\Client;
 
 /**
  * Context for rest call in acceptance tests
@@ -38,26 +39,17 @@ class RestContext implements Context
     }
     
     /**
-     * Set the rest client
-     *
-     * @param GuzzleHttp\Client $restClient The http object
-     */
-    public function setRestClient($restClient)
-    {
-        $this->restClient = $restClient;
-    }
-    
-    /**
      * Get the rest client
      *
      * @return GuzzleHttp\Client The http object
      */
     public function getRestClient()
     {
-        if (null === $this->restClient) {
-            throw new \RuntimeException(
-                'The rest client has not been set. ' .
-                'Have you enabled the Rest Extension ?'
+        if (!isset($this->restClient)) {
+            $this->restClient = new Client(
+                array(
+                    'base_uri' => $this->parameters['base_url']
+                )
             );
         }
         return $this->restClient;

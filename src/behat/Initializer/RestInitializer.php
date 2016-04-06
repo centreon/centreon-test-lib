@@ -18,7 +18,6 @@ namespace Centreon\Test\Behat\Initializer;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Initializer\ContextInitializer;
-use GuzzleHttp\Client;
 
 use Centreon\Test\Behat\RestContext;
 
@@ -27,17 +26,11 @@ use Centreon\Test\Behat\RestContext;
  */
 class RestInitializer implements ContextInitializer
 {
-    private $restClient;
     private $parameters;
     
     public function __construct($parameters)
     {
         $this->parameters = $parameters;
-        $this->restClient = new Client(
-            array(
-                'base_uri' => $this->parameters['base_url']
-            )
-        );
     }
     
     public function initializeContext(Context $context)
@@ -45,8 +38,6 @@ class RestInitializer implements ContextInitializer
         if (!$context instanceof RestContext) {
             return;
         }
-        
-        $context->setRestClient($this->restClient);
         $context->setRestParameters($this->parameters);
     }
 }
