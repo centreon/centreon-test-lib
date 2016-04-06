@@ -48,7 +48,7 @@ class RestContext implements Context
         if (!isset($this->restClient)) {
             $this->restClient = new Client(
                 array(
-                    'base_uri' => $this->parameters['base_url']
+                    'base_uri' => $this->restParameters['base_url']
                 )
             );
         }
