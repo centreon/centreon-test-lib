@@ -24,32 +24,15 @@ use Behat\Behat\Context\Initializer\ContextInitializer;
  */
 class DatabaseInitializer implements ContextInitializer
 {
-    private $dbconn;
     private $parameters;
-    
+
     public function __construct($parameters)
     {
         $this->parameters = $parameters;
-        
-        /* Build DSN */
-        $dsn = $this->parameters['driver'] . ':dbname=' . $this->parameters['dbname'] . ';host=' .
-            $this->parameters['host'];
-        if (isset($this->parameters['port']) && false === is_null($this->parameters['port'])) {
-            $dsn .= ';port=' . $this->parameters['port'];
-        }
-        $this->dbconn = new \PDO(
-            $dsn,
-            $this->parameters['username'],
-            $this->parameters['password']
-        );
-        $this->dbconn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
-    
+
     public function initializeContext(Context $context)
     {
-        if (method_exists($context, 'setDatabase')) {
-            $context->setDatabase($this->dbconn);
-        }
         if (method_exists($context, 'setDatabaseParameters')) {
             $context->setDatabaseParameters($this->parameters);
         }
