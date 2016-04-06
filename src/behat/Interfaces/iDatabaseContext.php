@@ -22,18 +22,12 @@ namespace Centreon\Test\Behat\Interfaces;
 interface iDatabaseContext
 {
     /**
-     * Set a database connection
-     *
-     * @param \PDO $dbconn The database connection
-     */
-    public function setDatabase(\PDO $dbconn);
-    /**
      * Get the database connection
      *
      * @return \PDO The database connection
      */
     public function getDatabase();
-    /** 
+    /**
      * Set database parameters
      *
      * @param array $parameters The database parameters
