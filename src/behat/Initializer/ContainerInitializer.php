@@ -34,7 +34,7 @@ class ContainerInitializer implements ContextInitializer
     public function initializeContext(Context $context)
     {
         if (method_exists($context, 'setContainerImages')) {
-            $context->setContainerImages($parameters['images']);
+            $context->setContainerImages($this->parameters['images']);
         }
     }
 }
