@@ -48,7 +48,7 @@ class CentreonContext extends UtilsContext
      */
     public function aCentreonServer()
     {
-        $image = getenv('CENTREON_WEB_IMAGE');
+        $image = $this->getContainerImage('web');
         if (!empty($image))
         {
             $this->container = new CentreonContainer($image);
@@ -62,7 +62,7 @@ class CentreonContext extends UtilsContext
      */
     public function aFreshlyInstalledCentreonServer()
     {
-        $image = getenv('CENTREON_WEB_FRESH_IMAGE');
+        $image = $this->getContainerImage('web_fresh');
         if (!empty($image))
         {
             $this->container = new CentreonContainer($image);

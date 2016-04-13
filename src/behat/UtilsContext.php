@@ -27,6 +27,11 @@ class UtilsContext extends RawMinkContext
      */
     protected $parameters;
 
+    /**
+     * @var array List of container images.
+     */
+    protected $containerImages;
+
    /**
     *  @var array List of closure to be executed
     *             in the context destruction.
@@ -84,6 +89,22 @@ class UtilsContext extends RawMinkContext
                 }
             }
         }
+    }
+
+    /**
+     *  Set container images.
+     */
+    public function setContainerImages($images)
+    {
+        $this->containerImages = $images;
+    }
+
+    /**
+     *  Get a container image.
+     */
+    public function getContainerImage($name)
+    {
+        return $this->containerImages[$name];
     }
 
     /**
