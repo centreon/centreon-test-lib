@@ -39,17 +39,12 @@ class Container
      * Constructor.
      *
      * @param $composeFile Docker Compose file used to run the services.
-     * @param $checkRoutine Check routine that will confirm that
-     *                      services are running.
      */
-    public function __construct($composeFile, $checkRoutine = NULL)
+    public function __construct($composeFile)
     {
         $this->composeFile = $composeFile;
         $this->id = uniqid();
         $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' up -d');
-        if (isset($checkRoutine)) {
-            $checkRoutine($this);
-        }
     }
 
     /**
