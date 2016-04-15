@@ -28,9 +28,9 @@ class UtilsContext extends RawMinkContext
     protected $parameters;
 
     /**
-     * @var array List of container images.
+     * @var array List of container Compose files.
      */
-    protected $containerImages;
+    protected $composeFiles;
 
    /**
     *  @var array List of closure to be executed
@@ -92,19 +92,19 @@ class UtilsContext extends RawMinkContext
     }
 
     /**
-     *  Set container images.
+     *  Set containers Compose files.
      */
-    public function setContainerImages($images)
+    public function setContainersComposeFiles($files)
     {
-        $this->containerImages = $images;
+        $this->composeFiles = $files;
     }
 
     /**
-     *  Get a container image.
+     *  Get a container Compose file.
      */
-    public function getContainerImage($name)
+    public function getContainerComposeFile($name)
     {
-        return $this->containerImages[$name];
+        return $this->composeFiles[$name];
     }
 
     /**

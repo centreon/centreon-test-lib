@@ -122,4 +122,17 @@ class Container
     {
         return shell_exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' port ' . $service . ' ' . $containerPort . ' | cut -d : -f 2 | tr -d "\n"');
     }
+
+    /**
+     *  Wait for available URL.
+     */
+    public function waitForAvailableUrl($url)
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 500);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        while (!curl_exec($ch)) {
+            sleep(1);
+        }
+    }
 }

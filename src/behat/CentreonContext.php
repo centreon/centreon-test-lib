@@ -48,11 +48,17 @@ class CentreonContext extends UtilsContext
      */
     public function aCentreonServer()
     {
-        $image = $this->getContainerImage('web');
+        $image = $this->getContainerComposeFile('web');
         if (!empty($image))
         {
-            $this->container = new CentreonContainer($image);
-            $this->setMinkParameter('base_url', 'http://localhost:' . $this->container->getPort() . '/centreon');
+            $url = 'http://localhost:' . $this->container->getPort(80, 'web') . '/centreon';
+            $this->container = new CentreonContainer(
+                $image,
+                function ($container) use ($url) {
+                    $container->waitForAvailableUrl($url);
+                }
+            );
+            $this->setMinkParameter('base_url', $url);
             $this->enableClosures(FALSE);
         }
     }
@@ -62,11 +68,17 @@ class CentreonContext extends UtilsContext
      */
     public function aFreshlyInstalledCentreonServer()
     {
-        $image = $this->getContainerImage('web_fresh');
+        $image = $this->getContainerComposeFile('web_fresh');
         if (!empty($image))
         {
-            $this->container = new CentreonContainer($image);
-            $this->setMinkParameter('base_url', 'http://localhost:' . $this->container->getPort() . '/centreon');
+            $url = 'http://localhost:' . $this->container->getPort(80, 'web') . '/centreon';
+            $this->container = new CentreonContainer(
+                $image,
+                function ($container) use ($url) {
+                    $container>waitForAvailableUrl($url);
+                }
+            );
+            $this->setMinkParameter('base_url', $url);
             $this->enableClosures(FALSE);
         }
     }
