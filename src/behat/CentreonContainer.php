@@ -21,25 +21,35 @@ namespace Centreon\Test\Behat;
  */
 class CentreonContainer
 {
-    private $container_id;
+    private $composeFile;
+    private $id;
+
+    /**
+     *  Execute a command on local host.
+     */
+    private function exec($cmd)
+    {
+        exec($cmd, $output, $returnVar);
+        if ($returnVar != 0) {
+            throw new \Exception('Cannot execute container control command: ' . $cmd);
+        }
+    }
 
     /**
      * Constructor.
      *
-     * @param $image Docker image name used to run the container.
+     * @param $composeFile Docker Compose file used to run the services.
+     * @param $checkRoutine Check routine that will confirm that
+     *                      services are running.
      */
-    public function __construct($image)
+    public function __construct($composeFile, $checkRoutine = NULL)
     {
-        $this->container_id = shell_exec('docker run -t -d -p 80 -p 7555 "' . $image . '" | tr -d "\n"');
-        if (empty($this->container_id))
-            throw new \Exception('Could not run Centreon Web container');
-        $ch = curl_init('http://localhost:' . $this->getPort());
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 500);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        while (!curl_exec($ch)) {
-            sleep(1);
+        $this->composeFile = $composeFile;
+        $this->id = uniqid();
+        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' up -d');
+        if (isset($checkRoutine)) {
+            $checkRoutine($this);
         }
-        curl_close($ch);
     }
 
     /**
@@ -49,19 +59,42 @@ class CentreonContainer
      */
     public function __destruct()
     {
-        shell_exec('docker stop "' . $this->container_id . '"');
-        shell_exec('docker rm "' . $this->container_id . '"');
+        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' down');
+    }
+
+    /**
+     *  Copy files from container to host.
+     *
+     *  @param $source Source path.
+     *  @param $destination Destination path.
+     *  @param $service Service name.
+     */
+    public function copyFromContainer($source, $destination, $service)
+    {
+        $this->exec('docker cp ' . $this->getContainerId($service) . ':' . $source . ' ' . $destination);
+    }
+
+    /**
+     *  Copy files from host to a container.
+     *
+     *  @param $source Source path.
+     *  @param $destination Destination path.
+     *  @param $service Service name.
+     */
+    public function copyToContainer($source, $destination, $service)
+    {
+        $this->exec('docker cp ' . $source . ' ' . $this->getContainerId($service) . ':' . $destination);
     }
 
     /**
      *  Execute a command within a container.
      *
-     *  @param string $cmd Command to execute.
+     *  @param $cmd Command to execute.
+     *  @param $service Name of service.
      */
-    public function execute($cmd)
+    public function execute($cmd, $service)
     {
-        exec('docker exec ' . $this->container_id . ' ' . $cmd, $output, $returnVar);
-
+        exec('docker exec ' . $this->getContainerId($service) . ' ' . $cmd, $output, $returnVar);
         return array(
             'output' => $output,
             'exit_code' => $returnVar
@@ -69,24 +102,24 @@ class CentreonContainer
     }
 
     /**
-     *  Copy file or directory from localhost to container.
+     *  Get the container ID of a service.
      *
-     *  @param string $src Source file or directory.
-     *  @param string $dst Destination directory
+     *  @param $service Service name.
      */
-    public function copyFromHost($src, $dst)
+    public function getContainerId($service)
     {
-        exec('docker exec -d -t ' . $this->container_id . ' sh -c "cd ' . $dst . ' ; nc -l 7555 | tar x"', $output, $return);
-        sleep(1);
-        $ipAddress = trim(shell_exec("docker inspect -f '{{ .NetworkSettings.IPAddress }}' " . $this->container_id));
-        shell_exec('cd `dirname ' . $src . '`; tar c `basename ' . $src . '` | nc ' . $ipAddress . ' 7555');
+        return shell_exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' ps -q ' . $service . ' | tr -d "\n"');
     }
 
     /**
-     *  Get the port to which users can connect and access Centreon Web.
+     *  Get the host port to which a container port is redirected.
+     *
+     *  @param $containerPort Container port.
+     *
+     *  @return Host port.
      */
-    public function getPort()
+    public function getPort($containerPort, $service)
     {
-        return shell_exec('docker port "' . $this->container_id . '" 80 | cut -d : -f 2 | tr -d "\n"');
+        return shell_exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' port ' . $service . ' ' . $containerPort . ' | cut -d : -f 2 | tr -d "\n"');
     }
 }
