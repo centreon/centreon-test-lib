@@ -34,7 +34,7 @@ class ContainerInitializer implements ContextInitializer
     public function initializeContext(Context $context)
     {
         if (method_exists($context, 'setContainersComposeFiles')) {
-            $context->setContainersComposeFiles($this->parameters['compose_files']);
+            $context->setContainersComposeFiles($this->parameters);
         }
     }
 }
