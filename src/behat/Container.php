@@ -17,9 +17,9 @@
 namespace Centreon\Test\Behat;
 
 /**
- *  Run a Centreon container and manage it.
+ *  Run a container and manage it.
  */
-class CentreonContainer
+class Container
 {
     private $composeFile;
     private $id;
