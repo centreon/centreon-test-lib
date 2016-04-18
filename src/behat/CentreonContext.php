@@ -137,21 +137,9 @@ class CentreonContext extends UtilsContext
      *
      *  @param string $cmd Command to execute.
      */
-    public function execute($dockerCmd, $shellCmd = "")
+    public function execute($command, $service)
     {
-        if (empty($shellCmd)) {
-            $shellCmd = $dockerCmd;
-        }
-
-        if (isset($this->container)) {
-            $returnCmd = $this->container->execute($dockerCmd);
-        } else {
-            exec($shellCmd, $output, $returnVar);
-            $returnCmd = array(
-                'output' => $output,
-                'exit_code' => $returnVar
-            );
-        }
+        $returnCmd = $this->container->execute($command, $service);
 
         return $returnCmd;
     }
