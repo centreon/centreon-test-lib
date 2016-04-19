@@ -43,7 +43,7 @@ class Container
     public function __construct($composeFile)
     {
         $this->composeFile = $composeFile;
-        $this->id = uniqid();
+        $this->id = uniqid('', TRUE);
         $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' up -d');
     }
 
