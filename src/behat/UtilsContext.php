@@ -142,7 +142,7 @@ class UtilsContext extends RawMinkContext
      * @param int $wait The timeout in seconds
      * @param string $timeoutMsg The custom message on timeout
      */
-    public function spin($closure, $wait = 60, $timeoutMsg = 'Load timeout')
+    public function spin($closure, $wait = 30, $timeoutMsg = 'Load timeout')
     {
         for ($i = 0; $i < $wait; $i++) {
             try {
