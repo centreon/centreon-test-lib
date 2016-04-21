@@ -154,6 +154,9 @@ class CentreonContext extends UtilsContext
     public function setContainerWebDriver()
     {
         $url = 'http://localhost:' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
-        $this->locateSession()->getDriver()->setWebDriver(new WebDriver($url));
+        $sessionName = $this->getMink()->getDefaultSessionName();
+        $driver = new \Behat\Mink\Driver\Selenium2Driver('phantomjs', null, $url);
+        $session = new \Behat\Mink\Session($driver);
+        $this->getMink()->registerSession($sessionName, $session);
     }
 }
