@@ -50,16 +50,7 @@ class CentreonContext extends UtilsContext
      */
     public function aCentreonServer()
     {
-        $image = $this->getContainerComposeFile('web');
-        if (!empty($image))
-        {
-            $this->container = new Container($image);
-            $url = 'http://localhost:' . $this->container->getPort(80, 'web') . '/centreon';
-            $this->container->waitForAvailableUrl($url);
-            $this->setMinkParameter('base_url', $url);
-            $this->setContainerWebDriver();
-            $this->enableClosures(FALSE);
-        }
+        $this->launchCentreonWebContainer('web');
     }
 
     /**
@@ -145,6 +136,24 @@ class CentreonContext extends UtilsContext
         $returnCmd = $this->container->execute($command, $service);
 
         return $returnCmd;
+    }
+
+    /**
+     *  Launch Centreon Web container and setup context.
+     *
+     *  @param $name Entry name.
+     */
+    public function launchCentreonWebContainer($name)
+    {
+        $composeFile = $this->getContainerComposeFile($name);
+        if (!empty($composeFile))
+        {
+            $this->container = new Container($composeFile);
+            $url = 'http://localhost:' . $this->container->getPort(80, 'web') . '/centreon';
+            $this->container->waitForAvailableUrl($url);
+            $this->setMinkParameter('base_url', $url);
+            $this->setContainerWebDriver();
+        }
     }
 
     /**
