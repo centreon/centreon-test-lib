@@ -148,7 +148,7 @@ class CentreonContext extends UtilsContext
         $this->setContainerWebDriver();
         $url = 'http://localhost:' . $this->container->getPort(80, 'web') . '/centreon';
         $this->container->waitForAvailableUrl($url);
-        $this->setMinkParameter('base_url', $url);
+        $this->setMinkParameter('base_url', 'http://web/centreon');
     }
 
     /**
