@@ -154,6 +154,6 @@ class CentreonContext extends UtilsContext
     public function setContainerWebDriver()
     {
         $url = 'http://localhost:' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
-        $this->getDriver()->setWebDriver(new WebDriver($url));
+        $this->getSession()->getDriver()->setWebDriver(new WebDriver($url));
     }
 }
