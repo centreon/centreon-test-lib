@@ -16,6 +16,8 @@
  */
 namespace Centreon\Test\Behat;
 
+use WebDriver\WebDriver;
+
 class CentreonContext extends UtilsContext
 {
     protected $container;
@@ -55,6 +57,7 @@ class CentreonContext extends UtilsContext
             $url = 'http://localhost:' . $this->container->getPort(80, 'web') . '/centreon';
             $this->container->waitForAvailableUrl($url);
             $this->setMinkParameter('base_url', $url);
+            $this->setContainerWebDriver();
             $this->enableClosures(FALSE);
         }
     }
@@ -142,5 +145,14 @@ class CentreonContext extends UtilsContext
         $returnCmd = $this->container->execute($command, $service);
 
         return $returnCmd;
+    }
+
+    /**
+     *  Properly set WebDriver driver.
+     */
+    public function setContainerWebDriver()
+    {
+        $url = 'http://localhost:' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
+        $this->getDriver()->setWebDriver(new WebDriver($url));
     }
 }
