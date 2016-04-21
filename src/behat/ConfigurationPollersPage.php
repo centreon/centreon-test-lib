@@ -30,7 +30,6 @@ class ConfigurationPollersPage
         $this->ctx->visit('/main.php?p=60901&o=a');
         $this->ctx->assertFindField('name')->setValue($name);
         $this->ctx->assertFindButton('Save')->click();
-        $this->scheduleRemovePoller($name);
         $this->waitForPollerListPage();
     }
 
@@ -41,7 +40,6 @@ class ConfigurationPollersPage
         $this->selectPoller($name);
         $this->ctx->getSession()->getPage()->selectFieldOption('o1', 'Duplicate');
         $this->waitForPollerListPage();
-        $this->scheduleRemovePoller($name . '_1');
         $this->enablePoller($name . '_1');
     }
 
@@ -71,13 +69,6 @@ class ConfigurationPollersPage
         $this->selectPoller($name);
         $this->ctx->getSession()->getPage()->selectFieldOption('o1', 'Delete');
         $this->waitForPollerListPage();
-    }
-
-    public function scheduleRemovePoller($name)
-    {
-        $my_this = $this;
-        $closure = function() use($name, $my_this) {$my_this->removePoller($name);};
-        $this->ctx->addClosure($closure);
     }
 
     public function selectPoller($name)

@@ -32,14 +32,6 @@ class UtilsContext extends RawMinkContext
      */
     protected $composeFiles;
 
-   /**
-    *  @var array List of closure to be executed
-    *             in the context destruction.
-    */
-    protected $end_closures;
-
-    private $enable_closures;
-
     /**
      * Constructor
      *
@@ -48,47 +40,6 @@ class UtilsContext extends RawMinkContext
     public function __construct($parameters = array())
     {
         $this->parameters = $parameters;
-        $this->end_closures = array();
-        $this->enable_closures = TRUE;
-    }
-
-    /**
-     *  Add a termination closure.
-     *
-     *  @param $closure Closure that will be called within terminate().
-     */
-    public function addClosure($closure)
-    {
-        array_push($this->end_closures, $closure);
-    }
-
-    /**
-     *  Set whether or not closures should be called at termination.
-     *
-     *  @param $enable TRUE or FALSE.
-     */
-    public function enableClosures($enable = TRUE)
-    {
-        $this->enable_closures = $enable;
-    }
-
-    /**
-     *  Terminate the context.
-     *
-     *  @AfterScenario
-     */
-    public function terminate()
-    {
-        if ($this->enable_closures) {
-            foreach ($this->end_closures as $closure) {
-                try {
-                    $closure();
-                }
-                catch (Exception $e) {
-                    echo 'Exception in context termination : ',  $e->getMessage(), "\n";
-                }
-            }
-        }
     }
 
     /**
