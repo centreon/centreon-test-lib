@@ -142,10 +142,10 @@ class CentreonContext extends UtilsContext
             throw new \Exception('Could not launch containers without Docker Compose file for ' . $name . ': check the configuration of your ContainerExtension in behat.yml.');
         }
         $this->container = new Container($composeFile);
+        $this->setContainerWebDriver();
         $url = 'http://localhost:' . $this->container->getPort(80, 'web') . '/centreon';
         $this->container->waitForAvailableUrl($url);
         $this->setMinkParameter('base_url', $url);
-        $this->setContainerWebDriver();
     }
 
     /**
@@ -154,6 +154,6 @@ class CentreonContext extends UtilsContext
     public function setContainerWebDriver()
     {
         $url = 'http://localhost:' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
-        $this->getSession()->getDriver()->setWebDriver(new WebDriver($url));
+        $this->locateSession()->getDriver()->setWebDriver(new WebDriver($url));
     }
 }
