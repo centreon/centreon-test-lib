@@ -42,6 +42,9 @@ class CentreonContext extends UtilsContext
      */
     public function unsetContainer()
     {
+        if ($this->getMink()->isSessionStarted()) {
+            $this->getMink()->getSession()->stop();
+        }
         unset($this->container);
     }
 
