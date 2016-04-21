@@ -58,15 +58,7 @@ class CentreonContext extends UtilsContext
      */
     public function aFreshlyInstalledCentreonServer()
     {
-        $image = $this->getContainerComposeFile('web_fresh');
-        if (!empty($image))
-        {
-            $this->container = new Container($image);
-            $url = 'http://localhost:' . $this->container->getPort(80, 'web') . '/centreon';
-            $this->container->waitForAvailableUrl($url);
-            $this->setMinkParameter('base_url', $url);
-            $this->enableClosures(FALSE);
-        }
+        $this->launchCentreonWebContainer('web_fresh');
     }
 
     /**
