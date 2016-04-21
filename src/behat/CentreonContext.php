@@ -146,14 +146,14 @@ class CentreonContext extends UtilsContext
     public function launchCentreonWebContainer($name)
     {
         $composeFile = $this->getContainerComposeFile($name);
-        if (!empty($composeFile))
-        {
-            $this->container = new Container($composeFile);
-            $url = 'http://localhost:' . $this->container->getPort(80, 'web') . '/centreon';
-            $this->container->waitForAvailableUrl($url);
-            $this->setMinkParameter('base_url', $url);
-            $this->setContainerWebDriver();
+        if (empty($composeFile)) {
+            throw new \Exception('Could not launch containers without Docker Compose file for ' . $name . ': check the configuration of your ContainerExtension in behat.yml.');
         }
+        $this->container = new Container($composeFile);
+        $url = 'http://localhost:' . $this->container->getPort(80, 'web') . '/centreon';
+        $this->container->waitForAvailableUrl($url);
+        $this->setMinkParameter('base_url', $url);
+        $this->setContainerWebDriver();
     }
 
     /**
