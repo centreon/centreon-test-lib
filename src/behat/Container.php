@@ -92,7 +92,7 @@ class Container
     {
         exec('docker exec ' . $this->getContainerId($service) . ' ' . $cmd, $output, $returnVar);
         if ($throwOnError == TRUE && $returnVar != 0) {
-            throw new \Exception('Cannot execute command on container ' . $service . ': ' . $output . ' (command was ' . $cmd . ').');
+            throw new \Exception('Cannot execute command on container ' . $service . ': ' . $output[0] . ' (command was ' . $cmd . ').');
         }
         return array(
             'output' => $output,
@@ -109,9 +109,9 @@ class Container
     {
         exec('sh -c \'docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' ps -q ' . $service . ' | tr -d "\n"\'', $output, $returnVar);
         if ($returnVar != 0) {
-            throw new \Exception('Cannot retrieve container ID of service ' . $service . ': ' . $output . '.');
+            throw new \Exception('Cannot retrieve container ID of service ' . $service . ': ' . $output[0] . '.');
         }
-        return $output;
+        return $output[0];
     }
 
     /**
