@@ -31,7 +31,7 @@ class Container
     {
         exec($cmd, $output, $returnVar);
         if ($returnVar != 0) {
-            throw new \Exception('Cannot execute container control command: ' . $cmd);
+            throw new \Exception('Cannot execute container control command: ' . $cmd . " \n " . implode("\n", $output));
         }
     }
 
