@@ -17,10 +17,16 @@
 namespace Centreon\Test\Behat;
 
 use WebDriver\WebDriver;
+use Centreon\Test\Behat\HostConfigurationPage;
+use Centreon\Test\Behat\ServiceConfigurationPage;
+use Centreon\Test\Behat\PollerConfigurationPage;
 
 class CentreonContext extends UtilsContext
 {
     protected $container;
+    protected $hostConfigurationPage;
+    protected $serviceConfigurationPage;
+    protected $pollerConfigurationPage;
 
     /**
      * Constructor
@@ -146,7 +152,7 @@ class CentreonContext extends UtilsContext
         }
         $this->container = new Container($composeFile);
         $this->setContainerWebDriver();
-        $url = 'http://localhost:' . $this->container->getPort(80, 'web') . '/centreon';
+        $url = 'http://127.0.0.1:' . $this->container->getPort(80, 'web') . '/centreon';
         $this->container->waitForAvailableUrl($url);
         $this->setMinkParameter('base_url', 'http://web/centreon');
     }
@@ -161,5 +167,38 @@ class CentreonContext extends UtilsContext
         $driver = new \Behat\Mink\Driver\Selenium2Driver('phantomjs', null, $url);
         $session = new \Behat\Mink\Session($driver);
         $this->getMink()->registerSession($sessionName, $session);
+    }
+
+    /**
+     *  Get the host configuration page object.
+     */
+    public function getHostConfigurationPage()
+    {
+      if (!isset($this->hostConfigurationPage)) {
+        $this->hostConfigurationPage = new HostConfigurationPage($this);
+      }
+      return ($this->hostConfigurationPage);
+    }
+
+    /**
+     *  Get the service configuration page object.
+     */
+    public function getServiceConfigurationPage()
+    {
+      if (!isset($this->serviceConfigurationPage)) {
+        $this->serviceConfigurationPage = new ServiceConfigurationPage($this);
+      }
+      return ($this->serviceConfigurationPage);
+    }
+
+    /**
+     *  Get the poller configuration page object.
+     */
+    public function getPollerConfigurationPage()
+    {
+      if (!isset($this->pollerConfigurationPage)) {
+        $this->pollerConfigurationPage = new PollerConfigurationPage($this);
+      }
+      return ($this->pollerConfigurationPage);
     }
 }

@@ -240,6 +240,37 @@ class UtilsContext extends RawMinkContext
     }
 
     /**
+     *  Select an element in a select two.
+     *
+     *  @param $css_id  The id of the select two.
+     *  @param $what    What to select.
+     */
+    public function selectToSelectTwo($css_id, $what)
+    {
+      $inputField = $this->assertFind('css', $css_id);
+      $choice = $inputField->getParent()->find('css', '.select2-selection');
+        if (!$choice) {
+            throw new \Exception('No select2 choice found');
+        }
+      $choice->press();
+
+      $this->spin(
+          function ($context) {
+              return count($context->getSession()->getPage()->findAll('css', '.select2-container--open li.select2-results__option')) != 0;
+          },
+          30
+      );
+
+      $chosenResults = $this->getSession()->getPage()->findAll('css', '.select2-results li:not(.select2-results__option--highlighted)');
+      foreach ($chosenResults as $result) {
+          if ($result->getText() == $what) {
+              $result->click();
+              break;
+          }
+      }
+    }
+
+    /**
      * Visit a page
      *
      * @param string $page The url page to visit
