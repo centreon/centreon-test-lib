@@ -115,6 +115,28 @@ class Container
     }
 
     /**
+     *  Get the container(s) logs.
+     *
+     *  @param $service Service name.
+     *
+     *  @return The logs as a string.
+     */
+    public function getLogs($service = '')
+    {
+        $cmd = 'docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' logs --no-color';
+        if (!empty($service)) {
+            $cmd .= ' ' . $service;
+        }
+        unset($output);
+        exec($cmd, $output, $returnVar);
+        $logs = '';
+        foreach ($output as $logline) {
+            $logs .= $logline . "\n";
+        }
+        return $logs;
+    }
+
+    /**
      *  Get the host port to which a container port is redirected.
      *
      *  @param $containerPort Container port.
