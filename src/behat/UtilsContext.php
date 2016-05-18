@@ -311,38 +311,5 @@ class UtilsContext extends RawMinkContext
       }
    }
 
-   /**
-     * Submit a passive result for a host (and wait)
-     *
-     * @param string hostname
-     * @param checkResult
-     * @param string checkOutput
-     * @param string performanceData
-     */
-   public function hostSubmitResult($hostname, $checkResult, $checkOutput = '', $performanceData = '')
-   {
-      // Page in : Monitoring  >  Status Details  >  Hosts
-      $this->visit('/main.php?p=20202&o=hpc&cmd=16&host_name=' . $hostname);
-      
-      // Configure the "Check result" dropdown field
-      $this->selectFieldOption('return_code', $checkResult);
-
-      // Configure the "Check output" field
-      if (! empty($checkOutput)) {
-         $this->assertFindField('output')->setValue($checkOutput);
-      }
-
-      // Configure the performance data field
-      if (! empty($performanceData)) {
-         $this->assertFindField('dataPerform')->setValue($performanceData);
-      }
-
-      // Submit global forms
-      $this->assertFindButton('Save')->click();
-
-      // Wait
-      $this->getSession()->wait(5000, '');
-
-   }
 
 }
