@@ -279,4 +279,41 @@ class UtilsContext extends RawMinkContext
     {
         $this->visitPath($page);
     }
+
+    public function checkRadioButton($)
+    {
+        $this
+    }
+
+    /**
+     * Check a radio button on current page, if the radio button is not found throw an exception
+     *
+     * @param string $labelText The label of the radio button to search.
+     * @param string $type The type for find.
+     * @param string $pattern The pattern for find.
+     * @param string $msg The exception message. If empty, use a default message.
+     * @return empty
+     */
+    public function checkRadioButton($labelText, $type, $pattern, $msg = '') {
+       $page = $this->getSession()->getPage();
+
+       $group = $page->find($type, $pattern);
+
+       foreach ($group->findAll('css', 'label') as $label) {
+          if ($labelText === $label->getText()) {
+             $radioButton = $page->find('css', '#'.$label->getAttribute('for'));
+
+             // Select the radio button
+             $radioButton->click();
+             return;
+          }
+      }
+
+      if (empty($msg) {
+         throw new \Exception("Radio button with label {$labelText} not found in pattern {$pattern}");
+      } else {
+         throw new \Exception($msg);
+      }
+   }
+
 }
