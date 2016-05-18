@@ -82,4 +82,16 @@ class ConfigurationPollersPage
             return $context->getSession()->getPage()->has('named', array('id_or_name', 'searchP'));
         });
     }
+    
+    public function restartEngine($poller_id = 1)
+    {
+      $this->ctx->visit("/main.php?p=60902&poller=$poller_id");
+      $this->ctx->assertFind('named', array('id', 'nrestart'))->check();
+      $this->ctx->getSession()->getPage()->selectFieldOption('restart_mode', 'Restart');
+      $this->ctx->assertFind('named', array('id', 'exportBtn'))->click();
+      $this->ctx->spin(function($context) {
+          return $context->getSession()->getPage()->has('named', array('id', 'progressPct'))
+                 && $context->getSession()->getPage()->find('named', array('id', 'progressPct'))->getText() == '100%';
+      });
+    }
 }

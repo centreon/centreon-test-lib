@@ -19,7 +19,6 @@ namespace Centreon\Test\Behat;
 use WebDriver\WebDriver;
 use Centreon\Test\Behat\HostConfigurationPage;
 use Centreon\Test\Behat\ServiceConfigurationPage;
-use Centreon\Test\Behat\PollerConfigurationPage;
 
 class CentreonContext extends UtilsContext
 {
@@ -258,16 +257,5 @@ class CentreonContext extends UtilsContext
 
       // Wait
       $this->getSession()->wait(5000, '');
-    }
-
-    /**
-     *  Get the poller configuration page object.
-     */
-    public function getPollerConfigurationPage()
-    {
-      if (!isset($this->pollerConfigurationPage)) {
-        $this->pollerConfigurationPage = new PollerConfigurationPage($this);
-      }
-      return ($this->pollerConfigurationPage);
     }
 }
