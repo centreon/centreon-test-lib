@@ -191,7 +191,6 @@ class CentreonContext extends UtilsContext
       return ($this->serviceConfigurationPage);
     }
 
-
     /**
       * Submit a passive result for a host (and wait)
       *
@@ -202,7 +201,7 @@ class CentreonContext extends UtilsContext
       */
     public function submitHostResult($hostname, $checkResult, $checkOutput = '', $performanceData = '')
     {
-      // Page in : Monitoring  >  Status Details  >  Hosts
+      // Page in : Monitoring > Status Details > Hosts
       $this->visit('/main.php?p=20202&o=hpc&cmd=16&host_name=' . $hostname);
 
       // Configure the "Check result" dropdown field
@@ -213,7 +212,7 @@ class CentreonContext extends UtilsContext
          $this->assertFindField('output')->setValue($checkOutput);
       }
 
-      // Configure the performance data field
+      // Configure the "Performance data" field
       if (! empty($performanceData)) {
          $this->assertFindField('dataPerform')->setValue($performanceData);
       }
@@ -225,6 +224,41 @@ class CentreonContext extends UtilsContext
       $this->getSession()->wait(5000, '');
     }
 
+    /**
+      * Submit a passive result for a service (and wait)
+      *
+      * @param string hostname
+      * @param checkResult
+      * @param string checkOutput
+      * @param string performanceData
+      */
+    public function submitServiceResult($hostname, $serviceDescription, $checkResult, $checkOutput = '', $performanceData = '')
+    {
+      // Page in : Monitoring > Status Details > Services
+      $this->visit('/main.php?p=20201&o=svcpc&cmd=16&host_name=' . $hostname . '&service_description=' . $serviceDescription);
+
+      // Configure the "Service" dropdown field
+      $this->selectFieldOption('service_description', $serviceDescription);
+
+      // Configure the "Check result" dropdown field
+      $this->selectFieldOption('return_code', $checkResult);
+
+      // Configure the "Check output" field
+      if (! empty($checkOutput)) {
+         $this->assertFindField('output')->setValue($checkOutput);
+      }
+
+      // Configure the "Performance data" field
+      if (! empty($performanceData)) {
+         $this->assertFindField('dataPerform')->setValue($performanceData);
+      }
+
+      // Submit global forms
+      $this->assertFindButton('Save')->click();
+
+      // Wait
+      $this->getSession()->wait(5000, '');
+    }
 
     /**
      *  Get the poller configuration page object.
