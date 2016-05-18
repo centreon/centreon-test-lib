@@ -280,11 +280,6 @@ class UtilsContext extends RawMinkContext
         $this->visitPath($page);
     }
 
-    public function checkRadioButton($)
-    {
-        $this
-    }
-
     /**
      * Check a radio button on current page, if the radio button is not found throw an exception
      *
