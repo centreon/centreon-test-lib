@@ -49,7 +49,7 @@ class CentreonContext extends UtilsContext
      */
     public function unsetContainer(AfterScenarioScope $scope)
     {
-        if (isset($this->container && !$scope->getTestResult()->isPassed()) {
+        if (isset($this->container) && !$scope->getTestResult()->isPassed()) {
             $filename = '/tmp/' . $scope->getSuite()->getName() . '-' . date('Y-m-d') . '.txt';
             file_put_contents($filename, $this->container->getLogs());
         }
