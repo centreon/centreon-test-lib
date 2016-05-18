@@ -50,4 +50,30 @@ class HostConfigurationPage
     {
       $this->context->assertFind('named', array('name', 'submitA'))->click();
     }
+
+    /**
+     *  Switch to a (other) tab
+     */
+    public function switchToTab(string $tabName, string $idOrNameInTab = '') {
+    {
+      // Search the tab from the name of the tab
+      $tabLink = $this->context->assertFind('named', array('link', $tabName));
+
+      // Click on the tab for switch to the tab
+      $tabLink->click();
+
+      // Wait tab load
+      if ($idOrNameInTab == '') {
+        $context->getSession()->wait(5000, '');
+        return true;
+      }
+
+      // Check when the tab is loaded (by a id or name search)
+      $this->context->getSession()->spin(function($context, $idOrNameInTab) {
+        $container = $context->assertFind('named', array('id_or_name', $idOrNameInTab));
+        return $container->isVisible();
+      });
+      
+    }
+
 }
