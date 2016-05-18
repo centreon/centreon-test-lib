@@ -134,8 +134,11 @@ class Container
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 500);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        while (!curl_exec($ch)) {
+        for ($i = 0; ($i < 30) && !curl_exec($ch); ++$i) {
             sleep(1);
+        }
+        if ($i >= 30) {
+            throw new \Exception('URL ' . $url . ' did not respond within a 30 seconds time frame.');
         }
     }
 }
