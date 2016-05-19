@@ -288,7 +288,7 @@ class UtilsContext extends RawMinkContext
     public function getCentreonDatabase()
     {
         if (!isset($this->db)) {
-            $dsn = 'mysql:dbname=imp;host=127.0.0.1;port=' . $this->container->getPort(3306, 'web');
+            $dsn = 'mysql:dbname=centreon;host=127.0.0.1;port=' . $this->container->getPort(3306, 'web');
             $this->db = new \PDO(
                 $dsn,
                 'root',
