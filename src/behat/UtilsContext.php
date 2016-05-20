@@ -80,7 +80,7 @@ class UtilsContext extends RawMinkContext
     public function takeScreenshotOnError(AfterStepScope $scope)
     {
         if (!$scope->getTestResult()->isPassed()) {
-            $filename = $scope->getSuite()->getName() . '-' . date('Y-m-d') . '.png';
+            $filename = date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '.png';
             $filepath = isset($this->parameters['save_images']) ? $this->parameters['save_images'] : null;
             $this->saveScreenshot($filename, $filepath);
         }
@@ -311,5 +311,24 @@ class UtilsContext extends RawMinkContext
       }
    }
 
+
+    /*
+     * Get Centreon database connection
+     *
+     * @return PDO The database connection
+     */
+    public function getCentreonDatabase()
+    {
+        if (!isset($this->db)) {
+            $dsn = 'mysql:dbname=centreon;host=127.0.0.1;port=' . $this->container->getPort(3306, 'web');
+            $this->db = new \PDO(
+                $dsn,
+                'root',
+                ''
+            );
+            $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        }
+        return $this->db;
+    }
 
 }

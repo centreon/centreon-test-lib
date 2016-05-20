@@ -16,6 +16,7 @@
  */
 namespace Centreon\Test\Behat;
 
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use WebDriver\WebDriver;
 use Centreon\Test\Behat\HostConfigurationPage;
 use Centreon\Test\Behat\ServiceConfigurationPage;
@@ -45,8 +46,12 @@ class CentreonContext extends UtilsContext
      *
      *  @AfterScenario
      */
-    public function unsetContainer()
+    public function unsetContainer(AfterScenarioScope $scope)
     {
+        if (isset($this->container) && !$scope->getTestResult()->isPassed()) {
+            $filename = '/tmp/' . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '.txt';
+            file_put_contents($filename, $this->container->getLogs());
+        }
         if ($this->getMink()->isSessionStarted()) {
             $this->getMink()->getSession()->stop();
         }
