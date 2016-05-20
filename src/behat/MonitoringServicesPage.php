@@ -37,9 +37,9 @@ class MonitoringServicesPage
     /**
      * Set the filter service
      *
-     * @param string service Service to select.
+     * @param string servicename Service to select.
      */
-    public function setFilterbyService($service) {
+    public function setFilterbyService($servicename) {
         $this->ctx->assertFind('named', array('id', 'input_search'))->setValue(trim($servicename));
     }
 
@@ -61,7 +61,7 @@ class MonitoringServicesPage
       */
     public function waitForServiceListPage()
     {
-        $this->ctx->spin(function($this->ctx) {
+        $this->ctx->spin(function($context) {
             return $this->ctx->getSession()->getPage()->has('named', array('id_or_name', 'host_search'));
         });
     }
@@ -215,7 +215,7 @@ class MonitoringServicesPage
         // Configure the checkbox "Notify" field
         $notifyCheckbox = $this->ctx->assertFindIn($popinACK, 'named', array('id', 'notify'));
 
-        if ($isNotify) {
+        if ($doNotify) {
             $notifyCheckbox->check();
         } else {
             $notifyCheckbox->uncheck();
@@ -313,8 +313,9 @@ class MonitoringServicesPage
       * @param end_time_time 
       * @param string duration Desired duration.
       * @param string duration_scale Unit of the duration.
+      * @param string comment Comment to associate on the downtime
       */
-    public function addDowntimeOnService($hostname, $servicename, bool $isDurationFixed, $startTimeDate, $startTimeTime, $endTimeDate, $end_time_time, $duration, $duration_scale)
+    public function addDowntimeOnService($hostname, $servicename, bool $isDurationFixed, $startTimeDate, $startTimeTime, $endTimeDate, $end_time_time, $duration, $duration_scale, $comment)
     {
 
         // Prepare the downtime of the service (of the hostname) 
