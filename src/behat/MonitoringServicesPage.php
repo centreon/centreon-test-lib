@@ -75,13 +75,58 @@ class MonitoringServicesPage
     }
 
     /**
+      * Check if the service is acknowledged or not
+      *
+      * @param string hostname Hostname to check.
+      * @param string servicename Service to check.
+      * @return bool 
+      */
+    public function isServiceAcknowledged($hostname, $servicename)
+    {
+        // Prepare (filter by hostname and service name)
+        $this->doActionOn($hostname, $servicename);
+
+        $table = $page->find('css', '.ListTable');
+
+        $linesWithACK = $table->findAll('xpath', "//img[contains(@name, 'popupForAck')]/../../..");
+
+        if (count($linesWithACK)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+      * Check if the service is in downtime or not
+      * 
+      * @param string hostname Hostname to check.
+      * @param string servicename Service to check.
+      * @return bool 
+      */
+    public function isServiceInDowntime($hostname, $servicename)
+    {
+        // Prepare (filter by hostname and service name)
+        $this->doActionOn($hostname, $servicename);
+
+        $table = $page->find('css', '.ListTable');
+
+        $linesWithACK = $table->findAll('xpath', "//img[contains(@name, 'popupForDowntime')]/../../..");
+
+        if (count($linesWithACK)) {
+            return true;
+        }
+        return false;
+
+    }
+
+    /**
       * Generic function for running an action on a hostname or on a service
       *
       * @param string hostname Hostname to select.
       * @param string servicename Service to select.
-      * @param string action_label Label of action to select.
+      * @param string action_label Label of action to select. Action by default is do no action.
       */
-    public function doActionOn($hostname, $servicename, $action_label)
+    public function doActionOn($hostname, $servicename, $action_label = 'More actions...')
     {
         // Go to : Monitoring > Status Details > Services
         $this->listServices();
