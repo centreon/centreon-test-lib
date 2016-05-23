@@ -324,7 +324,7 @@ class UtilsContext extends RawMinkContext
             $this->db = new \PDO(
                 $dsn,
                 'root',
-                ''
+                'centreon'
             );
             $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         }
