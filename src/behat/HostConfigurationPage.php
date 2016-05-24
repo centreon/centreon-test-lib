@@ -54,7 +54,7 @@ class HostConfigurationPage
     /**
      *  Switch to a (other) tab
      */
-    public function switchToTab(string $tabName, string $idOrNameInTab = '')
+    public function switchToTab($tabName, $idOrNameInTab = '')
     {
       // Search the tab from the name of the tab
       $tabLink = $this->context->assertFind('named', array('link', $tabName));

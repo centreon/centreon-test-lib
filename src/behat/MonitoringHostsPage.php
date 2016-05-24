@@ -155,7 +155,7 @@ class MonitoringHostsPage
       * @param bool doAckServicesAttached Check the checkbox "Acknowledge services attached to hosts"
       * @param bool doForceCheck Check the checkbox "Force active checks"
       */
-    public function addAcknowledgementOnHost($hostname, string $comment, bool $isSticky, bool $doNotify, bool $isPersistent, bool $doAckServicesAttached, bool $doForceCheck)
+    public function addAcknowledgementOnHost($hostname, $comment, $isSticky, $doNotify, $isPersistent, $doAckServicesAttached, $doForceCheck)
     {
         // Check the mandatory value "Comment"
         if (empty($comment)) {
@@ -289,7 +289,7 @@ class MonitoringHostsPage
       * @param string comment Comment to associate on the downtime
       * @param bool setDowntimesOnServicesAttached
       */
-    public function addDowntimeOnHost($hostname, bool $isDurationFixed, $startTimeDate, $startTimeTime, $endTimeDate, $end_time_time, $duration, $duration_scale, $comment, bool $setDowntimesOnServicesAttached)
+    public function addDowntimeOnHost($hostname, $isDurationFixed, $startTimeDate, $startTimeTime, $endTimeDate, $end_time_time, $duration, $duration_scale, $comment, $setDowntimesOnServicesAttached)
     {
 
         // Prepare the downtime of the host
