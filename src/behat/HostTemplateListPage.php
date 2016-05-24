@@ -36,6 +36,17 @@ class HostTemplateListPage
     }
 
     /**
+     *  Edit a template.
+     *
+     *  @param $name  Host template name.
+     */
+    public function editTemplate($name)
+    {
+        $this->assertFindLink($name)->click();
+        return new HostTemplateEditPage($this->context, FALSE);
+    }
+
+    /**
      *  Get template properties.
      *
      *  @param $name  Host template name.
