@@ -38,14 +38,14 @@ class ServiceTemplateListPage
     /**
      *  Get template properties.
      *
-     *  @param $name  Host template name.
+     *  @param $name  Service template name.
      */
     public function getTemplate($name)
     {
         $templates = $this->getTemplates();
         $tmpl = array_search($name, $templates);
         if ($tmpl == FALSE) {
-            throw new \Exception('Cannot find host template "' . $name . '".');
+            throw new \Exception('Cannot find service template "' . $name . '".');
         }
         return $tmpl;
     }
