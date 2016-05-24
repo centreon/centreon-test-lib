@@ -38,7 +38,7 @@ class HostConfigurationPage
     public function toHostCreationPage($host_name, $ip = '127.0.0.1')
     {
       $this->context->visit('main.php?p=60101&o=a');
-      $this->context->assertFind('named', array('naid_or_nameme', 'host_name'))->setValue($host_name);
+      $this->context->assertFind('named', array('id_or_name', 'host_name'))->setValue($host_name);
       $this->context->assertFind('named', array('id_or_name', 'host_alias'))->setValue($host_name);
       $this->context->assertFind('named', array('id_or_name', 'host_address'))->setValue($ip);
     }
@@ -64,7 +64,7 @@ class HostConfigurationPage
 
       // Wait tab load
       if ($idOrNameInTab == '') {
-        $context->getSession()->wait(5000, '');
+        $this->context->getSession()->wait(5000, '');
         return true;
       }
 
