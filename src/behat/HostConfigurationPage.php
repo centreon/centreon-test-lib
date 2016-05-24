@@ -64,7 +64,7 @@ class HostConfigurationPage
 
       // Wait tab load
       if ($idOrNameInTab == '') {
-        $context->getSession()->wait(5000, '');
+        $$this->context->getSession()->wait(5000, '');
         return true;
       }
 
