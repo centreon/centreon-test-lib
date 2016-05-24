@@ -57,7 +57,7 @@ class MonitoringHostsPage
     public function waitForHostListPage()
     {
         $this->ctx->spin(function($context) {
-            return $this->ctx->getSession()->getPage()->has('named', array('id_or_name', 'host_search'));
+            return $context->getSession()->getPage()->has('named', array('id_or_name', 'host_search'));
         });
     }
 
@@ -80,6 +80,7 @@ class MonitoringHostsPage
         // Prepare (filter by hostname)
         $this->doActionOn($hostname);
 
+        $page = $this->ctx->getSession()->getPage();
         $table = $page->find('css', '.ListTable');
 
         $linesWithACK = $table->findAll('xpath', "//img[contains(@name, 'popupForAck')]/../../..");
@@ -101,6 +102,7 @@ class MonitoringHostsPage
         // Prepare (filter by hostname)
         $this->doActionOn($hostname);
 
+        $page = $this->ctx->getSession()->getPage();
         $table = $page->find('css', '.ListTable');
 
         $linesWithACK = $table->findAll('xpath', "//img[contains(@name, 'popupForDowntime')]/../../..");
@@ -278,9 +280,10 @@ class MonitoringHostsPage
       *
       * @param string hostname Host name to select
       * @param bool isDurationFixed The duration is fixed or not.
-      * @param startTimeDate 
-      * @param endTimeDate 
-      * @param end_time_time 
+      * @param string startTimeDate
+      * @param string startTimeTime
+      * @param string endTimeDate
+      * @param string end_time_time
       * @param string duration Desired duration.
       * @param string duration_scale Unit of the duration.
       * @param string comment Comment to associate on the downtime
