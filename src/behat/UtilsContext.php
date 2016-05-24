@@ -324,7 +324,7 @@ class UtilsContext extends RawMinkContext
     public function checkRadioButtonByValue($value, $type, $pattern, $msg = '') {
        $page = $this->getSession()->getPage();
 
-       $group = $page->find($type, $pattern);
+       $group = $page->findAll($type, $pattern);
        foreach ($group as $button) {
          if ($value === $button->getAttribute('input')) {
              // Select the radio button
