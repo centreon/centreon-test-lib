@@ -186,7 +186,7 @@ class MonitoringServicesPage
       * @param bool isPersistent
       * @param bool doForceCheck
       */
-    public function addAcknowledgementOnService($hostname, $service, string $comment, bool $isSticky, bool $doNotify, bool $isPersistent, bool $doForceCheck)
+    public function addAcknowledgementOnService($hostname, $service, $comment, $isSticky, $doNotify, $isPersistent, $doForceCheck)
     {
         // Check the mandatory value "Comment"
         if (empty($comment)) {
@@ -315,7 +315,7 @@ class MonitoringServicesPage
       * @param string duration_scale Unit of the duration.
       * @param string comment Comment to associate on the downtime
       */
-    public function addDowntimeOnService($hostname, $servicename, bool $isDurationFixed, $startTimeDate, $startTimeTime, $endTimeDate, $end_time_time, $duration, $duration_scale, $comment)
+    public function addDowntimeOnService($hostname, $servicename, $isDurationFixed, $startTimeDate, $startTimeTime, $endTimeDate, $end_time_time, $duration, $duration_scale, $comment)
     {
 
         // Prepare the downtime of the service (of the hostname) 
