@@ -147,7 +147,7 @@ class MonitoringServicesPage
         $this->setPageLimitTo("100");
 
         // Check the line about the service (hostname, service) -> check all for check the only line
-        $this->ctx->assertFind('named', array('name', 'checkall'))->check();
+        $this->ctx->assertFind('named', array('id_or_name', 'checkall'))->check();
 
         // Select the action (by action label)
         $page->selectFieldOption('o1', $action_label);
@@ -335,18 +335,18 @@ class MonitoringServicesPage
         /* Configure "Start Time" line */
       
         // Configure first field of "Start Time" line, format : 05/19/2016
-        $this->ctx->assertFindIn($popinDowntime, 'named', array('name', 'start'))->setValue($startTimeDate);
+        $this->ctx->assertFindIn($popinDowntime, 'named', array('id_or_name', 'start'))->setValue($startTimeDate);
 
         // Configure second field of "Start Time" line, format : 10:37
-        $this->ctx->assertFindIn($popinDowntime, 'named', array('name', 'start_time'))->setValue($startTimeTime);
+        $this->ctx->assertFindIn($popinDowntime, 'named', array('id_or_name', 'start_time'))->setValue($startTimeTime);
 
         /* Configure the "End Time" line */
 
         // Configure first field of "Start Time" line, format : 05/19/2017
-        $this->ctx->assertFindIn($popinDowntime, 'named', array('name', 'end'))->setValue($endTimeDate);
+        $this->ctx->assertFindIn($popinDowntime, 'named', array('id_or_name', 'end'))->setValue($endTimeDate);
 
         // Configure second field of "Start Time" line, format : 21:37
-        $this->ctx->assertFindIn($popinDowntime, 'named', array('name', 'end_time'))->setValue($end_time_time);
+        $this->ctx->assertFindIn($popinDowntime, 'named', array('id_or_name', 'end_time'))->setValue($end_time_time);
 
         $durationFixedCheckbox = $this->ctx->assertFindIn($popinDowntime, 'named', array('id', 'fixed'));
 
@@ -365,7 +365,7 @@ class MonitoringServicesPage
         }
 
         // Configure text in mandatory field "Comment"
-        $this->ctx->assertFindIn($popinDowntime, 'named', array('name', 'comment'))->setValue($comment);
+        $this->ctx->assertFindIn($popinDowntime, 'named', array('id_or_name', 'comment'))->setValue($comment);
 
         // Submit pop-in form with submit button "Set downtime"
         $this->assertFindButtonIn($popinDowntime, 'Set downtime')->click();

@@ -40,7 +40,7 @@ class ServiceConfigurationPage
     {
       $this->context->visit('main.php?p=60201&o=a');
       $this->context->selectToSelectTwo('select#service_hPars', $host_name);
-      $this->context->assertFind('named', array('name', 'service_description'))->setValue($service_description);
+      $this->context->assertFind('named', array('id_or_name', 'service_description'))->setValue($service_description);
       $this->context->selectToSelectTwo('select#service_template_model_stm_id', $template);
     }
 
@@ -49,6 +49,6 @@ class ServiceConfigurationPage
      */
     public function saveService()
     {
-      $this->context->assertFind('named', array('name', 'submitA'))->click();
+      $this->context->assertFind('named', array('id_or_name', 'submitA'))->click();
     }
 }
