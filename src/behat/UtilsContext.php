@@ -305,7 +305,7 @@ class UtilsContext extends RawMinkContext
       }
 
       if (empty($msg)) {
-         throw new \Exception("Radio button with label {$labelText} not found in pattern {$pattern}");
+         throw new \Exception("Radio button with label {$labelText} not found");
       } else {
          throw new \Exception($msg);
       }
