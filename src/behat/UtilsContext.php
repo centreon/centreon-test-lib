@@ -326,7 +326,7 @@ class UtilsContext extends RawMinkContext
 
        $group = $page->findAll($type, $pattern);
        foreach ($group as $button) {
-         if ($value === $button->getAttribute('input')) {
+         if ($value === $button->getAttribute('value')) {
              // Select the radio button
              $button->click();
              return;
