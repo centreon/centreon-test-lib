@@ -78,7 +78,13 @@ class HostTemplateEditPage
      */
     public function save()
     {
-        $this->context->assertFindButton('submitC')->click();
+        $button = $this->context->getSession()->getPage()->findButton('submitA');
+        if (isset($button)) {
+            $button->click();
+        }
+        else {
+            $this->context->assertFindButton('submitC')->click();
+        }
     }
 }
 
