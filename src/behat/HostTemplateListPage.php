@@ -42,7 +42,7 @@ class HostTemplateListPage
      */
     public function editTemplate($name)
     {
-        $this->assertFindLink($name)->click();
+        $this->context->assertFindLink($name)->click();
         return new HostTemplateEditPage($this->context, FALSE);
     }
 
