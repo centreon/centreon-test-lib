@@ -54,11 +54,10 @@ class HostTemplateListPage
     public function getTemplate($name)
     {
         $templates = $this->getTemplates();
-        $tmpl = array_search($name, $templates);
-        if ($tmpl == FALSE) {
+        if (!array_key_exists($name, $templates)) {
             throw new \Exception('Cannot find host template "' . $name . '".');
         }
-        return $tmpl;
+        return $templates[$name];
     }
 
     /**
