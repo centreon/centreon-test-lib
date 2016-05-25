@@ -78,7 +78,7 @@ class HostTemplateEditPage
      */
     public function save()
     {
-        $this->assertFindButton('submitC')->click();
+        $this->context->assertFindButton('submitC')->click();
     }
 }
 
