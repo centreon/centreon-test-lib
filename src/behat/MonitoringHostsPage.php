@@ -348,11 +348,25 @@ class MonitoringHostsPage
         }
 
         // Submit pop-in form with submit button "Set downtime"
-        $this->assertFindButtonIn($popinDowntime, 'Set downtime')->click();
+        $this->ctx->assertFindButtonIn($popinDowntime, 'Set downtime')->click();
 
         // Page is refresh (by submit), need to wait
         $this->waitForHostListPage();
 
+    }
+    
+    /**
+      * Get the status of a host
+      *
+      * @param string hostName Host name to select
+      */
+    public function getStatus($hostName)
+    {
+        // Prepare (filter by hostname)
+        $this->doActionOn($hostName);
+        
+        // Find the status.
+        return ($this->ctx->assertFind('css', '.badge')->getText());
     }
     
 }

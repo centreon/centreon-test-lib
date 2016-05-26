@@ -375,4 +375,18 @@ class MonitoringServicesPage
 
     }
     
+    /**
+      * Get the status of a service
+      *
+      * @param string hostName Host name to select
+     *  @param string serviceDescription Service description to select
+      */
+    public function getStatus($hostName, $serviceDescription)
+    {
+        // Prepare (filter by hostname)
+        $this->doActionOn($hostName, $serviceDescription);
+        
+        // Find the status.
+        return ($this->ctx->assertFind('css', '.badge')->getText());
+    }
 }
