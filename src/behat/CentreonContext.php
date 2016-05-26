@@ -209,7 +209,7 @@ class CentreonContext extends UtilsContext
       $this->visit('/main.php?p=20202&o=hpc&cmd=16&host_name=' . $hostname);
 
       // Configure the "Check result" dropdown field
-      $this->selectFieldOption('return_code', $checkResult);
+      $this->getSession()->getPage()->selectFieldOption('return_code', $checkResult);
 
       // Configure the "Check output" field
       if (! empty($checkOutput)) {
@@ -242,10 +242,10 @@ class CentreonContext extends UtilsContext
       $this->visit('/main.php?p=20201&o=svcpc&cmd=16&host_name=' . $hostname . '&service_description=' . $serviceDescription);
 
       // Configure the "Service" dropdown field
-      $this->selectFieldOption('service_description', $serviceDescription);
+      $this->getSession()->getPage()->selectFieldOption('service_description', $serviceDescription);
 
       // Configure the "Check result" dropdown field
-      $this->selectFieldOption('return_code', $checkResult);
+      $this->getSession()->getPage()->selectFieldOption('return_code', $checkResult);
 
       // Configure the "Check output" field
       if (! empty($checkOutput)) {
