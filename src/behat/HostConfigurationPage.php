@@ -41,6 +41,7 @@ class HostConfigurationPage
       $this->context->assertFind('named', array('id_or_name', 'host_name'))->setValue($host_name);
       $this->context->assertFind('named', array('id_or_name', 'host_alias'))->setValue($host_name);
       $this->context->assertFind('named', array('id_or_name', 'host_address'))->setValue($ip);
+      $this->context->assertFind('named', array('id_or_name', 'host_max_check_attempts'))->setValue('0');
     }
 
     /**
