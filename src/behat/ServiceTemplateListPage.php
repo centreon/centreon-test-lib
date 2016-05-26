@@ -36,6 +36,17 @@ class ServiceTemplateListPage
     }
 
     /**
+     *  Edit a template.
+     *
+     *  @param $name  Service template name.
+     */
+    public function editTemplate($name)
+    {
+        $this->context->assertFindLink($name)->click();
+        return new ServiceTemplateEditPage($this->context, FALSE);
+    }
+
+    /**
      *  Get template properties.
      *
      *  @param $name  Service template name.
@@ -43,8 +54,7 @@ class ServiceTemplateListPage
     public function getTemplate($name)
     {
         $templates = $this->getTemplates();
-        $tmpl = array_search($name, $templates);
-        if ($tmpl == FALSE) {
+        if (!array_key_exists($name, $templates)) {
             throw new \Exception('Cannot find service template "' . $name . '".');
         }
         return $tmpl;
