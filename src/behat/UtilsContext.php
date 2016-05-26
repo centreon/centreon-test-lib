@@ -295,6 +295,7 @@ class UtilsContext extends RawMinkContext
        $group = $page->find($type, $pattern);
 
        foreach ($group->findAll('css', 'label') as $label) {
+          exec("echo '" . $label->getText() . "' 1>&2");
           if ($labelText === $label->getText()) {
              $radioButton = $page->find('css', '#'.$label->getAttribute('for'));
 
@@ -305,7 +306,36 @@ class UtilsContext extends RawMinkContext
       }
 
       if (empty($msg)) {
-         throw new \Exception("Radio button with label {$labelText} not found in pattern {$pattern}");
+         throw new \Exception("Radio button with label {$labelText} not found");
+      } else {
+         throw new \Exception($msg);
+      }
+   }
+   
+       /**
+     * Check a radio button on current page, if the radio button is not found throw an exception
+     *
+     * @param $value The value of the radio button to search.
+     * @param string $type The type for find.
+     * @param string $pattern The pattern for find.
+     * @param string $msg The exception message. If empty, use a default message.
+     * @return empty
+     */
+    public function checkRadioButtonByValue($value, $type, $pattern, $msg = '') {
+       $page = $this->getSession()->getPage();
+
+       $group = $page->findAll($type, $pattern);
+       foreach ($group as $button) {
+         if ($value === $button->getAttribute('value')) {
+             // Select the radio button
+             $button->click();
+             return;
+          }
+
+       }
+
+      if (empty($msg)) {
+         throw new \Exception("Radio button with value {$value} not found");
       } else {
          throw new \Exception($msg);
       }

@@ -38,9 +38,10 @@ class HostConfigurationPage
     public function toHostCreationPage($host_name, $ip = '127.0.0.1')
     {
       $this->context->visit('main.php?p=60101&o=a');
-      $this->context->assertFind('named', array('name', 'host_name'))->setValue($host_name);
-      $this->context->assertFind('named', array('name', 'host_alias'))->setValue($host_name);
-      $this->context->assertFind('named', array('name', 'host_address'))->setValue($ip);
+      $this->context->assertFind('named', array('id_or_name', 'host_name'))->setValue($host_name);
+      $this->context->assertFind('named', array('id_or_name', 'host_alias'))->setValue($host_name);
+      $this->context->assertFind('named', array('id_or_name', 'host_address'))->setValue($ip);
+      $this->context->assertFind('named', array('id_or_name', 'host_max_check_attempts'))->setValue('0');
     }
 
     /**
@@ -48,13 +49,13 @@ class HostConfigurationPage
      */
     public function saveHost()
     {
-      $this->context->assertFind('named', array('name', 'submitA'))->click();
+      $this->context->assertFind('named', array('id_or_name', 'submitA'))->click();
     }
 
     /**
      *  Switch to a (other) tab
      */
-    public function switchToTab(string $tabName, string $idOrNameInTab = '')
+    public function switchToTab($tabName, $idOrNameInTab = '')
     {
       // Search the tab from the name of the tab
       $tabLink = $this->context->assertFind('named', array('link', $tabName));
@@ -64,7 +65,7 @@ class HostConfigurationPage
 
       // Wait tab load
       if ($idOrNameInTab == '') {
-        $context->getSession()->wait(5000, '');
+        $this->context->getSession()->wait(5000, '');
         return true;
       }
 

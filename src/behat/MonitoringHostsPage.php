@@ -136,7 +136,7 @@ class MonitoringHostsPage
         $this->setPageLimitTo("100");
 
         // Check the line about the host (hostname) -> check all for check the only line
-        $this->ctx->assertFind('named', array('name', 'checkall'))->check();
+        $this->ctx->assertFind('named', array('id_or_name', 'checkall'))->check();
 
         // Select the action (by action label)
         $page->selectFieldOption('o1', $action_label);
@@ -155,7 +155,7 @@ class MonitoringHostsPage
       * @param bool doAckServicesAttached Check the checkbox "Acknowledge services attached to hosts"
       * @param bool doForceCheck Check the checkbox "Force active checks"
       */
-    public function addAcknowledgementOnHost($hostname, string $comment, bool $isSticky, bool $doNotify, bool $isPersistent, bool $doAckServicesAttached, bool $doForceCheck)
+    public function addAcknowledgementOnHost($hostname, $comment, $isSticky, $doNotify, $isPersistent, $doAckServicesAttached, $doForceCheck)
     {
         // Check the mandatory value "Comment"
         if (empty($comment)) {
@@ -289,7 +289,7 @@ class MonitoringHostsPage
       * @param string comment Comment to associate on the downtime
       * @param bool setDowntimesOnServicesAttached
       */
-    public function addDowntimeOnHost($hostname, bool $isDurationFixed, $startTimeDate, $startTimeTime, $endTimeDate, $end_time_time, $duration, $duration_scale, $comment, bool $setDowntimesOnServicesAttached)
+    public function addDowntimeOnHost($hostname, $isDurationFixed, $startTimeDate, $startTimeTime, $endTimeDate, $end_time_time, $duration, $duration_scale, $comment, $setDowntimesOnServicesAttached)
     {
 
         // Prepare the downtime of the host
@@ -306,18 +306,18 @@ class MonitoringHostsPage
         /* Configure "Start Time" line */
       
         // Configure first field of "Start Time" line, format : 05/19/2016
-        $this->ctx->assertFindIn($popinDowntime, 'named', array('name', 'start'))->setValue($startTimeDate);
+        $this->ctx->assertFindIn($popinDowntime, 'named', array('id_or_name', 'start'))->setValue($startTimeDate);
 
         // Configure second field of "Start Time" line, format : 10:37
-        $this->ctx->assertFindIn($popinDowntime, 'named', array('name', 'start_time'))->setValue($startTimeTime);
+        $this->ctx->assertFindIn($popinDowntime, 'named', array('id_or_name', 'start_time'))->setValue($startTimeTime);
 
         /* Configure the "End Time" line */
 
         // Configure first field of "Start Time" line, format : 05/19/2017
-        $this->ctx->assertFindIn($popinDowntime, 'named', array('name', 'end'))->setValue($endTimeDate);
+        $this->ctx->assertFindIn($popinDowntime, 'named', array('id_or_name', 'end'))->setValue($endTimeDate);
 
         // Configure second field of "Start Time" line, format : 21:37
-        $this->ctx->assertFindIn($popinDowntime, 'named', array('name', 'end_time'))->setValue($end_time_time);
+        $this->ctx->assertFindIn($popinDowntime, 'named', array('id_or_name', 'end_time'))->setValue($end_time_time);
 
         $durationFixedCheckbox = $this->ctx->assertFindIn($popinDowntime, 'named', array('id', 'fixed'));
 
@@ -336,7 +336,7 @@ class MonitoringHostsPage
         }
 
         // Configure text in mandatory field "Comment"
-        $this->ctx->assertFindIn($popinDowntime, 'named', array('name', 'comment'))->setValue($comment);
+        $this->ctx->assertFindIn($popinDowntime, 'named', array('id_or_name', 'comment'))->setValue($comment);
 
         // Configure "Set downtimes on services attached to hosts"
         $downtimesOnServicesAttachedCheckbox = $this->ctx->assertFindIn($popinDowntime, 'named', array('id', 'downtimehostservice'));
@@ -348,11 +348,25 @@ class MonitoringHostsPage
         }
 
         // Submit pop-in form with submit button "Set downtime"
-        $this->assertFindButtonIn($popinDowntime, 'Set downtime')->click();
+        $this->ctx->assertFindButtonIn($popinDowntime, 'Set downtime')->click();
 
         // Page is refresh (by submit), need to wait
         $this->waitForHostListPage();
 
+    }
+    
+    /**
+      * Get the status of a host
+      *
+      * @param string hostName Host name to select
+      */
+    public function getStatus($hostName)
+    {
+        // Prepare (filter by hostname)
+        $this->doActionOn($hostName);
+        
+        // Find the status.
+        return ($this->ctx->assertFind('css', '.badge')->getText());
     }
     
 }
