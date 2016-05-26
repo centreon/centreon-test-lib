@@ -57,7 +57,7 @@ class ServiceTemplateListPage
         if (!array_key_exists($name, $templates)) {
             throw new \Exception('Cannot find service template "' . $name . '".');
         }
-        return $tmpl;
+        return $templates[$name];
     }
 
     /**
