@@ -36,6 +36,17 @@ class HostTemplateListPage
     }
 
     /**
+     *  Edit a template.
+     *
+     *  @param $name  Host template name.
+     */
+    public function editTemplate($name)
+    {
+        $this->context->assertFindLink($name)->click();
+        return new HostTemplateEditPage($this->context, FALSE);
+    }
+
+    /**
      *  Get template properties.
      *
      *  @param $name  Host template name.
@@ -43,11 +54,10 @@ class HostTemplateListPage
     public function getTemplate($name)
     {
         $templates = $this->getTemplates();
-        $tmpl = array_search($name, $templates);
-        if ($tmpl == FALSE) {
+        if (!array_key_exists($name, $templates)) {
             throw new \Exception('Cannot find host template "' . $name . '".');
         }
-        return $tmpl;
+        return $templates[$name];
     }
 
     /**
@@ -59,11 +69,11 @@ class HostTemplateListPage
         $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
         foreach ($elements as $element) {
             $entry = array();
-            $entry['name'] = $this->context->assertFindIn($element, 'css', '.ListColLeft')->getText();
-            $entry['description'] = $this->context->assertFindIn($element, 'css', '.ListColLeft.resizeTitle')->getText();
-            $entry['linked_services'] = $this->context->assertFindIn($element, 'css', '.ListColCenter')->getText();
-            $entry['parents'] = $this->context->assertFindIn($element, 'css', '.ListColCenter.resizeTitle')->getText();
-            $entry['locked'] = (null === $element->find('css', 'input'));
+            $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
+            $entry['description'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
+            $entry['linked_services'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(4)')->getText();
+            $entry['parents'] = explode(' ', $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText());
+            $entry['locked'] = (null === $element->find('css', 'input:nth-child(2)'));
             $entries[$entry['name']] = $entry;
         }
         return $entries;
