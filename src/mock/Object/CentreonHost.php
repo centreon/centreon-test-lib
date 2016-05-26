@@ -16,19 +16,19 @@
  */
 namespace Centreon\Test\Mock\Object;
 
-class CentreonService extends BaseObject
+class CentreonHost extends BaseObject
 {
-    public function getServiceTemplateId($service_description)
+    public function getHostId($host_name)
     {
         return $this->getIncrementedId();
     }
     
-    public function update($serviceId, $serviceProperties)
+    public function update($hostId, $hostProperties)
     {
         
     }
     
-    public function insert($serviceProperties)
+    public function insert($hostProperties)
     {
         return $this->getIncrementedId();
     }
