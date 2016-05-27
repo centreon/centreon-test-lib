@@ -47,7 +47,7 @@ class CommandListPage
         $filterField->setValue(trim($commandName));
 
         // Apply filter
-        $this->ctx->assertFindButton('Tmainpage', 'Button Search not found')->click();
+        $this->context->assertFindButton('Tmainpage', 'Button Search not found')->click();
     }
 
     /**

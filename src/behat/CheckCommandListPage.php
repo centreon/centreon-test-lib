@@ -26,6 +26,8 @@ class CheckCommandListPage extends CommandListPage
      */
     public function __construct($context, $visit = TRUE)
     {
+        parent::__construct($context, FALSE);
+        
         $this->context = $context;
 
         if ($visit) {
