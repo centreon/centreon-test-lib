@@ -18,16 +18,21 @@ namespace Centreon\Test\Behat;
 
 class CommandListPage
 {
-    protected $ctx;
+    protected $context;
 
     /**
-     * Constructor
+     *  Command list page.
      *
-     * @param array $context A CentreonContext
+     *  @param $context  Centreon context object.
+     *  @param $visit    True to navigate to the default command list page.
      */
-    public function __construct($context)
+    public function __construct($context, $visit = TRUE)
     {
-        $this->ctx = $context;
+        $this->context = $context;
+
+        if ($visit) {
+            $this->context->visit('main.php?p=608');
+        }
     }
 
     /**
@@ -37,10 +42,12 @@ class CommandListPage
      */
     public function setFilterByCommand($commandName)
     {
-        $this->ctx->assertFind('named', array('id_or_name', 'searchC'))->setValue(trim($commandName));
+        // Set filter
+        $filterField = $this->context->assertFind('named', array('id_or_name', 'searchC'));
+        $filterField->setValue(trim($commandName));
 
-        $mainpage = $this->ctx->assertFind('named', array('id', 'Tmainpage'));
-        $this->ctx->assertFindButton($mainpage, 'Search')->click();
+        // Apply filter
+        $this->context->assertFindButton('Search', 'Button Search not found')->click();
     }
 
     /**
@@ -50,7 +57,7 @@ class CommandListPage
      */
     public function setPageLimitTo($limit)
     {
-        $page = $this->ctx->getSession()->getPage();
+        $page = $this->context->getSession()->getPage();
 
         $toolbar_pagelimit = $page->find('css', '.Toolbar_pagelimit');
         $toolbar_pagelimit->selectFieldOption('l', $limit);
@@ -61,39 +68,48 @@ class CommandListPage
      */
     public function waitForCommandListPage()
     {
-        $this->ctx->spin(function ($context) {
+        $this->context->spin(function ($context) {
             return $context->getSession()->getPage()->has('named', array('id_or_name', 'searchC'));
         });
     }
 
-    public function listCommands()
+    /**
+     *  Get the list of command.
+     */
+    public function getCommands()
     {
-        // Go to : Configuration > Commands > Checks
-        $this->ctx->visit('main.php?p=608');
-        $this->waitForCommandListPage();
+        $entries = array();
+
+        $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
+
+        foreach ($elements as $element) {
+            $entry = array();
+            $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
+            /*
+            $entry['command_line'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
+            $entry['type'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(4)')->getText();
+            $entry['parents'] = explode(' ', $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText());
+            $entry['host_uses'] = (null === $element->find('css', 'input:nth-child(2)'));
+            $entry['options'] = (null === $element->find('css', 'input:nth-child(2)'));
+            */
+
+            $entries[$entry['name']] = $entry;
+        }
+        return $entries;
     }
 
     /**
-     * Check if the command is in commands list or not
+     *  Get command properties.
      *
-     * @param string commandName Command name to check.
-     * @return bool
+     *  @param $name  Command name.
      */
-    public function isCommandExist($commandName)
+    public function getCommand($name)
     {
-
-        $this->listCommands();
-        //$this->setPageLimitTo(100);
-        $this->setFilterByCommand($commandName);
-
-        $page = $this->ctx->getSession()->getPage();
-
-        $linesWithCommandName = $page->findAll('xpath', "//*[@class='ListTable']/tr/td[2]/a[text()='".$commandName."']/../..");
-
-        if (count($linesWithCommandName)) {
-            return true;
+        $templates = $this->getCommands();
+        if (!array_key_exists($name, $templates)) {
+            throw new \Exception('Cannot find command "' . $name . '".');
         }
-        return false;
+        return $templates[$name];
     }
 
 }

@@ -37,7 +37,7 @@ class CentreonDB
     public function query($query)
     {
         if (!isset($this->queries[$query])) {
-            throw new OutOfRangeException('Query is not set.' . "\nQuery : " . $query);
+            throw new \Exception('Query is not set.' . "\nQuery : " . $query);
         }
         $this->queries[$query]->resetResultSet();
         return $this->queries[$query];
