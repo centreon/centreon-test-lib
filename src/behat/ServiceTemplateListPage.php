@@ -69,12 +69,12 @@ class ServiceTemplateListPage
         $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
         foreach ($elements as $element) {
             $entry = array();
-            $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
-            $entry['alis'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
+            $entry['description'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
+            $entry['alias'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
             $entry['parents'] = explode(' ', $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText());
             $entry['status'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(6)')->getText();
             $entry['locked'] = (null === $element->find('css', 'input:nth-child(2)'));
-            $entries[$entry['name']] = $entry;
+            $entries[$entry['description']] = $entry;
         }
         return $entries;
     }
