@@ -84,14 +84,8 @@ class CommandListPage
 
         foreach ($elements as $element) {
             $entry = array();
-            $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
-            /*
-            $entry['command_line'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
-            $entry['type'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(4)')->getText();
-            $entry['parents'] = explode(' ', $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText());
-            $entry['host_uses'] = (null === $element->find('css', 'input:nth-child(2)'));
-            $entry['options'] = (null === $element->find('css', 'input:nth-child(2)'));
-            */
+            $entry['name']          = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
+            $entry['command_line']  = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
 
             $entries[$entry['name']] = $entry;
         }
