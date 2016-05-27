@@ -18,16 +18,21 @@ namespace Centreon\Test\Behat;
 
 class CommandListPage
 {
-    protected $ctx;
+    protected $context;
 
     /**
-     * Constructor
+     *  Command list page.
      *
-     * @param array $context A CentreonContext
+     *  @param $context  Centreon context object.
+     *  @param $visit    True to navigate to the default command list page.
      */
-    public function __construct($context)
+    public function __construct($context, $visit = TRUE)
     {
-        $this->ctx = $context;
+        $this->context = $context;
+
+        if ($visit) {
+            $this->context->visit('main.php?p=608');
+        }
     }
 
     /**
@@ -37,10 +42,12 @@ class CommandListPage
      */
     public function setFilterByCommand($commandName)
     {
-        $this->ctx->assertFind('named', array('id_or_name', 'searchC'))->setValue(trim($commandName));
+        // Set filter
+        $filterField = $this->context->assertFind('named', array('id_or_name', 'searchC'));
+        $filterField->setValue(trim($commandName));
 
-        $mainpage = $this->ctx->assertFind('named', array('id', 'Tmainpage'));
-        $this->ctx->assertFindButton($mainpage, 'Search')->click();
+        // Apply filter
+        $this->ctx->assertFindButton('Tmainpage', 'Button Search not found')->click();
     }
 
     /**
@@ -50,7 +57,7 @@ class CommandListPage
      */
     public function setPageLimitTo($limit)
     {
-        $page = $this->ctx->getSession()->getPage();
+        $page = $this->context->getSession()->getPage();
 
         $toolbar_pagelimit = $page->find('css', '.Toolbar_pagelimit');
         $toolbar_pagelimit->selectFieldOption('l', $limit);
@@ -61,16 +68,9 @@ class CommandListPage
      */
     public function waitForCommandListPage()
     {
-        $this->ctx->spin(function ($context) {
+        $this->context->spin(function ($context) {
             return $context->getSession()->getPage()->has('named', array('id_or_name', 'searchC'));
         });
-    }
-
-    public function listCommands()
-    {
-        // Go to : Configuration > Commands > Checks
-        $this->ctx->visit('main.php?p=608');
-        $this->waitForCommandListPage();
     }
 
     /**
@@ -82,17 +82,19 @@ class CommandListPage
     public function isCommandExist($commandName)
     {
 
-        $this->listCommands();
-        //$this->setPageLimitTo(100);
+        $this->waitForCommandListPage();
+        $this->setPageLimitTo(100);
         $this->setFilterByCommand($commandName);
+        
+        $XPath = "//*[@class='ListTable']/tr/td[2]/a[text()='".addslashes($commandName)."']/../..";
 
-        $page = $this->ctx->getSession()->getPage();
-
-        $linesWithCommandName = $page->findAll('xpath', "//*[@class='ListTable']/tr/td[2]/a[text()='".$commandName."']/../..");
+        $page = $this->context->getSession()->getPage();
+        $linesWithCommandName = $page->findAll('xpath', $XPath);
 
         if (count($linesWithCommandName)) {
             return true;
         }
+
         return false;
     }
 
