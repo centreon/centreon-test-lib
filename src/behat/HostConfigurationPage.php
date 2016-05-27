@@ -38,10 +38,10 @@ class HostConfigurationPage
     public function toHostCreationPage($host_name, $ip = '127.0.0.1')
     {
       $this->context->visit('main.php?p=60101&o=a');
-      $this->context->assertFind('named', array('id_or_name', 'host_name'))->setValue($host_name);
+      $this->context->assertFind('css', 'input[name=host_name]')->setValue($host_name);
       $this->context->assertFind('named', array('id_or_name', 'host_alias'))->setValue($host_name);
       $this->context->assertFind('named', array('id_or_name', 'host_address'))->setValue($ip);
-      $this->context->assertFind('named', array('id_or_name', 'host_max_check_attempts'))->setValue('0');
+      $this->context->assertFind('named', array('id_or_name', 'host_max_check_attempts'))->setValue('1');
     }
 
     /**

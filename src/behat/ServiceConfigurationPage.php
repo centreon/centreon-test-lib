@@ -40,7 +40,7 @@ class ServiceConfigurationPage
     {
       $this->context->visit('main.php?p=60201&o=a');
       $this->context->selectToSelectTwo('select#service_hPars', $host_name);
-      $this->context->assertFind('named', array('id_or_name', 'service_description'))->setValue($service_description);
+      $this->context->assertFind('css', 'input[name=service_description]')->setValue($service_description);
       $this->context->selectToSelectTwo('select#service_template_model_stm_id', $template);
       $this->context->selectToSelectTwo('select#command_command_id', 'check_centreon_dummy');
       $this->context->assertFind('named', array('id_or_name', 'service_max_check_attempts'))->setValue('1');

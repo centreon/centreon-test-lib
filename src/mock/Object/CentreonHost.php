@@ -32,4 +32,9 @@ class CentreonHost extends BaseObject
     {
         return $this->getIncrementedId();
     }
+
+    public function insertMacro($hostId, $macroInput, $macroValue, $macroPassword, $macroDescription)
+    {
+
+    }
 }
