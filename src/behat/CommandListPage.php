@@ -47,7 +47,7 @@ class CommandListPage
         $filterField->setValue(trim($commandName));
 
         // Apply filter
-        $this->context->assertFindButton('Tmainpage', 'Button Search not found')->click();
+        $this->context->assertFindButton('Search', 'Button Search not found')->click();
     }
 
     /**
@@ -74,28 +74,42 @@ class CommandListPage
     }
 
     /**
-     * Check if the command is in commands list or not
-     *
-     * @param string commandName Command name to check.
-     * @return bool
+     *  Get the list of command.
      */
-    public function isCommandExist($commandName)
+    public function getCommands()
     {
+        $entries = array();
 
-        $this->waitForCommandListPage();
-        $this->setPageLimitTo(100);
-        $this->setFilterByCommand($commandName);
-        
-        $XPath = "//*[@class='ListTable']/tr/td[2]/a[text()='".addslashes($commandName)."']/../..";
+        $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
 
-        $page = $this->context->getSession()->getPage();
-        $linesWithCommandName = $page->findAll('xpath', $XPath);
+        foreach ($elements as $element) {
+            $entry = array();
+            $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
+            /*
+            $entry['command_line'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
+            $entry['type'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(4)')->getText();
+            $entry['parents'] = explode(' ', $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText());
+            $entry['host_uses'] = (null === $element->find('css', 'input:nth-child(2)'));
+            $entry['options'] = (null === $element->find('css', 'input:nth-child(2)'));
+            */
 
-        if (count($linesWithCommandName)) {
-            return true;
+            $entries[$entry['name']] = $entry;
         }
+        return $entries;
+    }
 
-        return false;
+    /**
+     *  Get command properties.
+     *
+     *  @param $name  Command name.
+     */
+    public function getCommand($name)
+    {
+        $templates = $this->getCommands();
+        if (!array_key_exists($name, $templates)) {
+            throw new \Exception('Cannot find command "' . $name . '".');
+        }
+        return $templates[$name];
     }
 
 }

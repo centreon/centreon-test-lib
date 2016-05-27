@@ -16,6 +16,8 @@
  */
 namespace Centreon\Test\Behat;
 
+use Centreon\Test\Behat\CheckCommandEditPage;
+
 class CheckCommandListPage extends CommandListPage
 {
     /**
@@ -27,11 +29,20 @@ class CheckCommandListPage extends CommandListPage
     public function __construct($context, $visit = TRUE)
     {
         parent::__construct($context, FALSE);
-        
-        $this->context = $context;
 
         if ($visit) {
             $this->context->visit('main.php?p=60801&type=2');
         }
+    }
+
+    /**
+     *  Edit a command.
+     *
+     *  @param $name  Check command name.
+     */
+    public function editCommand($name)
+    {
+        $this->context->assertFindLink($name)->click();
+        return new CheckCommandEditPage($this->context, FALSE);
     }
 }
