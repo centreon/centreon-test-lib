@@ -79,30 +79,29 @@ class MonitoringServicesPage
       *
       * @param string hostname Hostname to check.
       * @param string servicename Service to check.
-      * @return bool 
+      * @return bool
       */
     public function isServiceAcknowledged($hostname, $servicename)
     {
-        // Prepare (filter by hostname and service name)
-        $this->doActionOn($hostname, $servicename);
-
-        $page = $this->ctx->getSession()->getPage();
-        $table = $page->find('css', '.ListTable');
-
-        $linesWithACK = $table->findAll('xpath', "//img[contains(@name, 'popupForAck')]/../../..");
-
-        if (count($linesWithACK)) {
-            return true;
+        // As we cannot use the page because of incompatibilites between
+        // XSLT and PhantomJS, we will read the value directly in
+        // database.
+        $query = 'SELECT s.acknowledged AS acknowledged FROM services AS s LEFT JOIN hosts AS h ON s.host_id=h.host_id WHERE h.name=:hostname AND s.description=:description';
+        $stmt = $this->ctx->getStorageDatabase()->prepare($query);
+        $stmt->execute(array(':hostname' => $hostname, ':description' => $servicename));
+        $res = $stmt->fetch();
+        if ($res === FALSE) {
+            throw new \Exception('Cannot find service ' . $servicename . ' of host ' . $hostname . ' in database.');
         }
-        return false;
+        return $res['acknowledged'];
     }
 
     /**
       * Check if the service is in downtime or not
-      * 
+      *
       * @param string hostname Hostname to check.
       * @param string servicename Service to check.
-      * @return bool 
+      * @return bool
       */
     public function isServiceInDowntime($hostname, $servicename)
     {
@@ -190,63 +189,18 @@ class MonitoringServicesPage
       */
     public function addAcknowledgementOnService($hostname, $service, $comment, $isSticky, $doNotify, $isPersistent, $doForceCheck)
     {
-        // Check the mandatory value "Comment"
-        if (empty($comment)) {
-            throw new \Exception("Comment is a mandatory field, need to be not empty.");
-        }
-
-        $this->doActionOn($hostname, $service, 'Services : Acknowledge');
-
-        // When I have a pop-in "Set downtimes"
-        $this->ctx->spin(function($context) {
-            return $context->getSession()->getPage()->has('named', array('id_or_name', 'popupDowntime'));
-        });
-
-        // Search in pop-in "Acknowledge problems"
-        $popinACK = $this->ctx->assertFind('named', array('id', 'popupAcknowledgement'));
-
-        // Configure the checkbox "Sticky" field
-        $stickyCheckbox = $this->ctx->assertFindIn($popinACK, 'named', array('id', 'sticky'));
-
-        if ($isSticky) {
-            $stickyCheckbox->check();
-        } else {
-            $stickyCheckbox->uncheck();
-        }
-
-        // Configure the checkbox "Notify" field
-        $notifyCheckbox = $this->ctx->assertFindIn($popinACK, 'named', array('id', 'notify'));
-
-        if ($doNotify) {
-            $notifyCheckbox->check();
-        } else {
-            $notifyCheckbox->uncheck();
-        }
-
-        // Configure the checkbox "Persistent" field
-        $persistentCheckbox = $this->ctx->assertFindIn($popinACK, 'named', array('id', 'persistent'));
-
-        if ($isPersistent) {
-            $persistentCheckbox->check();
-        } else {
-            $persistentCheckbox->uncheck();
-        }
-
-        // Configure the (mandatory) field "Comment" textarea
-        $this->ctx->assertFindIn($popinACK, 'named', array('id', 'popupComment'))->setValue($comment);
-
-        // Configure the checkbox "Force active checks" field
-        $forceCheckCheckbox = $this->ctx->assertFindIn($popinACK, 'named', array('id', 'force_check'));
-
-        if ($doForceCheck) {
-            $forceCheckCheckbox->check();
-        } else {
-            $forceCheckCheckbox->uncheck();
-        }
-
-        // Submit pop-in form with submit button "Acknowledge selected problems"
-        $this->assertFindButtonIn($popinACK, 'Acknowledge selected problems')->click();
-
+        // The code below cannot work right now in the context of the
+        // hosts monitoring page as PhantomJS does not support XSLT.
+        // As a workaround will we use direct Ajax call to add the
+        // acknowledgement.
+        $this->ctx->visit(
+            'include/monitoring/external_cmd/cmdPopup.php?cmd=70&comment='
+            . $comment . '&sticky=' . ($isSticky ? 'true' : 'false')
+            . '&persistent=' . ($isPersistent ? 'true' : 'false')
+            . '&notify=' . $doNotify
+            . '&ackhostservice=0&force_check=' . ($doForceCheck ? 'true' : 'false')
+            . '&author=admin&select[' . $hostname . '%3B' . $service . ']=1');
+        $this->listServices();
     }
 
     /**
@@ -310,10 +264,10 @@ class MonitoringServicesPage
       * @param string hostname Host name to select
       * @param string servicename Service name to select
       * @param bool isDurationFixed The duration is fixed or not.
-      * @param string startTimeDate 
+      * @param string startTimeDate
       * @param string startTimeTime
-      * @param string endTimeDate 
-      * @param string end_time_time 
+      * @param string endTimeDate
+      * @param string end_time_time
       * @param string duration Desired duration.
       * @param string duration_scale Unit of the duration.
       * @param string comment Comment to associate on the downtime
@@ -321,7 +275,7 @@ class MonitoringServicesPage
     public function addDowntimeOnService($hostname, $servicename, $isDurationFixed, $startTimeDate, $startTimeTime, $endTimeDate, $end_time_time, $duration, $duration_scale, $comment)
     {
 
-        // Prepare the downtime of the service (of the hostname) 
+        // Prepare the downtime of the service (of the hostname)
         $this->doActionOn($hostname, $servicename, 'Services : Set Downtime');
 
         // When I have a pop-in "Set downtimes"
@@ -333,7 +287,7 @@ class MonitoringServicesPage
         $popinDowntime = $this->ctx->assertFind('named', array('id', 'popupDowntime'));
 
         /* Configure "Start Time" line */
-      
+
         // Configure first field of "Start Time" line, format : 05/19/2016
         $this->ctx->assertFindIn($popinDowntime, 'named', array('id_or_name', 'start'))->setValue($startTimeDate);
 
@@ -374,7 +328,7 @@ class MonitoringServicesPage
         $this->waitForServiceListPage();
 
     }
-    
+
     /**
       * Get the status of a service
       *
@@ -383,10 +337,29 @@ class MonitoringServicesPage
       */
     public function getStatus($hostName, $serviceDescription)
     {
-        // Prepare (filter by hostname)
-        $this->doActionOn($hostName, $serviceDescription);
-        
-        // Find the status.
-        return ($this->ctx->assertFind('css', '.badge')->getText());
+        // We cannot direct web-interface search right now (XSLT is not
+        // supported by PhantomJS). So we will look for the host status
+        // in database.
+        $query = 'SELECT s.state AS state FROM services AS s LEFT JOIN hosts AS h ON s.host_id=h.host_id WHERE h.name=:hostname AND s.description=:description';
+        $stmt = $this->ctx->getStorageDatabase()->prepare($query);
+        $stmt->execute(array(':hostname' => $hostName, ':description' => $serviceDescription));
+        $res = $stmt->fetch();
+        if ($res === FALSE) {
+            throw new \Exception('Cannot get status of service ' . $serviceDescription . ' of host ' . $hostName);
+        }
+        switch ($res['state']) {
+        case 0:
+            $status = 'OK';
+            break ;
+        case 1:
+            $status = 'WARNING';
+            break ;
+        case 2:
+            $status = 'CRITICAL';
+            break ;
+        default:
+            $status = 'UNKNOWN';
+        }
+        return $status;
     }
 }
