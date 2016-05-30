@@ -261,7 +261,7 @@ class UtilsContext extends RawMinkContext
           30
       );
 
-      $chosenResults = $this->getSession()->getPage()->findAll('css', '.select2-results li:not(.select2-results__option--highlighted)');
+      $chosenResults = $this->getSession()->getPage()->findAll('css', '.select2-results li');
       foreach ($chosenResults as $result) {
           if ($result->getText() == $what) {
               $result->click();
