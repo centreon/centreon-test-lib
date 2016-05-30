@@ -143,6 +143,26 @@ class CentreonContext extends UtilsContext
         return $returnCmd;
     }
 
+
+    /**
+     * Get Centreon database connection
+     *
+     * @return PDO The database connection
+     */
+    public function getCentreonDatabase()
+    {
+        if (!isset($this->db)) {
+            $dsn = 'mysql:dbname=centreon;host=127.0.0.1;port=' . $this->container->getPort(3306, 'web');
+            $this->db = new \PDO(
+                $dsn,
+                'root',
+                'centreon'
+            );
+            $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        }
+        return $this->db;
+    }
+
     /**
      *  Launch Centreon Web container and setup context.
      *
