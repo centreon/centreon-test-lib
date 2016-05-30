@@ -280,9 +280,6 @@ class CentreonContext extends UtilsContext
       // Page in : Monitoring > Status Details > Services
       $this->visit('/main.php?p=20201&o=svcpc&cmd=16&host_name=' . $hostname . '&service_description=' . $serviceDescription);
 
-      // Configure the "Service" dropdown field
-      $this->getSession()->getPage()->selectFieldOption('service_description', $serviceDescription);
-
       // Configure the "Check result" dropdown field
       $this->getSession()->getPage()->selectFieldOption('return_code', $checkResult);
 
