@@ -43,6 +43,7 @@ class ServiceConfigurationPage
       $this->context->assertFind('css', 'input[name=service_description]')->setValue($service_description);
       $this->context->selectToSelectTwo('select#service_template_model_stm_id', $template);
       $this->context->selectToSelectTwo('select#command_command_id', 'check_centreon_dummy');
+      $this->context->selectToSelectTwo('select#timeperiod_tp_id', '24x7');
       $this->context->assertFind('named', array('id_or_name', 'service_max_check_attempts'))->setValue('1');
       $this->context->assertFind('named', array('id_or_name', 'service_normal_check_interval'))->setValue('1');
       $this->context->assertFind('named', array('id_or_name', 'service_retry_check_interval'))->setValue('1');
@@ -54,5 +55,23 @@ class ServiceConfigurationPage
     public function saveService()
     {
       $this->context->assertFind('named', array('id_or_name', 'submitA'))->click();
+    }
+
+    /**
+     *  Switch to a (other) tab
+     */
+    public function switchToTab($tabName, $idOrNameInTab = '')
+    {
+      // Search the tab from the name of the tab
+      $tabLink = $this->context->assertFind('named', array('link', $tabName));
+
+      // Click on the tab for switch to the tab
+      $tabLink->click();
+
+      // Wait tab load
+      if ($idOrNameInTab == '') {
+        $this->context->getSession()->wait(5000, '');
+        return true;
+      }
     }
 }
