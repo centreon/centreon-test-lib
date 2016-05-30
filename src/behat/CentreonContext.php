@@ -151,16 +151,35 @@ class CentreonContext extends UtilsContext
      */
     public function getCentreonDatabase()
     {
-        if (!isset($this->db)) {
+        if (!isset($this->dbCentreon)) {
             $dsn = 'mysql:dbname=centreon;host=127.0.0.1;port=' . $this->container->getPort(3306, 'web');
-            $this->db = new \PDO(
+            $this->dbCentreon = new \PDO(
                 $dsn,
                 'root',
                 'centreon'
             );
-            $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $this->dbCentreon->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         }
-        return $this->db;
+        return $this->dbCentreon;
+    }
+
+    /**
+     *  Get Centreon Storage database connection.
+     *
+     *  @return PDO The database connection.
+     */
+    public function getStorageDatabase()
+    {
+        if (!isset($this->dbStorage)) {
+            $dsn = 'mysql:dbname=centreon_storage;host=127.0.0.1;port=' . $this->container->getPort(3306, 'web');
+            $this->dbStorage = new \PDO(
+                $dsn,
+                'root',
+                'centreon'
+            );
+            $this->dbStorage->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        }
+        return $this->dbStorage;
     }
 
     /**
