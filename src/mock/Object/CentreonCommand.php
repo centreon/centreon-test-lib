@@ -18,8 +18,13 @@ namespace Centreon\Test\Mock\Object;
 
 class CentreonCommand extends BaseObject
 {
-    public function getCommandIdByName($service_description)
+    public function getCommandIdByName($commandName)
     {
+        switch ($commandName) {
+            // A existant command, need for test update/insert command
+            case 'check_centreon_ping':
+                return NULL;
+        }
         return $this->getIncrementedId();
     }
 
