@@ -143,6 +143,45 @@ class CentreonContext extends UtilsContext
         return $returnCmd;
     }
 
+
+    /**
+     * Get Centreon database connection
+     *
+     * @return PDO The database connection
+     */
+    public function getCentreonDatabase()
+    {
+        if (!isset($this->dbCentreon)) {
+            $dsn = 'mysql:dbname=centreon;host=127.0.0.1;port=' . $this->container->getPort(3306, 'web');
+            $this->dbCentreon = new \PDO(
+                $dsn,
+                'root',
+                'centreon'
+            );
+            $this->dbCentreon->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        }
+        return $this->dbCentreon;
+    }
+
+    /**
+     *  Get Centreon Storage database connection.
+     *
+     *  @return PDO The database connection.
+     */
+    public function getStorageDatabase()
+    {
+        if (!isset($this->dbStorage)) {
+            $dsn = 'mysql:dbname=centreon_storage;host=127.0.0.1;port=' . $this->container->getPort(3306, 'web');
+            $this->dbStorage = new \PDO(
+                $dsn,
+                'root',
+                'centreon'
+            );
+            $this->dbStorage->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        }
+        return $this->dbStorage;
+    }
+
     /**
      *  Launch Centreon Web container and setup context.
      *
@@ -240,9 +279,6 @@ class CentreonContext extends UtilsContext
     {
       // Page in : Monitoring > Status Details > Services
       $this->visit('/main.php?p=20201&o=svcpc&cmd=16&host_name=' . $hostname . '&service_description=' . $serviceDescription);
-
-      // Configure the "Service" dropdown field
-      $this->getSession()->getPage()->selectFieldOption('service_description', $serviceDescription);
 
       // Configure the "Check result" dropdown field
       $this->getSession()->getPage()->selectFieldOption('return_code', $checkResult);
