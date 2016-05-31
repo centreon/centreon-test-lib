@@ -59,4 +59,13 @@ class CentreonDBResultSet
     {
         $this->pos = 0;
     }
+    
+    /**
+     * 
+     * @return int
+     */
+    public function numRows()
+    {
+        return count($this->resultset);
+    }
 }
