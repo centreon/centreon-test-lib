@@ -37,4 +37,9 @@ class CentreonService extends BaseObject
     {
 
     }
+
+    public function deleteServiceByDescription($service_description)
+    {
+        ;
+    }
 }

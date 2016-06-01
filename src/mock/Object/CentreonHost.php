@@ -37,4 +37,9 @@ class CentreonHost extends BaseObject
     {
 
     }
+
+    public function deleteHostByName($host_name)
+    {
+
+    }
 }

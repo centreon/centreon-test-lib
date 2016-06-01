@@ -37,4 +37,9 @@ class CentreonCommand extends BaseObject
     {
         ;
     }
+
+    public function deleteCommandByName($command_name)
+    {
+        ;
+    }
 }
