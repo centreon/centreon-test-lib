@@ -42,4 +42,9 @@ class CentreonHost extends BaseObject
     {
 
     }
+
+    public function setTemplates($hostId, $hostTemplates)
+    {
+
+    }
 }
