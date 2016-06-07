@@ -32,4 +32,14 @@ class CentreonService extends BaseObject
     {
         return $this->getIncrementedId();
     }
+
+    public function insertMacro($hostId, $macroInput, $macroValue, $macroPassword, $macroDescription)
+    {
+
+    }
+
+    public function deleteServiceByDescription($service_description)
+    {
+        ;
+    }
 }

@@ -45,6 +45,18 @@ class HostConfigurationPage
     }
 
     /**
+     *  Link host to host template.
+     */
+    public function linkHostTemplate($hostTemplateName)
+    {
+        $this->context->assertFind('named', array('id_or_name', 'template_add'))->click();
+        $this->context->spin(function($context) {
+            return $context->getSession()->getPage()->has('named', array('id_or_name', 'tpSelect_0'));
+        }, 5);
+        $this->context->getSession()->getPage()->selectFieldOption('tpSelect_0', $hostTemplateName);
+    }
+
+    /**
      *  Save a host from the host creation page.
      */
     public function saveHost()

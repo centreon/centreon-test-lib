@@ -37,4 +37,14 @@ class CentreonHost extends BaseObject
     {
 
     }
+
+    public function deleteHostByName($host_name)
+    {
+
+    }
+
+    public function setTemplates($hostId, $hostTemplates)
+    {
+
+    }
 }
