@@ -137,6 +137,23 @@ class Container
     }
 
     /**
+     *  Get the address or host name of the Docker server.
+     *
+     *  @return Address or host name of the Docker server.
+     */
+    public function getHost()
+    {
+        $docker = getenv('DOCKER_HOST');
+        if (!preg_match('@^(tcp://)?([^:]+)@', $docker, $matches)) {
+            $retval = '127.0.0.1';
+        }
+        else {
+            $retval = $matches[2];
+        }
+        return $retval;
+    }
+
+    /**
      *  Get the host port to which a container port is redirected.
      *
      *  @param $containerPort Container port.

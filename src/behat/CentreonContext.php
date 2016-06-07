@@ -152,7 +152,7 @@ class CentreonContext extends UtilsContext
     public function getCentreonDatabase()
     {
         if (!isset($this->dbCentreon)) {
-            $dsn = 'mysql:dbname=centreon;host=127.0.0.1;port=' . $this->container->getPort(3306, 'web');
+            $dsn = 'mysql:dbname=centreon;host=' . $this->container->getHost() . ';port=' . $this->container->getPort(3306, 'web');
             $this->dbCentreon = new \PDO(
                 $dsn,
                 'root',
@@ -171,7 +171,7 @@ class CentreonContext extends UtilsContext
     public function getStorageDatabase()
     {
         if (!isset($this->dbStorage)) {
-            $dsn = 'mysql:dbname=centreon_storage;host=127.0.0.1;port=' . $this->container->getPort(3306, 'web');
+            $dsn = 'mysql:dbname=centreon_storage;host=' . $this->container->getHost() . ';port=' . $this->container->getPort(3306, 'web');
             $this->dbStorage = new \PDO(
                 $dsn,
                 'root',
@@ -195,7 +195,7 @@ class CentreonContext extends UtilsContext
         }
         $this->container = new Container($composeFile);
         $this->setContainerWebDriver();
-        $url = 'http://127.0.0.1:' . $this->container->getPort(80, 'web') . '/centreon';
+        $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon';
         $this->container->waitForAvailableUrl($url);
         $this->setMinkParameter('base_url', 'http://web/centreon');
     }
@@ -205,7 +205,7 @@ class CentreonContext extends UtilsContext
      */
     public function setContainerWebDriver()
     {
-        $url = 'http://localhost:' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
+        $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
         $sessionName = $this->getMink()->getDefaultSessionName();
         $driver = new \Behat\Mink\Driver\Selenium2Driver('phantomjs', null, $url);
         $session = new \Behat\Mink\Session($driver);
