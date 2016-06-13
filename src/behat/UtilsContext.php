@@ -256,12 +256,12 @@ class UtilsContext extends RawMinkContext
 
       $this->spin(
           function ($context) {
-              return count($context->getSession()->getPage()->findAll('css', '.select2-container--open li.select2-results__option')) != 0;
+              return count($context->getSession()->getPage()->findAll('css', 'li.select2-results__option:not(.loading-results)')) != 0;
           },
           30
       );
 
-      $chosenResults = $this->getSession()->getPage()->findAll('css', '.select2-results li');
+      $chosenResults = $this->getSession()->getPage()->findAll('css', 'li.select2-results__option:not(.loading-results)');
       foreach ($chosenResults as $result) {
           if ($result->getText() == $what) {
               $result->click();
