@@ -64,4 +64,45 @@ class CentreonDB
     {
         $this->queries[$query] = new CentreonDBResultSet($result);
     }
+    
+    /**
+     * 
+     * @param string $query
+     * @return string
+     */
+    public function prepare($query)
+    {
+        return $query;
+    }
+
+    /**
+     * 
+     * @param mixed $queryObject
+     * @param array $values
+     * @return mixed
+     */
+    public function execute($queryObject, $values)
+    {
+        return $queryObject;
+    }
+
+    /**
+     * 
+     * @param type $enable
+     * @return type
+     */
+    public function autoCommit($enable)
+    {
+        return ;
+    }
+
+    /**
+     * 
+     * @return type
+     */
+    public function commit()
+    {
+        return;
+    }
+
 }
