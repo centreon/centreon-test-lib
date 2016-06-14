@@ -116,7 +116,7 @@ class HostTemplateEditPage
      */
     public function switchTab($tab)
     {
-        $this->context->assertFind('css', 'li#c' . $tab)->click();
+        $this->context->assertFind('css', 'li#c' . $tab . ' a')->click();
         $this->tab = $tab;
     }
 }
