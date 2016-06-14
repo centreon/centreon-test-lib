@@ -19,7 +19,15 @@ namespace Centreon\Test\Behat;
 
 class HostTemplateEditPage
 {
+    const UNKNOWN_TAB = 0;
+    const CONFIGURATION_TAB = 1;
+    const NOTIFICATION_TAB = 2;
+    const RELATIONS_TAB = 3;
+    const DATA_TAB = 4;
+    const EXTENDED_TAB = 5;
+
     private $context;
+    private $tab;
 
     /**
      *  Host template edit page.
@@ -32,6 +40,10 @@ class HostTemplateEditPage
         $this->context = $context;
         if ($visit) {
             $this->context->visit('main.php?p=60103&o=a');
+            $this->tab = self::CONFIGURATION_TAB;
+        }
+        else {
+            $this->tab = self::UNKNOWN_TAB;
         }
     }
 
@@ -56,6 +68,7 @@ class HostTemplateEditPage
      */
     public function setTemplateProperties($properties)
     {
+        $this->switchTab(self::CONFIGURATION_TAB);
         foreach ($properties as $key => $value) {
             switch ($key) {
             case 'name':
@@ -67,8 +80,17 @@ class HostTemplateEditPage
             case 'address':
                 $this->context->assertFindField('host_address')->setValue($value);
                 break ;
-            default:
-                throw new \Exception('Unsupported host template property: ' . $key);
+            }
+        }
+
+        $this->switchTab(self::RELATIONS_TAB);
+        foreach ($properties as $key => $value) {
+            switch ($key) {
+            case 'service_templates':
+                foreach ($value as $tpl) {
+                    $this->context->selectToSelectTwo('select#host_svTpls', $tpl);
+                }
+                break ;
             }
         }
     }
@@ -85,6 +107,17 @@ class HostTemplateEditPage
         else {
             $this->context->assertFindButton('submitC')->click();
         }
+    }
+
+    /**
+     *  Switch tab.
+     *
+     *  @param $tab  Tab.
+     */
+    public function switchTab($tab)
+    {
+        $this->context->assertFind('css', 'li#c' . $tab)->click();
+        $this->tab = $tab;
     }
 }
 
