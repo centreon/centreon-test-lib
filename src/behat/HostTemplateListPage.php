@@ -40,7 +40,7 @@ class HostTemplateListPage
      *
      *  @param $name  Host template name.
      */
-    public function editTemplate($name)
+    public function edit($name)
     {
         $this->context->assertFindLink($name)->click();
         return new HostTemplateEditPage($this->context, FALSE);
