@@ -40,6 +40,21 @@ class CentreonService extends BaseObject
 
     public function deleteServiceByDescription($service_description)
     {
-        ;
+
+    }
+
+    public function getParameters($serviceId, $parameters)
+    {
+
+    }
+
+    public function setServiceDescription($serviceId, $serviceDescription)
+    {
+
+    }
+
+    public function setServicealias($serviceId, $serviceAlias)
+    {
+
     }
 }

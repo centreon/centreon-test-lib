@@ -18,5 +18,8 @@ namespace Centreon\Test\Mock\Object;
 
 class CentreonServicetemplates extends CentreonService
 {
-    
+    public function getServiceIdsLinkedToSTAndCreatedByHT()
+    {
+
+    }    
 }
