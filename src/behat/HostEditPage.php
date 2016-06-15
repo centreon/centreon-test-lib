@@ -78,6 +78,20 @@ class HostEditPage
             case 'address':
                 $this->context->assertFindField('host_address')->setValue($value);
                 break ;
+            case 'templates':
+                $selectId = 0;
+                foreach ($value as $tpl) {
+                    $this->context->assertFind('css', '#template_add span')->click();
+                    $select = $this->context->assertFind('css', 'select#tpSelect_' . $selectId);
+                    ++$selectId;
+                    $options = $select->findAll('css', 'option');
+                    foreach ($options as $option) {
+                        if ($option->getText() == $tpl) {
+                            $select->setValue($option->getValue());
+                            break ;
+                        }
+                    }
+                }
             }
         }
 
