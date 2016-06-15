@@ -260,12 +260,14 @@ class UtilsContext extends RawMinkContext
           },
           30
       );
-
       $chosenResults = $this->getSession()->getPage()->findAll('css', 'li.select2-results__option:not(.loading-results)');
       foreach ($chosenResults as $result) {
-          if ($result->getText() == $what) {
-              $result->click();
-              break;
+          $html = $result->getHtml();
+          if (preg_match('/>(.+)</', $html, $matches)) {
+              if (isset($matches[1]) && $matches[1] == $what) {
+                  $result->click();
+                  break;
+              }
           }
       }
     }
