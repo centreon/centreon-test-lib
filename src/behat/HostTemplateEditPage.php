@@ -52,7 +52,7 @@ class HostTemplateEditPage
      *
      *  @return Host template properties.
      */
-    public function getTemplateProperties()
+    public function getProperties()
     {
         $properties = array();
         $properties['name'] = $this->context->assertFindField('host_name')->getValue();
@@ -66,7 +66,7 @@ class HostTemplateEditPage
      *
      *  @param $properties  Host template properties.
      */
-    public function setTemplateProperties($properties)
+    public function setProperties($properties)
     {
         $this->switchTab(self::CONFIGURATION_TAB);
         foreach ($properties as $key => $value) {
