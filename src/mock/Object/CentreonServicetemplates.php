@@ -21,5 +21,9 @@ class CentreonServicetemplates extends CentreonService
     public function getServiceIdsLinkedToSTAndCreatedByHT()
     {
 
-    }    
+    }
+    public function getLinkedHostsByServiceDescription()
+    {
+
+    }
 }
