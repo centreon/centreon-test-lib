@@ -26,4 +26,9 @@ class CentreonServicetemplates extends CentreonService
     {
 
     }
+
+    public function getLinkedServicesbyName()
+    {
+
+    }
 }

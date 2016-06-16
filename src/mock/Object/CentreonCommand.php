@@ -42,4 +42,14 @@ class CentreonCommand extends BaseObject
     {
         ;
     }
+
+    public function getLinkedHostsbyName()
+    {
+
+    }
+
+    public function getLinkedServicesbyName()
+    {
+
+    }
 }
