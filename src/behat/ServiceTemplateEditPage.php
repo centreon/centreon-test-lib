@@ -40,7 +40,7 @@ class ServiceTemplateEditPage
      *
      *  @return Service template properties.
      */
-    public function getTemplateProperties()
+    public function getProperties()
     {
         $properties = array();
         $properties['description'] = $this->context->assertFindField('service_description')->getValue();
@@ -53,7 +53,7 @@ class ServiceTemplateEditPage
      *
      *  @param $properties  Service template properties.
      */
-    public function setTemplateProperties($properties)
+    public function setProperties($properties)
     {
         foreach ($properties as $key => $value) {
             switch ($key) {

@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat;
 
-class HostTemplateEditPage
+class HostEditPage
 {
     const UNKNOWN_TAB = 0;
     const CONFIGURATION_TAB = 1;
@@ -30,7 +30,7 @@ class HostTemplateEditPage
     private $tab;
 
     /**
-     *  Host template edit page.
+     *  Host edit page.
      *
      *  @param $context  Centreon context object.
      *  @param $visit    True to navigate to a blank edit page.
@@ -39,7 +39,7 @@ class HostTemplateEditPage
     {
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('main.php?p=60103&o=a');
+            $this->context->visit('main.php?p=60101&o=a');
             $this->tab = self::CONFIGURATION_TAB;
         }
         else {
@@ -48,9 +48,9 @@ class HostTemplateEditPage
     }
 
     /**
-     *  Get template properties.
+     *  Get properties.
      *
-     *  @return Host template properties.
+     *  @return Host properties.
      */
     public function getProperties()
     {
@@ -62,9 +62,7 @@ class HostTemplateEditPage
     }
 
     /**
-     *  Set template properties.
-     *
-     *  @param $properties  Host template properties.
+     *  Set properties.
      */
     public function setProperties($properties)
     {
@@ -80,6 +78,20 @@ class HostTemplateEditPage
             case 'address':
                 $this->context->assertFindField('host_address')->setValue($value);
                 break ;
+            case 'templates':
+                $selectId = 0;
+                foreach ($value as $tpl) {
+                    $this->context->assertFind('css', '#template_add span')->click();
+                    $select = $this->context->assertFind('css', 'select#tpSelect_' . $selectId);
+                    ++$selectId;
+                    $options = $select->findAll('css', 'option');
+                    foreach ($options as $option) {
+                        if ($option->getText() == $tpl) {
+                            $select->setValue($option->getValue());
+                            break ;
+                        }
+                    }
+                }
             }
         }
 
@@ -96,7 +108,7 @@ class HostTemplateEditPage
     }
 
     /**
-     *  Save host template.
+     *  Save host.
      */
     public function save()
     {
@@ -110,9 +122,9 @@ class HostTemplateEditPage
     }
 
     /**
-     *  Switch tab.
+     *  Switch between tabs.
      *
-     *  @param $tab  Tab.
+     *  @param $tab  Target tab.
      */
     public function switchTab($tab)
     {
@@ -120,5 +132,3 @@ class HostTemplateEditPage
         $this->tab = $tab;
     }
 }
-
-?>

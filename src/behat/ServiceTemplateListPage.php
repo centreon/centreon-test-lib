@@ -40,7 +40,7 @@ class ServiceTemplateListPage
      *
      *  @param $name  Service template name.
      */
-    public function editTemplate($name)
+    public function edit($name)
     {
         $this->context->assertFindLink($name)->click();
         return new ServiceTemplateEditPage($this->context, FALSE);
