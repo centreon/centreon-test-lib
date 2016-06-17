@@ -72,7 +72,7 @@ class HostTemplateListPage
             $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
             $entry['description'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
             $entry['linked_services'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(4)')->getText();
-            $entry['parents'] = explode(' ', $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText());
+            $entry['parents'] = explode(' ', str_replace('|', '', $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText()));
             $entry['locked'] = (null === $element->find('css', 'input:nth-child(2)'));
             $entries[$entry['name']] = $entry;
         }
