@@ -166,6 +166,16 @@ class Container
     }
 
     /**
+     *  Stop a service.
+     *
+     *  @param $service  Service to stop.
+     */
+    public function stop($service)
+    {
+        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' stop ' . $service);
+    }
+
+    /**
      *  Wait for available URL.
      */
     public function waitForAvailableUrl($url)
