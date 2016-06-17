@@ -18,5 +18,10 @@ namespace Centreon\Test\Mock\Object;
 
 class CentreonHosttemplates extends CentreonHost
 {
+
+    public function getLinkedHostsbyName()
+    {
+
+    }
     
 }

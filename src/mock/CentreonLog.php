@@ -14,21 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Centreon\Test\Mock\Object;
+namespace Centreon\Test\Mock;
 
-class CentreonServicetemplates extends CentreonService
+/**
+ * Mock class for Log
+ *
+ * @author Centreon
+ * @version 1.0.0
+ * @subpackage test
+ */
+class CentreonLog
 {
-    public function getServiceIdsLinkedToSTAndCreatedByHT()
+    public function insertLog($id, $str, $print = 0, $page = 0, $option = 0)
     {
-
-    }
-    public function getLinkedHostsByServiceDescription()
-    {
-
-    }
-
-    public function getLinkedServicesbyName()
-    {
-
+        
     }
 }

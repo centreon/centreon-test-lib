@@ -104,5 +104,14 @@ class CentreonDB
     {
         return;
     }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function rollback()
+    {
+        return;
+    }
 
 }
