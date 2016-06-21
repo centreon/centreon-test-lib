@@ -68,8 +68,11 @@ class ServiceTemplateListPage
         $entries = array();
         $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
         foreach ($elements as $element) {
+            $descriptionComponent = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)');
+            $imageComponent = $this->context->assertFindIn($descriptionComponent, 'css', 'img');
             $entry = array();
-            $entry['description'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
+            $entry['description'] = $descriptionComponent->getText();
+            $entry['icon'] = $imageComponent->getAttribute('src');
             $entry['alias'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
             $entry['parents'] = explode(' ', $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText());
             $entry['status'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(6)')->getText();

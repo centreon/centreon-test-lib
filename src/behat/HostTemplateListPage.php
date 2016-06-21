@@ -68,8 +68,11 @@ class HostTemplateListPage
         $entries = array();
         $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
         foreach ($elements as $element) {
+            $nameComponent = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)');
+            $imageComponent = $this->context->assertFindIn($nameComponent, 'css', 'img');
             $entry = array();
-            $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
+            $entry['name'] = $nameComponent->getText();
+            $entry['icon'] = $imageComponent->getAttribute('src');
             $entry['description'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
             $entry['linked_services'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(4)')->getText();
             $entry['parents'] = explode(' ', str_replace('| ', '', $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText()));
