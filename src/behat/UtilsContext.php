@@ -66,10 +66,10 @@ class UtilsContext extends RawMinkContext
      */
     public function setConfirmBox($bool)
     {
-      if ($bool == true)
-        $this->getSession()->getDriver()->executeScript('window.confirm = function(){return true;}');
-      else
-        $this->getSession()->getDriver()->executeScript('window.confirm = function(){return false;}');
+        if ($bool == true)
+            $this->getSession()->getDriver()->executeScript('window.confirm = function(){return true;}');
+        else
+            $this->getSession()->getDriver()->executeScript('window.confirm = function(){return false;}');
     }
 
     /**
@@ -164,12 +164,12 @@ class UtilsContext extends RawMinkContext
     {
         $button = $parent->findButton($locator);
         if (is_null($button))
-        {
-            if (empty($msg))
-                throw new \Exception("Button '$locator' was not found.");
-            else
-                throw new \Exception($msg);
-        }
+            {
+                if (empty($msg))
+                    throw new \Exception("Button '$locator' was not found.");
+                else
+                    throw new \Exception($msg);
+            }
         return $button;
     }
 
@@ -197,12 +197,12 @@ class UtilsContext extends RawMinkContext
     {
         $field = $parent->findField($locator);
         if (is_null($field))
-        {
-            if (empty($msg))
-                throw new \Exception("Field '$locator' was not found.");
-            else
-                throw new \Exception($msg);
-        }
+            {
+                if (empty($msg))
+                    throw new \Exception("Field '$locator' was not found.");
+                else
+                    throw new \Exception($msg);
+            }
         return $field;
     }
 
@@ -230,12 +230,12 @@ class UtilsContext extends RawMinkContext
     {
         $link = $parent->findLink($locator);
         if (is_null($link))
-        {
-            if (empty($msg))
-                throw new \Exception("Link '$locator' was not found.");
-            else
-                throw new \Exception($msg);
-        }
+            {
+                if (empty($msg))
+                    throw new \Exception("Link '$locator' was not found.");
+                else
+                    throw new \Exception($msg);
+            }
         return $link;
     }
 
@@ -247,29 +247,29 @@ class UtilsContext extends RawMinkContext
      */
     public function selectToSelectTwo($css_id, $what)
     {
-      $inputField = $this->assertFind('css', $css_id);
-      $choice = $inputField->getParent()->find('css', '.select2-selection');
+        $inputField = $this->assertFind('css', $css_id);
+        $choice = $inputField->getParent()->find('css', '.select2-selection');
         if (!$choice) {
             throw new \Exception('No select2 choice found');
         }
-      $choice->press();
+        $choice->press();
 
-      $this->spin(
-          function ($context) {
-              return count($context->getSession()->getPage()->findAll('css', 'li.select2-results__option:not(.loading-results)')) != 0;
-          },
-          30
-      );
-      $chosenResults = $this->getSession()->getPage()->findAll('css', 'li.select2-results__option:not(.loading-results)');
-      foreach ($chosenResults as $result) {
-          $html = $result->getHtml();
-          if (preg_match('/>(.+)</', $html, $matches)) {
-              if (isset($matches[1]) && $matches[1] == $what) {
-                  $result->click();
-                  break;
-              }
-          }
-      }
+        $this->spin(
+            function ($context) {
+                return count($context->getSession()->getPage()->findAll('css', 'li.select2-results__option:not(.loading-results)')) != 0;
+            },
+            30
+        );
+        $chosenResults = $this->getSession()->getPage()->findAll('css', 'li.select2-results__option:not(.loading-results)');
+        foreach ($chosenResults as $result) {
+            $html = $result->getHtml();
+            if (preg_match('/>(.+)</', $html, $matches)) {
+                if (isset($matches[1]) && $matches[1] == $what) {
+                    $result->click();
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -292,29 +292,29 @@ class UtilsContext extends RawMinkContext
      * @return empty
      */
     public function checkRadioButton($labelText, $type, $pattern, $msg = '') {
-       $page = $this->getSession()->getPage();
+        $page = $this->getSession()->getPage();
 
-       $group = $page->find($type, $pattern);
+        $group = $page->find($type, $pattern);
 
-       foreach ($group->findAll('css', 'label') as $label) {
-          exec("echo '" . $label->getText() . "' 1>&2");
-          if ($labelText === $label->getText()) {
-             $radioButton = $page->find('css', '#'.$label->getAttribute('for'));
+        foreach ($group->findAll('css', 'label') as $label) {
+            exec("echo '" . $label->getText() . "' 1>&2");
+            if ($labelText === $label->getText()) {
+                $radioButton = $page->find('css', '#'.$label->getAttribute('for'));
 
-             // Select the radio button
-             $radioButton->click();
-             return;
-          }
-      }
+                // Select the radio button
+                $radioButton->click();
+                return;
+            }
+        }
 
-      if (empty($msg)) {
-         throw new \Exception("Radio button with label {$labelText} not found");
-      } else {
-         throw new \Exception($msg);
-      }
-   }
+        if (empty($msg)) {
+            throw new \Exception("Radio button with label {$labelText} not found");
+        } else {
+            throw new \Exception($msg);
+        }
+    }
 
-       /**
+    /**
      * Check a radio button on current page, if the radio button is not found throw an exception
      *
      * @param $value The value of the radio button to search.
@@ -324,23 +324,23 @@ class UtilsContext extends RawMinkContext
      * @return empty
      */
     public function checkRadioButtonByValue($value, $type, $pattern, $msg = '') {
-       $page = $this->getSession()->getPage();
+        $page = $this->getSession()->getPage();
 
-       $group = $page->findAll($type, $pattern);
-       foreach ($group as $button) {
-         if ($value === $button->getAttribute('value')) {
-             // Select the radio button
-             $button->click();
-             return;
-          }
+        $group = $page->findAll($type, $pattern);
+        foreach ($group as $button) {
+            if ($value === $button->getAttribute('value')) {
+                // Select the radio button
+                $button->click();
+                return;
+            }
 
-       }
+        }
 
-      if (empty($msg)) {
-         throw new \Exception("Radio button with value {$value} not found");
-      } else {
-         throw new \Exception($msg);
-      }
-   }
+        if (empty($msg)) {
+            throw new \Exception("Radio button with value {$value} not found");
+        } else {
+            throw new \Exception($msg);
+        }
+    }
 
 }
