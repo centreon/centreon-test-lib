@@ -240,6 +240,30 @@ class UtilsContext extends RawMinkContext
     }
 
     /**
+     *  Select an element in list.
+     *
+     *  @param $css_id  The ID of the select.
+     *  @param $value   The requested value.
+     */
+    public function selectInList($css_id, $value)
+    {
+        $found = FALSE;
+        $elements = $this->getSession()->getPage()->findAll('css', $css_id . ' option');
+        foreach ($elements as $element) {
+            if ($element->getText() == $value) {
+                $element->click();
+                $found = TRUE;
+                break ;
+            }
+        }
+        if (!$found) {
+            throw new \Exception(
+                'Could not find value ' . $value
+                . ' in selection list ' . $css_id . '.');
+        }
+    }
+
+    /**
      *  Select an element in a select two.
      *
      *  @param $css_id  The id of the select two.
@@ -342,5 +366,4 @@ class UtilsContext extends RawMinkContext
             throw new \Exception($msg);
         }
     }
-
 }
