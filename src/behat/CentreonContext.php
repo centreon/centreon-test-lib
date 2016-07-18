@@ -24,8 +24,6 @@ use Centreon\Test\Behat\ServiceConfigurationPage;
 class CentreonContext extends UtilsContext
 {
     protected $container;
-    protected $hostConfigurationPage;
-    protected $serviceConfigurationPage;
     protected $pollerConfigurationPage;
 
     /**
@@ -217,10 +215,7 @@ class CentreonContext extends UtilsContext
      */
     public function getHostConfigurationPage()
     {
-        if (!isset($this->hostConfigurationPage)) {
-            $this->hostConfigurationPage = new HostConfigurationPage($this);
-        }
-        return ($this->hostConfigurationPage);
+        return new HostConfigurationPage($this);
     }
 
     /**
@@ -228,10 +223,7 @@ class CentreonContext extends UtilsContext
      */
     public function getServiceConfigurationPage()
     {
-        if (!isset($this->serviceConfigurationPage)) {
-            $this->serviceConfigurationPage = new ServiceConfigurationPage($this);
-        }
-        return ($this->serviceConfigurationPage);
+        return new ServiceConfigurationPage($this);
     }
 
     /**
