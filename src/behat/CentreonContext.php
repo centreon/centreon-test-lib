@@ -132,11 +132,15 @@ class CentreonContext extends UtilsContext
     /**
      *  Execute a command.
      *
-     *  @param string $cmd Command to execute.
+     *  @param string  $cmd           Command to execute.
+     *  @param string  $service       Docker service to which this
+     *                                command should be addressed.
+     *  @param boolean $throwOnError  True to throw an error if the
+     *                                command fails to execute.
      */
-    public function execute($command, $service)
+    public function execute($command, $service, $throwOnError = true)
     {
-        $returnCmd = $this->container->execute($command, $service);
+        $returnCmd = $this->container->execute($command, $service, $throwOnError);
 
         return $returnCmd;
     }
