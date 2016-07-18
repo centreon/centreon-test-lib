@@ -68,6 +68,31 @@ class ServiceConfigurationPage
             ServiceConfigurationPage::GENERAL_TAB,
             'radio',
             'input[name="service_passive_checks_enabled[service_passive_checks_enabled]"]'),
+        // Notifications tab.
+        'notifications_enabled' => array(
+            self::NOTIFICATIONS_TAB,
+            'radio',
+            'input[name="service_notifications_enabled[service_notifications_enabled]"]'),
+        'notification_interval' => array(
+            self::NOTIFICATIONS_TAB,
+            'text',
+            'input[name="service_notification_interval"]'),
+        'notification_period' => array(
+            self::NOTIFICATIONS_TAB,
+            'select2',
+            'select#timeperiod_tp_id2'),
+        'notify_on_recovery' => array(
+            self::NOTIFICATIONS_TAB,
+            'checkbox',
+            'input[name="service_notifOpts[r]"]'),
+        'first_notification_delay' => array(
+            self::NOTIFICATIONS_TAB,
+            'text',
+            'input[name="service_first_notification_delay"]'),
+        'recovery_notification_delay' => array(
+            self::NOTIFICATIONS_TAB,
+            'text',
+            'input[name="service_first_notification_delay"]'), // XXX : this is wrong
         // Data tab.
         'acknowledgement_timeout' => array(
             ServiceConfigurationPage::DATA_TAB,
