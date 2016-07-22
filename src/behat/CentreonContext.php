@@ -24,8 +24,6 @@ use Centreon\Test\Behat\ServiceConfigurationPage;
 class CentreonContext extends UtilsContext
 {
     protected $container;
-    protected $hostConfigurationPage;
-    protected $serviceConfigurationPage;
     protected $pollerConfigurationPage;
 
     /**
@@ -134,11 +132,15 @@ class CentreonContext extends UtilsContext
     /**
      *  Execute a command.
      *
-     *  @param string $cmd Command to execute.
+     *  @param string  $cmd           Command to execute.
+     *  @param string  $service       Docker service to which this
+     *                                command should be addressed.
+     *  @param boolean $throwOnError  True to throw an error if the
+     *                                command fails to execute.
      */
-    public function execute($command, $service)
+    public function execute($command, $service, $throwOnError = true)
     {
-        $returnCmd = $this->container->execute($command, $service);
+        $returnCmd = $this->container->execute($command, $service, $throwOnError);
 
         return $returnCmd;
     }
@@ -217,10 +219,7 @@ class CentreonContext extends UtilsContext
      */
     public function getHostConfigurationPage()
     {
-      if (!isset($this->hostConfigurationPage)) {
-        $this->hostConfigurationPage = new HostConfigurationPage($this);
-      }
-      return ($this->hostConfigurationPage);
+        return new HostConfigurationPage($this);
     }
 
     /**
@@ -228,75 +227,72 @@ class CentreonContext extends UtilsContext
      */
     public function getServiceConfigurationPage()
     {
-      if (!isset($this->serviceConfigurationPage)) {
-        $this->serviceConfigurationPage = new ServiceConfigurationPage($this);
-      }
-      return ($this->serviceConfigurationPage);
+        return new ServiceConfigurationPage($this);
     }
 
     /**
-      * Submit a passive result for a host (and wait)
-      *
-      * @param string hostname
-      * @param checkResult
-      * @param string checkOutput
-      * @param string performanceData
-      */
+     * Submit a passive result for a host (and wait)
+     *
+     * @param string hostname
+     * @param checkResult
+     * @param string checkOutput
+     * @param string performanceData
+     */
     public function submitHostResult($hostname, $checkResult, $checkOutput = '', $performanceData = '')
     {
-      // Page in : Monitoring > Status Details > Hosts
-      $this->visit('/main.php?p=20202&o=hpc&cmd=16&host_name=' . $hostname);
+        // Page in : Monitoring > Status Details > Hosts
+        $this->visit('/main.php?p=20202&o=hpc&cmd=16&host_name=' . $hostname);
 
-      // Configure the "Check result" dropdown field
-      $this->getSession()->getPage()->selectFieldOption('return_code', $checkResult);
+        // Configure the "Check result" dropdown field
+        $this->getSession()->getPage()->selectFieldOption('return_code', $checkResult);
 
-      // Configure the "Check output" field
-      if (! empty($checkOutput)) {
-         $this->assertFindField('output')->setValue($checkOutput);
-      }
+        // Configure the "Check output" field
+        if (! empty($checkOutput)) {
+            $this->assertFindField('output')->setValue($checkOutput);
+        }
 
-      // Configure the "Performance data" field
-      if (! empty($performanceData)) {
-         $this->assertFindField('dataPerform')->setValue($performanceData);
-      }
+        // Configure the "Performance data" field
+        if (! empty($performanceData)) {
+            $this->assertFindField('dataPerform')->setValue($performanceData);
+        }
 
-      // Submit global forms
-      $this->assertFindButton('Save')->click();
+        // Submit global forms
+        $this->assertFindButton('Save')->click();
 
-      // Wait
-      $this->getSession()->wait(5000, '');
+        // Wait
+        $this->getSession()->wait(5000, '');
     }
 
     /**
-      * Submit a passive result for a service (and wait)
-      *
-      * @param string hostname
-      * @param checkResult
-      * @param string checkOutput
-      * @param string performanceData
-      */
+     * Submit a passive result for a service (and wait)
+     *
+     * @param string hostname
+     * @param checkResult
+     * @param string checkOutput
+     * @param string performanceData
+     */
     public function submitServiceResult($hostname, $serviceDescription, $checkResult, $checkOutput = '', $performanceData = '')
     {
-      // Page in : Monitoring > Status Details > Services
-      $this->visit('/main.php?p=20201&o=svcpc&cmd=16&host_name=' . $hostname . '&service_description=' . $serviceDescription);
+        // Page in : Monitoring > Status Details > Services
+        $this->visit('/main.php?p=20201&o=svcpc&cmd=16&host_name=' . $hostname . '&service_description=' . $serviceDescription);
 
-      // Configure the "Check result" dropdown field
-      $this->getSession()->getPage()->selectFieldOption('return_code', $checkResult);
+        // Configure the "Check result" dropdown field
+        $this->getSession()->getPage()->selectFieldOption('return_code', $checkResult);
 
-      // Configure the "Check output" field
-      if (! empty($checkOutput)) {
-         $this->assertFindField('output')->setValue($checkOutput);
-      }
+        // Configure the "Check output" field
+        if (! empty($checkOutput)) {
+            $this->assertFindField('output')->setValue($checkOutput);
+        }
 
-      // Configure the "Performance data" field
-      if (! empty($performanceData)) {
-         $this->assertFindField('dataPerform')->setValue($performanceData);
-      }
+        // Configure the "Performance data" field
+        if (! empty($performanceData)) {
+            $this->assertFindField('dataPerform')->setValue($performanceData);
+        }
 
-      // Submit global forms
-      $this->assertFindButton('Save')->click();
+        // Submit global forms
+        $this->assertFindButton('Save')->click();
 
-      // Wait
-      $this->getSession()->wait(5000, '');
+        // Wait
+        $this->getSession()->wait(5000, '');
     }
 }

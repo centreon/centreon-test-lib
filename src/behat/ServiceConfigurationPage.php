@@ -18,60 +18,239 @@ namespace Centreon\Test\Behat;
 
 class ServiceConfigurationPage
 {
+    const GENERAL_TAB = 1;
+    const NOTIFICATIONS_TAB = 2;
+    const RELATIONS_TAB = 3;
+    const DATA_TAB = 4;
+    const EXTENDED_TAB = 5;
+
     protected $context;
+
+    private static $properties = array(
+        // General tab.
+        'hosts' => array(
+            ServiceConfigurationPage::GENERAL_TAB,
+            'select2',
+            'select#service_hPars'),
+        'description' => array(
+            ServiceConfigurationPage::GENERAL_TAB,
+            'text',
+            'input[name="service_description"]'),
+        'templates' => array(
+            ServiceConfigurationPage::GENERAL_TAB,
+            'select2',
+            'select#service_template_model_stm_id'),
+        'check_command' => array(
+            ServiceConfigurationPage::GENERAL_TAB,
+            'select2',
+            'select#command_command_id'),
+        'check_period' => array(
+            ServiceConfigurationPage::GENERAL_TAB,
+            'select2',
+            'select#timeperiod_tp_id'),
+        'max_check_attempts' => array(
+            ServiceConfigurationPage::GENERAL_TAB,
+            'text',
+            'input[name="service_max_check_attempts"]'),
+        'normal_check_interval' => array(
+            ServiceConfigurationPage::GENERAL_TAB,
+            'text',
+            'input[name="service_normal_check_interval"]'),
+        'retry_check_interval' => array(
+            ServiceConfigurationPage::GENERAL_TAB,
+            'text',
+            'input[name="service_retry_check_interval"]'),
+        'active_checks_enabled' => array(
+            ServiceConfigurationPage::GENERAL_TAB,
+            'radio',
+            'input[name="service_active_checks_enabled[service_active_checks_enabled]"]'),
+        'passive_checks_enabled' => array(
+            ServiceConfigurationPage::GENERAL_TAB,
+            'radio',
+            'input[name="service_passive_checks_enabled[service_passive_checks_enabled]"]'),
+        // Notifications tab.
+        'notifications_enabled' => array(
+            self::NOTIFICATIONS_TAB,
+            'radio',
+            'input[name="service_notifications_enabled[service_notifications_enabled]"]'),
+        'notification_interval' => array(
+            self::NOTIFICATIONS_TAB,
+            'text',
+            'input[name="service_notification_interval"]'),
+        'notification_period' => array(
+            self::NOTIFICATIONS_TAB,
+            'select2',
+            'select#timeperiod_tp_id2'),
+        'notify_on_recovery' => array(
+            self::NOTIFICATIONS_TAB,
+            'checkbox',
+            'input[name="service_notifOpts[r]"]'),
+        'first_notification_delay' => array(
+            self::NOTIFICATIONS_TAB,
+            'text',
+            'input[name="service_first_notification_delay"]'),
+        'recovery_notification_delay' => array(
+            self::NOTIFICATIONS_TAB,
+            'text',
+            'input[name="service_first_notification_delay"]'), // XXX : this is wrong
+        // Data tab.
+        'acknowledgement_timeout' => array(
+            ServiceConfigurationPage::DATA_TAB,
+            'text',
+            'input[name="service_acknowledgement_timeout"]')
+    );
+
     /**
-     * Constructor
+     *  Navigate to and/or check that we are on a service configuration
+     *  page.
      *
-     * @param array $context A CentreonContext
+     *  @param $context  Centreon context.
+     *  @param $visit    True to navigate to a blank service
+     *                   configuration page.
      */
-    public function __construct($context)
+    public function __construct($context, $visit = TRUE)
     {
+        // Visit page.
         $this->context = $context;
+        if ($visit) {
+            $this->context->visit('main.php?p=60201&o=a');
+        }
+
+        // Check that page is valid for this class.
+        $mythis = $this;
+        $this->context->spin(function ($context) use ($mythis) {
+            return $mythis->isPageValid();
+        },
+        5,
+        'Current page does not match class ' . __CLASS__);
     }
 
     /**
-     *  Go to service creation page.
+     *  Check that the current page is matching this class.
      *
-     *  @param $host_name  The name of the host linked to this service
-     *  @param $service_description  The description of this service.
-     *  @param $template             The template to use for this service.
+     *  @return True if the current page matches this class.
      */
-    public function toServiceCreationPage($host_name, $service_description, $template = 'generic-service')
+    public function isPageValid()
     {
-      $this->context->visit('main.php?p=60201&o=a');
-      $this->context->selectToSelectTwo('select#service_hPars', $host_name);
-      $this->context->assertFind('css', 'input[name=service_description]')->setValue($service_description);
-      $this->context->selectToSelectTwo('select#service_template_model_stm_id', $template);
-      $this->context->selectToSelectTwo('select#command_command_id', 'check_centreon_dummy');
-      $this->context->selectToSelectTwo('select#timeperiod_tp_id', '24x7');
-      $this->context->assertFind('named', array('id_or_name', 'service_max_check_attempts'))->setValue('1');
-      $this->context->assertFind('named', array('id_or_name', 'service_normal_check_interval'))->setValue('1');
-      $this->context->assertFind('named', array('id_or_name', 'service_retry_check_interval'))->setValue('1');
+        return $this->context->getSession()->getPage()->has('css', 'input[name="service_description"]');
     }
 
     /**
-     *  Save a service from the service creation page.
+     *  Get properties of the service.
+     *
+     *  @return Properties of the service.
      */
-    public function saveService()
+    public function getProperties()
     {
-      $this->context->assertFind('named', array('id_or_name', 'submitA'))->click();
+        // Begin with first tab.
+        $tab = self::GENERAL_TAB;
+        $this->switchTab($tab);
+        $properties = array();
+
+        // Browse all properties.
+        foreach (self::$properties as $property => $metadata) {
+            // Set property meta-data in variables.
+            $targetTab = $metadata[0];
+            $propertyType = $metadata[1];
+            $propertyLocator = $metadata[2];
+
+            // Switch between tabs if required.
+            if ($tab != $targetTab) {
+                $this->switchTab($targetTab);
+                $tab = $targetTab;
+            }
+
+            // Get properties.
+            switch ($propertyType) {
+            case 'radio':
+                throw new \Behat\Behat\Tester\Exception\PendingException(__METHOD__);
+            case 'select2':
+                $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
+                break ;
+            case 'text':
+                $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
+                break ;
+            }
+        }
+        return $properties;
     }
 
     /**
-     *  Switch to a (other) tab
+     *  Set properties of the service.
+     *
+     *  @param $properties  Properties to set.
      */
-    public function switchToTab($tabName, $idOrNameInTab = '')
+    public function setProperties($properties)
     {
-      // Search the tab from the name of the tab
-      $tabLink = $this->context->assertFind('named', array('link', $tabName));
+        // Begin with first tab.
+        $tab = self::GENERAL_TAB;
+        $this->switchTab($tab);
 
-      // Click on the tab for switch to the tab
-      $tabLink->click();
+        // Browse all properties.
+        foreach ($properties as $property => $value) {
+            // Check that property exist.
+            if (!array_key_exists($property, self::$properties)) {
+                throw new \Exception('Unknown service property ' . $property . '.');
+            }
 
-      // Wait tab load
-      if ($idOrNameInTab == '') {
-        $this->context->getSession()->wait(5000, '');
-        return true;
-      }
+            // Set property meta-data in variables.
+            $targetTab = self::$properties[$property][0];
+            $propertyType = self::$properties[$property][1];
+            $propertyLocator = self::$properties[$property][2];
+
+            // Switch between tabs if required.
+            if ($tab != $targetTab) {
+                $this->switchTab($targetTab);
+                $tab = $targetTab;
+            }
+
+            // Set property with its value.
+            switch ($propertyType) {
+            case 'radio':
+                $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
+                break ;
+            case 'select2':
+                if (is_array($value)) {
+                    foreach ($value as $element) {
+                        $this->context->selectToSelectTwo($propertyLocator, $element);
+                    }
+                }
+                else {
+                    $this->context->selectToSelectTwo($propertyLocator, $value);
+                }
+                break ;
+            case 'text':
+                $this->context->assertFind('css', $propertyLocator)->setValue($value);
+                break ;
+            default:
+                throw new \Exception(
+                    'Unknown property type ' . $propertyType
+                    . ' found while setting service property ' . $property . '.');
+            }
+        }
+    }
+
+    /**
+     *  Save the service.
+     */
+    public function save()
+    {
+        $button = $this->context->getSession()->getPage()->findButton('submitA');
+        if (isset($button)) {
+            $button->click();
+        }
+        else {
+            $this->context->assertFindButton('submitC')->click();
+        }
+    }
+
+    /**
+     *  Switch between tabs.
+     *
+     *  @param $tab  Tab ID.
+     */
+    public function switchTab($tab)
+    {
+        $this->context->assertFind('css', 'li#c' . $tab . ' a')->click();
     }
 }

@@ -54,7 +54,8 @@ class Container
      */
     public function __destruct()
     {
-        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' down');
+        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' kill');
+        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' down -v');
     }
 
     /**

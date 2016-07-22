@@ -18,38 +18,18 @@ namespace Centreon\Test\Mock\Object;
 
 class CentreonMedia extends BaseObject
 {
-    public function getMediaDirectory()
+    public function addDirectory()
     {
-        return '/tmp/';
+        return $this->getIncrementedId();
     }
-    
-    public function getDirectoryId($dirname)
+
+    public function getDirectoryName()
     {
-        return $this->incrementalId++;
+        return 'directory_name';
     }
-    
-    public function getDirectoryName($directoryId)
+
+    public function addImage()
     {
-        return '/tmp/';
-    }
-    
-    public function addDirectory($dirname, $dirAlias = null)
-    {
-        return $this->incrementalId++;
-    }
-    
-    public function getImageId($imagename, $dirname = null)
-    {
-        return $this->incrementalId++;
-    }
-    
-    public function getFilename($imgId = null)
-    {
-        return '/tmp/myIcon.png';
-    }
-    
-    public function addImage($parameters, $binary = null)
-    {
-        return $this->incrementalId++;
+        return $this->getIncrementedId();
     }
 }
