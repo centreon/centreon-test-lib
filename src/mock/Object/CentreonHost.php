@@ -47,4 +47,9 @@ class CentreonHost extends BaseObject
     {
 
     }
+
+    public function insertRelHostService()
+    {
+
+    }
 }

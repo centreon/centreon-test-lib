@@ -11,15 +11,50 @@ namespace Centreon\Test\Mock\Object;
 
 class BaseObject
 {
-    protected $incrementalId;
+    protected $incrementalId = 1;
+    private static $countFunction = array();
     
     public function __construct($fakeDb)
     {
-        $this->incrementalId = 1;
+    }
+
+    protected function realResult($expectedResult)
+    {
+        global $customResult;
+
+        $calledMethod = debug_backtrace()[2]['function'];
+
+        if (isset(self::$countFunction[$calledMethod])) {
+            self::$countFunction[$calledMethod]++;
+        } else {
+            self::$countFunction[$calledMethod] = 0;
+        }
+
+        $result = $expectedResult;
+
+        if (array_key_exists($calledMethod, $customResult)) {
+
+            if (!is_array($customResult[$calledMethod])) {
+
+                $result = $customResult[$calledMethod];
+
+            } else if (isset($customResult[$calledMethod]['at']) &&
+                array_key_exists(self::$countFunction[$calledMethod], $customResult[$calledMethod]['at'])) {
+
+                $result = $customResult[$calledMethod]['at'][self::$countFunction[$calledMethod]];
+
+            } else if (array_key_exists('any', $customResult[$calledMethod])) {
+
+                $result = $customResult[$calledMethod]['any'];
+
+            }
+        }
+
+        return $result;
     }
     
     protected function getIncrementedId()
     {
-        return $this->incrementalId++;
+        return $this->realResult($this->incrementalId++);
     }
 }
