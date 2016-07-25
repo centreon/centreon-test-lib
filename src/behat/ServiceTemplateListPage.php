@@ -36,18 +36,28 @@ class ServiceTemplateListPage
     }
 
     /**
+     *  Edit a template.
+     *
+     *  @param $name  Service template name.
+     */
+    public function edit($name)
+    {
+        $this->context->assertFindLink($name)->click();
+        return new ServiceTemplateEditPage($this->context, FALSE);
+    }
+
+    /**
      *  Get template properties.
      *
-     *  @param $name  Host template name.
+     *  @param $name  Service template name.
      */
     public function getTemplate($name)
     {
         $templates = $this->getTemplates();
-        $tmpl = array_search($name, $templates);
-        if ($tmpl == FALSE) {
-            throw new \Exception('Cannot find host template "' . $name . '".');
+        if (!array_key_exists($name, $templates)) {
+            throw new \Exception('Cannot find service template "' . $name . '".');
         }
-        return $tmpl;
+        return $templates[$name];
     }
 
     /**
@@ -58,13 +68,16 @@ class ServiceTemplateListPage
         $entries = array();
         $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
         foreach ($elements as $element) {
+            $descriptionComponent = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)');
+            $imageComponent = $this->context->assertFindIn($descriptionComponent, 'css', 'img');
             $entry = array();
-            $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
+            $entry['description'] = $descriptionComponent->getText();
+            $entry['icon'] = $imageComponent->getAttribute('src');
             $entry['alias'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
-            $entry['parents'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText();
+            $entry['parents'] = explode(' ', $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText());
             $entry['status'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(6)')->getText();
             $entry['locked'] = (null === $element->find('css', 'input:nth-child(2)'));
-            $entries[$entry['name']] = $entry;
+            $entries[$entry['description']] = $entry;
         }
         return $entries;
     }

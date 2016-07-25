@@ -37,7 +37,7 @@ class CentreonDB
     public function query($query)
     {
         if (!isset($this->queries[$query])) {
-            throw new OutOfRangeException('Query is not set.' . "\nQuery : " . $query);
+            throw new \Exception('Query is not set.' . "\nQuery : " . $query);
         }
         $this->queries[$query]->resetResultSet();
         return $this->queries[$query];
@@ -64,4 +64,54 @@ class CentreonDB
     {
         $this->queries[$query] = new CentreonDBResultSet($result);
     }
+    
+    /**
+     * 
+     * @param string $query
+     * @return string
+     */
+    public function prepare($query)
+    {
+        return $query;
+    }
+
+    /**
+     * 
+     * @param mixed $queryObject
+     * @param array $values
+     * @return mixed
+     */
+    public function execute($queryObject, $values)
+    {
+        return $queryObject;
+    }
+
+    /**
+     * 
+     * @param type $enable
+     * @return type
+     */
+    public function autoCommit($enable)
+    {
+        return ;
+    }
+
+    /**
+     * 
+     * @return type
+     */
+    public function commit()
+    {
+        return;
+    }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function rollback()
+    {
+        return;
+    }
+
 }

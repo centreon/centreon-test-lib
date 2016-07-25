@@ -54,7 +54,8 @@ class Container
      */
     public function __destruct()
     {
-        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' down');
+        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' kill');
+        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' down -v');
     }
 
     /**
@@ -137,6 +138,23 @@ class Container
     }
 
     /**
+     *  Get the address or host name of the Docker server.
+     *
+     *  @return Address or host name of the Docker server.
+     */
+    public function getHost()
+    {
+        $docker = getenv('DOCKER_HOST');
+        if (!preg_match('@^(tcp://)?([^:]+)@', $docker, $matches)) {
+            $retval = '127.0.0.1';
+        }
+        else {
+            $retval = $matches[2];
+        }
+        return $retval;
+    }
+
+    /**
      *  Get the host port to which a container port is redirected.
      *
      *  @param $containerPort Container port.
@@ -146,6 +164,16 @@ class Container
     public function getPort($containerPort, $service)
     {
         return shell_exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' port ' . $service . ' ' . $containerPort . ' | cut -d : -f 2 | tr -d "\n"');
+    }
+
+    /**
+     *  Stop a service.
+     *
+     *  @param $service  Service to stop.
+     */
+    public function stop($service)
+    {
+        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' stop ' . $service);
     }
 
     /**

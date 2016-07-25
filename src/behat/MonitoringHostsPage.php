@@ -17,7 +17,7 @@
 namespace Centreon\Test\Behat;
 
 /**
-  * 
+  *
   * The code of his class is based on class MonitoringServicesPage
   */
 class MonitoringHostsPage
@@ -73,29 +73,28 @@ class MonitoringHostsPage
       * Check if the host is acknowledged or not
       *
       * @param string hostname Hostname to check.
-      * @return bool 
+      * @return bool
       */
     public function isHostAcknowledged($hostname)
     {
-        // Prepare (filter by hostname)
-        $this->doActionOn($hostname);
-
-        $page = $this->ctx->getSession()->getPage();
-        $table = $page->find('css', '.ListTable');
-
-        $linesWithACK = $table->findAll('xpath', "//img[contains(@name, 'popupForAck')]/../../..");
-
-        if (count($linesWithACK)) {
-            return true;
+        // As we cannot use the page because of incompatibilites between
+        // XSLT and PhantomJS, we will read the value directly in
+        // database.
+        $query = 'SELECT acknowledged FROM hosts WHERE name=:name';
+        $stmt = $this->ctx->getStorageDatabase()->prepare($query);
+        $stmt->execute(array(':name' => $hostname));
+        $res = $stmt->fetch();
+        if ($res === FALSE) {
+            throw new \Exception('Cannot find host ' . $hostname . ' in database.');
         }
-        return false;
+        return $res['acknowledged'];
     }
 
     /**
       * Check if the host is in downtime or not
-      * 
+      *
       * @param string hostname Hostname to check.
-      * @return bool 
+      * @return bool
       */
     public function isHostInDowntime($hostname)
     {
@@ -157,72 +156,19 @@ class MonitoringHostsPage
       */
     public function addAcknowledgementOnHost($hostname, $comment, $isSticky, $doNotify, $isPersistent, $doAckServicesAttached, $doForceCheck)
     {
-        // Check the mandatory value "Comment"
-        if (empty($comment)) {
-            throw new \Exception("Comment is a mandatory field, need to be not empty.");
-        }
-
-        $this->doActionOn($hostname, 'Hosts : Acknowledge');
-
-        // When I have a pop-in "Set downtimes"
-        $this->ctx->spin(function($context) {
-            return $context->getSession()->getPage()->has('named', array('id_or_name', 'popupDowntime'));
-        });
-
-        // Search in pop-in "Acknowledge problems"
-        $popinACK = $this->ctx->assertFind('named', array('id', 'popupAcknowledgement'));
-
-        // Configure the checkbox "Sticky" field
-        $stickyCheckbox = $this->ctx->assertFindIn($popinACK, 'named', array('id', 'sticky'));
-
-        if ($isSticky) {
-            $stickyCheckbox->check();
-        } else {
-            $stickyCheckbox->uncheck();
-        }
-
-        // Configure the checkbox "Notify" field
-        $notifyCheckbox = $this->ctx->assertFindIn($popinACK, 'named', array('id', 'notify'));
-
-        if ($doNotify) {
-            $notifyCheckbox->check();
-        } else {
-            $notifyCheckbox->uncheck();
-        }
-
-        // Configure the checkbox "Persistent" field
-        $persistentCheckbox = $this->ctx->assertFindIn($popinACK, 'named', array('id', 'persistent'));
-
-        if ($isPersistent) {
-            $persistentCheckbox->check();
-        } else {
-            $persistentCheckbox->uncheck();
-        }
-
-        // Configure the (mandatory) field "Comment" textarea
-        $this->ctx->assertFindIn($popinACK, 'named', array('id', 'popupComment'))->setValue($comment);
-
-        // Configure the checkbox "Acknowledge services attached to hosts" field
-        $ack_host_checkbox = $this->ctx->assertFindIn($popinACK, 'named', array('id', 'ackhostservice'));
-
-        if ($doAckServicesAttached) {
-            $ack_host_checkbox->check();
-        } else {
-            $ack_host_checkbox->uncheck();
-        }
-
-        // Configure the checkbox "Force active checks" field
-        $forceCheckCheckbox = $this->ctx->assertFindIn($popinACK, 'named', array('id', 'force_check'));
-
-        if ($doForceCheck) {
-            $forceCheckCheckbox->check();
-        } else {
-            $forceCheckCheckbox->uncheck();
-        }
-
-        // Submit pop-in form with submit button "Acknowledge selected problems"
-        $this->assertFindButtonIn($popinACK, 'Acknowledge selected problems')->click();
-
+        // The code below cannot work right now in the context of the
+        // hosts monitoring page as PhantomJS does not support XSLT.
+        // As a workaround will we use direct Ajax call to add the
+        // acknowledgement.
+        $this->ctx->visit(
+            'include/monitoring/external_cmd/cmdPopup.php?cmd=72&comment='
+            . $comment . '&sticky=' . ($isSticky ? 'true' : 'false')
+            . '&persistent=' . ($isPersistent ? 'true' : 'false')
+            . '&notify=' . $doNotify
+            . '&ackhostservice=' . ($doAckServicesAttached ? 'true' : 'false')
+            . '&force_check=' . ($doForceCheck ? 'true' : 'false')
+            . '&author=admin&select[' . $hostname . ']=1');
+        $this->listHosts();
     }
 
     /**
@@ -304,7 +250,7 @@ class MonitoringHostsPage
         $popinDowntime = $this->ctx->assertFind('named', array('id', 'popupDowntime'));
 
         /* Configure "Start Time" line */
-      
+
         // Configure first field of "Start Time" line, format : 05/19/2016
         $this->ctx->assertFindIn($popinDowntime, 'named', array('id_or_name', 'start'))->setValue($startTimeDate);
 
@@ -348,11 +294,44 @@ class MonitoringHostsPage
         }
 
         // Submit pop-in form with submit button "Set downtime"
-        $this->assertFindButtonIn($popinDowntime, 'Set downtime')->click();
+        $this->ctx->assertFindButtonIn($popinDowntime, 'Set downtime')->click();
 
         // Page is refresh (by submit), need to wait
         $this->waitForHostListPage();
 
     }
-    
+
+    /**
+      * Get the status of a host
+      *
+      * @param string hostName Host name to select
+      */
+    public function getStatus($hostName)
+    {
+        // We cannot direct web-interface search right now (XSLT is not
+        // supported by PhantomJS). So we will look for the host status
+        // in database.
+        $query = 'SELECT state FROM hosts WHERE name=:name';
+        $stmt = $this->ctx->getStorageDatabase()->prepare($query);
+        $stmt->execute(array(':name' => $hostName));
+        $res = $stmt->fetch();
+        if ($res === FALSE) {
+            throw new \Exception('Cannot get status of host ' . $hostName);
+        }
+        switch ($res['state']) {
+        case 0:
+            $status = 'UP';
+            break ;
+        case 1:
+            $status = 'DOWN';
+            break ;
+        case 2:
+            $status = 'UNREACHABLE';
+            break ;
+        default:
+            $status = 'UNKNOWN';
+        }
+        return $status;
+    }
+
 }
