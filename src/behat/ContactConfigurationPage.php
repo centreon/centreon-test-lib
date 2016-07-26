@@ -14,114 +14,75 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Centreon\Test\Behat;
 
-class ServiceConfigurationPage
+class ContactConfigurationPage
 {
-    const GENERAL_TAB = 1;
-    const NOTIFICATIONS_TAB = 2;
-    const RELATIONS_TAB = 3;
-    const DATA_TAB = 4;
-    const EXTENDED_TAB = 5;
+    const CONFIGURATION_TAB = 1;
+    const AUTHENTICATION_TAB = 2;
+    const EXTENDED_TAB = 3;
 
     protected $context;
 
     private static $properties = array(
-        // General tab.
-        'hosts' => array(
-            ServiceConfigurationPage::GENERAL_TAB,
-            'select2',
-            'select#service_hPars'),
-        'description' => array(
-            ServiceConfigurationPage::GENERAL_TAB,
+        // Configuration tab.
+        'alias' => array(
+            self::CONFIGURATION_TAB,
             'text',
-            'input[name="service_description"]'),
-        'templates' => array(
-            ServiceConfigurationPage::GENERAL_TAB,
-            'select2',
-            'select#service_template_model_stm_id'),
-        'check_command' => array(
-            ServiceConfigurationPage::GENERAL_TAB,
-            'select2',
-            'select#command_command_id'),
-        'check_period' => array(
-            ServiceConfigurationPage::GENERAL_TAB,
-            'select2',
-            'select#timeperiod_tp_id'),
-        'max_check_attempts' => array(
-            ServiceConfigurationPage::GENERAL_TAB,
+            'input[name="contact_alias"]'),
+        'name' => array(
+            self::CONFIGURATION_TAB,
             'text',
-            'input[name="service_max_check_attempts"]'),
-        'normal_check_interval' => array(
-            ServiceConfigurationPage::GENERAL_TAB,
+            'input[name="contact_name"]'),
+        'email' => array(
+            self::CONFIGURATION_TAB,
             'text',
-            'input[name="service_normal_check_interval"]'),
-        'retry_check_interval' => array(
-            ServiceConfigurationPage::GENERAL_TAB,
-            'text',
-            'input[name="service_retry_check_interval"]'),
-        'active_checks_enabled' => array(
-            ServiceConfigurationPage::GENERAL_TAB,
-            'radio',
-            'input[name="service_active_checks_enabled[service_active_checks_enabled]"]'),
-        'passive_checks_enabled' => array(
-            ServiceConfigurationPage::GENERAL_TAB,
-            'radio',
-            'input[name="service_passive_checks_enabled[service_passive_checks_enabled]"]'),
-        // Notifications tab.
+            'input[name="contact_email"]'),
         'notifications_enabled' => array(
-            self::NOTIFICATIONS_TAB,
+            self::CONFIGURATION_TAB,
             'radio',
-            'input[name="service_notifications_enabled[service_notifications_enabled]"]'),
-        'notification_interval' => array(
-            self::NOTIFICATIONS_TAB,
-            'text',
-            'input[name="service_notification_interval"]'),
-        'notification_period' => array(
-            self::NOTIFICATIONS_TAB,
-            'select2',
-            'select#timeperiod_tp_id2'),
-        'notify_on_recovery' => array(
-            self::NOTIFICATIONS_TAB,
+            'input[name="contact_enable_notifications[contact_enable_notifications]"]'),
+        'host_notify_on_recovery' => array(
+            self::CONFIGURATION_TAB,
             'checkbox',
-            'input[name="service_notifOpts[r]"]'),
-        'notify_on_critical' => array(
-            self::NOTIFICATIONS_TAB,
+            'input[name="contact_hostNotifOpts[r]"]'),
+        'host_notify_on_down' => array(
+            self::CONFIGURATION_TAB,
             'checkbox',
-            'input[name="service_notifOpts[c]"]'),
-        'first_notification_delay' => array(
-            self::NOTIFICATIONS_TAB,
-            'text',
-            'input[name="service_first_notification_delay"]'),
-        'recovery_notification_delay' => array(
-            self::NOTIFICATIONS_TAB,
-            'text',
-            'input[name="service_recovery_notification_delay"]'),
-        'cs' => array(
-            self::NOTIFICATIONS_TAB,
+            'input[name="contact_hostNotifOpts[d]"]'),
+        'host_notification_command' => array(
+            self::CONFIGURATION_TAB,
             'select2',
-            'select#service_cs'),
-        // Data tab.
-        'acknowledgement_timeout' => array(
-            ServiceConfigurationPage::DATA_TAB,
-            'text',
-            'input[name="service_acknowledgement_timeout"]')
+            'select#contact_hostNotifCmds'),
+        'service_notify_on_recovery' => array(
+            self::CONFIGURATION_TAB,
+            'checkbox',
+            'input[name="contact_svNotifOpts[r]"]'),
+        'service_notify_on_critical' => array(
+            self::CONFIGURATION_TAB,
+            'checkbox',
+            'input[name="contact_svNotifOpts[c]"]'),
+        'service_notification_command' => array(
+            self::CONFIGURATION_TAB,
+            'select2',
+            'select#contact_svNotifCmds'),
     );
 
     /**
-     *  Navigate to and/or check that we are on a service configuration
+     *  Navigate to and/or check that we are on a contact configuration
      *  page.
      *
      *  @param $context  Centreon context.
-     *  @param $visit    True to navigate to a blank service
-     *                   configuration page.
+     *  @param $visit    True to navigate to a blank host configuration
+     *                   page.
      */
     public function __construct($context, $visit = TRUE)
     {
         // Visit page.
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('main.php?p=60201&o=a');
+            $this->context->visit('main.php?p=60301&o=a');
         }
 
         // Check that page is valid for this class.
@@ -140,18 +101,18 @@ class ServiceConfigurationPage
      */
     public function isPageValid()
     {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="service_description"]');
+        return $this->context->getSession()->getPage()->has('css', 'input[name="contact_name"]');
     }
 
     /**
-     *  Get properties of the service.
+     *  Get host properties.
      *
-     *  @return Properties of the service.
+     *  @return Host properties.
      */
     public function getProperties()
     {
         // Begin with first tab.
-        $tab = self::GENERAL_TAB;
+        $tab = self::CONFIGURATION_TAB;
         $this->switchTab($tab);
         $properties = array();
 
@@ -171,34 +132,39 @@ class ServiceConfigurationPage
             // Get properties.
             switch ($propertyType) {
             case 'radio':
-                throw new \Behat\Behat\Tester\Exception\PendingException(__METHOD__);
+                throw new \Behat\Behat\Tester\Exception\PendingException(__FUNCTION__);
+                break ;
             case 'select2':
                 $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
                 break ;
             case 'text':
                 $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
                 break ;
+            default:
+                throw new \Exception(
+                    'Unknown property type ' . $propertyType
+                    . ' found while retrieving host properties.');
             }
         }
         return $properties;
     }
 
     /**
-     *  Set properties of the service.
+     *  Set host properties.
      *
-     *  @param $properties  Properties to set.
+     *  @param $properties  New host properties.
      */
     public function setProperties($properties)
     {
         // Begin with first tab.
-        $tab = self::GENERAL_TAB;
+        $tab = self::CONFIGURATION_TAB;
         $this->switchTab($tab);
 
         // Browse all properties.
         foreach ($properties as $property => $value) {
             // Check that property exist.
             if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown service property ' . $property . '.');
+                throw new \Exception('Unknown host property ' . $property . '.');
             }
 
             // Set property meta-data in variables.
@@ -214,18 +180,20 @@ class ServiceConfigurationPage
 
             // Set property with its value.
             switch ($propertyType) {
+            case 'custom':
+                $setter = 'set' . $propertyLocator;
+                $this->$setter($value);
+                break ;
             case 'checkbox':
             case 'radio':
                 $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
                 break ;
             case 'select2':
-                if (is_array($value)) {
-                    foreach ($value as $element) {
-                        $this->context->selectToSelectTwo($propertyLocator, $element);
-                    }
+                if (!is_array($value)) {
+                    $value = array($value);
                 }
-                else {
-                    $this->context->selectToSelectTwo($propertyLocator, $value);
+                foreach ($value as $element) {
+                    $this->context->selectToSelectTwo($propertyLocator, $element);
                 }
                 break ;
             case 'text':
@@ -234,21 +202,20 @@ class ServiceConfigurationPage
             default:
                 throw new \Exception(
                     'Unknown property type ' . $propertyType
-                    . ' found while setting service property ' . $property . '.');
+                    . ' found while setting host property ' . $property . '.');
             }
         }
     }
 
     /**
-     *  Save the service.
+     *  Save the current contact configuration page.
      */
     public function save()
     {
         $button = $this->context->getSession()->getPage()->findButton('submitA');
         if (isset($button)) {
             $button->click();
-        }
-        else {
+        } else {
             $this->context->assertFindButton('submitC')->click();
         }
     }
