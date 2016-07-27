@@ -22,7 +22,8 @@ class BaseObject
     {
         global $customResult;
 
-        $calledMethod = debug_backtrace()[2]['function'];
+        $stacktrace = debug_backtrace();
+        $calledMethod = $stacktrace[2]['function'];
 
         if (isset(self::$countFunction[$calledMethod])) {
             self::$countFunction[$calledMethod]++;
