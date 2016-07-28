@@ -38,12 +38,12 @@ class CommandConfigurationPage
      *  @param $visit    True to navigate to a blank command
      *                   configuration page.
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = TRUE, $type = 2)
     {
         // Visit page.
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('main.php?p=60801&o=a&type=2');
+            $this->context->visit('main.php?p=60801&o=a&type=' . $type);
         }
 
         // Check that page is valid for this class.

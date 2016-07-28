@@ -74,6 +74,10 @@ class HostConfigurationPage
             self::NOTIFICATION_TAB,
             'checkbox',
             'input[name="host_notifOpts[r]"]'),
+        'notify_on_down' => array(
+            self::NOTIFICATION_TAB,
+            'checkbox',
+            'input[name="host_notifOpts[d]"]'),
         'notification_interval' => array(
             self::NOTIFICATION_TAB,
             'text',
@@ -89,7 +93,11 @@ class HostConfigurationPage
         'recovery_notification_delay' => array(
             self::NOTIFICATION_TAB,
             'text',
-            'input[name="host_first_notification_delay"]'), // XXX : this is wrong !
+            'input[name="host_recovery_notification_delay"]'),
+        'cs' => array(
+            self::NOTIFICATION_TAB,
+            'select2',
+            'select#host_cs'),
         // Data tab.
         'acknowledgement_timeout' => array(
             self::DATA_TAB,
@@ -212,6 +220,7 @@ class HostConfigurationPage
                 $setter = 'set' . $propertyLocator;
                 $this->$setter($value);
                 break ;
+            case 'checkbox':
             case 'radio':
                 $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
                 break ;
@@ -220,7 +229,7 @@ class HostConfigurationPage
                     $value = array($value);
                 }
                 foreach ($value as $element) {
-                    $this->context->selectToSelectTwo($propertyLocator, $value);
+                    $this->context->selectToSelectTwo($propertyLocator, $element);
                 }
                 break ;
             case 'text':
