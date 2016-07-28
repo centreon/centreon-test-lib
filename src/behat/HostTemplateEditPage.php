@@ -40,6 +40,7 @@ class HostTemplateEditPage
         $this->context = $context;
         if ($visit) {
             $this->context->visit('main.php?p=60103&o=a');
+            $this->context->getSession()->getPage()->find('css' , '#macro_add p')->click();
             $this->tab = self::CONFIGURATION_TAB;
         }
         else {
@@ -58,6 +59,9 @@ class HostTemplateEditPage
         $properties['name'] = $this->context->assertFindField('host_name')->getValue();
         $properties['alias'] = $this->context->assertFindField('host_alias')->getValue();
         $properties['address'] = $this->context->assertFindField('host_address')->getValue();
+        $properties['macro-name'] = $this->context->assertFindField('macroInput[0]')->getValue();
+        $properties['macro-value'] = $this->context->assertFindField('macroValue[0]')->getValue();
+
         return ($properties);
     }
 
@@ -79,6 +83,12 @@ class HostTemplateEditPage
                 break ;
             case 'address':
                 $this->context->assertFindField('host_address')->setValue($value);
+                break ;
+            case 'macro-name':
+                $this->context->assertFindField('macroInput[0]')->setValue($value);
+                break ;
+            case 'macro-value':
+                $this->context->assertFindField('macroValue[0]')->setValue($value);
                 break ;
             }
         }
