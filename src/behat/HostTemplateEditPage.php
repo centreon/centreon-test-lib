@@ -40,7 +40,6 @@ class HostTemplateEditPage
         $this->context = $context;
         if ($visit) {
             $this->context->visit('main.php?p=60103&o=a');
-            $this->context->getSession()->getPage()->find('css' , '#macro_add p')->click();
             $this->tab = self::CONFIGURATION_TAB;
         }
         else {
@@ -59,8 +58,17 @@ class HostTemplateEditPage
         $properties['name'] = $this->context->assertFindField('host_name')->getValue();
         $properties['alias'] = $this->context->assertFindField('host_alias')->getValue();
         $properties['address'] = $this->context->assertFindField('host_address')->getValue();
-        $properties['macro-name'] = $this->context->assertFindField('macroInput[0]')->getValue();
-        $properties['macro-value'] = $this->context->assertFindField('macroValue[0]')->getValue();
+        $properties['macros'] = array();
+        $i = 0;
+        while (true) {
+            $name = $this->context->getSession()->getPage()->findField('macroInput_' . $i);
+            if (is_null($name)) {
+                break ;
+            }
+            $value = $this->context->assertFindField('macroValue_' . $i);
+            $properties['macros'][$name->getValue()] = $value->getValue();
+            ++$i;
+        }
 
         return ($properties);
     }
@@ -84,11 +92,14 @@ class HostTemplateEditPage
             case 'address':
                 $this->context->assertFindField('host_address')->setValue($value);
                 break ;
-            case 'macro-name':
-                $this->context->assertFindField('macroInput[0]')->setValue($value);
-                break ;
-            case 'macro-value':
-                $this->context->assertFindField('macroValue[0]')->setValue($value);
+            case 'macros':
+                $i = 0;
+                foreach ($value as $varname => $varvalue) {
+                    $this->context->assertFind('css' , '#macro_add p')->click();
+                    $this->context->assertFindField('macroInput_' . $i)->setValue($varname);
+                    $this->context->assertFindField('macroValue_' . $i)->setValue($varvalue);
+                    ++$i;
+                }
                 break ;
             }
         }
