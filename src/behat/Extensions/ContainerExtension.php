@@ -51,12 +51,12 @@ class ContainerExtension implements ExtensionInterface
             ->children()
                 ->scalarNode('web')->defaultValue('mon-web-dev.yml')->end()
                 ->scalarNode('web_fresh')->defaultValue('mon-web-fresh-dev.yml')->end()
+                ->scalarNode('web_kb')->defaultValue('mon-web-kb-dev.yml')->end()
                 ->scalarNode('lm')->defaultValue('mon-lm-dev.yml')->end()
                 ->scalarNode('ppe')->defaultValue('mon-ppe-dev.yml')->end()
                 ->scalarNode('ppe1')->defaultValue('mon-ppe1-dev.yml')->end()
                 ->scalarNode('ppm')->defaultValue('mon-ppm-dev.yml')->end()
                 ->scalarNode('middleware')->defaultValue('mon-middleware-dev.yml')->end()
-                ->scalarNode('kb')->defaultValue('mon-web-kb-dev.yml')->end()
                 ->scalarNode('bam')->defaultValue('des-bam-dev.yml')->end()
             ->end()
         ->end();
