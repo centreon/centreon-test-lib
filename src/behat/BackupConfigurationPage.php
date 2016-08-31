@@ -149,7 +149,7 @@ class BackupConfigurationPage
                     $this->$method($value);
                     break ;
                 case 'radio':
-                    $this->context->assertFind('css', $propertyLocator)->click();
+                    $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
                     break ;
                 case 'text':
                     $this->context->assertFind('css', $propertyLocator)->setValue($value);
