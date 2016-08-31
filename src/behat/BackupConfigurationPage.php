@@ -180,10 +180,10 @@ class BackupConfigurationPage
     public function setFullBackupDays($days)
     {
         for ($i = 0; $i < 7; ++$i) {
-            $this->context->assertFind('css', 'input[name="backup_database_partial[' . $i . ']"]')->uncheck();
+            $this->context->assertFind('css', 'input[name="backup_database_full[' . $i . ']"]')->uncheck();
         }
         foreach ($days as $day) {
-            $this->context->assertFind('css', 'input[name="backup_database_partial[' . $day . ']"]')->check();
+            $this->context->assertFind('css', 'input[name="backup_database_full[' . $day . ']"]')->check();
         }
     }
 
@@ -195,10 +195,10 @@ class BackupConfigurationPage
     public function setPartialBackupDays($days)
     {
         for ($i = 0; $i < 7; ++$i) {
-            $this->context->assertFind('css', 'input[name="backup_database_full[' . $i . ']"]')->uncheck();
+            $this->context->assertFind('css', 'input[name="backup_database_partial[' . $i . ']"]')->uncheck();
         }
         foreach ($days as $day) {
-            $this->context->assertFind('css', 'input[name="backup_database_full[' . $day . ']"]')->check();
+            $this->context->assertFind('css', 'input[name="backup_database_partial[' . $day . ']"]')->check();
         }
     }
 }
