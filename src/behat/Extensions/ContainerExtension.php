@@ -52,6 +52,7 @@ class ContainerExtension implements ExtensionInterface
                 ->scalarNode('web')->defaultValue('mon-web-dev.yml')->end()
                 ->scalarNode('web_fresh')->defaultValue('mon-web-fresh-dev.yml')->end()
                 ->scalarNode('web_kb')->defaultValue('mon-web-kb-dev.yml')->end()
+                ->scalarNode('web_influxdb')->defaultValue('mon-web-influxdb.yml')->end()
                 ->scalarNode('lm')->defaultValue('mon-lm-dev.yml')->end()
                 ->scalarNode('ppe')->defaultValue('mon-ppe-dev.yml')->end()
                 ->scalarNode('ppe1')->defaultValue('mon-ppe1-dev.yml')->end()
