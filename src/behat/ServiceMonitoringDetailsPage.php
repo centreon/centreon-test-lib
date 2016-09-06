@@ -69,9 +69,14 @@ class ServiceMonitoringDetailsPage
         $table = $this->context->assertFind('css', 'table.ListTable');
         $result = array();
 
+        // last_check
+        $lastCheck = $this->context->assertFindIn($table, 'css', 'tbody tr:nth-child(9) td:nth-child(2)')->getText();
+        $lastCheck = \DateTime::createFromFormat('Y/m/d - H:i:s', $lastCheck);
+        $result['last_check'] = ($lastCheck === false) ? false : $lastCheck->getTimestamp();
+
         // in_downtime
         $inDowntime = $this->context->assertFindIn($table, 'css', 'tbody tr:nth-child(19) td:nth-child(2)')->getText();
-        $result['in_downtime'] = (($inDowntime == 'Yes') ? TRUE : FALSE);
+        $result['in_downtime'] = (($inDowntime == 'Yes') ? true : false);
 
         return $result;
     }
