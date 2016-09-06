@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Centreon\Test\Behat;
 
 class MetaServiceConfigurationPage
 {
-
     protected $context;
 
     private static $properties = array(
@@ -26,6 +26,18 @@ class MetaServiceConfigurationPage
         'name' => array(
             'text',
             'input[name="meta_name"]'
+        ),
+        'output_format' => array(
+            'text',
+            'input[name="meta_display"]'
+        ),
+        'warning_level' => array(
+            'text',
+            'input[name="warning"]'
+        ),
+        'critical_level' => array(
+            'text',
+            'input[name="critical"]'
         ),
         'check_period' => array(
             'select2',
@@ -124,7 +136,7 @@ class MetaServiceConfigurationPage
         foreach ($properties as $property => $value) {
             // Check that property exist.
             if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown service property ' . $property . '.');
+                throw new \Exception('Unknown meta-service property ' . $property . '.');
             }
 
             // Set property meta-data in variables.
@@ -152,7 +164,7 @@ class MetaServiceConfigurationPage
                 default:
                     throw new \Exception(
                         'Unknown property type ' . $propertyType
-                        . ' found while setting service property ' . $property . '.');
+                        . ' found while setting meta-service property ' . $property . '.');
             }
         }
     }
