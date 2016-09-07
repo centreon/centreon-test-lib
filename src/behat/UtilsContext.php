@@ -81,8 +81,7 @@ class UtilsContext extends RawMinkContext
     {
         if (!$scope->getTestResult()->isPassed()) {
             $filename = date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '.png';
-            $filepath = isset($this->parameters['save_images']) ? $this->parameters['save_images'] : null;
-            $this->saveScreenshot($filename, $filepath);
+            $this->saveScreenshot($filename, $this->composeFiles['log_directory']);
         }
     }
 

@@ -49,6 +49,7 @@ class ContainerExtension implements ExtensionInterface
         $builder
             ->addDefaultsIfNotSet()
             ->children()
+                ->scalarNode('log_directory')->defaultValue('/tmp')->end()
                 ->scalarNode('web')->defaultValue('mon-web-dev.yml')->end()
                 ->scalarNode('web_fresh')->defaultValue('mon-web-fresh-dev.yml')->end()
                 ->scalarNode('web_kb')->defaultValue('mon-web-kb-dev.yml')->end()
