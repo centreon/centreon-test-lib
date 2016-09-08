@@ -17,54 +17,54 @@
 
 namespace Centreon\Test\Behat;
 
-class ContactConfigurationPage
+class ContactConfigurationPage implements ConfigurationPage
 {
-    const CONFIGURATION_TAB = 1;
-    const AUTHENTICATION_TAB = 2;
-    const EXTENDED_TAB = 3;
+    const TAB_CONFIGURATION = 1;
+    const TAB_AUTHENTICATION = 2;
+    const TAB_EXTENDED = 3;
 
     protected $context;
 
     private static $properties = array(
         // Configuration tab.
         'alias' => array(
-            self::CONFIGURATION_TAB,
+            self::TAB_CONFIGURATION,
             'text',
             'input[name="contact_alias"]'),
         'name' => array(
-            self::CONFIGURATION_TAB,
+            self::TAB_CONFIGURATION,
             'text',
             'input[name="contact_name"]'),
         'email' => array(
-            self::CONFIGURATION_TAB,
+            self::TAB_CONFIGURATION,
             'text',
             'input[name="contact_email"]'),
         'notifications_enabled' => array(
-            self::CONFIGURATION_TAB,
+            self::TAB_CONFIGURATION,
             'radio',
             'input[name="contact_enable_notifications[contact_enable_notifications]"]'),
         'host_notify_on_recovery' => array(
-            self::CONFIGURATION_TAB,
+            self::TAB_CONFIGURATION,
             'checkbox',
             'input[name="contact_hostNotifOpts[r]"]'),
         'host_notify_on_down' => array(
-            self::CONFIGURATION_TAB,
+            self::TAB_CONFIGURATION,
             'checkbox',
             'input[name="contact_hostNotifOpts[d]"]'),
         'host_notification_command' => array(
-            self::CONFIGURATION_TAB,
+            self::TAB_CONFIGURATION,
             'select2',
             'select#contact_hostNotifCmds'),
         'service_notify_on_recovery' => array(
-            self::CONFIGURATION_TAB,
+            self::TAB_CONFIGURATION,
             'checkbox',
             'input[name="contact_svNotifOpts[r]"]'),
         'service_notify_on_critical' => array(
-            self::CONFIGURATION_TAB,
+            self::TAB_CONFIGURATION,
             'checkbox',
             'input[name="contact_svNotifOpts[c]"]'),
         'service_notification_command' => array(
-            self::CONFIGURATION_TAB,
+            self::TAB_CONFIGURATION,
             'select2',
             'select#contact_svNotifCmds'),
     );
@@ -112,7 +112,7 @@ class ContactConfigurationPage
     public function getProperties()
     {
         // Begin with first tab.
-        $tab = self::CONFIGURATION_TAB;
+        $tab = self::TAB_CONFIGURATION;
         $this->switchTab($tab);
         $properties = array();
 
@@ -157,7 +157,7 @@ class ContactConfigurationPage
     public function setProperties($properties)
     {
         // Begin with first tab.
-        $tab = self::CONFIGURATION_TAB;
+        $tab = self::TAB_CONFIGURATION;
         $this->switchTab($tab);
 
         // Browse all properties.
