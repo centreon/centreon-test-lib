@@ -19,6 +19,11 @@ namespace Centreon\Test\Behat;
 
 class CommandConfigurationPage
 {
+    const TYPE_CHECK = 2;
+    const TYPE_NOTIFICATION = 1;
+    const TYPE_DISCOVERY = 4;
+    const TYPE_MISC = 3;
+
     protected $context;
 
     private static $properties = array(
@@ -35,7 +40,7 @@ class CommandConfigurationPage
      *  page.
      *
      *  @param $context  Centreon context.
-     *  @param $visit    True to navigate to a blank command
+     *  @param $visit    True to navigate to a blank check command
      *                   configuration page.
      */
     public function __construct($context, $visit = TRUE, $type = 2)
