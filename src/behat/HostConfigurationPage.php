@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat;
 
-class HostConfigurationPage
+class HostConfigurationPage implements ConfigurationPage
 {
     const CONFIGURATION_TAB = 1;
     const NOTIFICATION_TAB = 2;
