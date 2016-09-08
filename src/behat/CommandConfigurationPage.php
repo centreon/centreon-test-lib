@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat;
 
-class CommandConfigurationPage
+class CommandConfigurationPage implements ConfigurationPage
 {
     const TYPE_CHECK = 2;
     const TYPE_NOTIFICATION = 1;
