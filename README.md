@@ -13,16 +13,10 @@ from standard Centreon classes.
 
 | Layer           | Language           | Description                                 |
 |-----------------|--------------------|---------------------------------------------|
-| Acceptance Test | PHP                | This is where acceptance tests are written  |
-|                 |                    | and where classes from this project comes   |
-|                 |                    | in handy. These acceptance tests are run by |
-|                 |                    | Behat.                                      |
-| Behat           | PHP                | Behat run acceptance tests and provides     |
-|                 |                    | reports.                                    |
-| PhantomJS       | C++ but irrelevant | PhantomJS is a headless browser, optimal    |
-|                 |                    | for testing purposes.                       |
-| Centreon        | PHP (web UI)       | A classical Centreon interface, with which  |
-|                 |                    | monitoring is just plain fun.               |
+| Acceptance Test | PHP                | This is where acceptance tests are written and where classes from this project comes in handy. These acceptance tests are run by Behat. |
+| Behat           | PHP                | Behat run acceptance tests and provides reports. |
+| PhantomJS       | C++ but irrelevant | PhantomJS is a headless browser, optimal for testing purposes. |
+| Centreon        | PHP (web UI)       | A classical Centreon interface, with which monitoring is just plain fun. |
 
 ## Class naming ##
 
