@@ -42,8 +42,10 @@ class CommandConfigurationPage
      *  @param $context  Centreon context.
      *  @param $visit    True to navigate to a blank check command
      *                   configuration page.
+     *  @param $type     Command type if visit is enabled. Default to
+     *                   TYPE_CHECK.
      */
-    public function __construct($context, $visit = TRUE, $type = 2)
+    public function __construct($context, $visit = true, $type = self::TYPE_CHECK)
     {
         // Visit page.
         $this->context = $context;
