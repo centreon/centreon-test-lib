@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat;
 
-class BackupConfigurationPage
+class BackupConfigurationPage implements ConfigurationPage
 {
     const BACKUP_TYPE_DUMP = 0;
     const BACKUP_TYPE_LVM = 1;
