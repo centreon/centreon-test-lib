@@ -27,10 +27,17 @@ accessed. For exemple the service creation/edition page is named
 ServiceConfigurationPage. The backup configuration page in the Administration menu
 is named BackupConfigurationPage.
 
-| Menu                                         | Class name                           |
-|----------------------------------------------|--------------------------------------|
-| Administration -> Parameters -> Backup       | BackupConfigurationPage              |
-|
+| Menu                                                       | Class name                           |
+|------------------------------------------------------------|--------------------------------------|
+| Configuration -> Commands -> Checks                        | CommandConfigurationListingPage      |
+| Configuration -> Commands -> Checks -> Add / Edit          | CommandConfigurationPage             |
+| Configuration -> Commands -> Notifications                 | CommandConfigurationListingPage      |
+| Configuration -> Commands -> Notifications -> Add / Edit   | CommandConfigurationPage             |
+| Configuration -> Commands -> Discovery                     | CommandConfigurationListingPage      |
+| Configuration -> Commands -> Discovery -> Add / Edit       | CommandConfigurationPage             |
+| Configuration -> Commands -> Miscellaneous                 | CommandConfigurationListingPage      |
+| Configuration -> Commands -> Miscellaneous -> Add / Edit   | CommandConfigurationPage             |
+| Administration -> Parameters -> Backup                     | BackupConfigurationPage              |
 
 ## Class methods ##
 
