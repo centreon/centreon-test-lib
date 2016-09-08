@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat;
 
-class DowntimeConfigurationPage
+class DowntimeConfigurationPage implements ConfigurationPage
 {
     const TYPE_HOST = 1;
     const TYPE_SERVICE = 2;
@@ -71,6 +71,16 @@ class DowntimeConfigurationPage
     public function isPageValid()
     {
         return $this->context->getSession()->getPage()->has('css', 'input[name="start"]');
+    }
+
+    /**
+     *  Get downtime properties.
+     *
+     *  @return An array of downtime properties.
+     */
+    public function getProperties()
+    {
+        throw new \Exception('The getProperties() method of ' . __CLASS__ . ' is not yet implemented.');
     }
 
     /**

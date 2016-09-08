@@ -29,6 +29,7 @@ is named BackupConfigurationPage.
 
 | Menu                                                       | Class name                           |
 |------------------------------------------------------------|--------------------------------------|
+| Monitoring -> Downtimes -> Add                             | DowntimeConfigurationPage            |
 | Configuration -> Users -> Contacts / Users                 | ContactConfigurationListingPage      |
 | Configuration -> Users -> Contacts / Users -> Add / Edit   | ContactConfigurationPage             |
 | Configuration -> Commands -> Checks                        | CommandConfigurationListingPage      |
