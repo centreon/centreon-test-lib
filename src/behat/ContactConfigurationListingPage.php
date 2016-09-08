@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat;
 
-class ContactListPage
+class ContactConfigurationListingPage implements ListingPage
 {
     private $context;
 
@@ -29,14 +29,33 @@ class ContactListPage
      */
     public function __construct($context, $visit = TRUE)
     {
+        // Visit page.
         $this->context = $context;
         if ($visit) {
             $this->context->visit('main.php?p=60301');
         }
+
+        // Check that page is valid for this class.
+        $mythis = $this;
+        $this->context->spin(function ($context) use ($mythis) {
+            return $mythis->isPageValid();
+        },
+        5,
+        'Current page does not match class ' . __CLASS__);
     }
 
     /**
-     *  Edit a template.
+     *  Check that the current page matches this class.
+     *
+     *  @return True if the current page matches this class.
+     */
+    public function isPageValid()
+    {
+        return $this->context->getSession()->getPage()->has('css', 'table.ListTable');
+    }
+
+    /**
+     *  Edit a contact.
      *
      *  @param $name  Contact name.
      */
@@ -48,23 +67,9 @@ class ContactListPage
     }
 
     /**
-     *  Get template properties.
-     *
-     *  @param $name  Contact name.
-     */
-    public function getContact($name)
-    {
-        $contacts = $this->getContacts();
-        if (!array_key_exists($name, $contacts)) {
-            throw new \Exception('Cannot find contact "' . $name . '".');
-        }
-        return $contacts[$name];
-    }
-
-    /**
      *  Get the list of contacts.
      */
-    public function getContacts()
+    public function getEntries()
     {
         $entries = array();
         $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
@@ -87,5 +92,3 @@ class ContactListPage
         return $entries;
     }
 }
-
-?>

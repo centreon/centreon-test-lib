@@ -29,6 +29,7 @@ is named BackupConfigurationPage.
 
 | Menu                                                       | Class name                           |
 |------------------------------------------------------------|--------------------------------------|
+| Configuration -> Users -> Contacts / Users                 | ContactConfigurationListingPage      |
 | Configuration -> Users -> Contacts / Users -> Add / Edit   | ContactConfigurationPage             |
 | Configuration -> Commands -> Checks                        | CommandConfigurationListingPage      |
 | Configuration -> Commands -> Checks -> Add / Edit          | CommandConfigurationPage             |
@@ -70,12 +71,13 @@ public function __construct($context, $host = '', $service = '')
 ```
 
 In all cases, the constructor should check for page validity by using
-isPageValid().
+isPageValid(). It should throw if the page is not valid.
 
 ### isPageValid() ###
 
 This method should check for the validity of the current page relative to
-the class. It should throw an Exception in case of error.
+the class. It should return a boolean indicating whether or not the
+current page can be manipulated by this class.
 
 ## Common interfaces ##
 
