@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat;
 
-class ServiceTemplateListingPage implements ListingPage
+class ServiceTemplateConfigurationListingPage implements ListingPage
 {
     private $context;
 
