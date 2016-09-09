@@ -55,18 +55,6 @@ class ContactConfigurationListingPage implements ListingPage
     }
 
     /**
-     *  Edit a contact.
-     *
-     *  @param $name  Contact name.
-     */
-    public function edit($name)
-    {
-        $contacts = $this->context->assertFind('css', 'table.ListTable');
-        $this->context->assertFindLinkIn($contacts, $name)->click();
-        return new ContactConfigurationPage($this->context, FALSE);
-    }
-
-    /**
      *  Get the list of contacts.
      */
     public function getEntries()
@@ -90,5 +78,17 @@ class ContactConfigurationListingPage implements ListingPage
             $entries[$entry['alias']] = $entry;
         }
         return $entries;
+    }
+
+    /**
+     *  Edit a contact.
+     *
+     *  @param $name  Contact name.
+     */
+    public function inspect($name)
+    {
+        $contacts = $this->context->assertFind('css', 'table.ListTable');
+        $this->context->assertFindLinkIn($contacts, $name)->click();
+        return new ContactConfigurationPage($this->context, false);
     }
 }
