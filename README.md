@@ -27,24 +27,25 @@ accessed. For exemple the service creation/edition page is named
 ServiceConfigurationPage. The backup configuration page in the Administration menu
 is named BackupConfigurationPage.
 
-| Menu                                                       | Class name                           |
-|------------------------------------------------------------|--------------------------------------|
-| Monitoring -> Downtimes -> Add                             | DowntimeConfigurationPage            |
-| Configuration -> Hosts -> Hosts -> Add / Edit              | HostConfigurationPage                |
-| Configuration -> Hosts -> Templates                        | HostTemplateConfigurationListingPage |
-| Configuration -> Hosts -> Templates -> Add / Edit          | HostTemplateConfigurationPage        |
-| Configuration -> Services -> Meta Services -> Add / Edit   | MetaServiceConfigurationPage         |
-| Configuration -> Users -> Contacts / Users                 | ContactConfigurationListingPage      |
-| Configuration -> Users -> Contacts / Users -> Add / Edit   | ContactConfigurationPage             |
-| Configuration -> Commands -> Checks                        | CommandConfigurationListingPage      |
-| Configuration -> Commands -> Checks -> Add / Edit          | CommandConfigurationPage             |
-| Configuration -> Commands -> Notifications                 | CommandConfigurationListingPage      |
-| Configuration -> Commands -> Notifications -> Add / Edit   | CommandConfigurationPage             |
-| Configuration -> Commands -> Discovery                     | CommandConfigurationListingPage      |
-| Configuration -> Commands -> Discovery -> Add / Edit       | CommandConfigurationPage             |
-| Configuration -> Commands -> Miscellaneous                 | CommandConfigurationListingPage      |
-| Configuration -> Commands -> Miscellaneous -> Add / Edit   | CommandConfigurationPage             |
-| Administration -> Parameters -> Backup                     | BackupConfigurationPage              |
+| Menu                                                        | Class name                           |
+|-------------------------------------------------------------|--------------------------------------|
+| Monitoring -> Downtimes -> Add                              | DowntimeConfigurationPage            |
+| Configuration -> Hosts -> Hosts -> Add / Edit               | HostConfigurationPage                |
+| Configuration -> Hosts -> Templates                         | HostTemplateConfigurationListingPage |
+| Configuration -> Hosts -> Templates -> Add / Edit           | HostTemplateConfigurationPage        |
+| Configuration -> Services -> Services by host -> Add / Edit | ServiceConfigurationPage             |
+| Configuration -> Services -> Meta Services -> Add / Edit    | MetaServiceConfigurationPage         |
+| Configuration -> Users -> Contacts / Users                  | ContactConfigurationListingPage      |
+| Configuration -> Users -> Contacts / Users -> Add / Edit    | ContactConfigurationPage             |
+| Configuration -> Commands -> Checks                         | CommandConfigurationListingPage      |
+| Configuration -> Commands -> Checks -> Add / Edit           | CommandConfigurationPage             |
+| Configuration -> Commands -> Notifications                  | CommandConfigurationListingPage      |
+| Configuration -> Commands -> Notifications -> Add / Edit    | CommandConfigurationPage             |
+| Configuration -> Commands -> Discovery                      | CommandConfigurationListingPage      |
+| Configuration -> Commands -> Discovery -> Add / Edit        | CommandConfigurationPage             |
+| Configuration -> Commands -> Miscellaneous                  | CommandConfigurationListingPage      |
+| Configuration -> Commands -> Miscellaneous -> Add / Edit    | CommandConfigurationPage             |
+| Administration -> Parameters -> Backup                      | BackupConfigurationPage              |
 
 ## Class methods ##
 

@@ -16,7 +16,7 @@
  */
 namespace Centreon\Test\Behat;
 
-class ServiceConfigurationPage
+class ServiceConfigurationPage implements ConfigurationPage
 {
     const GENERAL_TAB = 1;
     const NOTIFICATIONS_TAB = 2;
