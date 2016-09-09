@@ -55,17 +55,6 @@ class HostTemplateConfigurationListingPage implements ListingPage
     }
 
     /**
-     *  Edit a template.
-     *
-     *  @param $name  Host template name.
-     */
-    public function edit($name)
-    {
-        $this->context->assertFindLink($name)->click();
-        return new HostTemplateEditPage($this->context, FALSE);
-    }
-
-    /**
      *  Get the list of templates.
      */
     public function getEntries()
@@ -85,5 +74,16 @@ class HostTemplateConfigurationListingPage implements ListingPage
             $entries[$entry['name']] = $entry;
         }
         return $entries;
+    }
+
+    /**
+     *  Edit a template.
+     *
+     *  @param $name  Host template name.
+     */
+    public function inspect($name)
+    {
+        $this->context->assertFindLink($name)->click();
+        return new HostTemplateConfigurationPage($this->context, false);
     }
 }
