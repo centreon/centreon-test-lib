@@ -55,40 +55,74 @@ class ServiceConfigurationListingPage implements ListingPage
     }
 
     /**
-     *  Check that a service exist in configuration.
-     *
-     *  @param $host     Host name.
-     *  @param $service  Service description.
+     *  Get services.
      */
-    public function has($host, $service)
+    public function getEntries()
     {
-        // Set search filters.
-        $this->setSearchHost($host);
-        $this->setSearchService($service);
-        $this->search();
-
         // Browse all elements.
+        $entries = array();
         $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two,.row_disabled');
         $currentHost = '';
-        $retval = FALSE;
         foreach ($elements as $element) {
             $tempHost = $this->context->assertFindIn($element, 'css', 'td:nth-child(2) a')->getText();
             if (!empty($tempHost) && ($tempHost != $currentHost)) {
                 $currentHost = $tempHost;
             }
             $currentService = $this->context->assertFindIn($element, 'css', 'td:nth-child(3) a')->getText();
-            if (($currentHost == $host) && ($currentService == $service)) {
-                $retval = TRUE;
-                break ;
-            }
+            $entries[$currentHost][$currentService] = array();
         }
 
-        // Unset search filters.
-        $this->setSearchHost('');
-        $this->setSearchService('');
-        $this->search();
+        return $entries;
+    }
 
-        return $retval;
+    /**
+     *  Get a service.
+     *
+     *  @param $hostservice  Array with host and service.
+     *
+     *  @return Service properties.
+     */
+    public function getEntry($hostservice)
+    {
+        $services = $this->getEntries();
+        if (!array_key_exists($hostservice['host'], $services) ||
+            !array_key_exists($hostservice['service'], $services[$hostservice['host']])) {
+            throw new \Exception(
+                'could not find service ' . $hostservice['service'] .
+                ' of host ' . $hostservice['host']
+            );
+        }
+        return $services[$hostservice['host']][$hostservice['service']];
+    }
+
+    /**
+     *  Check if a service exist.
+     *
+     *  @param $hostservice  Array with host and service.
+     *
+     *  @return True if service exist.
+     */
+    public function hasEntry($hostservice)
+    {
+        try {
+            $this->getEntry($hostservice);
+            $thrown = false;
+        } catch (\Exception $e) {
+            $throwm = true;
+        }
+        return !$thrown;
+    }
+
+    /**
+     *  Edit a service.
+     *
+     *  @param $hostservice  Array with host and service.
+     *
+     *  @return A new ServiceConfigurationPage.
+     */
+    public function inspect($hostservice)
+    {
+        throw new \Exception(__METHOD__ . ' not implemented');
     }
 
     /**
@@ -96,7 +130,7 @@ class ServiceConfigurationListingPage implements ListingPage
      *
      *  @param $host  Host name.
      */
-    public function setSearchHost($host)
+    public function setHostFilter($host)
     {
         $this->context->assertFindField('searchH')->setValue($host);
     }
@@ -106,7 +140,7 @@ class ServiceConfigurationListingPage implements ListingPage
      *
      *  @param $service  Service description.
      */
-    public function setSearchService($service)
+    public function setServiceFilter($service)
     {
         $this->context->assertFindField('searchS')->setValue($service);
     }
