@@ -215,22 +215,6 @@ class CentreonContext extends UtilsContext
     }
 
     /**
-     *  Get the host configuration page object.
-     */
-    public function getHostConfigurationPage()
-    {
-        return new HostConfigurationPage($this);
-    }
-
-    /**
-     *  Get the service configuration page object.
-     */
-    public function getServiceConfigurationPage()
-    {
-        return new ServiceConfigurationPage($this);
-    }
-
-    /**
      * Submit a passive result for a host (and wait)
      *
      * @param string hostname
