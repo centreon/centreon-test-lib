@@ -119,6 +119,16 @@ class BackupConfigurationPage implements ConfigurationPage
     }
 
     /**
+     *  Get backup configuration properties.
+     *
+     *  @return An array of the backup configuration properties.
+     */
+    public function getProperties()
+    {
+        throw new \Exception(__METHOD__ . ' not implemented');
+    }
+
+    /**
      *  Set backup configuration properties.
      *
      *  @param $properties  Backup configuration properties.
