@@ -87,7 +87,7 @@ class CommandConfigurationListingPage implements ListingPage
     public function getEntry($cmdname)
     {
         $commands = $this->getEntries();
-        if (!array_key_exists($commands[$cmdname])) {
+        if (!array_key_exists($cmdname, $commands)) {
             throw new \Exception('could not find command ' . $cmdname);
         }
         return $commands[$cmdname];

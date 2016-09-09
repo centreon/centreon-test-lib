@@ -86,7 +86,7 @@ class ServiceTemplateConfigurationListingPage implements ListingPage
     public function getEntry($svctmpl)
     {
         $templates = $this->getEntries();
-        if (!array_key_exists($svctmpl)) {
+        if (!array_key_exists($svctmpl, $templates)) {
             throw new \Exception('could not find service template ' . $svctmpl);
         }
         return $templates[$svctmpl];

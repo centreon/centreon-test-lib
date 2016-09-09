@@ -90,7 +90,7 @@ class ContactConfigurationListingPage implements ListingPage
     public function getEntry($contactname)
     {
         $contacts = $this->getEntries($contactname);
-        if (!array_key_exists($contacts[$contactname])) {
+        if (!array_key_exists($contactname, $contacts)) {
             throw new \Exception('could not find contact ' . $contactname);
         }
         return $contacts[$contactname];

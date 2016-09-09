@@ -86,7 +86,7 @@ class HostTemplateConfigurationListingPage implements ListingPage
     public function getEntry($tmpl)
     {
         $templates = $this->getEntries();
-        if (!array_key_exists($templates[$tmpl])) {
+        if (!array_key_exists($tmpl, $templates)) {
             throw new \Exception('could not find host template ' . $tmpl);
         }
         return $templates[$tmpl];
