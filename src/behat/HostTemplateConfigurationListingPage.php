@@ -77,6 +77,22 @@ class HostTemplateConfigurationListingPage implements ListingPage
     }
 
     /**
+     *  Get a host template.
+     *
+     *  @param $tmpl  Host template name.
+     *
+     *  @return An array of properties.
+     */
+    public function getEntry($tmpl)
+    {
+        $templates = $this->getEntries();
+        if (!array_key_exists($templates[$tmpl])) {
+            throw new \Exception('could not find host template ' . $tmpl);
+        }
+        return $templates[$tmpl];
+    }
+
+    /**
      *  Edit a template.
      *
      *  @param $name  Host template name.

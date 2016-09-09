@@ -81,6 +81,22 @@ class ContactConfigurationListingPage implements ListingPage
     }
 
     /**
+     *  Get a contact.
+     *
+     *  @param $contactname  Contact name.
+     *
+     *  @return An array of properties.
+     */
+    public function getEntry($contactname)
+    {
+        $contacts = $this->getEntries($contactname);
+        if (!array_key_exists($contacts[$contactname])) {
+            throw new \Exception('could not find contact ' . $contactname);
+        }
+        return $contacts[$contactname];
+    }
+
+    /**
      *  Edit a contact.
      *
      *  @param $name  Contact name.

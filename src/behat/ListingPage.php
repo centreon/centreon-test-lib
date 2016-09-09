@@ -24,5 +24,6 @@ namespace Centreon\Test\Behat;
 interface ListingPage extends Page
 {
     public function getEntries();
+    public function getEntry($entry);
     public function inspect($entry);
 }

@@ -77,6 +77,22 @@ class ServiceTemplateConfigurationListingPage implements ListingPage
     }
 
     /**
+     *  Get properties of a service template.
+     *
+     *  @param $svctmpl  Service template name.
+     *
+     *  @return An array of properties.
+     */
+    public function getEntry($svctmpl)
+    {
+        $templates = $this->getEntries();
+        if (!array_key_exists($svctmpl)) {
+            throw new \Exception('could not find service template ' . $svctmpl);
+        }
+        return $templates[$svctmpl];
+    }
+
+    /**
      *  Edit a template.
      *
      *  @param $name  Service template name.

@@ -78,6 +78,22 @@ class CommandConfigurationListingPage implements ListingPage
     }
 
     /**
+     *  Get a command.
+     *
+     *  @param $cmdname  Command name.
+     *
+     *  @return An array of properties.
+     */
+    public function getEntry($cmdname)
+    {
+        $commands = $this->getEntries();
+        if (!array_key_exists($commands[$cmdname])) {
+            throw new \Exception('could not find command ' . $cmdname);
+        }
+        return $commands[$cmdname];
+    }
+
+    /**
      *  Edit a command.
      *
      *  @param $command  Command name.
