@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat;
 
-class ServiceMonitoringDetailsPage
+class ServiceMonitoringDetailsPage implements Page
 {
     protected $context;
 

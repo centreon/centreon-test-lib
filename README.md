@@ -29,6 +29,7 @@ is named BackupConfigurationPage.
 
 | Menu                                                        | Class name                           |
 |-------------------------------------------------------------|--------------------------------------|
+| Monitoring -> Status Details -> Services -> Inspect         | ServiceMonitoringDetailsPage         |
 | Monitoring -> Downtimes -> Add                              | DowntimeConfigurationPage            |
 | Configuration -> Hosts -> Hosts -> Add / Edit               | HostConfigurationPage                |
 | Configuration -> Hosts -> Templates                         | HostTemplateConfigurationListingPage |
