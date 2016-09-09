@@ -17,14 +17,14 @@
 
 namespace Centreon\Test\Behat;
 
-class HostTemplateEditPage
+class HostTemplateConfigurationPage implements ConfigurationPage
 {
-    const UNKNOWN_TAB = 0;
-    const CONFIGURATION_TAB = 1;
-    const NOTIFICATION_TAB = 2;
-    const RELATIONS_TAB = 3;
-    const DATA_TAB = 4;
-    const EXTENDED_TAB = 5;
+    const TAB_UNKNOWN = 0;
+    const TAB_CONFIGURATION = 1;
+    const TAB_NOTIFICATION = 2;
+    const TAB_RELATIONS = 3;
+    const TAB_DATA = 4;
+    const TAB_EXTENDED = 5;
 
     private $context;
     private $tab;
@@ -40,10 +40,10 @@ class HostTemplateEditPage
         $this->context = $context;
         if ($visit) {
             $this->context->visit('main.php?p=60103&o=a');
-            $this->tab = self::CONFIGURATION_TAB;
+            $this->tab = self::TAB_CONFIGURATION;
         }
         else {
-            $this->tab = self::UNKNOWN_TAB;
+            $this->tab = self::TAB_UNKNOWN;
         }
     }
 
@@ -80,7 +80,7 @@ class HostTemplateEditPage
      */
     public function setProperties($properties)
     {
-        $this->switchTab(self::CONFIGURATION_TAB);
+        $this->switchTab(self::TAB_CONFIGURATION);
         foreach ($properties as $key => $value) {
             switch ($key) {
             case 'name':
@@ -104,7 +104,7 @@ class HostTemplateEditPage
             }
         }
 
-        $this->switchTab(self::RELATIONS_TAB);
+        $this->switchTab(self::TAB_RELATIONS);
         foreach ($properties as $key => $value) {
             switch ($key) {
             case 'service_templates':
