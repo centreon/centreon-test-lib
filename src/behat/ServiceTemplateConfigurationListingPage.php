@@ -55,17 +55,6 @@ class ServiceTemplateConfigurationListingPage implements ListingPage
     }
 
     /**
-     *  Edit a template.
-     *
-     *  @param $name  Service template name.
-     */
-    public function edit($name)
-    {
-        $this->context->assertFindLink($name)->click();
-        return new ServiceTemplateEditPage($this->context, FALSE);
-    }
-
-    /**
      *  Get the list of templates.
      */
     public function getEntries()
@@ -85,5 +74,16 @@ class ServiceTemplateConfigurationListingPage implements ListingPage
             $entries[$entry['description']] = $entry;
         }
         return $entries;
+    }
+
+    /**
+     *  Edit a template.
+     *
+     *  @param $name  Service template name.
+     */
+    public function inspect($name)
+    {
+        $this->context->assertFindLink($name)->click();
+        return new ServiceTemplateConfigurationPage($this->context, false);
     }
 }
