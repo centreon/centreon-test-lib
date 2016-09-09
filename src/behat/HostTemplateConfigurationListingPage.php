@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat;
 
-class HostTemplateListPage
+class HostTemplateConfigurationListingPage implements ListingPage
 {
     private $context;
 
@@ -29,10 +29,29 @@ class HostTemplateListPage
      */
     public function __construct($context, $visit = TRUE)
     {
+        // Visit page.
         $this->context = $context;
         if ($visit) {
             $this->context->visit('main.php?p=60103');
         }
+
+        // Check that page is valid for this class.
+        $mythis = $this;
+        $this->context->spin(function ($context) use ($mythis) {
+            return $mythis->isPageValid();
+        },
+        5,
+        'Current page does not match class ' . __CLASS__);
+    }
+
+    /**
+     *  Check that the current page is matching this class.
+     *
+     *  @return True if the current page matches this class.
+     */
+    public function isPageValid()
+    {
+        return $this->context->getSession()->getPage()->has('css', 'input[name="searchHT"]');
     }
 
     /**
@@ -47,23 +66,9 @@ class HostTemplateListPage
     }
 
     /**
-     *  Get template properties.
-     *
-     *  @param $name  Host template name.
-     */
-    public function getTemplate($name)
-    {
-        $templates = $this->getTemplates();
-        if (!array_key_exists($name, $templates)) {
-            throw new \Exception('Cannot find host template "' . $name . '".');
-        }
-        return $templates[$name];
-    }
-
-    /**
      *  Get the list of templates.
      */
-    public function getTemplates()
+    public function getEntries()
     {
         $entries = array();
         $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
@@ -82,5 +87,3 @@ class HostTemplateListPage
         return $entries;
     }
 }
-
-?>

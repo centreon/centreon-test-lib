@@ -31,6 +31,7 @@ is named BackupConfigurationPage.
 |------------------------------------------------------------|--------------------------------------|
 | Monitoring -> Downtimes -> Add                             | DowntimeConfigurationPage            |
 | Configuration -> Hosts -> Hosts -> Add / Edit              | HostConfigurationPage                |
+| Configuration -> Hosts -> Templates                        | HostTemplateConfigurationListingPage |
 | Configuration -> Hosts -> Templates -> Add / Edit          | HostTemplateConfigurationPage        |
 | Configuration -> Users -> Contacts / Users                 | ContactConfigurationListingPage      |
 | Configuration -> Users -> Contacts / Users -> Add / Edit   | ContactConfigurationPage             |
