@@ -274,7 +274,7 @@ class CentreonContext extends UtilsContext
     public function submitServiceResult($hostname, $serviceDescription, $checkResult, $checkOutput = '', $performanceData = '')
     {
         // Page in : Monitoring > Status Details > Services
-        $this->visit('/main.php?p=20201&o=svcpc&cmd=16&host_name=' . $hostname . '&service_description=' . $serviceDescription);
+        $this->visit('/main.php?p=20201&o=svcpc&cmd=16&host_name=' . $hostname . '&service_description=' . $serviceDescription . '&is_meta=false');
 
         // Configure the "Check result" dropdown field
         $this->getSession()->getPage()->selectFieldOption('return_code', $checkResult);
