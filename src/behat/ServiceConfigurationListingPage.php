@@ -108,7 +108,7 @@ class ServiceConfigurationListingPage implements ListingPage
             $this->getEntry($hostservice);
             $thrown = false;
         } catch (\Exception $e) {
-            $throwm = true;
+            $thrown = true;
         }
         return !$thrown;
     }
