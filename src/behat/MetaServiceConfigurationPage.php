@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat;
 
-class MetaServiceConfigurationPage
+class MetaServiceConfigurationPage implements ConfigurationPage
 {
     protected $context;
 

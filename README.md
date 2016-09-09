@@ -33,6 +33,7 @@ is named BackupConfigurationPage.
 | Configuration -> Hosts -> Hosts -> Add / Edit              | HostConfigurationPage                |
 | Configuration -> Hosts -> Templates                        | HostTemplateConfigurationListingPage |
 | Configuration -> Hosts -> Templates -> Add / Edit          | HostTemplateConfigurationPage        |
+| Configuration -> Services -> Meta Services -> Add / Edit   | MetaServiceConfigurationPage         |
 | Configuration -> Users -> Contacts / Users                 | ContactConfigurationListingPage      |
 | Configuration -> Users -> Contacts / Users -> Add / Edit   | ContactConfigurationPage             |
 | Configuration -> Commands -> Checks                        | CommandConfigurationListingPage      |
