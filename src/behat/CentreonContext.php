@@ -23,7 +23,7 @@ use Centreon\Test\Behat\ServiceConfigurationPage;
 
 class CentreonContext extends UtilsContext
 {
-    protected $container;
+    public $container;
     protected $pollerConfigurationPage;
 
     /**
