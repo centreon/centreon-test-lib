@@ -78,6 +78,16 @@ class CommandConfigurationListingPage implements ListingPage
     }
 
     /**
+     *  Edit a command.
+     *
+     *  @param $command  Command name.
+     */
+    public function inspect($command)
+    {
+        throw new \Exception(__METHOD__ ' not yet implemented');
+    }
+
+    /**
      *  Set the command filter.
      *
      *  @param string $commandName Command name to select.
