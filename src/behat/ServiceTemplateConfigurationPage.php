@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat;
 
-class ServiceTemplateEditPage
+class ServiceTemplateConfigurationPage implements ConfigurationPage
 {
     private $context;
 
@@ -29,10 +29,29 @@ class ServiceTemplateEditPage
      */
     public function __construct($context, $visit = TRUE)
     {
+        // Visit.
         $this->context = $context;
         if ($visit) {
             $this->context->visit('main.php?p=60206&o=a');
         }
+
+        // Check that page is valid.
+        $mythis = $this;
+        $this->context->spin(function ($context) use ($mythis) {
+            return $mythis->isPageValid();
+        },
+        5,
+        'Current page does not match class ' . __CLASS__);
+    }
+
+    /**
+     *  Check that the current page matches this class.
+     *
+     *  @return True if the current page matches this class.
+     */
+    public function isPageValid()
+    {
+        return $this->context->getSession()->getPage()->has('css', 'input[name="service_description"]');
     }
 
     /**

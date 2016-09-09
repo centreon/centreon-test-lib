@@ -36,6 +36,7 @@ is named BackupConfigurationPage.
 | Configuration -> Hosts -> Templates -> Add / Edit           | HostTemplateConfigurationPage        |
 | Configuration -> Services -> Services by host               | ServiceConfigurationListingPage      |
 | Configuration -> Services -> Services by host -> Add / Edit | ServiceConfigurationPage             |
+| Configuration -> Services -> Templates -> Add / Edit        | ServiceTemplateConfigurationPage     |
 | Configuration -> Services -> Meta Services -> Add / Edit    | MetaServiceConfigurationPage         |
 | Configuration -> Users -> Contacts / Users                  | ContactConfigurationListingPage      |
 | Configuration -> Users -> Contacts / Users -> Add / Edit    | ContactConfigurationPage             |
