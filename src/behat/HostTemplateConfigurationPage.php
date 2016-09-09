@@ -37,6 +37,7 @@ class HostTemplateConfigurationPage implements ConfigurationPage
      */
     public function __construct($context, $visit = TRUE)
     {
+        // Visit page.
         $this->context = $context;
         if ($visit) {
             $this->context->visit('main.php?p=60103&o=a');
@@ -45,6 +46,24 @@ class HostTemplateConfigurationPage implements ConfigurationPage
         else {
             $this->tab = self::TAB_UNKNOWN;
         }
+
+        // Check that page is valid for this class.
+        $mythis = $this;
+        $this->context->spin(function ($context) use ($mythis) {
+            return $mythis->isPageValid();
+        },
+        5,
+        'Current page does not match class ' . __CLASS__);
+    }
+
+    /**
+     *  Check that the current page is valid for this class.
+     *
+     *  @return True if the current page matches this class.
+     */
+    public function isPageValid()
+    {
+        return $this->context->getSession()->getPage()->has('css', 'input[name="host_name"]');
     }
 
     /**
