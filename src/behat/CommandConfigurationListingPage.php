@@ -58,7 +58,7 @@ class CommandConfigurationListingPage implements ListingPage
      */
     public function isPageValid()
     {
-        return $context->getSession()->getPage()->has('named', array('id_or_name', 'searchC'));
+        return $this->context->getSession()->getPage()->has('css', 'input[name="searchC"]');
     }
 
     /**
@@ -100,7 +100,8 @@ class CommandConfigurationListingPage implements ListingPage
      */
     public function inspect($command)
     {
-        throw new \Exception(__METHOD__ ' not yet implemented');
+        $this->context->assertFindLink($command)->click();
+        return new CommandConfigurationPage($this, false);
     }
 
     /**
