@@ -116,6 +116,17 @@ class PollerConfigurationExportPage implements Page
     public function export()
     {
         $this->context->assertFind('css', '#exportBtn')->click();
+        $this->context->spin(function($context) {
+            return (
+                $context->getSession()->getPage()->has(
+                    'named',
+                    array('id', 'progressPct')) &&
+                $context->getSession()->getPage()->find(
+                    'named',
+                    array('id', 'progressPct')
+                )->getText() == '100%'
+            );
+        });
     }
 
     /**
@@ -130,8 +141,8 @@ class PollerConfigurationExportPage implements Page
         }
         foreach ($pollers as $poller) {
             if ('all' == $poller) {
-                $this->context->assertFind('css', 'select#nhost')->click();
-                $this->context->assertFindLink('Select all')->click();
+                $this->context->assertFind('css', '.select2-search__field')->click();
+                $this->context->assertFindButton('Select all')->click();
             } else {
                 $this->context->selectToSelectTwo('select#nhost', $poller);
             }
