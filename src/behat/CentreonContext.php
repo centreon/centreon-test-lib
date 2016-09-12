@@ -14,11 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Centreon\Test\Behat;
 
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use WebDriver\WebDriver;
 use Centreon\Test\Behat\HostConfigurationPage;
+use Centreon\Test\Behat\PollerConfigurationExportPage;
 use Centreon\Test\Behat\ServiceConfigurationPage;
 
 class CentreonContext extends UtilsContext
@@ -278,5 +280,22 @@ class CentreonContext extends UtilsContext
 
         // Wait
         $this->getSession()->wait(5000, '');
+    }
+
+    /**
+     *  Restart all pollers.
+     */
+    public function restartAllPollers()
+    {
+        $page = new PollerConfigurationExportPage($this);
+        $page->setProperties(array(
+            'pollers' => 'all',
+            'generate_files' => true,
+            'run_debug' => true,
+            'move_files' => true,
+            'restart_engine' => true,
+            'restart_method' => PollerConfigurationExportPage::METHOD_RESTART
+        ));
+        $page->export();
     }
 }
