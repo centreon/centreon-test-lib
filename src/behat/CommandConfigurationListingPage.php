@@ -43,12 +43,7 @@ class CommandConfigurationListingPage implements ListingPage
         }
 
         // Check that page is valid for this class.
-        $mythis = $this;
-        $this->context->spin(function ($context) use ($mythis) {
-            return $mythis->isPageValid();
-        },
-        5,
-        'Current page does not match class ' . __CLASS__);
+        $this->waitForValidPage();
     }
 
     /**
@@ -62,17 +57,56 @@ class CommandConfigurationListingPage implements ListingPage
     }
 
     /**
+     *  Wait until page is valid or timeout occurs.
+     */
+    public function waitForValidPage()
+    {
+        $mythis = $this;
+        $this->context->spin(
+            function ($context) use ($mythis) {
+                return $mythis->isPageValid();
+            },
+            5,
+            'Current page does not match class ' . __CLASS__
+        );
+    }
+
+    /**
      *  Get the list of commands.
      */
     public function getEntries()
     {
+        // Go to first page.
+        $paginationLinks = $this->context->getSession()->getPage()->findAll('css', '.ToolbarPagination a');
+        foreach ($paginationLinks as $pageLink) {
+            if ($pageLink->getText() == '1') {
+                $pageLink->click();
+                $this->waitForValidPage();
+            }
+        }
+
+        // Browse all pages to find all commands.
         $entries = array();
-        $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
-        foreach ($elements as $element) {
-            $entry = array();
-            $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
-            $entry['command_line'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
-            $entries[$entry['name']] = $entry;
+        while (true) {
+            $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
+            foreach ($elements as $element) {
+                $entry = array();
+                $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
+                $entry['command_line'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
+                $entries[$entry['name']] = $entry;
+            }
+
+            // Go to next page or break.
+            $nextLink = $this->context->getSession()->getPage()->find(
+                'css',
+                '.ToolbarPagination a img[title="Next page"]'
+            );
+            if (is_null($nextLink)) {
+                break ;
+            } else {
+                $nextLink->click();
+                $this->waitForValidPage();
+            }
         }
         return $entries;
     }
