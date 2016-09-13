@@ -49,6 +49,8 @@ is named BackupConfigurationPage.
 | Configuration -> Commands -> Discovery -> Add / Edit        | CommandConfigurationPage                |
 | Configuration -> Commands -> Miscellaneous                  | CommandConfigurationListingPage         |
 | Configuration -> Commands -> Miscellaneous -> Add / Edit    | CommandConfigurationPage                |
+| Configuration -> Pollers -> Pollers                         | PollerConfigurationListingPage          |
+| Configuration -> Pollers -> Pollers -> Add / Edit           | PollerConfigurationPage                 |
 | Configuration -> Pollers -> Export configuration            | PollerConfigurationExportPage           |
 | Administration -> Parameters -> Backup                      | BackupConfigurationPage                 |
 
