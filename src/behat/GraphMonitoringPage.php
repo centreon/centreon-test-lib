@@ -64,7 +64,6 @@ class GraphMonitoringPage implements Page
     public function setFilterbyChart($hostname, $servicename)
     {
         $this->setFilterbyHost($hostname);
-sleep(10);
         $this->context->selectToSelectTwo('#select-chart', $hostname . ' - ' . $servicename);
     }
 
@@ -78,4 +77,45 @@ sleep(10);
         $this->context->selectToSelectTwo('#host_filter', $hostname);
     }
 
+    /**
+      * check if chart exists
+      *
+      * @param string hostname Hostame to select.
+      * @param string servicename Servicename to select.
+      */
+    public function hasChart($hostname, $servicename)
+    {
+        $graphDivs = $this->context->getSession()->getPage()->findAll('css', 'div.graph');
+        foreach ($graphDivs as $graphDiv) {
+            $graphName = $this->context->assertFindIn($graphDiv, 'css', 'div.title > span')->getText();
+            if ($graphName == $hostname . ' - ' . $servicename) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+      * Get chart
+      *
+      * @param string hostname Hostame to select.
+      * @param string servicename Servicename to select.
+      */
+    public function getChart($hostname, $servicename)
+    {
+        $graph = null;
+
+        if ($this->hasChart($hostname, $servicename)) {
+            $graphDivs = $this->context->getSession()->getPage()->findAll('css', 'div.graph');
+            foreach ($graphDivs as $graphDiv) {
+                $graphName = $this->context->assertFindIn($graphDiv, 'css', 'div.title > span')->getText();
+                if ($graphName == $hostname . ' - ' . $servicename) {
+                    $graph = $graphDiv;
+                }
+            }
+        }
+
+        return $graph;
+    }
 }
