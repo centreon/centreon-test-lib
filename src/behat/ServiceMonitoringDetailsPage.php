@@ -80,16 +80,4 @@ class ServiceMonitoringDetailsPage implements Page
 
         return $result;
     }
-    
-    /**
-     * Get Chart of the page
-     * 
-     * @return type
-     */
-    public function getChart()
-    {
-        $graph = null;
-        $graph = $this->context->getSession()->getPage()->findAll('css', 'div#chart-detailed-wrapper');
-        return $graph;
-    }
 }
