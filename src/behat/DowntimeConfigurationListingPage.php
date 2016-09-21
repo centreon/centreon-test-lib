@@ -164,6 +164,6 @@ class DowntimeConfigurationListingPage implements ListingPage
     public function cancel()
     {
         $this->context->setConfirmBox(true);
-        $this->context->assertFind('css', 'select[name="o1"]')->setValue('cs');
+        $this->context->assertFind('css', 'input[name="submit2"]')->click();
     }
 }
