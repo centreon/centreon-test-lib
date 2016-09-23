@@ -94,7 +94,8 @@ class UtilsContext extends RawMinkContext
      */
     public function spin($closure, $wait = 30, $timeoutMsg = 'Load timeout')
     {
-        for ($i = 0; $i < $wait; $i++) {
+        $limit = time() + $wait;
+        while (time() <= $limit) {
             try {
                 if ($closure($this)) {
                     return true;
