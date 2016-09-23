@@ -102,4 +102,25 @@ class HostTemplateConfigurationListingPage implements ListingPage
         $this->context->assertFindLink($name)->click();
         return new HostTemplateConfigurationPage($this->context, false);
     }
+
+    /**
+     *  Get a search.
+     */
+    public function setSearch($search)
+    {
+        $this->context->assertFind('css', 'input[name="searchHT"]')->setValue($search);
+        $this->context->assertFind('css', 'tbody tr td input.btc.bt_success')->click();
+    }
+
+    /**
+     *  Get the search.
+     */
+    public function getSearch()
+    {
+        $search =  $this->context->assertFind('css', 'input[name="searchHT"]')->getValue();
+        if (!isset($search)) {
+            throw new \Exception('could not find host template search');
+        }
+        return $search;
+    }
 }
