@@ -212,6 +212,10 @@ class CentreonContext extends UtilsContext
         $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
         $sessionName = $this->getMink()->getDefaultSessionName();
         $driver = new \Behat\Mink\Driver\Selenium2Driver('phantomjs', null, $url);
+        $driver->setTimeouts(array(
+            'page load' => 50000,
+            'script' => 50000
+        ));
         $session = new \Behat\Mink\Session($driver);
         $this->getMink()->registerSession($sessionName, $session);
     }
