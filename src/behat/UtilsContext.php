@@ -277,14 +277,24 @@ class UtilsContext extends RawMinkContext
             throw new \Exception('No select2 choice found');
         }
         $choice->press();
-
+        $select2Input = $this->getSession()->getDriver()->getWebDriverSession()->activeElement(
+            'xpath',
+            "//html/descendant-or-self::*[@class and contains(concat(' ', normalize-space(@class), ' '), ' select2-search__field ')]"
+        );
+        $select2Input->postValue(['value' => [$what]]);
         $this->spin(
             function ($context) {
-                return count($context->getSession()->getPage()->findAll('css', 'li.select2-results__option:not(.loading-results)')) != 0;
+                return count($context->getSession()->getPage()->findAll(
+                    'css',
+                    'li.select2-results__option:not(.loading-results):not(.select2-results__message)'
+                )) != 0;
             },
             30
         );
-        $chosenResults = $this->getSession()->getPage()->findAll('css', 'li.select2-results__option:not(.loading-results)');
+        $chosenResults = $this->getSession()->getPage()->findAll(
+            'css',
+            'li.select2-results__option:not(.loading-results):not(.select2-results__message)'
+        );
         foreach ($chosenResults as $result) {
             $html = $result->getHtml();
             if (preg_match('/>(.+)</', $html, $matches)) {
