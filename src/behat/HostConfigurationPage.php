@@ -41,6 +41,10 @@ class HostConfigurationPage implements ConfigurationPage
             self::CONFIGURATION_TAB,
             'text',
             'input[name="host_address"]'),
+        'location' => array(
+            self::CONFIGURATION_TAB,
+            'select2',
+            'select#host_location'),
         'templates' => array(
             self::CONFIGURATION_TAB,
             'custom',
