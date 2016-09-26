@@ -17,58 +17,29 @@
 
 namespace Centreon\Test\Behat;
 
-class ContactConfigurationPage implements ConfigurationPage
+class CurrentUserConfigurationPage implements ConfigurationPage
 {
-    const TAB_CONFIGURATION = 1;
-    const TAB_AUTHENTICATION = 2;
-    const TAB_EXTENDED = 3;
+    const TAB_INFORMATION = 1;
+    const TAB_NOTIFICATION = 2;
 
     protected $context;
 
     private static $properties = array(
         // Configuration tab.
         'alias' => array(
-            self::TAB_CONFIGURATION,
+            self::TAB_INFORMATION,
             'text',
             'input[name="contact_alias"]'),
         'name' => array(
-            self::TAB_CONFIGURATION,
+            self::TAB_INFORMATION,
             'text',
             'input[name="contact_name"]'),
         'email' => array(
-            self::TAB_CONFIGURATION,
+            self::TAB_INFORMATION,
             'text',
             'input[name="contact_email"]'),
-        'notifications_enabled' => array(
-            self::TAB_CONFIGURATION,
-            'radio',
-            'input[name="contact_enable_notifications[contact_enable_notifications]"]'),
-        'host_notify_on_recovery' => array(
-            self::TAB_CONFIGURATION,
-            'checkbox',
-            'input[name="contact_hostNotifOpts[r]"]'),
-        'host_notify_on_down' => array(
-            self::TAB_CONFIGURATION,
-            'checkbox',
-            'input[name="contact_hostNotifOpts[d]"]'),
-        'host_notification_command' => array(
-            self::TAB_CONFIGURATION,
-            'select2',
-            'select#contact_hostNotifCmds'),
-        'service_notify_on_recovery' => array(
-            self::TAB_CONFIGURATION,
-            'checkbox',
-            'input[name="contact_svNotifOpts[r]"]'),
-        'service_notify_on_critical' => array(
-            self::TAB_CONFIGURATION,
-            'checkbox',
-            'input[name="contact_svNotifOpts[c]"]'),
-        'service_notification_command' => array(
-            self::TAB_CONFIGURATION,
-            'select2',
-            'select#contact_svNotifCmds'),
         'location' => array(
-            self::TAB_AUTHENTICATION,
+            self::TAB_INFORMATION,
             'select2',
             'select#contact_location'),
     );
@@ -86,7 +57,7 @@ class ContactConfigurationPage implements ConfigurationPage
         // Visit page.
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('main.php?p=60301&o=a');
+            $this->context->visit('main.php?p=50104&o=c');
         }
 
         // Check that page is valid for this class.
@@ -107,6 +78,7 @@ class ContactConfigurationPage implements ConfigurationPage
     {
         return $this->context->getSession()->getPage()->has('css', 'input[name="contact_name"]');
     }
+
 
     /**
      *  Get host properties.
