@@ -39,6 +39,10 @@ class ContactConfigurationPage implements ConfigurationPage
             self::TAB_CONFIGURATION,
             'text',
             'input[name="contact_email"]'),
+        'location' => array(
+            self::TAB_CONFIGURATION,
+            'select2',
+            'select#contact_location'),
         'notifications_enabled' => array(
             self::TAB_CONFIGURATION,
             'radio',
