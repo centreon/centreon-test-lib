@@ -17,6 +17,8 @@
 
 namespace Centreon\Test\Behat;
 
+namespace Centreon\Test\Behat;
+
 class DowntimeConfigurationPage implements ConfigurationPage
 {
     const TYPE_HOST = 1;
@@ -80,7 +82,38 @@ class DowntimeConfigurationPage implements ConfigurationPage
      */
     public function getProperties()
     {
-        throw new \Exception('The getProperties() method of ' . __CLASS__ . ' is not yet implemented.');
+
+        $properties = array();
+
+        // Browse all properties.
+        foreach (self::$properties as $property => $metadata) {
+            // Set property meta-data in variables.
+            $propertyType = $metadata[0];
+            $propertyLocator = $metadata[1];
+
+            // Get properties.
+            switch ($propertyType) {
+                case 'radio':
+                    break ;
+                case 'select2':
+                    $properties[$property] = $this->context->assertFind('css',$propertyLocator)->getValue();
+                    break ;
+                case 'text':
+                    $properties[$property] = $this->context->assertFind('css',$propertyLocator)->getValue();
+                    break ;
+                case 'select':
+                    $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
+                    break ;
+                case 'checkbox':
+                    break ;
+                default:
+                    throw new \Exception(
+                        'Unknown property type ' . $propertyType
+                        . ' found while retrieving host properties.');
+            }
+        }
+        return $properties;
+
     }
 
     /**
