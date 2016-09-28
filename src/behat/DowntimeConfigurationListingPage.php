@@ -33,7 +33,7 @@ class DowntimeConfigurationListingPage implements ListingPage
         // Visit page.
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('main.php?p=210');
+            $this->context->visit('main.php?p=21001');
         }
 
         // Check that page is valid for this class.
