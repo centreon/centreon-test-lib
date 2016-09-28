@@ -105,6 +105,12 @@ class DowntimeConfigurationListingPage implements ListingPage
                 'css',
                 'td:nth-child(8)'
             )->getText();
+            $entry['started'] = $this->context->assertFindIn(
+                $element,
+                'css',
+                'td:nth-child(9)'
+            )->getText();
+            $entry['started'] = ($entry['started'] == 'Yes') ? true : false;
 
             // Store entry in result set.
             $entries[] = $entry;
