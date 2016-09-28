@@ -136,7 +136,11 @@ class DowntimeConfigurationPage implements ConfigurationPage
             // Set property with its value.
             switch ($propertyType) {
                 case 'checkbox':
-                    $this->context->assertFind('css', $propertyLocator)->check();
+                    if ($value) {
+                        $this->context->assertFind('css', $propertyLocator)->check();
+                    } else {
+                        $this->context->assertFind('css', $propertyLocator)->uncheck();
+                    }
                     break ;
                 case 'radio':
                     $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
