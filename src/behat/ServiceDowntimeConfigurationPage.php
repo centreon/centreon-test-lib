@@ -24,7 +24,6 @@ class ServiceDowntimeConfigurationPage implements ConfigurationPage
     const RELATIONS_TAB = 2;
 
     protected $context;
-    protected $nbPeriod = 1;
 
     private static $properties = array(
         // configuration tab.
@@ -41,17 +40,17 @@ class ServiceDowntimeConfigurationPage implements ConfigurationPage
         'periods' => array(
             self::CONFIGURATION_TAB,
             'checkbox',
-            'input[name="periods[+p+][days][]"]'
+            'input[name="periods[1][days][]"]'
         ),
         'start' => array(
             self::CONFIGURATION_TAB,
             'text',
-            'input[name="periods[+p+][start_period]"]'
+            'input[name="periods[1][start_period]"]'
         ),
         'end' => array(
             self::CONFIGURATION_TAB,
             'text',
-            'input[name="periods[+p+][end_period]"]'
+            'input[name="periods[1][end_period]"]'
         ),
         'host_relation' => array(
             self::RELATIONS_TAB,
@@ -124,7 +123,7 @@ class ServiceDowntimeConfigurationPage implements ConfigurationPage
     }
 
     /**
-     *  Set template properties.
+     *  Set template properties. (For 1 period)
      *
      * @param $properties  Service template properties.
      */
@@ -133,17 +132,6 @@ class ServiceDowntimeConfigurationPage implements ConfigurationPage
         // Begin with first tab.
         $tab = self::CONFIGURATION_TAB;
         $this->switchTab($tab);
-
-        //change day
-        if (($this->nbPeriod == 2) && ($properties['start'] > $properties['end'])) {
-            $start[1] = $properties['start'];
-            $start[2] = '00:00';
-            $end[1] = '23:59';
-            $end[2] = $properties['end'];
-        } else {
-            $start[1] = $properties['start'];
-            $end[1] = $properties['end'];
-        }
 
         // Browse all properties.
         foreach ($properties as $property => $value) {
@@ -167,22 +155,18 @@ class ServiceDowntimeConfigurationPage implements ConfigurationPage
             switch ($propertyType) {
                 case 'checkbox':
                     foreach ($value as $key => $val) {
+
+
                         if ($val) {
-                            for ($i = 1; $i <= $this->nbPeriod; $i++) {
-                                $this->switchPeriode($i);
-                                $this->context->assertFind(
-                                    'css',
-                                    str_replace("+p+", "$i", $propertyLocator) . '[value="' . $val . '"]'
-                                )->check();
-                            }
+                            $this->context->assertFind(
+                                'css',
+                                $propertyLocator. '[value="' . $val . '"]'
+                            )->check();
                         } else {
-                            for ($i = 1; $i <= $this->nbPeriod; $i++) {
-                                $this->switchPeriode($i);
-                                $this->context->assertFind(
-                                    'css',
-                                    str_replace("+p+", "$i", $propertyLocator) . '[value="' . $val . '"]'
-                                )->uncheck();
-                            }
+                            $this->context->assertFind(
+                                'css',
+                                $propertyLocator . '[value="' . $val . '"]'
+                            )->uncheck();
                         }
                     }
                     break;
@@ -199,29 +183,10 @@ class ServiceDowntimeConfigurationPage implements ConfigurationPage
                     }
                     break;
                 case 'text':
-                    // if start or end time, choose periode
-                    if ($property == 'start') {
-                        for ($i = 1; $i <= $this->nbPeriod; $i++) {
-                            $this->switchPeriode($i);
-                            $this->context->assertFind(
-                                'css',
-                                str_replace("+p+", "$i", $propertyLocator)
-                            )->setValue($start[$i]);
-                        }
-                    } elseif ($property == 'end') {
-                        for ($i = 1; $i <= $this->nbPeriod; $i++) {
-                            $this->switchPeriode($i);
-                            $this->context->assertFind(
-                                'css',
-                                str_replace("+p+", "$i", $propertyLocator)
-                            )->setValue($end[$i]);
-                        }
-                    } else {
-                        $this->context->assertFind(
-                            'css',
-                            str_replace("+p+", "$this->nbPeriod", $propertyLocator)
-                        )->setValue($value);
-                    }
+                    $this->context->assertFind(
+                        'css',
+                        $propertyLocator
+                    )->setValue($value);
                     break;
                 default:
                     throw new \Exception(
@@ -257,7 +222,6 @@ class ServiceDowntimeConfigurationPage implements ConfigurationPage
         $this->nbPeriod++;
     }
 
-
     /**
      *  Switch between tabs.
      *
@@ -267,7 +231,6 @@ class ServiceDowntimeConfigurationPage implements ConfigurationPage
     {
         $this->context->assertFind('css', 'ul#ul_tabs li:nth-child(' . $tab . ') a:nth-child(1)')->click();
     }
-
 
     /**
      *  Switch between tabs.
