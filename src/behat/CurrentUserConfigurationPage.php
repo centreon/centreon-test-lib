@@ -88,7 +88,7 @@ class CurrentUserConfigurationPage implements ConfigurationPage
     public function getProperties()
     {
         // Begin with first tab.
-        $tab = self::TAB_CONFIGURATION;
+        $tab = self::TAB_INFORMATION;
         $this->switchTab($tab);
         $properties = array();
 
@@ -133,7 +133,7 @@ class CurrentUserConfigurationPage implements ConfigurationPage
     public function setProperties($properties)
     {
         // Begin with first tab.
-        $tab = self::TAB_CONFIGURATION;
+        $tab = self::TAB_INFORMATION;
         $this->switchTab($tab);
 
         // Browse all properties.
