@@ -80,22 +80,16 @@ class DowntimeConfigurationListingPage implements ListingPage
                 'css',
                 'td:nth-child(3)'
             )->getText();
-            $entry['start'] = \DateTime::createFromFormat(
-                'Y/m/d H:i',
-                $this->context->assertFindIn(
-                    $element,
-                    'css',
-                    'td:nth-child(4)'
-                )->getText()
-            )->getTimestamp();
-            $entry['end'] = \DateTime::createFromFormat(
-                'Y/m/d H:i',
-                $this->context->assertFindIn(
-                    $element,
-                    'css',
-                    'td:nth-child(5)'
-                )->getText()
-            )->getTimestamp();
+            $entry['start'] = $this->context->assertFindIn(
+                $element,
+                'css',
+                'td:nth-child(4)'
+            )->getText();
+            $entry['end'] = $this->context->assertFindIn(
+                $element,
+                'css',
+                'td:nth-child(5)'
+            )->getText();
             $entry['author'] = $this->context->assertFindIn(
                 $element,
                 'css',
