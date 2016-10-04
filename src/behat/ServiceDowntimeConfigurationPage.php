@@ -95,7 +95,7 @@ class ServiceDowntimeConfigurationPage implements ConfigurationPage
      */
     public function isPageValid()
     {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="downtime_name"]');
+        return $this->context->getSession()->getPage()->has('css', 'input#start_period_1');
     }
 
     /**
