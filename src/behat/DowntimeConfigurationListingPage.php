@@ -24,8 +24,8 @@ class DowntimeConfigurationListingPage implements ListingPage
     /**
      *  Navigate to the downtime configuration listing page.
      *
-     *  @param $context  Centreon context.
-     *  @param $visit    True to visit the downtime configuration
+     * @param $context  Centreon context.
+     * @param $visit    True to visit the downtime configuration
      *                   listing page.
      */
     public function __construct($context, $visit = true)
@@ -47,10 +47,11 @@ class DowntimeConfigurationListingPage implements ListingPage
         );
     }
 
+
     /**
      *  Check that current page matches this class.
      *
-     *  @return True if the current page matches this class.
+     * @return True if the current page matches this class.
      */
     public function isPageValid()
     {
@@ -60,7 +61,7 @@ class DowntimeConfigurationListingPage implements ListingPage
     /**
      *  Get downtime listing.
      *
-     *  @return An array of downtimes.
+     * @return An array of downtimes.
      */
     public function getEntries()
     {
@@ -121,9 +122,9 @@ class DowntimeConfigurationListingPage implements ListingPage
     /**
      *  Get a specific downtime.
      *
-     *  @param $entry  Downtime entry number in the listing.
+     * @param $entry  Downtime entry number in the listing.
      *
-     *  @return An array with the downtime properties.
+     * @return An array with the downtime properties.
      */
     public function getEntry($entry)
     {
@@ -135,9 +136,19 @@ class DowntimeConfigurationListingPage implements ListingPage
     }
 
     /**
+     *  display downtime cycle.
+     *
+     */
+    public function displayDowntimeCycle()
+    {
+        $this->context->assertFind('css', 'input[name="view_downtime_cycle"]')->check();
+        $this->context->assertFindButton('SearchB')->click();
+    }
+
+    /**
      *  Throw an exception. Downtimes are not inspectable.
      *
-     *  @param $entry  Downtime entry number in the listing.
+     * @param $entry  Downtime entry number in the listing.
      */
     public function inspect($entry)
     {
@@ -147,8 +158,8 @@ class DowntimeConfigurationListingPage implements ListingPage
     /**
      *  Select an entry.
      *
-     *  @param $entry   Downtime entry number in the listing.
-     *  @param $select  True to select entry, false to unselect.
+     * @param $entry   Downtime entry number in the listing.
+     * @param $select  True to select entry, false to unselect.
      */
     public function selectEntry($entry, $select = true)
     {

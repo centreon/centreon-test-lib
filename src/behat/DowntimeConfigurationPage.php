@@ -32,7 +32,7 @@ class DowntimeConfigurationPage implements ConfigurationPage
         'service' => array('select2', 'select#service_id'),
         'fixed' => array('checkbox', 'input[name="persistant"]'),
         'duration' => array('text', 'input[name="duration"]'),
-        'duration_unit' => array('select', 'input[name="duration_scale"]'),
+        'duration_unit' => array('select', 'select[name="duration_scale"]'),
         'start_day' => array('text', 'input[name="start"]'),
         'start_time' => array('text', 'input[name="start_time"]'),
         'end_day' => array('text', 'input[name="end"]'),
