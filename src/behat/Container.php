@@ -187,7 +187,7 @@ class Container
         for ($i = 0; ($i < 50) && !curl_exec($ch); ++$i) {
             sleep(1);
         }
-        if ($i >= 30) {
+        if ($i >= 50) {
             throw new \Exception('URL ' . $url . ' did not respond within a 50 seconds time frame.');
         }
     }
