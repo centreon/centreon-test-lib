@@ -29,9 +29,9 @@ class Container
      */
     private function exec($cmd)
     {
-        exec($cmd, $output, $returnVar);
+        exec($cmd . ' 2>&1', $output, $returnVar);
         if ($returnVar != 0) {
-            throw new \Exception('Cannot execute container control command: ' . $cmd . " \n " . implode("\n", $output));
+            throw new \Exception('Cannot execute container control command: ' . $cmd . " \n " . implode("\n", $output) . ' (code ' . $returnVar . ')');
         }
     }
 
