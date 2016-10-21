@@ -104,8 +104,7 @@ class CentreonContext extends UtilsContext
         $this->spin(
             function ($context) use ($page) {
                 return $page->has('css', 'a[href="main.php?p=103"]');
-            },
-            30
+            }
         );
     }
 
