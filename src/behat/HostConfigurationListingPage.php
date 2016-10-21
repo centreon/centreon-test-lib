@@ -123,4 +123,18 @@ class HostConfigurationListingPage implements ListingPage
         }
         return $search;
     }
+
+
+    /**
+     *  Del an host.
+     */
+    public function delHost($hostId)
+    {
+        $this->context->setConfirmBox(true);
+        $this->context->assertFind('css', 'input[name="select['.$hostId.']"]')->click();
+        $this->context->assertFind('css', 'select[name="o1"]')->selectOption('Delete');
+    }
+
+
+
 }
