@@ -62,9 +62,11 @@ class HostTemplateConfigurationListingPage implements ListingPage
         $entries = array();
         $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
         foreach ($elements as $element) {
+            $idComponent = $this->context->assertFindIn($element, 'css', 'input[type="checkbox"]')->getAttribute('name');
             $nameComponent = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)');
             $imageComponent = $this->context->assertFindIn($nameComponent, 'css', 'img');
             $entry = array();
+            $entry['id'] = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
             $entry['name'] = $nameComponent->getText();
             $entry['icon'] = $imageComponent->getAttribute('src');
             $entry['description'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
@@ -122,5 +124,17 @@ class HostTemplateConfigurationListingPage implements ListingPage
             throw new \Exception('could not find host template search');
         }
         return $search;
+    }
+
+    /**
+     *  Del an host.
+     */
+    public function delHostTemplate($hostTemplateName)
+    {
+        $this->context->setConfirmBox(true);
+
+        $hostTemplates = $this->getEntries();
+        $this->context->assertFind('css', 'input[name="select['.$hostTemplates[$hostTemplateName]['id'].']"]')->click();
+        $this->context->assertFind('css', 'select[name="o1"]')->selectOption('Delete');
     }
 }
