@@ -67,10 +67,10 @@ class HostConfigurationListingPage implements ListingPage
             $entry = array();
             $entry['name'] = $nameComponent->getText();
             $entry['icon'] = $imageComponent->getAttribute('src');
-            $entry['alias'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
-            $entry['ip_address'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(4)')->getText();
-            $entry['poller'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText();
-            $entry['parents'] = explode(' ', str_replace('| ', '', $this->context->assertFindIn($element, 'css', 'td:nth-child(6)')->getText()));
+            $entry['alias'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(4)')->getText();
+            $entry['ip_address'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText();
+            $entry['poller'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(6)')->getText();
+            $entry['parents'] = explode(' ', str_replace('| ', '', $this->context->assertFindIn($element, 'css', 'td:nth-child(7)')->getText()));
             $entries[$entry['name']] = $entry;
         }
         return $entries;

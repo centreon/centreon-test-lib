@@ -172,20 +172,22 @@ class HostConfigurationPage implements ConfigurationPage
             // Get properties.
             switch ($propertyType) {
             case 'radio':
-                throw new \Behat\Behat\Tester\Exception\PendingException(__FUNCTION__);
-                break ;
+            case 'checkbox':
             case 'select2':
-                $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
-                break ;
             case 'text':
-                $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
+                $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
                 break ;
+            case 'custom':
+                $methodName = 'get' . $propertyLocator;
+                $properties[$property] = $this->$methodName();
+                break;
             default:
                 throw new \Exception(
                     'Unknown property type ' . $propertyType
                     . ' found while retrieving host properties.');
             }
         }
+
         return $properties;
     }
 
@@ -268,6 +270,26 @@ class HostConfigurationPage implements ConfigurationPage
     public function switchTab($tab)
     {
         $this->context->assertFind('css', 'li#c' . $tab . ' a')->click();
+    }
+
+    /**
+     *  Get host templates.
+     *
+     *  @return host templates
+     */
+    private function getTemplates()
+    {
+        $templates = array();
+
+        $elements = $this->context->getSession()->getPage()->findAll('css', '[id^="tpSelect_"] option[selected="selected"]');
+        foreach ($elements as $element) {
+            $templateName = $element->getText();
+            if ($templateName != '') {
+                $templates[] = $templateName;
+            }
+        }
+
+        return $templates;
     }
 
     /**
