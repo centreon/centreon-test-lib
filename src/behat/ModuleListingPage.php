@@ -90,4 +90,30 @@ class ModuleListingPage implements ListingPage
         return $entries;
     }
 
+    /**
+     *  Get a module.
+     *
+     *  @param $module  Module name.
+     *
+     *  @return An array of properties.
+     */
+    public function getEntry($module)
+    {
+        $modules = $this->getEntries();
+        if (!array_key_exists($module, $modules)) {
+            throw new \Exception('could not find module ' . $module);
+        }
+        return $modules[$module];
+    }
+
+    /**
+     *  Edit a module.
+     *
+     *  @param $name  Module name.
+     */
+    public function inspect($name)
+    {
+        throw new \Exception('Cannot inspect a module.');
+    }
+
 }
