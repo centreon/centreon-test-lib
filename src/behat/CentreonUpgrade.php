@@ -47,7 +47,7 @@ class CentreonUpgrade
 
     public function installFiles()
     {
-        exec(
+        $this->context->execute(
             'yum update -y --nogpgcheck centreon-base-config-centreon-engine-' . $this->version .
             ' centreon-' . $this->version .
             ' centreon-plugins-' . $this->version .
@@ -56,7 +56,7 @@ class CentreonUpgrade
             ' centreon-web-' . $this->version .
             ' centreon-trap-' . $this->version .
             ' centreon-perl-libs-' . $this->version
-        );
+        ,'web');
 
     //     yum install -y --nogpgcheck centreon-base-config-centreon-engine-2.8.0 centreon-2.8.0 centreon-plugins-2.8.0 centreon-plugin-meta-2.8.0 centreon-common-2.8.0 centreon-web-2.8.0 centreon-trap-2.8.0 centreon-perl-libs-2.8.0
 
