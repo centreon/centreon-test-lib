@@ -58,6 +58,7 @@ class ContainerExtension implements ExtensionInterface
                 ->scalarNode('ppe')->defaultValue('mon-ppe-dev.yml')->end()
                 ->scalarNode('ppe1')->defaultValue('mon-ppe1-dev.yml')->end()
                 ->scalarNode('ppm')->defaultValue('mon-ppm-dev.yml')->end()
+                ->scalarNode('ppm1')->defaultValue('mon-ppm1-dev.yml')->end()
                 ->scalarNode('automation')->defaultValue('mon-automation-dev.yml')->end()
                 ->scalarNode('middleware')->defaultValue('mon-middleware-dev.yml')->end()
                 ->scalarNode('bam')->defaultValue('des-bam-dev.yml')->end()
