@@ -33,15 +33,12 @@ class CentreonUpgrade
      */
     public function __construct($context, $version)
     {
-
         $this->context = $context;
         $this->version = $version;
 
         $this->installFiles();
         $this->logOut();
         $this->installWeb();
-
-
     }
 
 
@@ -56,60 +53,60 @@ class CentreonUpgrade
             ' centreon-web-' . $this->version .
             ' centreon-trap-' . $this->version .
             ' centreon-perl-libs-' . $this->version
-        ,'web');
-
-    //     yum install -y --nogpgcheck centreon-base-config-centreon-engine-2.8.0 centreon-2.8.0 centreon-plugins-2.8.0 centreon-plugin-meta-2.8.0 centreon-common-2.8.0 centreon-web-2.8.0 centreon-trap-2.8.0 centreon-perl-libs-2.8.0
-
+            , 'web');
     }
 
     public function installWeb()
     {
         $mythis = $this;
         //step 1
-        $this->context->spin(function ($context) use ($mythis) {
-            return $this->context->getSession()->getPage()->has('css', '#next');
-        },
+        $this->context->spin(
+            function ($context) use ($mythis) {
+                return $this->context->getSession()->getPage()->has('css', '#next');
+            },
             5,
-            'Current page does not match class ' . __CLASS__);
-
+            'Current page does not match step 1'
+        );
         $this->context->assertFind('css', '#next')->click();
 
         //step 2
-        $this->context->spin(function ($context) use ($mythis) {
-            return $this->context->getSession()->getPage()->has('css', '#next');
-        },
+        $this->context->spin(
+            function ($context) use ($mythis) {
+                return $this->context->getSession()->getPage()->has('css', '#next');
+            },
             5,
-            'Current page does not match class ' . __CLASS__);
-
+            'Current page does not match step 2'
+        );
         $this->context->assertFind('css', '#next')->click();
 
         //step 3
-        $this->context->spin(function ($context) use ($mythis) {
-            'Next' == $this->context->assertFind('css', '#next')->getValue();
-        },
+        $this->context->spin(
+            function ($context) use ($mythis) {
+                return 'Next' == $this->context->assertFind('css', '#next')->getValue();
+            },
             15,
-            'Current page does not match class ' . __CLASS__);
-
+            'Current page does not match step 3'
+        );
         $this->context->assertFind('css', '#next')->click();
-
 
         //step 4
-        $this->context->spin(function ($context) use ($mythis) {
-            return !$this->context->getSession()->getPage()->has('css', 'tbody#step_contents td img');
-        },
+        $this->context->spin(
+            function ($context) use ($mythis) {
+                return !$this->context->getSession()->getPage()->has('css', 'tbody#step_contents td img');
+            },
             60,
-            'Current page does not match class ' . __CLASS__);
-
+            'Current page does not match step 4'
+        );
         $this->context->assertFind('css', '#next')->click();
 
-
         //step 5
-        $this->context->spin(function ($context) use ($mythis) {
-            return !$this->context->getSession()->getPage()->has('css', '#finish');
-        },
+        $this->context->spin(
+            function ($context) use ($mythis) {
+                return $this->context->getSession()->getPage()->has('css', '#finish');
+            },
             5,
-            'Current page does not match class ' . __CLASS__);
-
+            'Current page does not match step 5'
+        );
         $this->context->assertFind('css', '#finish')->click();
     }
 
@@ -117,6 +114,4 @@ class CentreonUpgrade
     {
         $this->context->assertFind('css', 'div#logli a.red')->click();
     }
-
-
 }
