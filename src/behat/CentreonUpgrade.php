@@ -44,7 +44,7 @@ class CentreonUpgrade
 
     public function installFiles()
     {
-        $this->context->execute(
+        $this->context->container->execute(
             'yum update -y --nogpgcheck centreon-base-config-centreon-engine-' . $this->version .
             ' centreon-' . $this->version .
             ' centreon-plugins-' . $this->version .
