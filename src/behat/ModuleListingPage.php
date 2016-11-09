@@ -24,10 +24,10 @@ class ModuleListingPage implements ListingPage
     /**
      *  Module list page.
      *
-     *  @param $context  Centreon context class.
-     *  @param $visit    True to navigate to page.
+     * @param $context  Centreon context class.
+     * @param $visit    True to navigate to page.
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = true)
     {
         // Visit page.
         $this->context = $context;
@@ -40,14 +40,14 @@ class ModuleListingPage implements ListingPage
         $this->context->spin(function ($context) use ($mythis) {
             return $mythis->isPageValid();
         },
-        5,
-        'Current page does not match class ' . __CLASS__);
+            5,
+            'Current page does not match class ' . __CLASS__);
     }
 
     /**
      *  Check that the current page is matching this class.
      *
-     *  @return True if the current page matches this class.
+     * @return True if the current page matches this class.
      */
     public function isPageValid()
     {
@@ -93,9 +93,9 @@ class ModuleListingPage implements ListingPage
     /**
      *  Get a module.
      *
-     *  @param $module  Module name.
+     * @param $module  Module name.
      *
-     *  @return An array of properties.
+     * @return An array of properties.
      */
     public function getEntry($module)
     {
@@ -109,11 +109,32 @@ class ModuleListingPage implements ListingPage
     /**
      *  Edit a module.
      *
-     *  @param $name  Module name.
+     * @param $name  Module name.
      */
     public function inspect($name)
     {
         throw new \Exception('Cannot inspect a module.');
     }
+
+
+    /**
+     *  Upgrade a module.
+     *
+     * @param $name  Module name.
+     */
+    public function upgrade($name)
+    {
+        $module = $this->getEntry($name);
+        if ($module['actions']['upgrade']) {
+            $moduleUpgradeImg = $this->context->assertFind('css', '#action' . $name . ' img[title="Upgrade"]');
+            $moduleUpgradeImg->click();
+            $validUpgradeImg = $this->context->assertFind('css', 'input[name="upgrade"]');
+            $validUpgradeImg->click();
+        } else {
+            throw new \Exception('Cannot upgrade the module : ' . $name);
+        }
+
+    }
+
 
 }
