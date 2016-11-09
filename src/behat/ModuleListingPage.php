@@ -124,10 +124,21 @@ class ModuleListingPage implements ListingPage
      */
     public function upgrade($name)
     {
+        $mythis = $this;
+
         $module = $this->getEntry($name);
         if ($module['actions']['upgrade']) {
             $moduleUpgradeImg = $this->context->assertFind('css', '#action' . $name . ' img[title="Upgrade"]');
             $moduleUpgradeImg->click();
+
+            $this->context->spin(
+                function ($context) use ($mythis) {
+                    return $this->context->getSession()->getPage()->has('css', 'input[name="upgrade"]');
+                },
+                5,
+                'Current page does not match'
+            );
+
             $validUpgradeImg = $this->context->assertFind('css', 'input[name="upgrade"]');
             $validUpgradeImg->click();
         } else {
