@@ -59,7 +59,7 @@ class CentreonUpgrade
             function ($context) use ($mythis) {
                 return $this->context->getSession()->getPage()->has('css', '#next');
             },
-            5,
+            60,
             'Current page does not match step 1'
         );
         $this->context->assertFind('css', '#next')->click();
@@ -69,7 +69,7 @@ class CentreonUpgrade
             function ($context) use ($mythis) {
                 return $this->context->getSession()->getPage()->has('css', '#next');
             },
-            5,
+            60,
             'Current page does not match step 2'
         );
         $this->context->assertFind('css', '#next')->click();
@@ -79,7 +79,7 @@ class CentreonUpgrade
             function ($context) use ($mythis) {
                 return 'Next' == $this->context->assertFind('css', '#next')->getValue();
             },
-            25,
+            80,
             'Current page does not match step 3'
         );
         $this->context->assertFind('css', '#next')->click();
@@ -89,7 +89,7 @@ class CentreonUpgrade
             function ($context) use ($mythis) {
                 return !$this->context->getSession()->getPage()->has('css', 'tbody#step_contents td img');
             },
-            60,
+            120,
             'Current page does not match step 4'
         );
         $this->context->assertFind('css', '#next')->click();
@@ -99,7 +99,7 @@ class CentreonUpgrade
             function ($context) use ($mythis) {
                 return $this->context->getSession()->getPage()->has('css', '#finish');
             },
-            10,
+            60,
             'Current page does not match step 5'
         );
         $this->context->assertFind('css', '#finish')->click();
