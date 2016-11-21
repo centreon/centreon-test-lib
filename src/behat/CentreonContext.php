@@ -44,7 +44,7 @@ class CentreonContext extends UtilsContext
      *  This will effectively stop and remove the container attached to
      *  this context if one was launched.
      *
-     *  @AfterScenario
+     * @AfterScenario
      */
     public function unsetContainer(AfterScenarioScope $scope)
     {
@@ -59,7 +59,7 @@ class CentreonContext extends UtilsContext
     }
 
     /**
-     *  @Given a Centreon server
+     * @Given a Centreon server
      */
     public function aCentreonServer()
     {
@@ -67,7 +67,7 @@ class CentreonContext extends UtilsContext
     }
 
     /**
-     *  @Given a freshly installed Centreon server
+     * @Given a freshly installed Centreon server
      */
     public function aFreshlyInstalledCentreonServer()
     {
@@ -133,10 +133,10 @@ class CentreonContext extends UtilsContext
     /**
      *  Execute a command.
      *
-     *  @param string  $cmd           Command to execute.
-     *  @param string  $service       Docker service to which this
+     * @param string $cmd Command to execute.
+     * @param string $service Docker service to which this
      *                                command should be addressed.
-     *  @param boolean $throwOnError  True to throw an error if the
+     * @param boolean $throwOnError True to throw an error if the
      *                                command fails to execute.
      */
     public function execute($command, $service, $throwOnError = true)
@@ -155,7 +155,8 @@ class CentreonContext extends UtilsContext
     public function getCentreonDatabase()
     {
         if (!isset($this->dbCentreon)) {
-            $dsn = 'mysql:dbname=centreon;host=' . $this->container->getHost() . ';port=' . $this->container->getPort(3306, 'web');
+            $dsn = 'mysql:dbname=centreon;host=' . $this->container->getHost() . ';port=' . $this->container->getPort(3306,
+                    'web');
             $this->dbCentreon = new \PDO(
                 $dsn,
                 'root',
@@ -169,12 +170,13 @@ class CentreonContext extends UtilsContext
     /**
      *  Get Centreon Storage database connection.
      *
-     *  @return PDO The database connection.
+     * @return PDO The database connection.
      */
     public function getStorageDatabase()
     {
         if (!isset($this->dbStorage)) {
-            $dsn = 'mysql:dbname=centreon_storage;host=' . $this->container->getHost() . ';port=' . $this->container->getPort(3306, 'web');
+            $dsn = 'mysql:dbname=centreon_storage;host=' . $this->container->getHost() . ';port=' . $this->container->getPort(3306,
+                    'web');
             $this->dbStorage = new \PDO(
                 $dsn,
                 'root',
@@ -188,7 +190,7 @@ class CentreonContext extends UtilsContext
     /**
      *  Launch Centreon Web container and setup context.
      *
-     *  @param $name Entry name.
+     * @param $name Entry name.
      */
     public function launchCentreonWebContainer($name)
     {
@@ -236,12 +238,12 @@ class CentreonContext extends UtilsContext
         $this->getSession()->getPage()->selectFieldOption('return_code', $checkResult);
 
         // Configure the "Check output" field
-        if (! empty($checkOutput)) {
+        if (!empty($checkOutput)) {
             $this->assertFindField('output')->setValue($checkOutput);
         }
 
         // Configure the "Performance data" field
-        if (! empty($performanceData)) {
+        if (!empty($performanceData)) {
             $this->assertFindField('dataPerform')->setValue($performanceData);
         }
 
@@ -260,8 +262,13 @@ class CentreonContext extends UtilsContext
      * @param string checkOutput
      * @param string performanceData
      */
-    public function submitServiceResult($hostname, $serviceDescription, $checkResult, $checkOutput = '', $performanceData = '')
-    {
+    public function submitServiceResult(
+        $hostname,
+        $serviceDescription,
+        $checkResult,
+        $checkOutput = '',
+        $performanceData = ''
+    ) {
         // Page in : Monitoring > Status Details > Services
         $this->visit('/main.php?p=20201&o=svcpc&cmd=16&host_name=' . $hostname . '&service_description=' . $serviceDescription . '&is_meta=false');
 
@@ -269,12 +276,12 @@ class CentreonContext extends UtilsContext
         $this->getSession()->getPage()->selectFieldOption('return_code', $checkResult);
 
         // Configure the "Check output" field
-        if (! empty($checkOutput)) {
+        if (!empty($checkOutput)) {
             $this->assertFindField('output')->setValue($checkOutput);
         }
 
         // Configure the "Performance data" field
-        if (! empty($performanceData)) {
+        if (!empty($performanceData)) {
             $this->assertFindField('dataPerform')->setValue($performanceData);
         }
 
