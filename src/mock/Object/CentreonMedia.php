@@ -32,4 +32,14 @@ class CentreonMedia extends BaseObject
     {
         return $this->getIncrementedId();
     }
+    
+    public function setMediaDirectory($newMediaDirectory)
+    {
+        
+    }
+    
+    public function getMediaDirectory()
+    {
+        return 'directory_name';
+    }
 }
