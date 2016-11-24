@@ -308,4 +308,19 @@ class CentreonContext extends UtilsContext
         ));
         $page->export();
     }
+
+    /**
+     *  Run yum update centreon-web in the container.
+     */
+    public function yumUpdateCentreonWeb()
+    {
+        $this->context->container->execute(
+            'yum clean all',
+            'web'
+        );
+        $this->context->container->execute(
+            'yum update -y --nogpgcheck centreon-web',
+            'web'
+        );
+    }
 }

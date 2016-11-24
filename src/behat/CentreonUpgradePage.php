@@ -17,96 +17,101 @@
 
 namespace Centreon\Test\Behat;
 
-class CentreonUpgrade
+class CentreonUpgradePage implements Page
 {
-
     protected $context;
-    protected $version;
 
     /**
-     *  Navigate to and/or check that we are on the backup
-     *  configuration page.
+     *  Navigate to and/or check that we are on the Centreon upgrade
+     *  page.
      *
      * @param $context  Centreon context.
-     * @param $version  Centreon version.
-     *
      */
-    public function __construct($context, $version = '2.8.0')
+    public function __construct($context)
     {
+        // Disconnect.
         $this->context = $context;
-        $this->version = $version;
+        $this->context->visit('index.php?disconnect=1');
+
+        // Check that page is valid for this class.
+        $mythis = $this;
+        $this->context->spin(function ($context) use ($mythis) {
+            return $mythis->isPageValid();
+        },
+        5,
+        'Current page does not match class ' . __CLASS__);
     }
 
-
-    public function installFiles()
+    /**
+     *  Check that the current page is matching this class.
+     *
+     *  @return True if the current page matches this class.
+     */
+    public function isPageValid()
     {
-
-        $this->context->container->execute(
-            'yum clean all'
-            , 'web');
-
-        $this->context->container->execute(
-            'yum update -y --nogpgcheck centreon-web-' . $this->version
-            , 'web');
-
+        return $this->context->getSession()->getPage()->has(
+            'css',
+            'th.step-wrapper'
+        );
     }
 
-    public function installWeb()
+    /**
+     *  Run the web upgrade and browse all steps.
+     */
+    public function upgrade()
     {
         $mythis = $this;
-        //step 1
+        // Step 1
         $this->context->spin(
             function ($context) use ($mythis) {
-                return $this->context->getSession()->getPage()->has('css', '#next');
+                return $this->context->assertFind('css', 'th.step-wrapper span')->getText() == 1;
             },
-            60,
+            30,
             'Current page does not match step 1'
         );
         $this->context->assertFind('css', '#next')->click();
 
-        //step 2
+        // Step 2
         $this->context->spin(
             function ($context) use ($mythis) {
-                return $this->context->getSession()->getPage()->has('css', '#next');
+                return $this->context->assertFind('css', 'th.step-wrapper span')->getText() == 2;
             },
-            60,
+            30,
             'Current page does not match step 2'
         );
         $this->context->assertFind('css', '#next')->click();
 
-        //step 3
+        // Step 3
         $this->context->spin(
             function ($context) use ($mythis) {
-                return 'Next' == $this->context->assertFind('css', '#next')->getValue();
+                return ($this->context->assertFind('css', 'th.step-wrapper span')->getText() == 3)
+                    && ($this->context->getSession()->getPage()->has('css', '#releasenotes'));
             },
-            80,
+            30,
             'Current page does not match step 3'
         );
+        sleep(12);
         $this->context->assertFind('css', '#next')->click();
 
-        //step 4
+        // Step 4
         $this->context->spin(
             function ($context) use ($mythis) {
-                return !$this->context->getSession()->getPage()->has('css', 'tbody#step_contents td img');
+                return ($this->context->assertFind('css', 'th.step-wrapper span')->getText() == 4)
+                    && ($this->context->assertFind('css', '#next')->isVisible());
             },
             120,
             'Current page does not match step 4'
         );
         $this->context->assertFind('css', '#next')->click();
 
-        //step 5
+        // Step 5
         $this->context->spin(
             function ($context) use ($mythis) {
-                return $this->context->getSession()->getPage()->has('css', '#finish');
+                return $this->context->assertFind('css', 'th.step-wrapper span')->getText() == 5;
             },
             60,
             'Current page does not match step 5'
         );
         $this->context->assertFind('css', '#finish')->click();
-    }
-
-    public function logOut()
-    {
-        $this->context->assertFind('css', 'div#logli a.red')->click();
     }
 }
