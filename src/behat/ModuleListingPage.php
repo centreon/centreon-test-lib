@@ -125,27 +125,50 @@ class ModuleListingPage implements ListingPage
     public function upgrade($name)
     {
         $mythis = $this;
-
+        $i = 0;
         $module = $this->getEntry($name);
-        if ($module['actions']['upgrade']) {
-            $moduleUpgradeImg = $this->context->assertFind('css', '#action' . $name . ' img[title="Upgrade"]');
-            $moduleUpgradeImg->click();
+        while ($module['actions']['upgrade']) {
+            $i++;
+            if ($module['actions']['upgrade']) {
+                $moduleUpgradeImg = $this->context->assertFind('css', '#action' . $name . ' img[title="Upgrade"]');
+                $moduleUpgradeImg->click();
 
-            $this->context->spin(
-                function ($context) use ($mythis) {
-                    return $this->context->getSession()->getPage()->has('css', 'input[name="upgrade"]');
-                },
-                5,
-                'Current page does not match'
-            );
+                //update
+                $this->context->spin(
+                    function ($context) use ($mythis) {
+                        return $this->context->getSession()->getPage()->has('css', 'input[name="upgrade"]');
+                    },
+                    5,
+                    'Current page does not match'
+                );
 
-            $validUpgradeImg = $this->context->assertFind('css', 'input[name="upgrade"]');
-            $validUpgradeImg->click();
-        } else {
-            throw new \Exception('Cannot upgrade the module : ' . $name);
+                $validUpgradeImg = $this->context->assertFind('css', 'input[name="upgrade"]');
+                $validUpgradeImg->click();
+
+                //back
+                $this->context->spin(
+                    function ($context) use ($mythis) {
+                        return !$this->context->getSession()->getPage()->has('css', 'input[name="upgrade"]');
+                    },
+                    20,
+                    'Current page does not match'
+                );
+
+                $this->context->spin(
+                    function ($context) use ($mythis) {
+                        return $this->context->getSession()->getPage()->has('css', 'input[name="list"]');
+                    },
+                    60,
+                    'Current page does not match'
+                );
+
+                $validUpgradeImg = $this->context->assertFind('css', 'input[name="list"]');
+                $validUpgradeImg->click();
+
+            } else {
+                throw new \Exception('Cannot upgrade the module : ' . $name);
+            }
+            $module = $this->getEntry($name);
         }
-
     }
-
-
 }
