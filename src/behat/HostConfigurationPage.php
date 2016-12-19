@@ -41,6 +41,10 @@ class HostConfigurationPage implements ConfigurationPage
             self::CONFIGURATION_TAB,
             'text',
             'input[name="host_address"]'),
+        'check_command' => array(
+            self::CONFIGURATION_TAB,
+            'select2',
+            'select#command_command_id'),
         'location' => array(
             self::CONFIGURATION_TAB,
             'select2',
