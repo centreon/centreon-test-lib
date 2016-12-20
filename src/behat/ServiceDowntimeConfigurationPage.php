@@ -85,7 +85,7 @@ class ServiceDowntimeConfigurationPage implements ConfigurationPage
         // Visit.
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('main.php?p=60216&o=a&type=s');
+            $this->context->visit('main.php?p=21003&o=a');
         }
 
         // Check that page is valid.
