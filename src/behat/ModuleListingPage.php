@@ -62,6 +62,11 @@ class ModuleListingPage implements ListingPage
         $entries = array();
         $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
         foreach ($elements as $element) {
+            try {
+                $this->context->assertFindIn($element, 'css', 'td:nth-child(1) a')->getText();
+            } catch (\Exception $e) {
+                continue;
+            }
             $entry = array();
             $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(1) a')->getText();
             $entry['realname'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2) a')->getText();
