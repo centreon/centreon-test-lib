@@ -22,6 +22,7 @@ use WebDriver\WebDriver;
 use Centreon\Test\Behat\HostConfigurationPage;
 use Centreon\Test\Behat\PollerConfigurationExportPage;
 use Centreon\Test\Behat\ServiceConfigurationPage;
+use Centreon\Test\Behat\UtilsContext;
 
 class CentreonContext extends UtilsContext
 {
@@ -106,6 +107,14 @@ class CentreonContext extends UtilsContext
                 return $page->has('css', 'a[href="main.php?p=103"]');
             }
         );
+    }
+
+    protected $context;
+
+    public function iAmLoggOut($context)
+    {
+        $this->context = $context;
+        $this->context->visit('index.php?disconnect=1');
     }
 
     /**

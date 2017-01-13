@@ -87,6 +87,10 @@ class ParametersCentreonUiPage implements ConfigurationPage
             'text',
             'input[name="proxy_port"]'
         ),
+        'enable autologin' => array(
+            'checkbox',
+            'input[name="enable_autologin[yes]"]')
+
     );
 
     /**
@@ -148,6 +152,7 @@ class ParametersCentreonUiPage implements ConfigurationPage
                 case 'select2':
                     $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
                     break;
+                case 'checkbox':
                 case 'text':
                     $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
                     break;

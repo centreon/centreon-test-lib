@@ -42,6 +42,10 @@ class CurrentUserConfigurationPage implements ConfigurationPage
             self::TAB_INFORMATION,
             'select2',
             'select#contact_location'),
+        'autologin_key' => array(
+            self::TAB_INFORMATION,
+            'text',
+            'input[name="contact_autologin_key"]')
     );
 
     /**
