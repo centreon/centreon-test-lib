@@ -121,6 +121,48 @@ class ModuleListingPage implements ListingPage
         throw new \Exception('Cannot inspect a module.');
     }
 
+    /**
+     *  Install a module.
+     *
+     * @param $name  Module name.
+     * @throws \Exception
+     */
+    public function install($name)
+    {
+        $mythis = $this;
+        $i = 0;
+        $module = $this->getEntry($name);
+        if ($module['actions']['install']) {
+            $moduleInstallImg = $this->context->assertFind('css', '#action' . $name . ' img[title="Install Module"]');
+            $moduleInstallImg->click();
+
+            // install module
+            $this->context->spin(
+                function ($context) use ($mythis) {
+                    return $mythis->context->getSession()->getPage()->has('css', 'input[name="install"]');
+                },
+                5,
+                'Current page does not match'
+            );
+
+            $validInstallImg = $this->context->assertFind('css', 'input[name="install"]');
+            $validInstallImg->click();
+
+            //back
+            $this->context->spin(
+                function ($context) use ($mythis) {
+                    return !$mythis->context->getSession()->getPage()->has('css', 'input[name="list"]');
+                },
+                20,
+                'Current page does not match'
+            );
+
+            $validInstallImg = $this->context->assertFind('css', 'input[name="list"]');
+            $validInstallImg->click();
+        } else {
+            throw new \Exception('Module ' . $name . ' is already installed.');
+        }
+    }
 
     /**
      *  Upgrade a module.
