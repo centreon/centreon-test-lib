@@ -109,12 +109,16 @@ class CentreonContext extends UtilsContext
         );
     }
 
-    protected $context;
-
-    public function iAmLoggOut($context)
+    public function iAmLoggedOut()
     {
-        $this->context = $context;
-        $this->context->visit('index.php?disconnect=1');
+        $this->visit('index.php?disconnect=1');
+
+        $page = $this->getSession()->getPage();
+        $this->spin(
+            function ($this) use ($page) {
+                return $page->has('css', 'input[name="useralias"]');
+            }
+        );
     }
 
     /**
