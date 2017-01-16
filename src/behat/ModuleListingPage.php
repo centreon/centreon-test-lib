@@ -151,7 +151,7 @@ class ModuleListingPage implements ListingPage
             //back
             $this->context->spin(
                 function ($context) use ($mythis) {
-                    return !$mythis->context->getSession()->getPage()->has('css', 'input[name="list"]');
+                    return $mythis->context->getSession()->getPage()->has('css', 'input[name="list"]');
                 },
                 20,
                 'Current page does not match'
