@@ -34,9 +34,9 @@ class CentreonContext extends UtilsContext
      *
      * @param array $parameters The list of parameters given in behat.yml
      */
-    public function __construct($paramaters = array())
+    public function __construct($parameters = array())
     {
-        parent::__construct($paramaters);
+        parent::__construct($parameters);
     }
 
     /**
@@ -114,8 +114,9 @@ class CentreonContext extends UtilsContext
         $this->visit('index.php?disconnect=1');
 
         $page = $this->getSession()->getPage();
+        $mythis = $this;
         $this->spin(
-            function ($this) use ($page) {
+            function ($mythis) use ($page) {
                 return $page->has('css', 'input[name="useralias"]');
             }
         );
