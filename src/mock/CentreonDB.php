@@ -83,7 +83,7 @@ class CentreonDB
      */
     public function execute($queryObject, $values)
     {
-        return new CentreonDBResultSet(array());
+        return new CentreonDBResultSet(array($values));
     }
 
     /**
