@@ -22,6 +22,7 @@ use WebDriver\WebDriver;
 use Centreon\Test\Behat\HostConfigurationPage;
 use Centreon\Test\Behat\PollerConfigurationExportPage;
 use Centreon\Test\Behat\ServiceConfigurationPage;
+use Centreon\Test\Behat\UtilsContext;
 
 class CentreonContext extends UtilsContext
 {
@@ -33,9 +34,9 @@ class CentreonContext extends UtilsContext
      *
      * @param array $parameters The list of parameters given in behat.yml
      */
-    public function __construct($paramaters = array())
+    public function __construct($parameters = array())
     {
-        parent::__construct($paramaters);
+        parent::__construct($parameters);
     }
 
     /**
@@ -104,6 +105,19 @@ class CentreonContext extends UtilsContext
         $this->spin(
             function ($context) use ($page) {
                 return $page->has('css', 'a[href="main.php?p=103"]');
+            }
+        );
+    }
+
+    public function iAmLoggedOut()
+    {
+        $this->visit('index.php?disconnect=1');
+
+        $page = $this->getSession()->getPage();
+        $mythis = $this;
+        $this->spin(
+            function ($mythis) use ($page) {
+                return $page->has('css', 'input[name="useralias"]');
             }
         );
     }

@@ -17,96 +17,79 @@
 
 namespace Centreon\Test\Behat;
 
-class ParametersCentreonUiPage implements ConfigurationPage
+class TimeperiodsConfigurationPage implements ConfigurationPage
 {
+    const TAB_CONFIGURATION = 1;
+    const TAB_EXCEPTION = 2;
+
     protected $context;
 
     private static $properties = array(
         // Configuration tab.
-        'directory' => array(
+        'name' => array(
+            self::TAB_CONFIGURATION,
             'text',
-            'input[name="oreon_path"]'
+            'input[name="tp_name"]'
         ),
-        'web_directory' => array(
+        'alias' => array(
+            self::TAB_CONFIGURATION,
             'text',
-            'input[name="oreon_web_path"]'
+            'input[name="tp_alias"]'
         ),
-        'default_limit_page' => array(
+        'sunday' => array(
+            self::TAB_CONFIGURATION,
             'text',
-            'input[name="maxViewConfiguration"]'
+            'input[name="tp_sunday"]'
         ),
-        'monitoring_limit_page' => array(
-            'select',
-            'select[name="maxViewMonitoring"]'
-        ),
-        'graph_per_page' => array(
+        'monday' => array(
+            self::TAB_CONFIGURATION,
             'text',
-            'input[name="maxGraphPerformances"]'
+            'input[name="tp_monday"]'
         ),
-        'elements_loaded' => array(
+        'tuesday' => array(
+            self::TAB_CONFIGURATION,
             'text',
-            'input[name="selectPaginationSize"]'
+            'input[name="tp_tuesday"]'
         ),
-        'sessions_time' => array(
+        'wednesday' => array(
+            self::TAB_CONFIGURATION,
             'text',
-            'input[name="session_expire"]'
+            'input[name="tp_wednesday"]'
         ),
-        'refresh_statistics' => array(
+        'thursday' => array(
+            self::TAB_CONFIGURATION,
             'text',
-            'input[name="AjaxTimeReloadStatistic"]'
+            'input[name="tp_thursday"]'
         ),
-        'refresh_monitoring' => array(
+        'friday' => array(
+            self::TAB_CONFIGURATION,
             'text',
-            'input[name="AjaxTimeReloadMonitoring"]'
+            'input[name="tp_friday"]'
         ),
-        'display_sort_by' => array(
-            'select',
-            'select[name="global_sort_type"]'
-        ),
-        'display_order_by' => array(
-            'select',
-            'select[name="global_sort_order"]'
-        ),
-        'problem_display_sort_by' => array(
-            'select',
-            'select[name="problem_sort_type"]'
-        ),
-        'problem_display_order_by' => array(
-            'select',
-            'select[name="problem_sort_order"]'
-        ),
-        'proxy_protocol' => array(
-            'select',
-            'select[name="proxy_protocol"]'
-        ),
-        'proxy_url' => array(
+        'saturday' => array(
+            self::TAB_CONFIGURATION,
             'text',
-            'input[name="proxy_url"]'
+            'input[name="tp_saturday"]'
         ),
-        'proxy_port' => array(
-            'text',
-            'input[name="proxy_port"]'
+        'templates' => array(
+            self::TAB_CONFIGURATION,
+            'select2',
+            'select#tp_include'
         ),
-        'enable autologin' => array(
-            'checkbox',
-            'input[name="enable_autologin[yes]"]')
-
     );
 
     /**
-     *  Navigate to and/or check that we are on a contact configuration
-     *  page.
+     *  Navigate to and/or check that we are on a timeperiod configuration page.
      *
      * @param $context  Centreon context.
-     * @param $visit    True to navigate to a blank host configuration
-     *                   page.
+     * @param $visit    True to navigate to a blank timeperiods configuration page.
      */
     public function __construct($context, $visit = true)
     {
         // Visit page.
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('main.php?p=50110&o=general');
+            $this->context->visit('main.php?p=60304&o=c');
         }
 
         // Check that page is valid for this class.
@@ -125,38 +108,40 @@ class ParametersCentreonUiPage implements ConfigurationPage
      */
     public function isPageValid()
     {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="proxy_url"]');
+        return $this->context->getSession()->getPage()->has('css', 'input[name="tp_name"]');
     }
 
     /**
-     *  Get host properties.
+     *  Get timeperiods properties.
      *
-     * @return Host properties.
+     * @return timeperiods properties.
      */
     public function getProperties()
     {
         // Begin with first tab.
+        $tab = self::TAB_CONFIGURATION;
+        $this->switchTab($tab);
         $properties = array();
 
         // Browse all properties.
         foreach (self::$properties as $property => $metadata) {
             // Set property meta-data in variables.
-            $propertyType = $metadata[0];
-            $propertyLocator = $metadata[1];
+            $targetTab = $metadata[0];
+            $propertyType = $metadata[1];
+            $propertyLocator = $metadata[2];
+
+            // Switch between tabs if required.
+            if ($tab != $targetTab) {
+                $this->switchTab($targetTab);
+                $tab = $targetTab;
+            }
 
             // Get properties.
             switch ($propertyType) {
-                case 'radio':
-                    throw new \Behat\Behat\Tester\Exception\PendingException(__FUNCTION__);
-                    break;
                 case 'select2':
-                    $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
+                    $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
                     break;
-                case 'checkbox':
                 case 'text':
-                    $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
-                    break;
-                case 'select':
                     $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
                     break;
                 default:
@@ -169,12 +154,15 @@ class ParametersCentreonUiPage implements ConfigurationPage
     }
 
     /**
-     *  Set host properties.
+     *  Set timeperiods properties.
      *
-     * @param $properties Centreon UI properties.
+     * @param $properties New timeperiods properties.
      */
     public function setProperties($properties)
     {
+        // Begin with first tab.
+        $tab = self::TAB_CONFIGURATION;
+        $this->switchTab($tab);
 
         // Browse all properties.
         foreach ($properties as $property => $value) {
@@ -184,19 +172,18 @@ class ParametersCentreonUiPage implements ConfigurationPage
             }
 
             // Set property meta-data in variables.
-            $propertyType = self::$properties[$property][0];
-            $propertyLocator = self::$properties[$property][1];
+            $targetTab = self::$properties[$property][0];
+            $propertyType = self::$properties[$property][1];
+            $propertyLocator = self::$properties[$property][2];
+
+            // Switch between tabs if required.
+            if ($tab != $targetTab) {
+                $this->switchTab($targetTab);
+                $tab = $targetTab;
+            }
 
             // Set property with its value.
             switch ($propertyType) {
-                case 'custom':
-                    $setter = 'set' . $propertyLocator;
-                    $this->$setter($value);
-                    break;
-                case 'checkbox':
-                case 'radio':
-                    $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
-                    break;
                 case 'select2':
                     if (!is_array($value)) {
                         $value = array($value);
@@ -208,9 +195,6 @@ class ParametersCentreonUiPage implements ConfigurationPage
                 case 'text':
                     $this->context->assertFind('css', $propertyLocator)->setValue($value);
                     break;
-                case 'select':
-                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
-                    break;
                 default:
                     throw new \Exception(
                         'Unknown property type ' . $propertyType
@@ -220,7 +204,7 @@ class ParametersCentreonUiPage implements ConfigurationPage
     }
 
     /**
-     *  Save the current contact configuration page.
+     *  Save the current timeperiod configuration page.
      */
     public function save()
     {
@@ -232,4 +216,13 @@ class ParametersCentreonUiPage implements ConfigurationPage
         }
     }
 
+    /**
+     *  Switch between tabs.
+     *
+     * @param $tab  Tab ID.
+     */
+    public function switchTab($tab)
+    {
+        $this->context->assertFind('css', 'li#c' . $tab . ' a')->click();
+    }
 }

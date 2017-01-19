@@ -143,6 +143,7 @@ class PollerConfigurationExportPage implements Page
             if ('all' == $poller) {
                 $this->context->assertFind('css', '.select2-search__field')->click();
                 $this->context->assertFindButton('Select all')->click();
+                $this->context->assertFind('css', '.popin-wrapper .button_group_center .btc.bt_success')->click();
             } else {
                 $this->context->selectToSelectTwo('select#nhost', $poller);
             }

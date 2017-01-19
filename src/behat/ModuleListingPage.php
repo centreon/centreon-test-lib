@@ -62,6 +62,11 @@ class ModuleListingPage implements ListingPage
         $entries = array();
         $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
         foreach ($elements as $element) {
+            try {
+                $this->context->assertFindIn($element, 'css', 'td:nth-child(1) a')->getText();
+            } catch (\Exception $e) {
+                continue;
+            }
             $entry = array();
             $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(1) a')->getText();
             $entry['realname'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2) a')->getText();
@@ -116,6 +121,48 @@ class ModuleListingPage implements ListingPage
         throw new \Exception('Cannot inspect a module.');
     }
 
+    /**
+     *  Install a module.
+     *
+     * @param $name  Module name.
+     * @throws \Exception
+     */
+    public function install($name)
+    {
+        $mythis = $this;
+        $i = 0;
+        $module = $this->getEntry($name);
+        if ($module['actions']['install']) {
+            $moduleInstallImg = $this->context->assertFind('css', '#action' . $name . ' img[title="Install Module"]');
+            $moduleInstallImg->click();
+
+            // install module
+            $this->context->spin(
+                function ($context) use ($mythis) {
+                    return $mythis->context->getSession()->getPage()->has('css', 'input[name="install"]');
+                },
+                5,
+                'Current page does not match'
+            );
+
+            $validInstallImg = $this->context->assertFind('css', 'input[name="install"]');
+            $validInstallImg->click();
+
+            //back
+            $this->context->spin(
+                function ($context) use ($mythis) {
+                    return $mythis->context->getSession()->getPage()->has('css', 'input[name="list"]');
+                },
+                20,
+                'Current page does not match'
+            );
+
+            $validInstallImg = $this->context->assertFind('css', 'input[name="list"]');
+            $validInstallImg->click();
+        } else {
+            throw new \Exception('Module ' . $name . ' is already installed.');
+        }
+    }
 
     /**
      *  Upgrade a module.
