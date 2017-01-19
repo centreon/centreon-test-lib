@@ -29,12 +29,12 @@ class TimeperiodsConfigurationPage implements ConfigurationPage
         'name' => array(
             self::TAB_CONFIGURATION,
             'text',
-            'input[name="timeperiod_name"]'
+            'input[name="tp_name"]'
         ),
         'alias' => array(
             self::TAB_CONFIGURATION,
             'text',
-            'input[name="tp_name"]'
+            'input[name="tp_alias"]'
         ),
         'sunday' => array(
             self::TAB_CONFIGURATION,
@@ -139,10 +139,10 @@ class TimeperiodsConfigurationPage implements ConfigurationPage
             // Get properties.
             switch ($propertyType) {
                 case 'select2':
-                    $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
+                    $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
                     break;
                 case 'text':
-                    $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
+                    $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
                     break;
                 default:
                     throw new \Exception(
