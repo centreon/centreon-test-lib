@@ -46,7 +46,7 @@ class CentreonDB
     /**
      * Stub escape function
      *
-     * @param string $stub The string to escape
+     * @param string $string The string to escape
      * @return string The string escaped
      */
     public function escape($string)
@@ -77,13 +77,13 @@ class CentreonDB
 
     /**
      * 
-     * @param mixed $queryObject
+     * @param mixed $query
      * @param array $values
      * @return mixed
      */
-    public function execute($queryObject, $values)
+    public function execute($query, $values)
     {
-        return new CentreonDBResultSet(array());
+        return $this->query($query);
     }
 
     /**
