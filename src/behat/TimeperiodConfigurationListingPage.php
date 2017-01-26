@@ -99,6 +99,6 @@ class TimeperiodConfigurationListingPage implements ListingPage
     {
         $timeperiods = $this->context->assertFind('css', 'table.ListTable');
         $this->context->assertFindLinkIn($timeperiods, $name)->click();
-        return new TimeperiodsConfigurationPage($this->context, false);
+        return new TimeperiodConfigurationPage($this->context, false);
     }
 }
