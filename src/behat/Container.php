@@ -197,12 +197,14 @@ class Container
     public function waitForAvailableUrl($url)
     {
         $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 500);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        for ($i = 0; ($i < 50) && !curl_exec($ch); ++$i) {
+        $limit = time() + 50;
+        while ((time() < $limit) && !curl_exec($ch)) {
             sleep(1);
         }
-        if ($i >= 50) {
+        if (time() >= $limit) {
             throw new \Exception('URL ' . $url . ' did not respond within a 50 seconds time frame.');
         }
     }
