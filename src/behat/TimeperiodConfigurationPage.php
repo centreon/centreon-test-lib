@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat;
 
-class TimeperiodsConfigurationPage implements ConfigurationPage
+class TimeperiodConfigurationPage implements ConfigurationPage
 {
     const TAB_CONFIGURATION = 1;
     const TAB_EXCEPTION = 2;

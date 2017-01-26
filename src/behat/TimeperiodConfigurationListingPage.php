@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat;
 
-class TimeperiodsListingPage implements ListingPage
+class TimeperiodConfigurationListingPage implements ListingPage
 {
     private $context;
 
@@ -85,7 +85,7 @@ class TimeperiodsListingPage implements ListingPage
     {
         $timeperiods = $this->getEntries($tpname);
         if (!array_key_exists($tpname, $timeperiods)) {
-            throw new \Exception('could not find contact ' . $tpname);
+            throw new \Exception('could not find timeperiod ' . $tpname);
         }
         return $timeperiods[$tpname];
     }
