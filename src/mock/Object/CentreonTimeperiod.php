@@ -22,4 +22,54 @@ class CentreonTimeperiod extends BaseObject
     {
         return $this->getIncrementedId();
     }
+
+    public function update($tp_id, $timeperiod)
+    {
+        ;
+    }
+
+    public function deleteTimeperiodByName($tp_name)
+    {
+        ;
+    }
+
+    public function setTimeperiodException($tp_id, $exceptions)
+    {
+        ;
+    }
+
+    public function deleteTimeperiodException($tp_id)
+    {
+        ;
+    }
+
+    public function deleteTimeperiodInclude($tp_id)
+    {
+        ;
+    }
+
+    public function setTimeperiodDependency($tp_id, $dependencies)
+    {
+        ;
+    }
+
+    public function getLinkedHostsByName()
+    {
+        return array();
+    }
+
+    public function getLinkedServicesByName()
+    {
+        return array();
+    }
+
+    public function getLinkedContactsByName()
+    {
+        return array();
+    }
+
+    public function getLinkedTimeperiodsByName()
+    {
+        return array();
+    }
 }
