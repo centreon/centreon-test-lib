@@ -31,6 +31,10 @@ class ParametersCentreonUiPage implements ConfigurationPage
             'text',
             'input[name="oreon_web_path"]'
         ),
+        'web_base_root' => array(
+            'text',
+            'input[name="centreon_web_base_root"]'
+        ),
         'default_limit_page' => array(
             'text',
             'input[name="maxViewConfiguration"]'
