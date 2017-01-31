@@ -91,6 +91,14 @@ class ParametersCentreonUiPage implements ConfigurationPage
             'text',
             'input[name="proxy_port"]'
         ),
+        'proxy_user' => array(
+            'text',
+            'input[name="proxy_user"]'
+        ),
+        'proxy_password' => array(
+            'text',
+            'input[name="proxy_password"]'
+        ),
         'enable autologin' => array(
             'checkbox',
             'input[name="enable_autologin[yes]"]')
