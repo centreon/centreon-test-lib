@@ -89,7 +89,7 @@ class CentreonContext extends UtilsContext
             $user = $this->parameters['centreon_user'];
         }
         if (isset($this->parameters['centreon_password'])) {
-            $password = $this->paramaters['centreon_password'];
+            $password = $this->parameters['centreon_password'];
         }
 
         $this->visit('/');

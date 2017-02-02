@@ -264,6 +264,46 @@ class UtilsContext extends RawMinkContext
     }
 
     /**
+     *  Select an element in advMultiSelect.
+     *
+     *  @param $css_id  The ID of the select.
+     *  @param $value   The requested value.
+     */
+    public function selectInAdvMultiSelect($css_id, $values = array())
+    {
+        if (!is_array($values)) {
+            $values = array($values);
+        }
+
+        $elements = $this->getSession()->getPage()->findAll('css', $css_id . ' option');
+
+        /* Select Add button */
+        $buttonSelector = $css_id;
+        if (preg_match('/.*name=\"(\S+)\[/', $css_id, $matches)) {
+            $buttonSelector = 'input[type="button"][onclick*="' . $matches[1] . '"]';
+        }
+        $addButton = $this->assertFind('css', $buttonSelector);
+
+        foreach ($values as $value) {
+            $found = FALSE;
+
+            foreach ($elements as $element) {
+                if ($element->getText() == $value) {
+                    $element->click();
+                    $addButton->click();
+                    $found = TRUE;
+                    break;
+                }
+            }
+            if (!$found) {
+                throw new \Exception(
+                    'Could not find value ' . $value
+                    . ' in selection list ' . $css_id . '.');
+            }
+        }
+    }
+
+    /**
      *  Select an element in a select two.
      *
      *  @param $css_id  The id of the select two.

@@ -67,6 +67,18 @@ class ContactConfigurationPage implements ConfigurationPage
             self::TAB_CONFIGURATION,
             'select2',
             'select#contact_svNotifCmds'),
+        'password' => array(
+            self::TAB_AUTHENTICATION,
+            'text',
+            'input#passwd1',
+            false // Do not exist on ldap contact
+        ),
+        'dn' => array(
+            self::TAB_AUTHENTICATION,
+            'text',
+            'input[name="contact_ldap_dn"]',
+            false // Do not exist when no ldap is configured
+        ),
         'location' => array(
             self::TAB_AUTHENTICATION,
             'select2',
@@ -78,8 +90,7 @@ class ContactConfigurationPage implements ConfigurationPage
      *  page.
      *
      *  @param $context  Centreon context.
-     *  @param $visit    True to navigate to a blank host configuration
-     *                   page.
+     *  @param bool $visit    True to navigate to a blank configuration page.
      */
     public function __construct($context, $visit = TRUE)
     {
@@ -136,13 +147,19 @@ class ContactConfigurationPage implements ConfigurationPage
             // Get properties.
             switch ($propertyType) {
             case 'radio':
-                throw new \Behat\Behat\Tester\Exception\PendingException(__FUNCTION__);
+            case 'checkbox':
                 break ;
             case 'select2':
-                $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
+                $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
                 break ;
             case 'text':
-                $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
+                try {
+                    $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
+                } catch (\Exception $e) {
+                    if (!isset($metadata[3]) || $metadata[3]) {
+                        throw $e;
+                    }
+                }
                 break ;
             default:
                 throw new \Exception(
