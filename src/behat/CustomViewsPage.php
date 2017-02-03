@@ -86,4 +86,23 @@ class CustomViewsPage implements Page
         $this->context->selectToSelectTwo('select#widget_model_id', $widget);
         $this->context->assertFind('css', 'input[name="submit"]')->click();
     }
+
+    /**
+     *  Share a custom view.
+     *
+     *  @param $lock  for a locked view
+     *  @param $user  user type.
+     *  @param $userGroup  user group type.
+     */
+    public function shareView($lock = 1, $user, $userGroup)
+    {
+        $this->context->assertFind('css', 'button.shareView')->click();
+        $this->context->assertFind('css', 'input[name="locked"]')->setValue($lock);
+        $this->context->selectToSelectTwo('select#user_id', $user);
+        $this->context->selectToSelectTwo('select#usergroup_id', $userGroup);
+        $this->context->assertFind('css', 'input[name="submit"]')->click();
+
+    }
+
+
 }
