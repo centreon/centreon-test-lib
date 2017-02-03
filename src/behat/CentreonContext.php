@@ -215,6 +215,21 @@ class CentreonContext extends UtilsContext
         $this->container = new Container($composeFile);
         $this->setContainerWebDriver();
 
+        // Wait for WebDriver.
+        $ch = curl_init('http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/status');
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $res = curl_exec($ch);
+        $limit = time() + 50;
+        while ((time() < $limit) && (($res === false) || empty($res))) {
+            sleep(1);
+            $res = curl_exec($ch);
+        }
+        if (time() >= $limit) {
+            throw new \Exception('WebDriver did not respond within a 50 seconds time frame.');
+        }
+
         // Real application test, create an API authentication token.
         $ch = curl_init('http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon/api/index.php?action=authenticate');
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
