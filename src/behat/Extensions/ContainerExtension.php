@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Centreon
+ * Copyright 2016-2017 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,7 @@ class ContainerExtension implements ExtensionInterface
                 ->scalarNode('log_directory')->defaultValue('/tmp')->end()
                 ->scalarNode('web')->defaultValue('mon-web-dev.yml')->end()
                 ->scalarNode('web_fresh')->defaultValue('mon-web-fresh-dev.yml')->end()
+                ->scalarNode('web_widgets')->defaultValue('mon-web-widgets-dev.yml')->end()
                 ->scalarNode('web_kb')->defaultValue('mon-web-kb-dev.yml')->end()
                 ->scalarNode('web_openldap')->defaultValue('mon-web-openldap-dev.yml')->end()
                 ->scalarNode('ppm_squid_simple')->defaultValue('mon-ppm-squid-simple-dev.yml')->end()
