@@ -88,7 +88,7 @@ class ContactConfigurationPage implements ConfigurationPage
         'admin' => array(
             self::TAB_AUTHENTICATION,
             'radio',
-            'input[contact_admin[contact_admin]]'
+            'input[name="contact_admin[contact_admin]"]'
         ),
         'location' => array(
             self::TAB_AUTHENTICATION,
