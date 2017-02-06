@@ -74,11 +74,11 @@ class CustomViewsPage implements Page
      */
     public function createNewView($name, $columns = 1, $public = false)
     {
+        // Find number of existing tabs.
+        $tabs = count($this->context->getSession()->getPage()->findAll('css', '#tabs .tabs_header li'));
 
-        if(!$this->context->assertFind('css', '#actionBar')->isVisible()){
-            $this->context->assertFind('css', 'div.toggleEdit a')->click();
-        }
-
+        // Create new view (new tab).
+        $this->showEditBar();
         $this->context->assertFind('css', 'button.addView')->click();
         $this->context->assertFind('css', '#formAddView input[name="name"]')->setValue($name);
         $this->context->assertFind('css', '#formAddView input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
@@ -88,6 +88,17 @@ class CustomViewsPage implements Page
             $this->context->assertFind('css', '#formAddView input[name="public"]')->uncheck();
         }
         $this->context->assertFind('css', '#formAddView input[name="submit"]')->click();
+
+        // Wait for new tab to appear.
+        $tabs += 1;
+        $this->context->spin(
+            function ($context) use ($tabs) {
+                return count($this->context->getSession()->getPage()->findAll(
+                    'css',
+                    '#tabs .tabs_header li'))
+                    >= $tabs;
+            }
+        );
     }
 
     /**
