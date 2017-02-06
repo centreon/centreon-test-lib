@@ -75,14 +75,14 @@ class CustomViewsPage implements Page
     public function createNewView($name, $columns = 1, $public = false)
     {
         $this->context->assertFind('css', 'button.addView')->click();
-        $this->context->assertFind('css', 'input[name="name"]')->setValue($name);
-        $this->context->assertFind('css', 'input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
+        $this->context->assertFind('css', '#formAddView input[name="name"]')->setValue($name);
+        $this->context->assertFind('css', '#formAddView input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
         if ($public) {
-            $this->context->assertFind('css', 'input[name="public"]')->check();
+            $this->context->assertFind('css', '#formAddView input[name="public"]')->check();
         } else {
-            $this->context->assertFind('css', 'input[name="public"]')->uncheck();
+            $this->context->assertFind('css', '#formAddView input[name="public"]')->uncheck();
         }
-        $this->context->assertFind('css', 'input[name="submit"]')->click();
+        $this->context->assertFind('css', '#formAddView input[name="submit"]')->click();
     }
 
     /**
@@ -95,18 +95,18 @@ class CustomViewsPage implements Page
     {
         // Open popin.
         $this->context->assertFind('css', 'button.addView')->click();
-        $this->context->assertFind('css', 'input[name="create_load[create_load][value="load"]"')->click();
+        $this->context->assertFind('css', '#formAddView input[name="create_load[create_load]"][value="load"]')->click();
 
         // Set requested view.
         if (!empty($publicView)) {
-            $this->context->selectInList('input[name="viewLoad"]', $publicView);
+            $this->context->selectInList('#formAddView input[name="viewLoad"]', $publicView);
         }
         if (!empty($sharedView)) {
-            $this->context->selectInList('input[name="viewLoadShare"]', $sharedView);
+            $this->context->selectInList('#formAddView input[name="viewLoadShare"]', $sharedView);
         }
 
         // Submit form.
-        $this->context->assertFind('css', 'input[name="submit"]')->click();
+        $this->context->assertFind('css', '#formAddView input[name="submit"]')->click();
     }
 
     /**
@@ -120,14 +120,14 @@ class CustomViewsPage implements Page
     {
         $this->context->assertFind('css', 'button.editView')->click();
 
-        $this->context->assertFind('css', 'input[name="name"]')->setValue($name);
-        $this->context->assertFind('css', 'input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
+        $this->context->assertFind('css', '#formEditView input[name="name"]')->setValue($name);
+        $this->context->assertFind('css', '#formEditView input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
         if ($public) {
-            $this->context->assertFind('css', 'input[name="public"]')->check();
+            $this->context->assertFind('css', '#formEditView input[name="public"]')->check();
         } else {
-            $this->context->assertFind('css', 'input[name="public"]')->uncheck();
+            $this->context->assertFind('css', '#formEditView input[name="public"]')->uncheck();
         }
-        $this->context->assertFind('css', 'input[name="submit"]')->click();
+        $this->context->assertFind('css', '#formEditView input[name="submit"]')->click();
     }
 
     /**
@@ -149,9 +149,9 @@ class CustomViewsPage implements Page
     public function addWidget($title, $widget)
     {
         $this->context->assertFind('css', 'button.addWidget')->click();
-        $this->context->assertFind('css', 'input[name="widget_title"]')->setValue($title);
-        $this->context->selectToSelectTwo('select#widget_model_id', $widget);
-        $this->context->assertFind('css', 'input[name="submit"]')->click();
+        $this->context->assertFind('css', '#formAddWidget input[name="widget_title"]')->setValue($title);
+        $this->context->selectToSelectTwo('#formAddWidget select#widget_model_id', $widget);
+        $this->context->assertFind('css', '#formAddWidget input[name="submit"]')->click();
     }
 
     /**
@@ -164,9 +164,9 @@ class CustomViewsPage implements Page
     public function shareView($lock = 1, $user, $userGroup)
     {
         $this->context->assertFind('css', 'button.shareView')->click();
-        $this->context->assertFind('css', 'input[name="locked"]')->setValue($lock);
-        $this->context->selectToSelectTwo('select#user_id', $user);
-        $this->context->selectToSelectTwo('select#usergroup_id', $userGroup);
-        $this->context->assertFind('css', 'input[name="submit"]')->click();
+        $this->context->assertFind('css', '#formShareView input[name="locked"]')->setValue($lock);
+        $this->context->selectToSelectTwo('#formAddWidget select#user_id', $user);
+        $this->context->selectToSelectTwo('#formAddWidget select#usergroup_id', $userGroup);
+        $this->context->assertFind('css', '#formAddWidget input[name="submit"]')->click();
     }
 }
