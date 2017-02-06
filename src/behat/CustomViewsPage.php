@@ -56,9 +56,9 @@ class CustomViewsPage implements Page
     /**
      *  Show/hide edit bar.
      */
-    public function showEditBar($show)
+    public function showEditBar($show = true)
     {
-        $hasBar = $this->context->getSession()->getPage()->has('css', '#actionBar');
+        $hasBar = $this->context->assertFind('css', '#actionBar')->isVisible();
         $editButton = '.toggleEdit a';
         if (($show && !$hasBar) || (!$show && $hasBar)) {
             $this->context->assertFind('css', $editButton)->click();
