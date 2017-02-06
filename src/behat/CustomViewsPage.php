@@ -74,6 +74,22 @@ class CustomViewsPage implements Page
     }
 
     /**
+     *  Load a view.
+     *
+     *  @param $publicView
+     *  @param $shareView  Column number.
+     */
+    public function loadView($publicView, $shareView)
+    {
+        $this->context->assertFind('css', 'input[name="create_load[create_load][value="load"]"')->click();
+
+        $this->context->selectInList('input[name="viewLoad"]', $publicView);
+        $this->context->selectInList('input[name="viewLoadShare"]', $shareView);
+
+        $this->context->assertFind('css', 'input[name="submit"]')->click();
+    }
+
+    /**
      *  Add widget to view.
      *
      *  @param $title   Widget title.
