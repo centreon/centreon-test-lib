@@ -73,6 +73,12 @@ class ContactConfigurationPage implements ConfigurationPage
             'input#passwd1',
             false // Do not exist on ldap contact
         ),
+        'password2' => array(
+            self::TAB_AUTHENTICATION,
+            'text',
+            'input#passwd2',
+            false // Do not exist on ldap contact
+        ),
         'dn' => array(
             self::TAB_AUTHENTICATION,
             'text',
