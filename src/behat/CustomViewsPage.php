@@ -188,11 +188,11 @@ class CustomViewsPage implements Page
     /**
      *  Share a custom view.
      *
-     *  @param $lock  for a locked view
      *  @param $user  user type.
      *  @param $userGroup  user group type.
+     *  @param $lock  for a locked view
      */
-    public function shareView($lock = 1, $user = null, $userGroup = null)
+    public function shareView($user = null, $userGroup = null, $lock = 1)
     {
         $this->context->assertFind('css', 'button.shareView')->click();
 
@@ -209,8 +209,3 @@ class CustomViewsPage implements Page
         $this->context->assertFind('css', '#formShareView input[name="submit"]')->click();
     }
 }
-
-
-
-
-
