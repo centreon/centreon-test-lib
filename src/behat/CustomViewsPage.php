@@ -164,10 +164,25 @@ class CustomViewsPage implements Page
      */
     public function addWidget($title, $widget)
     {
+        // Find number of existing widgets.
+        $widgets = count($this->context->getSession()->getPage()->findAll('css', '.widgetTitle'));
+
+        // Create new widget.
         $this->context->assertFind('css', 'button.addWidget')->click();
         $this->context->assertFind('css', '#formAddWidget input[name="widget_title"]')->setValue($title);
         $this->context->selectToSelectTwo('#formAddWidget select#widget_model_id', $widget);
         $this->context->assertFind('css', '#formAddWidget input[name="submit"]')->click();
+
+        // Wait for new widget to appear.
+        $widgets += 1;
+        $this->context->spin(
+            function ($context) use ($widgets) {
+                return count($this->context->getSession()->getPage()->findAll(
+                    'css',
+                    '.widgetTitle'))
+                    >= $widgets;
+            }
+        );
     }
 
     /**
