@@ -91,14 +91,21 @@ class CustomViewsPage implements Page
      *  @param $publicView
      *  @param $shareView  Column number.
      */
-    public function loadView($publicView, $shareView)
+    public function loadView($publicView = null, $sharedView = null)
     {
+        // Open popin.
         $this->context->assertFind('css', 'button.addView')->click();
         $this->context->assertFind('css', 'input[name="create_load[create_load][value="load"]"')->click();
 
-        $this->context->selectInList('input[name="viewLoad"]', $publicView);
-        $this->context->selectInList('input[name="viewLoadShare"]', $shareView);
+        // Set requested view.
+        if (!empty($publicView)) {
+            $this->context->selectInList('input[name="viewLoad"]', $publicView);
+        }
+        if (!empty($sharedView)) {
+            $this->context->selectInList('input[name="viewLoadShare"]', $sharedView);
+        }
 
+        // Submit form.
         $this->context->assertFind('css', 'input[name="submit"]')->click();
     }
 
