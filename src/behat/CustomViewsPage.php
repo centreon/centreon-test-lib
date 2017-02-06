@@ -192,12 +192,25 @@ class CustomViewsPage implements Page
      *  @param $user  user type.
      *  @param $userGroup  user group type.
      */
-    public function shareView($lock = 1, $user, $userGroup)
+    public function shareView($lock = 1, $user = null, $userGroup = null)
     {
         $this->context->assertFind('css', 'button.shareView')->click();
-        $this->context->assertFind('css', '#formShareView input[name="locked"]')->setValue($lock);
-        $this->context->selectToSelectTwo('#formAddWidget select#user_id', $user);
-        $this->context->selectToSelectTwo('#formAddWidget select#usergroup_id', $userGroup);
-        $this->context->assertFind('css', '#formAddWidget input[name="submit"]')->click();
+
+        $this->context->assertFind('css', '#formShareView input[name="locked[locked]"][value=' . $lock . ']')->click();
+
+        if (!empty($user)) {
+            $this->context->selectToSelectTwo('#formShareView select#user_id', $user);
+        }
+
+        if (!empty($userGroup)) {
+            $this->context->selectToSelectTwo('#formShareView select#usergroup_id', $userGroup);
+        }
+
+        $this->context->assertFind('css', '#formShareView input[name="submit"]')->click();
     }
 }
+
+
+
+
+
