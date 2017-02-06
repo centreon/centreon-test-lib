@@ -85,6 +85,11 @@ class ContactConfigurationPage implements ConfigurationPage
             'input[name="contact_ldap_dn"]',
             false // Do not exist when no ldap is configured
         ),
+        'admin' => array(
+            self::TAB_AUTHENTICATION,
+            'radio',
+            'input[contact_admin[contact_admin]]'
+        ),
         'location' => array(
             self::TAB_AUTHENTICATION,
             'select2',
