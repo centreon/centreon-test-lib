@@ -54,6 +54,18 @@ class CustomViewsPage implements Page
     }
 
     /**
+     *  Show/hide edit bar.
+     */
+    public function showEditBar($show)
+    {
+        $hasBar = $this->context->getSession()->getPage()->has('css', '#actionBar');
+        $editButton = '.toggleEdit a';
+        if (($show && !$hasBar) || (!$show && $hasBar)) {
+            $this->context->assertFind('css', $editButton)->click();
+        }
+    }
+
+    /**
      *  Create a new view.
      *
      *  @param $name
@@ -90,7 +102,6 @@ class CustomViewsPage implements Page
         $this->context->assertFind('css', 'input[name="submit"]')->click();
     }
 
-
     /**
      *  Edit a view.
      *
@@ -112,8 +123,6 @@ class CustomViewsPage implements Page
         $this->context->assertFind('css', 'input[name="submit"]')->click();
     }
 
-
-
     /**
      *  Delete a view.
      *
@@ -123,7 +132,6 @@ class CustomViewsPage implements Page
         $this->context->assertFind('css', 'button.editView')->click();
         $this->context->assertFind('css', '.button_group_center button.bt_danger')->click();
     }
-
 
     /**
      *  Add widget to view.
@@ -153,8 +161,5 @@ class CustomViewsPage implements Page
         $this->context->selectToSelectTwo('select#user_id', $user);
         $this->context->selectToSelectTwo('select#usergroup_id', $userGroup);
         $this->context->assertFind('css', 'input[name="submit"]')->click();
-
     }
-
-
 }
