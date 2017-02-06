@@ -74,6 +74,11 @@ class CustomViewsPage implements Page
      */
     public function createNewView($name, $columns = 1, $public = false)
     {
+
+        if(!$this->context->assertFind('css', '#actionBar')->isVisible()){
+            $this->context->assertFind('css', 'div.toggleEdit a')->click();
+        }
+
         $this->context->assertFind('css', 'button.addView')->click();
         $this->context->assertFind('css', '#formAddView input[name="name"]')->setValue($name);
         $this->context->assertFind('css', '#formAddView input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
