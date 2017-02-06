@@ -81,6 +81,7 @@ class CustomViewsPage implements Page
      */
     public function loadView($publicView, $shareView)
     {
+        $this->context->assertFind('css', 'button.addView')->click();
         $this->context->assertFind('css', 'input[name="create_load[create_load][value="load"]"')->click();
 
         $this->context->selectInList('input[name="viewLoad"]', $publicView);
@@ -88,6 +89,29 @@ class CustomViewsPage implements Page
 
         $this->context->assertFind('css', 'input[name="submit"]')->click();
     }
+
+
+    /**
+     *  Edit a view.
+     *
+     *  @param $name
+     *  @param $columns  Column number.
+     *  @param $public   True for a public view, false otherwise.
+     */
+    public function editView($name, $columns = 1, $public = false)
+    {
+        $this->context->assertFind('css', 'button.editView')->click();
+
+        $this->context->assertFind('css', 'input[name="name"]')->setValue($name);
+        $this->context->assertFind('css', 'input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
+        if ($public) {
+            $this->context->assertFind('css', 'input[name="public"]')->check();
+        } else {
+            $this->context->assertFind('css', 'input[name="public"]')->uncheck();
+        }
+        $this->context->assertFind('css', 'input[name="submit"]')->click();
+    }
+
 
     /**
      *  Add widget to view.
