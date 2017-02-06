@@ -115,10 +115,10 @@ class CustomViewsPage implements Page
 
         // Set requested view.
         if (!empty($publicView)) {
-            $this->context->selectInList('#formAddView input[name="viewLoad"]', $publicView);
+            $this->context->selectInList('#formAddView select[name="viewLoad"]', $publicView);
         }
         if (!empty($sharedView)) {
-            $this->context->selectInList('#formAddView input[name="viewLoadShare"]', $sharedView);
+            $this->context->selectInList('#formAddView select[name="viewLoadShare"]', $sharedView);
         }
 
         // Submit form.
