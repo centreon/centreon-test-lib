@@ -152,7 +152,7 @@ class CustomViewsPage implements Page
      */
     public function deleteView()
     {
-        $this->context->assertFind('css', 'button.editView')->click();
+        $this->context->assertFind('css', 'button.deleteView')->click();
         $this->context->assertFind('css', '.button_group_center button.bt_danger')->click();
     }
 
