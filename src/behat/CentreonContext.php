@@ -372,4 +372,16 @@ class CentreonContext extends UtilsContext
             'web'
         );
     }
+
+    /**
+     * Get polling state in top counter
+     */
+    public function getPollingState()
+    {
+        $title = $this->assertFind('css', 'img#img_pollingState')->getAttribute('title');
+        if (preg_match('/^OK/', $title)) {
+            return true;
+        }
+        return false;
+    }
 }
