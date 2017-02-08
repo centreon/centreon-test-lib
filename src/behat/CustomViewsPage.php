@@ -63,6 +63,11 @@ class CustomViewsPage implements Page
         if (($show && !$hasBar) || (!$show && $hasBar)) {
             $this->context->assertFind('css', $editButton)->click();
         }
+        $this->context->spin(
+            function ($context) use ($show) {
+                return $this->context->assertFind('css', '#actionBar')->isVisible() == $show;
+            }
+        );
     }
 
     /**
