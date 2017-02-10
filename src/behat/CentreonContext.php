@@ -221,13 +221,13 @@ class CentreonContext extends UtilsContext
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $res = curl_exec($ch);
-        $limit = time() + 50;
+        $limit = time() + 60;
         while ((time() < $limit) && (($res === false) || empty($res))) {
             sleep(1);
             $res = curl_exec($ch);
         }
         if (time() >= $limit) {
-            throw new \Exception('WebDriver did not respond within a 50 seconds time frame.');
+            throw new \Exception('WebDriver did not respond within a 60 seconds time frame.');
         }
 
         // Real application test, create an API authentication token.
@@ -241,13 +241,13 @@ class CentreonContext extends UtilsContext
             CURLOPT_POSTFIELDS,
             array('username' => 'admin', 'password' => 'centreon'));
         $res = curl_exec($ch);
-        $limit = time() + 50;
+        $limit = time() + 120;
         while ((time() < $limit) && (($res === false) || empty($res))) {
             sleep(1);
             $res = curl_exec($ch);
         }
         if (time() >= $limit) {
-            throw new \Exception('Centreon Web did not respond within a 50 seconds time frame (API authentication test).');
+            throw new \Exception('Centreon Web did not respond within a 120 seconds time frame (API authentication test).');
         }
 
         // Set Mink parameter.
