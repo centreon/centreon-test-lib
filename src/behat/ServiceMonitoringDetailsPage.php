@@ -69,6 +69,10 @@ class ServiceMonitoringDetailsPage implements Page
         $table = $this->context->assertFind('css', 'table.ListTable');
         $result = array();
 
+        // Performance data
+        $perfdata = $this->context->assertFindIn($table, 'css', 'tbody tr:nth-child(5) td:nth-child(2) pre')->getText();
+        $result['perfdata'] = explode(PHP_EOL, $perfdata);
+
         // last_check
         $lastCheck = $this->context->assertFindIn($table, 'css', 'tbody tr:nth-child(9) td:nth-child(2)')->getText();
         $lastCheck = \DateTime::createFromFormat('Y/m/d - H:i:s', $lastCheck);
@@ -76,7 +80,7 @@ class ServiceMonitoringDetailsPage implements Page
 
         // in_downtime
         $inDowntime = $this->context->assertFindIn($table, 'css', 'tbody tr:nth-child(19) td:nth-child(2)')->getText();
-        $result['in_downtime'] = (($inDowntime == 'Yes') ? true : false);
+        $result['in_downtime'] = ($inDowntime == 'Yes') ? true : false;
 
         return $result;
     }
