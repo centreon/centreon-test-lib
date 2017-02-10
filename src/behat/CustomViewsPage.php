@@ -63,6 +63,11 @@ class CustomViewsPage implements Page
         if (($show && !$hasBar) || (!$show && $hasBar)) {
             $this->context->assertFind('css', $editButton)->click();
         }
+        $this->context->spin(
+            function ($context) use ($show) {
+                return $this->context->assertFind('css', '#actionBar')->isVisible() == $show;
+            }
+        );
     }
 
     /**
@@ -153,7 +158,7 @@ class CustomViewsPage implements Page
     public function deleteView()
     {
         $this->context->assertFind('css', 'button.deleteView')->click();
-        $this->context->assertFind('css', '.button_group_center button.bt_danger')->click();
+        $this->context->assertFind('css', '#deleteViewConfirm button.bt_danger')->click();
     }
 
     /**
