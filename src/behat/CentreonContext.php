@@ -359,6 +359,23 @@ class CentreonContext extends UtilsContext
     }
 
     /**
+     *  Reload all pollers.
+     */
+    public function reloadAllPollers()
+    {
+        $page = new PollerConfigurationExportPage($this);
+        $page->setProperties(array(
+            'pollers' => 'all',
+            'generate_files' => true,
+            'run_debug' => true,
+            'move_files' => true,
+            'restart_engine' => true,
+            'restart_method' => PollerConfigurationExportPage::METHOD_RELOAD
+        ));
+        $page->export();
+    }
+
+    /**
      *  Run yum update centreon-web in the container.
      */
     public function yumUpdateCentreonWeb()
