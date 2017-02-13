@@ -46,7 +46,7 @@ class CustomViewsPage implements Page
     /**
      *  Check that the current page is matching this class.
      *
-     *  @return True if the current page matches this class.
+     * @return True if the current page matches this class.
      */
     public function isPageValid()
     {
@@ -58,24 +58,37 @@ class CustomViewsPage implements Page
      */
     public function showEditBar($show = true)
     {
+        $this->context->spin(
+            function ($context) use ($show) {
+                $this->viewEditBar($show);
+                return $this->context->assertFind('css', '#actionBar')->isVisible() == $show;
+
+            },
+            20,
+            'ActionBar not display'
+        );
+
+    }
+
+    /**
+     *  click on edit button.
+     */
+    public function viewEditBar($show = true)
+    {
         $hasBar = $this->context->assertFind('css', '#actionBar')->isVisible();
         $editButton = '.toggleEdit a';
         if (($show && !$hasBar) || (!$show && $hasBar)) {
             $this->context->assertFind('css', $editButton)->click();
         }
-        $this->context->spin(
-            function ($context) use ($show) {
-                return $this->context->assertFind('css', '#actionBar')->isVisible() == $show;
-            }
-        );
     }
+
 
     /**
      *  Create a new view.
      *
-     *  @param $name
-     *  @param $columns  Column number.
-     *  @param $public   True for a public view, false otherwise.
+     * @param $name
+     * @param $columns  Column number.
+     * @param $public   True for a public view, false otherwise.
      */
     public function createNewView($name, $columns = 1, $public = false)
     {
@@ -86,7 +99,8 @@ class CustomViewsPage implements Page
         $this->showEditBar();
         $this->context->assertFind('css', 'button.addView')->click();
         $this->context->assertFind('css', '#formAddView input[name="name"]')->setValue($name);
-        $this->context->assertFind('css', '#formAddView input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
+        $this->context->assertFind('css',
+            '#formAddView input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
         if ($public) {
             $this->context->assertFind('css', '#formAddView input[name="public"]')->check();
         } else {
@@ -99,8 +113,8 @@ class CustomViewsPage implements Page
         $this->context->spin(
             function ($context) use ($tabs) {
                 return count($this->context->getSession()->getPage()->findAll(
-                    'css',
-                    '#tabs .tabs_header li'))
+                        'css',
+                        '#tabs .tabs_header li'))
                     >= $tabs;
             }
         );
@@ -109,8 +123,8 @@ class CustomViewsPage implements Page
     /**
      *  Load a view.
      *
-     *  @param $publicView
-     *  @param $shareView  Column number.
+     * @param $publicView
+     * @param $shareView  Column number.
      */
     public function loadView($publicView = null, $sharedView = null)
     {
@@ -133,16 +147,17 @@ class CustomViewsPage implements Page
     /**
      *  Edit a view.
      *
-     *  @param $name
-     *  @param $columns  Column number.
-     *  @param $public   True for a public view, false otherwise.
+     * @param $name
+     * @param $columns  Column number.
+     * @param $public   True for a public view, false otherwise.
      */
     public function editView($name, $columns = 1, $public = false)
     {
         $this->context->assertFind('css', 'button.editView')->click();
 
         $this->context->assertFind('css', '#formEditView input[name="name"]')->setValue($name);
-        $this->context->assertFind('css', '#formEditView input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
+        $this->context->assertFind('css',
+            '#formEditView input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
         if ($public) {
             $this->context->assertFind('css', '#formEditView input[name="public"]')->check();
         } else {
@@ -164,8 +179,8 @@ class CustomViewsPage implements Page
     /**
      *  Add widget to view.
      *
-     *  @param $title   Widget title.
-     *  @param $widget  Widget type.
+     * @param $title   Widget title.
+     * @param $widget  Widget type.
      */
     public function addWidget($title, $widget)
     {
@@ -183,8 +198,8 @@ class CustomViewsPage implements Page
         $this->context->spin(
             function ($context) use ($widgets) {
                 return count($this->context->getSession()->getPage()->findAll(
-                    'css',
-                    '.widgetTitle'))
+                        'css',
+                        '.widgetTitle'))
                     >= $widgets;
             }
         );
@@ -193,9 +208,9 @@ class CustomViewsPage implements Page
     /**
      *  Share a custom view.
      *
-     *  @param $user  user type.
-     *  @param $userGroup  user group type.
-     *  @param $lock  for a locked view
+     * @param $user  user type.
+     * @param $userGroup  user group type.
+     * @param $lock  for a locked view
      */
     public function shareView($user = null, $userGroup = null, $lock = 1)
     {
