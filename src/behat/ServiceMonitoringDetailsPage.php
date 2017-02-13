@@ -72,7 +72,8 @@ class ServiceMonitoringDetailsPage implements Page
         // Performance data
         $perfdata = $this->context->assertFindIn($table, 'css', 'tbody tr:nth-child(5) td:nth-child(2) pre')->getText();
         $result['perfdata'] = array();
-        if (!empty(trim($perfdata))) {
+        $perfdata = trim($perfdata);
+        if (!empty($perfdata)) {
             $result['perfdata'] = explode(PHP_EOL, $perfdata);
         }
 
