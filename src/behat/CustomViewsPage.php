@@ -62,13 +62,27 @@ class CustomViewsPage implements Page
             function ($context) use ($show) {
                 $this->viewEditBar($show);
                 return $this->context->assertFind('css', '#actionBar')->isVisible() == $show;
-
             },
             20,
             'ActionBar not display'
         );
 
     }
+
+    /**
+     *  show edit button status.
+     */
+    public function isTheViewModifiyable()
+    {
+        $this->context->spin(
+            function ($context) {
+                return $this->context->assertFind('css', 'button.editView')->hasAttribute('aria-disabled');
+            }
+        );
+
+        return !$this->context->assertFind('css', 'button.editView')->getAttribute('aria-disabled');
+    }
+
 
     /**
      *  click on edit button.
@@ -92,11 +106,12 @@ class CustomViewsPage implements Page
      */
     public function createNewView($name, $columns = 1, $public = false)
     {
-        // Find number of existing tabs.
-        $tabs = count($this->context->getSession()->getPage()->findAll('css', '#tabs .tabs_header li'));
 
         // Create new view (new tab).
         $this->showEditBar();
+        // Find number of existing tabs.
+        $tabs = count($this->context->getSession()->getPage()->findAll('css', '#tabs .tabs_header li'));
+
         $this->context->assertFind('css', 'button.addView')->click();
         $this->context->assertFind('css', '#formAddView input[name="name"]')->setValue($name);
         $this->context->assertFind('css',
@@ -128,8 +143,23 @@ class CustomViewsPage implements Page
      */
     public function loadView($publicView = null, $sharedView = null)
     {
+
+        $this->context->spin(
+            function ($context) {
+                return $this->context->assertFind('css', 'button.addView');
+            }
+        );
         // Open popin.
         $this->context->assertFind('css', 'button.addView')->click();
+
+        $this->context->spin(
+            function ($context) {
+                return $this->context->assertFind(
+                    'css',
+                    '#formAddView input[name="create_load[create_load]"][value="load"]'
+                );
+            }
+        );
         $this->context->assertFind('css', '#formAddView input[name="create_load[create_load]"][value="load"]')->click();
 
         // Set requested view.
@@ -153,9 +183,21 @@ class CustomViewsPage implements Page
      */
     public function editView($name, $columns = 1, $public = false)
     {
+
+        $this->context->spin(
+            function ($context) {
+                return $this->context->assertFind('css', 'button.editView');
+            }
+        );
         $this->context->assertFind('css', 'button.editView')->click();
 
+        $this->context->spin(
+            function ($context) {
+                return $this->context->assertFind('css', '#formEditView input[name="name"]');
+            }
+        );
         $this->context->assertFind('css', '#formEditView input[name="name"]')->setValue($name);
+
         $this->context->assertFind('css',
             '#formEditView input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
         if ($public) {
@@ -172,7 +214,18 @@ class CustomViewsPage implements Page
      */
     public function deleteView()
     {
+        $this->context->spin(
+            function ($context) {
+                return $this->context->assertFind('css', 'button.deleteView');
+            }
+        );
         $this->context->assertFind('css', 'button.deleteView')->click();
+
+        $this->context->spin(
+            function ($context) {
+                return $this->context->assertFind('css', '#deleteViewConfirm button.bt_danger');
+            }
+        );
         $this->context->assertFind('css', '#deleteViewConfirm button.bt_danger')->click();
     }
 
@@ -186,6 +239,12 @@ class CustomViewsPage implements Page
     {
         // Find number of existing widgets.
         $widgets = count($this->context->getSession()->getPage()->findAll('css', '.widgetTitle'));
+
+        $this->context->spin(
+            function ($context) {
+                return $this->context->assertFind('css', 'button.addWidget');
+            }
+        );
 
         // Create new widget.
         $this->context->assertFind('css', 'button.addWidget')->click();
@@ -214,6 +273,13 @@ class CustomViewsPage implements Page
      */
     public function shareView($user = null, $userGroup = null, $lock = 1)
     {
+
+        $this->context->spin(
+            function ($context) {
+                return $this->context->assertFind('css', 'button.shareView');
+            }
+        );
+
         $this->context->assertFind('css', 'button.shareView')->click();
 
         $this->context->assertFind('css', '#formShareView input[name="locked[locked]"][value=' . $lock . ']')->click();
