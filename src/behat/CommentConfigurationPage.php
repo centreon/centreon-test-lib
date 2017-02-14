@@ -45,7 +45,6 @@ class CommentConfigurationPage implements ConfigurationPage
             function ($context) use ($mythis) {
                 return $mythis->isPageValid();
             },
-            20,
             'Current page does not match class ' . __CLASS__
         );
     }

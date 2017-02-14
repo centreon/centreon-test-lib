@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Centreon
+ * Copyright 2016-2017 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,6 @@ class CustomViewsPage implements Page
             function ($context) use ($mythis) {
                 return $mythis->isPageValid();
             },
-            30,
             'Current page does not match class ' . __CLASS__
         );
     }

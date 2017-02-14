@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Centreon
+ * Copyright 2016-2017 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,11 +37,12 @@ class WidgetsListingPage implements ListingPage
 
         // Check that page is valid for this class.
         $mythis = $this;
-        $this->context->spin(function ($context) use ($mythis) {
-            return $mythis->isPageValid();
-        },
-            5,
-            'Current page does not match class ' . __CLASS__);
+        $this->context->spin(
+            function ($context) use ($mythis) {
+                return $mythis->isPageValid();
+            }
+            'Current page does not match class ' . __CLASS__
+        );
     }
 
     /**
@@ -125,25 +126,23 @@ class WidgetsListingPage implements ListingPage
             $widgetInstallImg = $this->context->assertFind('css', '#'. $widget['id'] . ' .installBtn ');
             $widgetInstallImg->click();
 
-            // install widget
+            // Install widget.
             $this->context->spin(
                 function ($context) use ($mythis) {
                     return $mythis->context->getSession()->getPage()->has('css', 'input[name="install"]');
                 },
-                5,
-                'Current page does not match'
+                'Could not install widget ' . $name . '.'
             );
 
             $validInstallImg = $this->context->assertFind('css', 'input[name="install"]');
             $validInstallImg->click();
 
-            //back
+            // Back.
             $this->context->spin(
                 function ($context) use ($mythis) {
                     return $mythis->context->getSession()->getPage()->has('css', 'input[name="list"]');
                 },
-                20,
-                'Current page does not match'
+                'Could not go back after installation of widget ' . $name . '.'
             );
 
             $validInstallImg = $this->context->assertFind('css', 'input[name="list"]');
@@ -169,33 +168,23 @@ class WidgetsListingPage implements ListingPage
                 $widgetUpgradeImg = $this->context->assertFind('css', '#'. $widget['id'] . ' .installBtn ');;
                 $widgetUpgradeImg->click();
 
-                //update
+                // Update.
                 $this->context->spin(
                     function ($context) use ($mythis) {
                         return $this->context->getSession()->getPage()->has('css', 'input[name="upgrade"]');
                     },
-                    5,
-                    'Current page does not match'
+                    'Could not upgrade widget ' . $name . '.'
                 );
 
                 $validUpgradeImg = $this->context->assertFind('css', 'input[name="upgrade"]');
                 $validUpgradeImg->click();
 
-                //back
-                $this->context->spin(
-                    function ($context) use ($mythis) {
-                        return !$this->context->getSession()->getPage()->has('css', 'input[name="upgrade"]');
-                    },
-                    20,
-                    'Current page does not match'
-                );
-
+                // Back.
                 $this->context->spin(
                     function ($context) use ($mythis) {
                         return $this->context->getSession()->getPage()->has('css', 'input[name="list"]');
                     },
-                    60,
-                    'Current page does not match'
+                    'Could not go back after upgrade of widget ' . $name . '.'
                 );
 
                 $validUpgradeImg = $this->context->assertFind('css', 'input[name="list"]');

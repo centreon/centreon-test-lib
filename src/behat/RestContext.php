@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Centreon
+ * Copyright 2016-2017 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ class RestContext implements Context
     protected $restClient;
     protected $parameters;
     protected $restParameters = array();
-    
+
     /**
      * Constructor
      *
@@ -37,7 +37,7 @@ class RestContext implements Context
     {
         $this->parameters = $parameters;
     }
-    
+
     /**
      * Get the rest client
      *
@@ -54,7 +54,7 @@ class RestContext implements Context
         }
         return $this->restClient;
     }
-    
+
     /**
      * Set extension parameters
      *
@@ -64,7 +64,7 @@ class RestContext implements Context
     {
         $this->restParameters = $parameters;
     }
-    
+
     /**
      * Get extension parameters
      *

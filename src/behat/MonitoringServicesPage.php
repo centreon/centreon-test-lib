@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Centreon
+ * Copyright 2016-2017 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,9 +61,11 @@ class MonitoringServicesPage
       */
     public function waitForServiceListPage()
     {
-        $this->ctx->spin(function($context) {
-            return $context->getSession()->getPage()->has('named', array('id_or_name', 'host_search'));
-        });
+        $this->ctx->spin(
+            function($context) {
+                return $context->getSession()->getPage()->has('named', array('id_or_name', 'host_search'));
+            }
+        );
     }
 
     public function listServices()
@@ -279,9 +281,11 @@ class MonitoringServicesPage
         $this->doActionOn($hostname, $servicename, 'Services : Set Downtime');
 
         // When I have a pop-in "Set downtimes"
-        $this->ctx->spin(function($context) {
-            return $context->getSession()->getPage()->has('named', array('id', 'popupDowntime'));
-        });
+        $this->ctx->spin(
+            function($context) {
+                return $context->getSession()->getPage()->has('named', array('id', 'popupDowntime'));
+            }
+        );
 
         // Search in pop-in only
         $popinDowntime = $this->ctx->assertFind('named', array('id', 'popupDowntime'));

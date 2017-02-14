@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Centreon
+ * Copyright 2016-2017 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,11 +50,12 @@ class PollerConfigurationExportPage implements Page
 
         // Check that page is valid.
         $mythis = $this;
-        $this->context->spin(function ($context) use ($mythis) {
-            return $mythis->isPageValid();
-        },
-        5,
-        'Current page does not match class ' . __CLASS__);
+        $this->context->spin(
+            function ($context) use ($mythis) {
+                return $mythis->isPageValid();
+            },
+            'Current page does not match class ' . __CLASS__
+        );
     }
 
     /**
@@ -116,17 +117,19 @@ class PollerConfigurationExportPage implements Page
     public function export()
     {
         $this->context->assertFind('css', '#exportBtn')->click();
-        $this->context->spin(function($context) {
-            return (
-                $context->getSession()->getPage()->has(
-                    'named',
-                    array('id', 'progressPct')) &&
-                $context->getSession()->getPage()->find(
-                    'named',
-                    array('id', 'progressPct')
-                )->getText() == '100%'
-            );
-        });
+        $this->context->spin(
+            function($context) {
+                return (
+                    $context->getSession()->getPage()->has(
+                        'named',
+                        array('id', 'progressPct')) &&
+                    $context->getSession()->getPage()->find(
+                        'named',
+                        array('id', 'progressPct')
+                    )->getText() == '100%'
+                );
+            }
+        );
     }
 
     /**

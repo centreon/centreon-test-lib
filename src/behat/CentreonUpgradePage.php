@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Centreon
+ * Copyright 2016-2017 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,11 +35,12 @@ class CentreonUpgradePage implements Page
 
         // Check that page is valid for this class.
         $mythis = $this;
-        $this->context->spin(function ($context) use ($mythis) {
-            return $mythis->isPageValid();
-        },
-        5,
-        'Current page does not match class ' . __CLASS__);
+        $this->context->spin(
+            function ($context) use ($mythis) {
+                return $mythis->isPageValid();
+            },
+            'Current page does not match class ' . __CLASS__
+        );
     }
 
     /**
@@ -66,7 +67,6 @@ class CentreonUpgradePage implements Page
             function ($context) use ($mythis) {
                 return $this->context->assertFind('css', 'th.step-wrapper span')->getText() == 1;
             },
-            30,
             'Current page does not match step 1'
         );
         $this->context->assertFind('css', '#next')->click();
@@ -76,7 +76,6 @@ class CentreonUpgradePage implements Page
             function ($context) use ($mythis) {
                 return $this->context->assertFind('css', 'th.step-wrapper span')->getText() == 2;
             },
-            30,
             'Current page does not match step 2'
         );
         $this->context->assertFind('css', '#next')->click();
@@ -87,7 +86,6 @@ class CentreonUpgradePage implements Page
                 return ($this->context->assertFind('css', 'th.step-wrapper span')->getText() == 3)
                     && ($this->context->getSession()->getPage()->has('css', '#releasenotes'));
             },
-            30,
             'Current page does not match step 3'
         );
         sleep(12);
@@ -99,8 +97,8 @@ class CentreonUpgradePage implements Page
                 return ($this->context->assertFind('css', 'th.step-wrapper span')->getText() == 4)
                     && ($this->context->assertFind('css', '#next')->isVisible());
             },
-            120,
-            'Current page does not match step 4'
+            'Current page does not match step 4',
+            120
         );
         $this->context->assertFind('css', '#next')->click();
 
@@ -109,7 +107,6 @@ class CentreonUpgradePage implements Page
             function ($context) use ($mythis) {
                 return $this->context->assertFind('css', 'th.step-wrapper span')->getText() == 5;
             },
-            60,
             'Current page does not match step 5'
         );
         $this->context->assertFind('css', '#finish')->click();

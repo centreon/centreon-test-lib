@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Centreon
+ * Copyright 2016-2017 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,11 +38,12 @@ class GraphServiceDetailsMonitoringPage implements Page
 
         // Check that page is valid for this class.
         $mythis = $this;
-        $this->context->spin(function ($context) use ($mythis) {
-            return $mythis->isPageValid();
-        },
-        5,
-        'Current page does not match class ' . __CLASS__);
+        $this->context->spin(
+            function ($context) use ($mythis) {
+                return $mythis->isPageValid();
+            },
+            'Current page does not match class ' . __CLASS__
+        );
     }
 
     /**
@@ -54,10 +55,10 @@ class GraphServiceDetailsMonitoringPage implements Page
     {
         return $this->context->getSession()->getPage()->has('css', 'select#select-chart');
     }
-    
+
     /**
      * Get Chart of the page
-     * 
+     *
      * @return type
      */
     public function getChart()

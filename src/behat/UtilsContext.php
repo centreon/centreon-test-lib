@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Centreon
+ * Copyright 2016-2017 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,11 +88,11 @@ class UtilsContext extends RawMinkContext
     /**
      * Waiting an action
      *
-     * @param closure $closure The function to execute for test the loading
-     * @param int $wait The timeout in seconds
-     * @param string $timeoutMsg The custom message on timeout
+     * @param closure  $closure    The function to execute for test the loading.
+     * @param string   $timeoutMsg The custom message on timeout.
+     * @param int      $wait       The timeout in seconds.
      */
-    public function spin($closure, $wait = 30, $timeoutMsg = 'Load timeout')
+    public function spin($closure, $timeoutMsg = 'Load timeout', $wait = 60)
     {
         $limit = time() + $wait;
         while (time() <= $limit) {
@@ -328,8 +328,7 @@ class UtilsContext extends RawMinkContext
                     'css',
                     'li.select2-results__option:not(.loading-results):not(.select2-results__message)'
                 )) != 0;
-            },
-            30
+            }
         );
         $chosenResults = $this->getSession()->getPage()->findAll(
             'css',

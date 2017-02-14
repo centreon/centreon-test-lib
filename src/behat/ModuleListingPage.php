@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Centreon
+ * Copyright 2016-2017 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,11 +37,12 @@ class ModuleListingPage implements ListingPage
 
         // Check that page is valid for this class.
         $mythis = $this;
-        $this->context->spin(function ($context) use ($mythis) {
-            return $mythis->isPageValid();
-        },
-            5,
-            'Current page does not match class ' . __CLASS__);
+        $this->context->spin(
+            function ($context) use ($mythis) {
+                return $mythis->isPageValid();
+            },
+            'Current page does not match class ' . __CLASS__
+        );
     }
 
     /**
@@ -136,25 +137,23 @@ class ModuleListingPage implements ListingPage
             $moduleInstallImg = $this->context->assertFind('css', '#action' . $name . ' img[title="Install Module"]');
             $moduleInstallImg->click();
 
-            // install module
+            // Install module.
             $this->context->spin(
                 function ($context) use ($mythis) {
                     return $mythis->context->getSession()->getPage()->has('css', 'input[name="install"]');
                 },
-                5,
-                'Current page does not match'
+                'Could not install module ' . $name . '.'
             );
 
             $validInstallImg = $this->context->assertFind('css', 'input[name="install"]');
             $validInstallImg->click();
 
-            //back
+            // Back.
             $this->context->spin(
                 function ($context) use ($mythis) {
                     return $mythis->context->getSession()->getPage()->has('css', 'input[name="list"]');
                 },
-                20,
-                'Current page does not match'
+                'Could not go back after install of module ' . $name . '.'
             );
 
             $validInstallImg = $this->context->assertFind('css', 'input[name="list"]');
@@ -180,33 +179,23 @@ class ModuleListingPage implements ListingPage
                 $moduleUpgradeImg = $this->context->assertFind('css', '#action' . $name . ' img[title="Upgrade"]');
                 $moduleUpgradeImg->click();
 
-                //update
+                // Update.
                 $this->context->spin(
                     function ($context) use ($mythis) {
                         return $this->context->getSession()->getPage()->has('css', 'input[name="upgrade"]');
                     },
-                    5,
-                    'Current page does not match'
+                    'Could not upgrade module ' . $name . '.'
                 );
 
                 $validUpgradeImg = $this->context->assertFind('css', 'input[name="upgrade"]');
                 $validUpgradeImg->click();
 
-                //back
-                $this->context->spin(
-                    function ($context) use ($mythis) {
-                        return !$this->context->getSession()->getPage()->has('css', 'input[name="upgrade"]');
-                    },
-                    20,
-                    'Current page does not match'
-                );
-
+                // Back.
                 $this->context->spin(
                     function ($context) use ($mythis) {
                         return $this->context->getSession()->getPage()->has('css', 'input[name="list"]');
                     },
-                    60,
-                    'Current page does not match'
+                    'Could not go back after upgrade of module ' . $name . '.'
                 );
 
                 $validUpgradeImg = $this->context->assertFind('css', 'input[name="list"]');
