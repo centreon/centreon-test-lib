@@ -62,7 +62,6 @@ class CustomViewsPage implements Page
                 $this->viewEditBar($show);
                 return $this->context->assertFind('css', '#actionBar')->isVisible() == $show;
             },
-            20,
             'ActionBar not display'
         );
 
