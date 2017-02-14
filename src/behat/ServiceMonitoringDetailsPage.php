@@ -75,7 +75,7 @@ class ServiceMonitoringDetailsPage implements Page
         $result['perfdata'] = array();
         $perfdata = trim($perfdata);
         if (!empty($perfdata)) {
-            $result['perfdata'] = explode(PHP_EOL, $perfdata);
+            $result['perfdata'] = explode(' ', $perfdata);
         }
 
         // last_check
