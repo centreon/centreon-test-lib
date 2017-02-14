@@ -75,7 +75,8 @@ class CustomViewsPage implements Page
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', 'button.editView')->hasAttribute('aria-disabled');
-            }
+            },
+            'no attribute aria-disabled'
         );
 
         return !$this->context->assertFind('css', 'button.editView')->getAttribute('aria-disabled');
@@ -145,7 +146,8 @@ class CustomViewsPage implements Page
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', 'button.addView');
-            }
+            },
+            'no button addView'
         );
         // Open popin.
         $this->context->assertFind('css', 'button.addView')->click();
@@ -185,7 +187,8 @@ class CustomViewsPage implements Page
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', 'button.editView');
-            }
+            },
+            'no button editView'
         );
         $this->context->assertFind('css', 'button.editView')->click();
 
@@ -215,14 +218,16 @@ class CustomViewsPage implements Page
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', 'button.deleteView');
-            }
+            },
+            'no button deleteView'
         );
         $this->context->assertFind('css', 'button.deleteView')->click();
 
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', '#deleteViewConfirm button.bt_danger');
-            }
+            },
+            'no button delete in popin'
         );
         $this->context->assertFind('css', '#deleteViewConfirm button.bt_danger')->click();
     }
@@ -241,7 +246,8 @@ class CustomViewsPage implements Page
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', 'button.addWidget');
-            }
+            },
+            'no button addWidget'
         );
 
         // Create new widget.
@@ -275,7 +281,8 @@ class CustomViewsPage implements Page
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', 'button.shareView');
-            }
+            },
+            'no button shareView'
         );
 
         $this->context->assertFind('css', 'button.shareView')->click();
