@@ -79,10 +79,6 @@ class ParametersCentreonUiPage implements ConfigurationPage
             'select',
             'select[name="problem_sort_order"]'
         ),
-        'proxy_protocol' => array(
-            'select',
-            'select[name="proxy_protocol"]'
-        ),
         'proxy_url' => array(
             'text',
             'input[name="proxy_url"]'
