@@ -20,6 +20,7 @@ namespace Centreon\Test\Behat;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use WebDriver\WebDriver;
 use Centreon\Test\Behat\HostConfigurationPage;
+use Centreon\Test\Behat\LoginPage;
 use Centreon\Test\Behat\PollerConfigurationExportPage;
 use Centreon\Test\Behat\ServiceConfigurationPage;
 use Centreon\Test\Behat\UtilsContext;
@@ -82,7 +83,7 @@ class CentreonContext extends UtilsContext
      */
     public function iAmLoggedIn()
     {
-        /* Prepare credentials */
+        // Prepare credentials.
         $user = 'admin';
         $password = 'centreon';
         if (isset($this->parameters['centreon_user'])) {
@@ -92,34 +93,17 @@ class CentreonContext extends UtilsContext
             $password = $this->parameters['centreon_password'];
         }
 
-        $this->visit('/');
-
-        /* Login to Centreon */
-        $page = $this->getSession()->getPage();
-        $userField = $this->assertFind('css', 'input[name="useralias"]');
-        $userField->setValue($user);
-        $passwordField = $this->assertFind('css', 'input[name="password"]');
-        $passwordField->setValue($password);
-        $formLogin = $this->assertFind('css', 'form[name="login"]');
-        $formLogin->submit();
-        $this->spin(
-            function ($context) use ($page) {
-                return $page->has('css', 'a[href="main.php?p=103"]');
-            }
-        );
+        // Login.
+        $page = new LoginPage($this);
+        $page->login($user, $password);
     }
 
     public function iAmLoggedOut()
     {
+        // LoginPage constructor will automatically throw if we are
+        // not on the login page.
         $this->visit('index.php?disconnect=1');
-
-        $page = $this->getSession()->getPage();
-        $mythis = $this;
-        $this->spin(
-            function ($mythis) use ($page) {
-                return $page->has('css', 'input[name="useralias"]');
-            }
-        );
+        return new LoginPage($this, false);
     }
 
     /**
