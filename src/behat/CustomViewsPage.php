@@ -199,9 +199,9 @@ class CustomViewsPage implements Page
     {
         $this->context->spin(
             function ($context) {
-                return $this->context->assertFind('css', 'button.editView');
+                return $this->context->assertFind('css', 'button.editView')->isVisible();
             },
-            'no button editView'
+            'No button editView, or not visible.'
         );
         $this->context->assertFind('css', 'button.editView')->click();
 
@@ -222,11 +222,10 @@ class CustomViewsPage implements Page
 
         $this->context->spin(
             function ($context) {
-                return $this->context->assertFind('css', '#formEditView input[name="submit"]');
+                return $this->context->assertFind('css', '#formEditView input[name="submit"]')->isVisible();
             },
-            'No submit button for edit custom view'
+            'No submit button for edit custom view, or not visible'
         );
-
         $this->context->assertFind('css', '#formEditView input[name="submit"]')->click();
     }
 
@@ -238,17 +237,16 @@ class CustomViewsPage implements Page
     {
         $this->context->spin(
             function ($context) {
-                return $this->context->assertFind('css', 'button.deleteView');
+                return $this->context->assertFind('css', 'button.deleteView')->isVisible();
             },
-            'no button deleteView'
+            'No button deleteView, or not visible.'
         );
         $this->context->assertFind('css', 'button.deleteView')->click();
-
         $this->context->spin(
             function ($context) {
-                return $this->context->assertFind('css', '#deleteViewConfirm button.bt_danger');
+                return $this->context->assertFind('css', '#deleteViewConfirm button.bt_danger')->isVisible();
             },
-            'no button delete in popin'
+            'No button delete in popin.'
         );
         $this->context->assertFind('css', '#deleteViewConfirm button.bt_danger')->click();
     }
