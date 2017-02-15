@@ -59,7 +59,7 @@ class CustomViewsPage implements Page
     public function showEditBar($show = true)
     {
         $this->toggleEditBar();
-        $this->spin(
+        $this->context->spin(
             function ($context) use ($show) {
                 $barVisible = $context->assertFind('css', 'button.addView')->isVisible();
                 return $show == $barVisible;
