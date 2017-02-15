@@ -27,15 +27,6 @@ class HostMonitoringDetailPage implements Page
     protected $context;
     protected $hostname;
 
-    private static $tab_choise = array(
-        // Configuration tab.
-        'service' => self::SERVICE_STATUS_TAB,
-        'performance' => self::PERFORMANCE_TAB,
-        'informations' => self::HOST_INFORMATIONS_TAB,
-        'comments' => self::COMMENTS_TAB
-    );
-
-
     /**
      *  Navigate to and/or check that we are on a host configuration
      *  page.
@@ -60,7 +51,6 @@ class HostMonitoringDetailPage implements Page
             },
             'Current page does not match class ' . __CLASS__
         );
-
     }
 
     /**
@@ -74,16 +64,37 @@ class HostMonitoringDetailPage implements Page
     }
 
     /**
+     *  Get properties printed on the host monitoring details page.
+     *
+     *  @return An array with detailed properties.
+     */
+    public function getProperties()
+    {
+        $table = $this->context->assertFind('css', 'table.ListTable');
+        $result = array();
+
+        //
+        // Host information tab.
+        //
+        $this->switchTab(self::HOST_INFORMATIONS_TAB);
+
+        // Timezone.
+        $result['timezone'] = $this->context->assertFindIn(
+            $table,
+            'css',
+            '#tab3 tr:nth-child(16) td.ListColLeft span'
+        )->getText();
+
+        return $result;
+    }
+
+    /**
      *  Switch between tabs.
      *
      * @param $tab  Tab ID / Tab name.
      */
     public function switchTab($tab)
     {
-        if (is_string($tab)) {
-            $tab = self::$tab_choise[$tab];
-        }
         $this->context->assertFind('css', 'li#c' . $tab . ' a')->click();
     }
-
 }
