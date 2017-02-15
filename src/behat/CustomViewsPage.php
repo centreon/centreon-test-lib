@@ -131,7 +131,8 @@ class CustomViewsPage implements Page
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', 'button.addView');
-            }
+            },
+            'no button addView'
         );
         // Open popin.
         $this->context->assertFind('css', 'button.addView')->click();
@@ -155,6 +156,15 @@ class CustomViewsPage implements Page
         }
 
         // Submit form.
+        $this->context->spin(
+            function ($context) {
+                return $this->context->assertFind(
+                    'css',
+                    '#formAddView input[name="submit"]'
+                );
+            },
+            'No submit button for add/load custom view'
+        );
         $this->context->assertFind('css', '#formAddView input[name="submit"]')->click();
     }
 
@@ -170,7 +180,8 @@ class CustomViewsPage implements Page
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', 'button.editView');
-            }
+            },
+            'no button editView'
         );
         $this->context->assertFind('css', 'button.editView')->click();
 
@@ -188,6 +199,14 @@ class CustomViewsPage implements Page
         } else {
             $this->context->assertFind('css', '#formEditView input[name="public"]')->uncheck();
         }
+
+        $this->context->spin(
+            function ($context) {
+                return $this->context->assertFind('css', '#formEditView input[name="submit"]');
+            },
+            'No submit button for edit custom view'
+        );
+
         $this->context->assertFind('css', '#formEditView input[name="submit"]')->click();
     }
 
@@ -200,14 +219,16 @@ class CustomViewsPage implements Page
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', 'button.deleteView');
-            }
+            },
+            'no button deleteView'
         );
         $this->context->assertFind('css', 'button.deleteView')->click();
 
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', '#deleteViewConfirm button.bt_danger');
-            }
+            },
+            'no button delete in popin'
         );
         $this->context->assertFind('css', '#deleteViewConfirm button.bt_danger')->click();
     }
@@ -226,13 +247,21 @@ class CustomViewsPage implements Page
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', 'button.addWidget');
-            }
+            },
+            'no button addWidget'
         );
 
         // Create new widget.
         $this->context->assertFind('css', 'button.addWidget')->click();
         $this->context->assertFind('css', '#formAddWidget input[name="widget_title"]')->setValue($title);
         $this->context->selectToSelectTwo('#formAddWidget select#widget_model_id', $widget);
+
+        $this->context->spin(
+            function ($context) {
+                return $this->context->assertFind('css', '#formAddWidget input[name="submit"]');
+            },
+            'No submit button for add widget'
+        );
         $this->context->assertFind('css', '#formAddWidget input[name="submit"]')->click();
 
         // Wait for new widget to appear.
@@ -259,7 +288,8 @@ class CustomViewsPage implements Page
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', 'button.shareView');
-            }
+            },
+            'no button shareView'
         );
 
         $this->context->assertFind('css', 'button.shareView')->click();
@@ -274,6 +304,12 @@ class CustomViewsPage implements Page
             $this->context->selectToSelectTwo('#formShareView select#usergroup_id', $userGroup);
         }
 
+        $this->context->spin(
+            function ($context) {
+                return $this->context->assertFind('css', '#formShareView input[name="submit"]');
+            },
+            'No submit button for share view'
+        );
         $this->context->assertFind('css', '#formShareView input[name="submit"]')->click();
     }
 }
