@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat;
 
-class HostMonitoringDetailPage implements Page
+class HostMonitoringDetailsPage implements Page
 {
     const SERVICE_STATUS_TAB = 1;
     const PERFORMANCE_TAB = 2;
