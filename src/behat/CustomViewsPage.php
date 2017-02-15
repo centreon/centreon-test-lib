@@ -59,7 +59,11 @@ class CustomViewsPage implements Page
     {
         $this->context->spin(
             function ($context) use ($show) {
-                $this->viewEditBar($show);
+                $hasBar = $this->context->assertFind('css', '#actionBar')->isVisible();
+                $editButton = '.toggleEdit a';
+                if (($show && !$hasBar) || (!$show && $hasBar)) {
+                    $this->context->assertFind('css', $editButton)->click();
+                }
                 return $this->context->assertFind('css', '#actionBar')->isVisible() == $show;
             },
             'ActionBar not display'
@@ -68,32 +72,16 @@ class CustomViewsPage implements Page
     }
 
     /**
-     *  show edit button status.
+     *  Show edit button status.
      */
-    public function isTheViewModifiyable()
+    public function isCurrentViewEditable()
     {
-        $this->context->spin(
-            function ($context) {
-                return $this->context->assertFind('css', 'button.editView')->hasAttribute('aria-disabled');
-            }
-        );
-
-        return !$this->context->assertFind('css', 'button.editView')->getAttribute('aria-disabled');
+        $ariadisabled = $this->context->assertFind(
+            'css',
+            'button.editView'
+        )->getAttribute('aria-disabled');
+        return is_null($ariadisabled) || ($ariadisabled == 'false');
     }
-
-
-    /**
-     *  click on edit button.
-     */
-    public function viewEditBar($show = true)
-    {
-        $hasBar = $this->context->assertFind('css', '#actionBar')->isVisible();
-        $editButton = '.toggleEdit a';
-        if (($show && !$hasBar) || (!$show && $hasBar)) {
-            $this->context->assertFind('css', $editButton)->click();
-        }
-    }
-
 
     /**
      *  Create a new view.
@@ -104,7 +92,6 @@ class CustomViewsPage implements Page
      */
     public function createNewView($name, $columns = 1, $public = false)
     {
-
         // Create new view (new tab).
         $this->showEditBar();
         // Find number of existing tabs.
@@ -141,7 +128,6 @@ class CustomViewsPage implements Page
      */
     public function loadView($publicView = null, $sharedView = null)
     {
-
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', 'button.addView');
@@ -181,7 +167,6 @@ class CustomViewsPage implements Page
      */
     public function editView($name, $columns = 1, $public = false)
     {
-
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', 'button.editView');
@@ -271,7 +256,6 @@ class CustomViewsPage implements Page
      */
     public function shareView($user = null, $userGroup = null, $lock = 1)
     {
-
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', 'button.shareView');
