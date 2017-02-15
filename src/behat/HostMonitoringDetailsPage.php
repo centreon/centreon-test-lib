@@ -70,19 +70,20 @@ class HostMonitoringDetailsPage implements Page
      */
     public function getProperties()
     {
-        $table = $this->context->assertFind('css', 'table.ListTable');
         $result = array();
 
         //
         // Host information tab.
         //
-        $this->switchTab(self::HOST_INFORMATIONS_TAB);
+        $tab = self::HOST_INFORMATIONS_TAB;
+        $this->switchTab($tab);
+        $table = $this->context->assertFind('css', '#tab' . $tab . ' table.ListTable');
 
         // Timezone.
         $result['timezone'] = $this->context->assertFindIn(
             $table,
             'css',
-            '#tab3 tr:nth-child(16) td.ListColLeft span'
+            'tr:nth-child(16) td.ListColLeft span'
         )->getText();
 
         return $result;
