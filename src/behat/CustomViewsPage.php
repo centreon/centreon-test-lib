@@ -303,32 +303,31 @@ class CustomViewsPage implements Page
      */
     public function shareView($user = null, $userGroup = null, $lock = 1)
     {
+        // Click on sharing button.
         $this->context->spin(
             function ($context) {
                 return $this->context->assertFind('css', 'button.shareView');
             },
             'no button shareView'
         );
-
         $this->context->assertFind('css', 'button.shareView')->click();
 
+        // Select 'locked' option.
         $this->context->assertFind('css', '#formShareView input[name="locked[locked]"][value=' . $lock . ']')->click();
 
+        // Set user and/or user group.
         if (!empty($user)) {
             $this->context->selectToSelectTwo('#formShareView select#user_id', $user);
         }
-
         if (!empty($userGroup)) {
             $this->context->selectToSelectTwo('#formShareView select#usergroup_id', $userGroup);
         }
 
-        $this->context->spin(
-            function ($context) {
-                return $this->context->assertFind('css', '#formShareView input[name="submit"]');
-            },
-            'No submit button for share view'
-        );
+        // Submit form.
         $this->context->assertFind('css', '#formShareView input[name="submit"]')->click();
+
+        // Wait a few seconds for asynchronous processing.
+        sleep(3);
     }
 
     /**
