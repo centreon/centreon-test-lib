@@ -53,22 +53,12 @@ class CustomViewsPage implements Page
     }
 
     /**
-     *  Show/hide edit bar.
+     *  Toggle edit bar.
      */
-    public function showEditBar($show = true)
+    public function toggleEditBar()
     {
-        $this->context->spin(
-            function ($context) use ($show) {
-                $hasBar = $this->context->assertFind('css', '#actionBar')->isVisible();
-                $editButton = '.toggleEdit a';
-                if (($show && !$hasBar) || (!$show && $hasBar)) {
-                    $this->context->assertFind('css', $editButton)->click();
-                }
-                return $this->context->assertFind('css', '#actionBar')->isVisible() == $show;
-            },
-            'ActionBar not display'
-        );
-
+        $editButton = '.toggleEdit a';
+        $this->context->assertFind('css', $editButton)->click();
     }
 
     /**
@@ -92,8 +82,6 @@ class CustomViewsPage implements Page
      */
     public function createNewView($name, $columns = 1, $public = false)
     {
-        // Create new view (new tab).
-        $this->showEditBar();
         // Find number of existing tabs.
         $tabs = count($this->context->getSession()->getPage()->findAll('css', '#tabs .tabs_header li'));
 
