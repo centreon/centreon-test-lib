@@ -53,12 +53,19 @@ class CustomViewsPage implements Page
     }
 
     /**
-     *  Toggle edit bar.
+     *  Show edit bar that is not currently visible or hide edit bar
+     *  that is currently visible.
      */
-    public function toggleEditBar()
+    public function showEditBar($show = true)
     {
-        $editButton = '.toggleEdit a';
-        $this->context->assertFind('css', $editButton)->click();
+        $this->toggleEditBar();
+        $this->spin(
+            function ($context) use ($show) {
+                $barVisible = $context->assertFind('css', 'button.addView')->isVisible();
+                return $show == $barVisible;
+            },
+            'Toggle of edit bar did not ' . ($show ? 'show' : 'hide') . ' edit bar.'
+        );
     }
 
     /**
@@ -324,5 +331,14 @@ class CustomViewsPage implements Page
             'No submit button for share view'
         );
         $this->context->assertFind('css', '#formShareView input[name="submit"]')->click();
+    }
+
+    /**
+     *  Toggle edit bar.
+     */
+    private function toggleEditBar()
+    {
+        $editButton = '.toggleEdit a';
+        $this->context->assertFind('css', $editButton)->click();
     }
 }
