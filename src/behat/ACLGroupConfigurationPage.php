@@ -35,6 +35,11 @@ class ACLGroupConfigurationPage implements ConfigurationPage
             'text',
             'input[name="acl_group_alias"]'
         ),
+        'contacts' => array(
+            self::GROUP_TAB,
+            'advmultiselect',
+            'select[name="cg_contacts-f[]"]'
+        ),
         'contactgroups' => array(
             self::GROUP_TAB,
             'advmultiselect',

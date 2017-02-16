@@ -189,6 +189,7 @@ class CentreonContext extends UtilsContext
      *  Launch Centreon Web container and setup context.
      *
      * @param $name Entry name.
+     * @throws \Exception
      */
     public function launchCentreonWebContainer($name)
     {
@@ -384,5 +385,17 @@ class CentreonContext extends UtilsContext
             return true;
         }
         return false;
+    }
+
+    /**
+     * Reload ACL with command line
+     */
+    public function reloadACL()
+    {
+        $this->container->execute(
+            'su -s /bin/sh apache -c "/usr/bin/php -q /usr/share/centreon/cron/centAcl.php"',
+            'web',
+            false
+        );
     }
 }
