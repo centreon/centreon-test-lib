@@ -144,46 +144,18 @@ class CustomViewsPage implements Page
 
         // Set requested view.
         if (!empty($publicView)) {
-            $this->context->spin(
-                function ($context) use ($publicView) {
-                    if (count($this->context->getSession()->getPage()->findAll(
-                            'css',
-                            '#formAddView select[name="viewLoad"] option'
-                        )) == 2
-                    ) {
-                        $this->context->selectInList('#formAddView select[name="viewLoad"]', $publicView);
-                        return true;
-                    }
-                },
-                'No public view in select list'
-            );
+            return $this->context->selectToSelectTwo('#formAddView select#viewLoad', $publicView);
         }
 
         if (!empty($sharedView)) {
-            $this->context->spin(
-                function ($context) use ($sharedView) {
-                    if (count($this->context->getSession()->getPage()->findAll(
-                            'css',
-                            '#formAddView select[name="viewLoadShare"] option'
-                        )) == 2
-                    ) {
-                        $this->context->selectInList('#formAddView select[name="viewLoadShare"]', $sharedView);
-                        return true;
-                    }
-                },
-                'No shared view in select list'
-            );
+            return $this->context->selectToSelectTwo('#formAddView select#viewLoadShare', $sharedView);
         }
 
-        // Submit form.
         $this->context->spin(
             function ($context) {
-                return $this->context->assertFind(
-                    'css',
-                    '#formAddView input[name="submit"]'
-                );
+                return $this->context->assertFind('css', '#formAddView input[name="submit"]')->isVisible();
             },
-            'No submit button for add/load custom view'
+            'No submit button for load view'
         );
         $this->context->assertFind('css', '#formAddView input[name="submit"]')->click();
     }
