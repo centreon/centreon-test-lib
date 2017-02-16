@@ -125,7 +125,7 @@ class CustomViewsPage implements Page
     {
         $this->context->spin(
             function ($context) {
-                return $this->context->assertFind('css', 'button.addView');
+                return $this->context->assertFind('css', 'button.addView')->isVisible();
             },
             'no button addView'
         );
@@ -144,11 +144,11 @@ class CustomViewsPage implements Page
 
         // Set requested view.
         if (!empty($publicView)) {
-            return $this->context->selectToSelectTwo('#formAddView select#viewLoad', $publicView);
+            $this->context->selectToSelectTwo('#formAddView select#viewLoad', $publicView);
         }
 
         if (!empty($sharedView)) {
-            return $this->context->selectToSelectTwo('#formAddView select#viewLoadShare', $sharedView);
+            $this->context->selectToSelectTwo('#formAddView select#viewLoadShare', $sharedView);
         }
 
         $this->context->spin(
