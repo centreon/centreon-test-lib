@@ -97,7 +97,7 @@ class TimeperiodConfigurationPage implements ConfigurationPage
         $this->context->spin(
             function ($context) use ($mythis) {
                 return $mythis->isPageValid();
-            }
+            },
             'Current page does not match class ' . __CLASS__
         );
     }
