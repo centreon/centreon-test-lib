@@ -121,7 +121,7 @@ class CustomViewsPage implements Page
      * @param $publicView
      * @param $shareView  Column number.
      */
-    public function loadView($publicView = null, $sharedView = null)
+    public function loadView($view)
     {
         $this->context->spin(
             function ($context) {
@@ -143,13 +143,8 @@ class CustomViewsPage implements Page
         $this->context->assertFind('css', '#formAddView input[name="create_load[create_load]"][value="load"]')->click();
 
         // Set requested view.
-        if (!empty($publicView)) {
-            $this->context->selectToSelectTwo('#formAddView select#viewLoad', $publicView);
-        }
 
-        if (!empty($sharedView)) {
-            $this->context->selectToSelectTwo('#formAddView select#viewLoadShare', $sharedView);
-        }
+        $this->context->selectToSelectTwo('#formAddView select#viewLoad', $view);
 
         $this->context->spin(
             function ($context) {
@@ -273,7 +268,7 @@ class CustomViewsPage implements Page
      * @param $userGroup  user group type.
      * @param $lock  for a locked view
      */
-    public function shareView($user = null, $userGroup = null, $lock = 1)
+    public function shareView($userLock = null, $userUnlock = null, $userGroupLock = null, $userGroupUnlock = null)
     {
         // Click on sharing button.
         $this->context->spin(
@@ -284,15 +279,18 @@ class CustomViewsPage implements Page
         );
         $this->context->assertFind('css', 'button.shareView')->click();
 
-        // Select 'locked' option.
-        $this->context->assertFind('css', '#formShareView input[name="locked[locked]"][value=' . $lock . ']')->click();
-
-        // Set user and/or user group.
-        if (!empty($user)) {
-            $this->context->selectToSelectTwo('#formShareView select#user_id', $user);
+        // Set user and/or user group lock/unlock.
+        if (!empty($userLock)) {
+            $this->context->selectToSelectTwo('#formShareView select#lock_user_id', $userLock);
         }
-        if (!empty($userGroup)) {
-            $this->context->selectToSelectTwo('#formShareView select#usergroup_id', $userGroup);
+        if (!empty($userUnlock)) {
+            $this->context->selectToSelectTwo('#formShareView select#unlock_user_id', $userUnlock);
+        }
+        if (!empty($userGroupLock)) {
+            $this->context->selectToSelectTwo('#formShareView select#lock_usergroup_id', $userGroupLock);
+        }
+        if (!empty($userGroupUnlock)) {
+            $this->context->selectToSelectTwo('#formShareView select#unlock_usergroup_id', $userGroupUnlock);
         }
 
         // Submit form.
