@@ -58,7 +58,7 @@ class CustomViewsPage implements Page
      */
     public function showEditBar($show = true)
     {
-        $this->toggleEditBar();
+        $this->toggleEditBar($show);
         $this->context->spin(
             function ($context) use ($show) {
                 $barVisible = $context->assertFind('css', 'button.addView')->isVisible();
@@ -303,9 +303,12 @@ class CustomViewsPage implements Page
     /**
      *  Toggle edit bar.
      */
-    private function toggleEditBar()
+    private function toggleEditBar($show)
     {
-        $editButton = '.toggleEdit a';
-        $this->context->assertFind('css', $editButton)->click();
+        $visible = $this->context->assertFind('css', 'button.addView')->isVisible();
+        $toggleButton = $this->context->assertFind('css', '.toggleEdit a');
+        if ($show != $visible) {
+            $toggleButton->click();
+        }
     }
 }
