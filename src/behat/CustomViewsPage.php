@@ -281,16 +281,16 @@ class CustomViewsPage implements Page
 
         // Set user and/or user group lock/unlock.
         if (!empty($userLock)) {
-            $this->context->selectToSelectTwo('#formShareView select#lock_user_id', $userLock);
+            $this->context->selectToSelectTwo('#formShareView select#locked_user_id', $userLock);
         }
         if (!empty($userUnlock)) {
-            $this->context->selectToSelectTwo('#formShareView select#unlock_user_id', $userUnlock);
+            $this->context->selectToSelectTwo('#formShareView select#unlocked_user_id', $userUnlock);
         }
         if (!empty($userGroupLock)) {
-            $this->context->selectToSelectTwo('#formShareView select#lock_usergroup_id', $userGroupLock);
+            $this->context->selectToSelectTwo('#formShareView select#locked_usergroup_id', $userGroupLock);
         }
         if (!empty($userGroupUnlock)) {
-            $this->context->selectToSelectTwo('#formShareView select#unlock_usergroup_id', $userGroupUnlock);
+            $this->context->selectToSelectTwo('#formShareView select#unlocked_usergroup_id', $userGroupUnlock);
         }
 
         // Submit form.
