@@ -153,6 +153,14 @@ class CustomViewsPage implements Page
             'No submit button for load view'
         );
         $this->context->assertFind('css', '#formAddView input[name="submit"]')->click();
+
+        $this->context->spin(
+            function ($context) {
+                return !$this->context->assertFind('css', '#formAddView input[name="submit"]')->isVisible();
+            },
+            'load view form is not submitted',
+            5
+        );
     }
 
     /**
@@ -194,6 +202,14 @@ class CustomViewsPage implements Page
             'No submit button for edit custom view, or not visible'
         );
         $this->context->assertFind('css', '#formEditView input[name="submit"]')->click();
+
+        $this->context->spin(
+            function ($context) {
+                return !$this->context->assertFind('css', '#formEditView input[name="submit"]')->isVisible();
+            },
+            'The edit form is not submitted.',
+            5
+        );
     }
 
     /**
@@ -295,6 +311,14 @@ class CustomViewsPage implements Page
 
         // Submit form.
         $this->context->assertFind('css', '#formShareView input[name="submit"]')->click();
+
+        $this->context->spin(
+            function ($context) {
+                return !$this->context->assertFind('css', '#formShareView input[name="submit"]')->isVisible();
+            },
+            'share view form is not submitted',
+            5
+        );
 
         // Wait a few seconds for asynchronous processing.
         sleep(3);
