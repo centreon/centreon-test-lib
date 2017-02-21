@@ -44,10 +44,10 @@ class BrokerConfigurationPage implements ConfigurationPage
             self::TAB_GENERAL,
             'text',
             'input[name="filename"]'),
-        'retention_path' => array(
+        'cache_directory' => array(
             self::TAB_GENERAL,
             'text',
-            'input[name="retention_path"]'),
+            'input[name="cache_directory"]'),
         'status' => array(
             self::TAB_GENERAL,
             'radio',
