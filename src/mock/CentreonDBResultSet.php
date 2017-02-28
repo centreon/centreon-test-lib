@@ -51,7 +51,17 @@ class CentreonDBResultSet
         }
         return $this->resultset[$this->pos++];
     }
-    
+
+    /**
+     * Return a result
+     *
+     * @return array
+     */
+    public function fetch()
+    {
+        return $this->fetchRow();
+    }
+
     /**
      * Reset the position of resultset
      */
