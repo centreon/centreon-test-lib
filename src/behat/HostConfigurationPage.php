@@ -41,10 +41,10 @@ class HostConfigurationPage implements ConfigurationPage
             self::CONFIGURATION_TAB,
             'text',
             'input[name="host_address"]'),
-        'check_command' => array(
+        'poller' => array(
             self::CONFIGURATION_TAB,
-            'select2',
-            'select#command_command_id'),
+            'select',
+            'select[name="nagios_server_id"]'),
         'location' => array(
             self::CONFIGURATION_TAB,
             'select2',
@@ -53,6 +53,10 @@ class HostConfigurationPage implements ConfigurationPage
             self::CONFIGURATION_TAB,
             'custom',
             'Templates'),
+        'check_command' => array(
+            self::CONFIGURATION_TAB,
+            'select2',
+            'select#command_command_id'),
         'max_check_attempts' => array(
             self::CONFIGURATION_TAB,
             'text',
@@ -186,6 +190,9 @@ class HostConfigurationPage implements ConfigurationPage
                 $methodName = 'get' . $propertyLocator;
                 $properties[$property] = $this->$methodName();
                 break;
+            case 'select':
+                $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
+                break ;
             default:
                 throw new \Exception(
                     'Unknown property type ' . $propertyType
@@ -234,6 +241,9 @@ class HostConfigurationPage implements ConfigurationPage
             case 'checkbox':
             case 'radio':
                 $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
+                break ;
+            case 'select':
+                $this->context->selectInList($propertyLocator, $value);
                 break ;
             case 'select2':
                 if (!is_array($value)) {
