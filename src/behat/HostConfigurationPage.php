@@ -45,6 +45,11 @@ class HostConfigurationPage implements ConfigurationPage
             self::CONFIGURATION_TAB,
             'select2',
             'select#command_command_id'),
+        'macros' => array(
+            self::CONFIGURATION_TAB,
+            'custom',
+            'Macros'
+        ),
         'location' => array(
             self::CONFIGURATION_TAB,
             'select2',
@@ -278,6 +283,29 @@ class HostConfigurationPage implements ConfigurationPage
     }
 
     /**
+     *  Get macros.
+     *
+     *  @return macros
+     */
+    private function getMacros()
+    {
+        $macros = array();
+
+        $i = 0;
+        while (true) {
+            $name = $this->context->getSession()->getPage()->findField('macroInput_' . $i);
+            if (is_null($name)) {
+                break ;
+            }
+            $value = $this->context->assertFindField('macroValue_' . $i);
+            $macros[$name->getValue()] = $value->getValue();
+            ++$i;
+        }
+
+        return $macros;
+    }
+
+    /**
      *  Get host templates.
      *
      *  @return host templates
@@ -295,6 +323,23 @@ class HostConfigurationPage implements ConfigurationPage
         }
 
         return $templates;
+    }
+
+    /**
+     *  Set macros.
+     *
+     *  @param $macros Macros.
+     */
+    private function setMacros($macros)
+    {
+        $currentMacros = $this->getMacros();
+        $i = count($currentMacros);
+        foreach ($macros as $name => $value) {
+            $this->context->assertFind('css' , '#macro_add p')->click();
+            $this->context->assertFindField('macroInput_' . $i)->setValue($name);
+            $this->context->assertFindField('macroValue_' . $i)->setValue($value);
+            $i++;
+        }
     }
 
     /**

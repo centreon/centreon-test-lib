@@ -17,17 +17,9 @@
 
 namespace Centreon\Test\Behat;
 
-class HostTemplateConfigurationPage implements ConfigurationPage
+class HostTemplateConfigurationPage extends HostConfigurationPage
 {
-    const TAB_UNKNOWN = 0;
-    const TAB_CONFIGURATION = 1;
-    const TAB_NOTIFICATION = 2;
-    const TAB_RELATIONS = 3;
-    const TAB_DATA = 4;
-    const TAB_EXTENDED = 5;
-
-    private $context;
-    private $tab;
+    protected $context;
 
     /**
      *  Host template edit page.
@@ -41,10 +33,6 @@ class HostTemplateConfigurationPage implements ConfigurationPage
         $this->context = $context;
         if ($visit) {
             $this->context->visit('main.php?p=60103&o=a');
-            $this->tab = self::TAB_CONFIGURATION;
-        }
-        else {
-            $this->tab = self::TAB_UNKNOWN;
         }
 
         // Check that page is valid for this class.
@@ -65,100 +53,6 @@ class HostTemplateConfigurationPage implements ConfigurationPage
     public function isPageValid()
     {
         return $this->context->getSession()->getPage()->has('css', 'input[name="host_name"]');
-    }
-
-    /**
-     *  Get template properties.
-     *
-     *  @return Host template properties.
-     */
-    public function getProperties()
-    {
-        $properties = array();
-        $properties['name'] = $this->context->assertFindField('host_name')->getValue();
-        $properties['alias'] = $this->context->assertFindField('host_alias')->getValue();
-        $properties['address'] = $this->context->assertFindField('host_address')->getValue();
-        $properties['macros'] = array();
-        $i = 0;
-        while (true) {
-            $name = $this->context->getSession()->getPage()->findField('macroInput_' . $i);
-            if (is_null($name)) {
-                break ;
-            }
-            $value = $this->context->assertFindField('macroValue_' . $i);
-            $properties['macros'][$name->getValue()] = $value->getValue();
-            ++$i;
-        }
-
-        return ($properties);
-    }
-
-    /**
-     *  Set template properties.
-     *
-     *  @param $properties  Host template properties.
-     */
-    public function setProperties($properties)
-    {
-        $this->switchTab(self::TAB_CONFIGURATION);
-        foreach ($properties as $key => $value) {
-            switch ($key) {
-            case 'name':
-                $this->context->assertFindField('host_name')->setValue($value);
-                break ;
-            case 'alias':
-                $this->context->assertFindField('host_alias')->setValue($value);
-                break ;
-            case 'address':
-                $this->context->assertFindField('host_address')->setValue($value);
-                break ;
-            case 'macros':
-                $i = 0;
-                foreach ($value as $varname => $varvalue) {
-                    $this->context->assertFind('css' , '#macro_add p')->click();
-                    $this->context->assertFindField('macroInput_' . $i)->setValue($varname);
-                    $this->context->assertFindField('macroValue_' . $i)->setValue($varvalue);
-                    ++$i;
-                }
-                break ;
-            }
-        }
-
-        $this->switchTab(self::TAB_RELATIONS);
-        foreach ($properties as $key => $value) {
-            switch ($key) {
-            case 'service_templates':
-                foreach ($value as $tpl) {
-                    $this->context->selectToSelectTwo('select#host_svTpls', $tpl);
-                }
-                break ;
-            }
-        }
-    }
-
-    /**
-     *  Save host template.
-     */
-    public function save()
-    {
-        $button = $this->context->getSession()->getPage()->findButton('submitA');
-        if (isset($button)) {
-            $button->click();
-        }
-        else {
-            $this->context->assertFindButton('submitC')->click();
-        }
-    }
-
-    /**
-     *  Switch tab.
-     *
-     *  @param $tab  Tab.
-     */
-    public function switchTab($tab)
-    {
-        $this->context->assertFind('css', 'li#c' . $tab . ' a')->click();
-        $this->tab = $tab;
     }
 }
 
