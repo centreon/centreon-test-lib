@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Administration;
 
 class ImageListingPage implements ListingPage
 {

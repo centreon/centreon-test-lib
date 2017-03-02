@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Administration;
 
-class ParametersCentreonUiPage implements ConfigurationPage
+class ParametersCentreonUiPage extends \Centreon\Test\Behat\ConfigurationPage
 {
     protected $context;
 

@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Administration;
 
-class ACLActionConfigurationPage implements ConfigurationPage
+class ACLActionConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
-    protected $context;
+    protected $validField = 'input[name="acl_action_name"]';
 
-    private static $properties = array(
+    protected $properties = array(
         'acl_name' => array(
             'text',
             'input[name="acl_action_name"]'
@@ -93,67 +93,6 @@ class ACLActionConfigurationPage implements ConfigurationPage
     }
 
     /**
-     *  Check that the current page is matching this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="acl_action_name"]');
-    }
-
-    /**
-     *  Get properties of the acl.
-     *
-     *  @return Properties of the acl.
-     */
-    public function getProperties()
-    {
-        throw new \Behat\Behat\Tester\Exception\PendingException(__METHOD__);
-    }
-
-    /**
-     *  Set properties of the acl.
-     *
-     *  @param $properties  Properties of the acl.
-     */
-    public function setProperties($properties)
-    {
-        // Browse all properties.
-        foreach ($properties as $property => $value) {
-            // Check that property exist.
-            if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown action acl property ' . $property . '.');
-            }
-
-            // Set property meta-data in variables.
-            $propertyType = self::$properties[$property][0];
-            $propertyLocator = self::$properties[$property][1];
-
-            // Set property with its value.
-            switch ($propertyType) {
-                case 'advmultiselect':
-                    $this->context->selectInAdvMultiSelect($propertyLocator, $value);
-                    break ;
-                case 'text':
-                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
-                    break ;
-                case 'checkbox':
-                    if ($value) {
-                        $this->context->assertFind('css', $propertyLocator)->check();
-                    } else {
-                        $this->context->assertFind('css', $propertyLocator)->uncheck();
-                    }
-                    break ;
-                default:
-                    throw new \Exception(
-                        'Unknown property type ' . $propertyType
-                        . ' found while setting acl property ' . $property . '.');
-            }
-        }
-    }
-
-    /*
      * Select all actions access
      */
     public function selectAll()
@@ -165,18 +104,5 @@ class ACLActionConfigurationPage implements ConfigurationPage
             }
         }
         $this->setProperties($properties);
-    }
-
-    /**
-     *  Save form.
-     */
-    public function save()
-    {
-        $button = $this->context->getSession()->getPage()->findButton('submitA');
-        if (isset($button)) {
-            $button->click();
-        } else {
-            $this->context->assertFindButton('submitC')->click();
-        }
     }
 }

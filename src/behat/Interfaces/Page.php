@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Interfaces;
 
 /**
  *  This is the default interface for all pages of Centreon. All xxxPage

@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Administration;
 
-class ACLMenuConfigurationPage implements ConfigurationPage
+class ACLMenuConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
     protected $context;
 

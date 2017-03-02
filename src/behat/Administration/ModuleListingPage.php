@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Administration;
 
-class WidgetsListingPage implements ListingPage
+class ModuleListingPage implements ListingPage
 {
     private $context;
 
     /**
-     *  Widget list page.
+     *  Module list page.
      *
      * @param $context  Centreon context class.
      * @param $visit    True to navigate to page.
@@ -32,7 +32,7 @@ class WidgetsListingPage implements ListingPage
         // Visit page.
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('main.php?p=50703');
+            $this->context->visit('main.php?p=50701');
         }
 
         // Check that page is valid for this class.
@@ -40,7 +40,7 @@ class WidgetsListingPage implements ListingPage
         $this->context->spin(
             function ($context) use ($mythis) {
                 return $mythis->isPageValid();
-            }
+            },
             'Current page does not match class ' . __CLASS__
         );
     }
@@ -69,12 +69,19 @@ class WidgetsListingPage implements ListingPage
                 continue;
             }
             $entry = array();
-            $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(1)')->getText();
-            $entry['description'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
-            $entry['version'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
-            $entry['author'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(4)')->getText();
-            $entry['id'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getAttribute('id');
-            $actionsComponent = $this->context->assertFindIn($element, 'css', 'td:nth-child(5)');
+            $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(1) a')->getText();
+            $entry['realname'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2) a')->getText();
+            $entry['description'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
+            $entry['version'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(4)')->getText();
+            $entry['author'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText();
+            $entry['expirationDate'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(6)')->getText();
+            $entry['installed'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(7)')->getText();
+            $entry['actions'] = array(
+                'install' => false,
+                'upgrade' => false,
+                'remove' => false
+            );
+            $actionsComponent = $this->context->assertFindIn($element, 'css', 'td:nth-child(9)');
             if ($actionsComponent->has('css', 'img[src$="generate_conf.png"]')) {
                 $entry['actions']['install'] = true;
             }
@@ -90,48 +97,52 @@ class WidgetsListingPage implements ListingPage
     }
 
     /**
-     *  Get a widget.
+     *  Get a module.
      *
-     * @param $widget  widget name.
+     * @param $module  Module name.
      *
      * @return An array of properties.
      */
-    public function getEntry($widget)
+    public function getEntry($module)
     {
-        $widgets = $this->getEntries();
-        if (!array_key_exists($widget, $widgets)) {
-            throw new \Exception('could not find widget ' . $widget);
+        $modules = $this->getEntries();
+        if (!array_key_exists($module, $modules)) {
+            throw new \Exception('could not find module ' . $module);
         }
-        return $widgets[$widget];
+        return $modules[$module];
     }
 
+    /**
+     *  Edit a module.
+     *
+     * @param $name  Module name.
+     */
+    public function inspect($name)
+    {
+        throw new \Exception('Cannot inspect a module.');
+    }
 
     /**
-     *  Install a widget.
+     *  Install a module.
      *
-     * @param $name  Widget name.
+     * @param $name  Module name.
      * @throws \Exception
      */
     public function install($name)
     {
-
         $mythis = $this;
         $i = 0;
-        $widget = $this->getEntry($name);
+        $module = $this->getEntry($name);
+        if ($module['actions']['install']) {
+            $moduleInstallImg = $this->context->assertFind('css', '#action' . $name . ' img[title="Install Module"]');
+            $moduleInstallImg->click();
 
-        $widget['id'];
-
-        if ($widget['actions']['install']) {
-
-            $widgetInstallImg = $this->context->assertFind('css', '#'. $widget['id'] . ' .installBtn ');
-            $widgetInstallImg->click();
-
-            // Install widget.
+            // Install module.
             $this->context->spin(
                 function ($context) use ($mythis) {
                     return $mythis->context->getSession()->getPage()->has('css', 'input[name="install"]');
                 },
-                'Could not install widget ' . $name . '.'
+                'Could not install module ' . $name . '.'
             );
 
             $validInstallImg = $this->context->assertFind('css', 'input[name="install"]');
@@ -142,38 +153,38 @@ class WidgetsListingPage implements ListingPage
                 function ($context) use ($mythis) {
                     return $mythis->context->getSession()->getPage()->has('css', 'input[name="list"]');
                 },
-                'Could not go back after installation of widget ' . $name . '.'
+                'Could not go back after install of module ' . $name . '.'
             );
 
             $validInstallImg = $this->context->assertFind('css', 'input[name="list"]');
             $validInstallImg->click();
         } else {
-            throw new \Exception('Widget ' . $name . ' is already installed.');
+            throw new \Exception('Module ' . $name . ' is already installed.');
         }
     }
 
     /**
-     *  Upgrade a widget.
+     *  Upgrade a module.
      *
-     * @param $name  Widget name.
+     * @param $name  Module name.
      */
     public function upgrade($name)
     {
         $mythis = $this;
         $i = 0;
-        $widget = $this->getEntry($name);
-        while ($widget['actions']['upgrade']) {
+        $module = $this->getEntry($name);
+        while ($module['actions']['upgrade']) {
             $i++;
-            if ($widget['actions']['upgrade']) {
-                $widgetUpgradeImg = $this->context->assertFind('css', '#'. $widget['id'] . ' .installBtn ');;
-                $widgetUpgradeImg->click();
+            if ($module['actions']['upgrade']) {
+                $moduleUpgradeImg = $this->context->assertFind('css', '#action' . $name . ' img[title="Upgrade"]');
+                $moduleUpgradeImg->click();
 
                 // Update.
                 $this->context->spin(
                     function ($context) use ($mythis) {
                         return $this->context->getSession()->getPage()->has('css', 'input[name="upgrade"]');
                     },
-                    'Could not upgrade widget ' . $name . '.'
+                    'Could not upgrade module ' . $name . '.'
                 );
 
                 $validUpgradeImg = $this->context->assertFind('css', 'input[name="upgrade"]');
@@ -184,7 +195,7 @@ class WidgetsListingPage implements ListingPage
                     function ($context) use ($mythis) {
                         return $this->context->getSession()->getPage()->has('css', 'input[name="list"]');
                     },
-                    'Could not go back after upgrade of widget ' . $name . '.'
+                    'Could not go back after upgrade of module ' . $name . '.'
                 );
 
                 $validUpgradeImg = $this->context->assertFind('css', 'input[name="list"]');
@@ -193,7 +204,7 @@ class WidgetsListingPage implements ListingPage
             } else {
                 throw new \Exception('Cannot upgrade the module : ' . $name);
             }
-            $widget = $this->getEntry($name);
+            $module = $this->getEntry($name);
         }
     }
 }

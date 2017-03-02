@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Administration;
 
-class ACLGroupConfigurationListingPage implements ListingPage
+class ACLGroupConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 {
-    private $context;
+    protected $validField = 'table.ListTable';
 
     /**
      *  Contact list page.
@@ -43,16 +43,6 @@ class ACLGroupConfigurationListingPage implements ListingPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page matches this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'table.ListTable');
     }
 
     /**

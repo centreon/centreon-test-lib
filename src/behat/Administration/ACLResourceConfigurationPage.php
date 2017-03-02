@@ -15,35 +15,48 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Administration;
 
-class ACLGroupConfigurationPage implements ConfigurationPage
+class ACLResourceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
-    const GROUP_TAB = 1;
-    const AUTHORIZATION_TAB = 2;
+    const GENERAL_TAB = 1;
+    const HOST_TAB = 2;
+    const SERVICE_TAB = 3;
+    const META_TAB = 4;
+    const FILTER_TAB = 5;
 
     protected $context;
 
     private static $properties = array(
-        'group_name' => array(
-            self::GROUP_TAB,
+        'acl_name' => array(
+            self::GENERAL_TAB,
             'text',
-            'input[name="acl_group_name"]'
+            'input[name="acl_res_name"]'
         ),
-        'group_alias' => array(
-            self::GROUP_TAB,
+        'acl_alias' => array(
+            self::GENERAL_TAB,
             'text',
-            'input[name="acl_group_alias"]'
+            'input[name="acl_res_alias"]'
         ),
-        'contacts' => array(
-            self::GROUP_TAB,
+        'acl_groups' => array(
+            self::GENERAL_TAB,
             'advmultiselect',
-            'select[name="cg_contacts-f[]"]'
+            'select[name="acl_groups-f[]"]'
         ),
-        'contactgroups' => array(
-            self::GROUP_TAB,
-            'advmultiselect',
-            'select[name="cg_contactGroups-f[]"]'
+        'all_hosts' => array(
+            self::HOST_TAB,
+            'checkbox',
+            'input[type="checkbox"][id="all_hosts"]'
+        ),
+        'all_hostgroups' => array(
+            self::HOST_TAB,
+            'checkbox',
+            'input[type="checkbox"][id="all_hostgroups"]'
+        ),
+        'all_servicegroups' => array(
+            self::SERVICE_TAB,
+            'checkbox',
+            'input[type="checkbox"][id="all_servicegroups"]'
         )
     );
 
@@ -59,7 +72,7 @@ class ACLGroupConfigurationPage implements ConfigurationPage
         // Visit page.
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('main.php?p=50203&o=a');
+            $this->context->visit('main.php?p=50202&o=a');
         }
 
         // Check that page is valid for this class.
@@ -79,7 +92,7 @@ class ACLGroupConfigurationPage implements ConfigurationPage
      */
     public function isPageValid()
     {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="acl_group_name"]');
+        return $this->context->getSession()->getPage()->has('css', 'input[name="acl_res_name"]');
     }
 
     /**
@@ -100,14 +113,14 @@ class ACLGroupConfigurationPage implements ConfigurationPage
     public function setProperties($properties)
     {
         // Begin with first tab.
-        $tab = self::GROUP_TAB;
+        $tab = self::GENERAL_TAB;
         $this->switchTab($tab);
 
         // Browse all properties.
         foreach ($properties as $property => $value) {
             // Check that property exist.
             if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown acl group property ' . $property . '.');
+                throw new \Exception('Unknown resource acl property ' . $property . '.');
             }
 
             // Set property meta-data in variables.
@@ -142,6 +155,20 @@ class ACLGroupConfigurationPage implements ConfigurationPage
                         . ' found while setting acl property ' . $property . '.');
             }
         }
+    }
+
+    /*
+     * Select all menu access
+     */
+    public function selectAll()
+    {
+        $properties = array();
+        foreach (self::$properties as $name => $parameters) {
+            if ($parameters[1] == 'checkbox') {
+                $properties[$name] = true;
+            }
+        }
+        $this->setProperties($properties);
     }
 
     /**

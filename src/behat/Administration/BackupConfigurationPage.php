@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Administration;
 
-class BackupConfigurationPage implements ConfigurationPage
+class BackupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
     const BACKUP_TYPE_DUMP = 0;
     const BACKUP_TYPE_LVM = 1;
