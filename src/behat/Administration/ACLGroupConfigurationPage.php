@@ -22,8 +22,6 @@ class ACLGroupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     const GROUP_TAB = 1;
     const AUTHORIZATION_TAB = 2;
 
-    protected $context;
-
     protected $validField = 'input[name="acl_group_name"]';
 
     protected $properties = array(

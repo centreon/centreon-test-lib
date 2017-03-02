@@ -25,38 +25,38 @@ class ACLResourceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
     const META_TAB = 4;
     const FILTER_TAB = 5;
 
-    protected $context;
+    protected $validField = 'input[name="acl_res_name"]';
 
-    private static $properties = array(
+    protected $properties = array(
         'acl_name' => array(
-            self::GENERAL_TAB,
             'text',
-            'input[name="acl_res_name"]'
+            'input[name="acl_res_name"]',
+            self::GENERAL_TAB
         ),
         'acl_alias' => array(
-            self::GENERAL_TAB,
             'text',
-            'input[name="acl_res_alias"]'
+            'input[name="acl_res_alias"]',
+            self::GENERAL_TAB
         ),
         'acl_groups' => array(
-            self::GENERAL_TAB,
             'advmultiselect',
-            'select[name="acl_groups-f[]"]'
+            'select[name="acl_groups-f[]"]',
+            self::GENERAL_TAB
         ),
         'all_hosts' => array(
-            self::HOST_TAB,
             'checkbox',
-            'input[type="checkbox"][id="all_hosts"]'
+            'input[type="checkbox"][id="all_hosts"]',
+            self::HOST_TAB
         ),
         'all_hostgroups' => array(
-            self::HOST_TAB,
             'checkbox',
-            'input[type="checkbox"][id="all_hostgroups"]'
+            'input[type="checkbox"][id="all_hostgroups"]',
+            self::HOST_TAB
         ),
         'all_servicegroups' => array(
-            self::SERVICE_TAB,
             'checkbox',
-            'input[type="checkbox"][id="all_servicegroups"]'
+            'input[type="checkbox"][id="all_servicegroups"]',
+            self::SERVICE_TAB
         )
     );
 
@@ -85,78 +85,6 @@ class ACLResourceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
         );
     }
 
-    /**
-     *  Check that the current page is matching this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="acl_res_name"]');
-    }
-
-    /**
-     *  Get properties of the acl group.
-     *
-     *  @return Properties of the acl group.
-     */
-    public function getProperties()
-    {
-        throw new \Behat\Behat\Tester\Exception\PendingException(__METHOD__);
-    }
-
-    /**
-     *  Set properties of the acl group.
-     *
-     *  @param $properties  Properties of the acl group.
-     */
-    public function setProperties($properties)
-    {
-        // Begin with first tab.
-        $tab = self::GENERAL_TAB;
-        $this->switchTab($tab);
-
-        // Browse all properties.
-        foreach ($properties as $property => $value) {
-            // Check that property exist.
-            if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown resource acl property ' . $property . '.');
-            }
-
-            // Set property meta-data in variables.
-            $targetTab = self::$properties[$property][0];
-            $propertyType = self::$properties[$property][1];
-            $propertyLocator = self::$properties[$property][2];
-
-            // Switch between tabs if required.
-            if ($tab != $targetTab) {
-                $this->switchTab($targetTab);
-                $tab = $targetTab;
-            }
-
-            // Set property with its value.
-            switch ($propertyType) {
-                case 'advmultiselect':
-                    $this->context->selectInAdvMultiSelect($propertyLocator, $value);
-                    break ;
-                case 'text':
-                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
-                    break ;
-                case 'checkbox':
-                    if ($value) {
-                        $this->context->assertFind('css', $propertyLocator)->check();
-                    } else {
-                        $this->context->assertFind('css', $propertyLocator)->uncheck();
-                    }
-                    break ;
-                default:
-                    throw new \Exception(
-                        'Unknown property type ' . $propertyType
-                        . ' found while setting acl property ' . $property . '.');
-            }
-        }
-    }
-
     /*
      * Select all menu access
      */
@@ -169,28 +97,5 @@ class ACLResourceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
             }
         }
         $this->setProperties($properties);
-    }
-
-    /**
-     *  Switch between tabs.
-     *
-     *  @param $tab  Tab ID.
-     */
-    public function switchTab($tab)
-    {
-        $this->context->assertFind('css', 'li#c' . $tab . ' a')->click();
-    }
-
-    /**
-     *  Save form.
-     */
-    public function save()
-    {
-        $button = $this->context->getSession()->getPage()->findButton('submitA');
-        if (isset($button)) {
-            $button->click();
-        } else {
-            $this->context->assertFindButton('submitC')->click();
-        }
     }
 }

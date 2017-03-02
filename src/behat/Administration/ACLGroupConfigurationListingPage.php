@@ -21,6 +21,31 @@ class ACLGroupConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 {
     protected $validField = 'table.ListTable';
 
+    protected $properties = array(
+        'name' => array(
+            'text',
+            'td:nth-child(2)'
+        ),
+        'description' => array(
+            'text',
+            'td:nth-child(3)'
+        ),
+        'count_contacts' => array(
+            'text',
+            'td:nth-child(3)'
+        ),
+        'count_contactgroups' => array(
+            'text',
+            'td:nth-child(4)'
+        ),
+        'status' => array(
+            'text',
+            'td:nth-child(5)'
+        )
+    );
+
+    protected $objectClass = '\Centreon\Test\Behat\AdministrationACLGroupConfigurationPage';
+
     /**
      *  Contact list page.
      *
@@ -43,53 +68,5 @@ class ACLGroupConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Get the list of ACL groups.
-     */
-    public function getEntries()
-    {
-        $entries = array();
-        $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
-        foreach ($elements as $element) {
-            $entry = array();
-            $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
-            $entry['description'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
-            $entry['count_contacts'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
-            $entry['count_contactgroups'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(4)')->getText();
-            $entry['status'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText();
-            $entries[$entry['name']] = $entry;
-        }
-        return $entries;
-    }
-
-    /**
-     *  Get an ACL group.
-     *
-     *  @param $aclGroupName  ACL group name
-     *  @throws \Exception
-     *  @return An array of properties.
-     */
-    public function getEntry($aclGroupName)
-    {
-        $aclGroups = $this->getEntries();
-        if (!array_key_exists($aclGroupName, $aclGroups)) {
-            throw new \Exception('could not find acl group ' . $aclGroupName);
-        }
-        return $aclGroups[$aclGroupName];
-    }
-
-    /**
-     *  Edit an acl group.
-     *
-     *  @param $aclGroupName  ACL group name
-     *  @return ACLGroupConfigurationPage
-     */
-    public function inspect($aclGroupName)
-    {
-        $contacts = $this->context->assertFind('css', 'table.ListTable');
-        $this->context->assertFindLinkIn($contacts, $aclGroupName)->click();
-        return new ACLGroupConfigurationPage($this->context, false);
     }
 }

@@ -27,9 +27,7 @@ abstract class ListingPage implements \Centreon\Test\Behat\Interfaces\ListingPag
 
     protected $properties = array();
 
-    protected $propertyTitle;
-
-    protected $objectType;
+    protected $objectClass;
 
     /**
      *  Check that the current page is valid for this class.
@@ -48,10 +46,20 @@ abstract class ListingPage implements \Centreon\Test\Behat\Interfaces\ListingPag
     {
         $entries = array();
 
+        $propertyTitle = '';
+
         $elements = $this->context->getSession()->getPage()->findAll('css', $this->lineSelector);
         foreach ($elements as $element) {
+            if (!$this->validateEntry($element)) {
+                continue;
+            }
+
             $entry = array();
             foreach ($this->properties as $property => $metadata) {
+                if (empty($propertyTitle)) {
+                    $propertyTitle = $property;
+                }
+
                 // Set property meta-data in variables.
                 $propertyType = $metadata[0];
                 $propertyLocator = $metadata[1];
@@ -66,13 +74,26 @@ abstract class ListingPage implements \Centreon\Test\Behat\Interfaces\ListingPag
                         break;
                     case 'custom':
                         $methodName = 'get' . $propertyLocator;
-                        $entry[$property] = $this->$methodName();
+                        $entry[$property] = $this->$methodName($element);
                         break;
                 }
             }
+
+            $entries[$entry[$propertyTitle]] = $entry;
         }
 
         return $entries;
+    }
+
+    /**
+     * Validate entry integrity
+     *
+     * @param $element
+     * @return bool
+     */
+    public function validateEntry($element)
+    {
+        return true;
     }
 
     /**
@@ -100,8 +121,13 @@ abstract class ListingPage implements \Centreon\Test\Behat\Interfaces\ListingPag
     public function inspect($name)
     {
         $this->context->assertFindLink($name)->click();
-        $objectType = $this->objectType;
-        return new $objectType($this->context, false);
+
+        if (isset($this->objectClass) && !is_null($this->objectClass)) {
+            $objectClass = $this->objectClass;
+            return new $objectClass($this->context, false);
+        }
+
+        return null;
     }
 }
 

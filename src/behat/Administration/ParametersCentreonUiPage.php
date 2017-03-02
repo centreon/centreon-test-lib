@@ -19,9 +19,9 @@ namespace Centreon\Test\Behat\Administration;
 
 class ParametersCentreonUiPage extends \Centreon\Test\Behat\ConfigurationPage
 {
-    protected $context;
+    protected $validField = 'input[name="proxy_url"]';
 
-    private static $properties = array(
+    protected $properties = array(
         // Configuration tab.
         'directory' => array(
             'text',
@@ -97,8 +97,8 @@ class ParametersCentreonUiPage extends \Centreon\Test\Behat\ConfigurationPage
         ),
         'enable autologin' => array(
             'checkbox',
-            'input[name="enable_autologin[yes]"]')
-
+            'input[name="enable_autologin[yes]"]'
+        )
     );
 
     /**
@@ -126,119 +126,4 @@ class ParametersCentreonUiPage extends \Centreon\Test\Behat\ConfigurationPage
             'Current page does not match class ' . __CLASS__
         );
     }
-
-    /**
-     *  Check that the current page is matching this class.
-     *
-     * @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="proxy_url"]');
-    }
-
-    /**
-     *  Get host properties.
-     *
-     * @return Host properties.
-     */
-    public function getProperties()
-    {
-        // Begin with first tab.
-        $properties = array();
-
-        // Browse all properties.
-        foreach (self::$properties as $property => $metadata) {
-            // Set property meta-data in variables.
-            $propertyType = $metadata[0];
-            $propertyLocator = $metadata[1];
-
-            // Get properties.
-            switch ($propertyType) {
-                case 'radio':
-                    throw new \Behat\Behat\Tester\Exception\PendingException(__FUNCTION__);
-                    break;
-                case 'select2':
-                    $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
-                    break;
-                case 'checkbox':
-                case 'text':
-                    $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
-                    break;
-                case 'select':
-                    $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
-                    break;
-                default:
-                    throw new \Exception(
-                        'Unknown property type ' . $propertyType
-                        . ' found while retrieving host properties.');
-            }
-        }
-        return $properties;
-    }
-
-    /**
-     *  Set host properties.
-     *
-     * @param $properties Centreon UI properties.
-     */
-    public function setProperties($properties)
-    {
-
-        // Browse all properties.
-        foreach ($properties as $property => $value) {
-            // Check that property exist.
-            if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown host property ' . $property . '.');
-            }
-
-            // Set property meta-data in variables.
-            $propertyType = self::$properties[$property][0];
-            $propertyLocator = self::$properties[$property][1];
-
-            // Set property with its value.
-            switch ($propertyType) {
-                case 'custom':
-                    $setter = 'set' . $propertyLocator;
-                    $this->$setter($value);
-                    break;
-                case 'checkbox':
-                case 'radio':
-                    $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
-                    break;
-                case 'select2':
-                    if (!is_array($value)) {
-                        $value = array($value);
-                    }
-                    foreach ($value as $element) {
-                        $this->context->selectToSelectTwo($propertyLocator, $element);
-                    }
-                    break;
-                case 'text':
-                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
-                    break;
-                case 'select':
-                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
-                    break;
-                default:
-                    throw new \Exception(
-                        'Unknown property type ' . $propertyType
-                        . ' found while setting host property ' . $property . '.');
-            }
-        }
-    }
-
-    /**
-     *  Save the current contact configuration page.
-     */
-    public function save()
-    {
-        $button = $this->context->getSession()->getPage()->findButton('submitA');
-        if (isset($button)) {
-            $button->click();
-        } else {
-            $this->context->assertFindButton('submitC')->click();
-        }
-    }
-
 }

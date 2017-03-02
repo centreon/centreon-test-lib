@@ -17,9 +17,28 @@
 
 namespace Centreon\Test\Behat\Administration;
 
-class ImageListingPage implements ListingPage
+class ImageListingPage extends \Centreon\Test\Behat\ListingPage
 {
-    private $context;
+    protected $validField = 'input[name="searchM"]';
+
+    protected $properties = array(
+        'name' => array(
+            'text',
+            'td:nth-child(2) a'
+        ),
+        'imageDirectory' => array(
+            'custom',
+            'imageDirectory'
+        ),
+        'imageName' => array(
+            'custom',
+            'imageName'
+        ),
+        'comment' => array(
+            'text',
+            'td:nth-child(4)'
+        )
+    );
 
     /**
      *  Images list page.
@@ -46,16 +65,6 @@ class ImageListingPage implements ListingPage
     }
 
     /**
-     *  Check that the current page is matching this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="searchM"]');
-    }
-
-    /**
      *  Get the list of images.
      */
     public function getEntries()
@@ -74,28 +83,30 @@ class ImageListingPage implements ListingPage
     }
 
     /**
-     *  Get properties of an image.
+     * Get image directory of an element
      *
-     * @param $image  Image name.
-     * @return An array of properties.
-     * @throws \Exception
+     * @param $element
+     * @return mixed
      */
-    public function getEntry($image)
+    private function getImageDirectory($element)
     {
-        $images = $this->getEntries();
-        if (!array_key_exists($image, $images)) {
-            throw new \Exception('could not find image ' . $image);
-        }
-        return $images[$image];
+        $imageFullPath = $this->context->assertFindIn($element, 'css', 'td:nth-child(3) a')->getText();
+        list($imageDirectory, $imageName) = explode('/', $imageFullPath);
+
+        return $imageDirectory;
     }
 
     /**
-     *  Edit a template.
+     * Get image name of an element
      *
-     *  @param $name  Image name.
+     * @param $element
+     * @return mixed
      */
-    public function inspect($name)
+    private function getImageName($element)
     {
-        $this->context->assertFindLink($name)->click();
+        $imageFullPath = $this->context->assertFindIn($element, 'css', 'td:nth-child(3) a')->getText();
+        list($imageDirectory, $imageName) = explode('/', $imageFullPath);
+
+        return $imageName;
     }
 }

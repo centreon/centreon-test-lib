@@ -17,9 +17,44 @@
 
 namespace Centreon\Test\Behat\Administration;
 
-class ModuleListingPage implements ListingPage
+class ModuleListingPage extends \Centreon\Test\Behat\ListingPage
 {
-    private $context;
+    protected $validField = 'tr.ListHeader';
+
+    protected $properties = array(
+        'name' => array(
+            'text',
+            'td:nth-child(1) a'
+        ),
+        'realname' => array(
+            'text',
+            'td:nth-child(2) a'
+        ),
+        'description' => array(
+            'text',
+            'td:nth-child(3)'
+        ),
+        'version' => array(
+            'text',
+            'td:nth-child(4)'
+        ),
+        'author' => array(
+            'text',
+            'td:nth-child(5)'
+        ),
+        'expirationDate' => array(
+            'text',
+            'td:nth-child(6)'
+        ),
+        'installed' => array(
+            'text',
+            'td:nth-child(7)'
+        ),
+        'actions' => array(
+            'custom',
+            'actions'
+        )
+    );
 
     /**
      *  Module list page.
@@ -46,80 +81,31 @@ class ModuleListingPage implements ListingPage
     }
 
     /**
-     *  Check that the current page is matching this class.
+     * Get list of actions
      *
-     * @return True if the current page matches this class.
+     * @param $element
+     * @return array
      */
-    public function isPageValid()
+    public function getActions($element)
     {
-        return $this->context->getSession()->getPage()->has('css', 'tr.ListHeader');
-    }
+        $actions = array(
+            'install' => false,
+            'upgrade' => false,
+            'remove' => false
+        );
 
-    /**
-     *  Get the list of templates.
-     */
-    public function getEntries()
-    {
-        $entries = array();
-        $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
-        foreach ($elements as $element) {
-            try {
-                $this->context->assertFindIn($element, 'css', 'td:nth-child(1) a')->getText();
-            } catch (\Exception $e) {
-                continue;
-            }
-            $entry = array();
-            $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(1) a')->getText();
-            $entry['realname'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2) a')->getText();
-            $entry['description'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
-            $entry['version'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(4)')->getText();
-            $entry['author'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText();
-            $entry['expirationDate'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(6)')->getText();
-            $entry['installed'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(7)')->getText();
-            $entry['actions'] = array(
-                'install' => false,
-                'upgrade' => false,
-                'remove' => false
-            );
-            $actionsComponent = $this->context->assertFindIn($element, 'css', 'td:nth-child(9)');
-            if ($actionsComponent->has('css', 'img[src$="generate_conf.png"]')) {
-                $entry['actions']['install'] = true;
-            }
-            if ($actionsComponent->has('css', 'img[src$="upgrade.png"]')) {
-                $entry['actions']['upgrade'] = true;
-            }
-            if ($actionsComponent->has('css', 'img[src$="delete.png"]')) {
-                $entry['actions']['remove'] = true;
-            }
-            $entries[$entry['name']] = $entry;
+        $actionsComponent = $this->context->assertFindIn($element, 'css', 'td:nth-child(9)');
+        if ($actionsComponent->has('css', 'img[src$="generate_conf.png"]')) {
+            $actions['install'] = true;
         }
-        return $entries;
-    }
-
-    /**
-     *  Get a module.
-     *
-     * @param $module  Module name.
-     *
-     * @return An array of properties.
-     */
-    public function getEntry($module)
-    {
-        $modules = $this->getEntries();
-        if (!array_key_exists($module, $modules)) {
-            throw new \Exception('could not find module ' . $module);
+        if ($actionsComponent->has('css', 'img[src$="upgrade.png"]')) {
+            $actions['upgrade'] = true;
         }
-        return $modules[$module];
-    }
+        if ($actionsComponent->has('css', 'img[src$="delete.png"]')) {
+            $actions['remove'] = true;
+        }
 
-    /**
-     *  Edit a module.
-     *
-     * @param $name  Module name.
-     */
-    public function inspect($name)
-    {
-        throw new \Exception('Cannot inspect a module.');
+        return $actions;
     }
 
     /**
@@ -164,9 +150,10 @@ class ModuleListingPage implements ListingPage
     }
 
     /**
-     *  Upgrade a module.
+     * Upgrade a module
      *
-     * @param $name  Module name.
+     * @param $name
+     * @throws \Exception
      */
     public function upgrade($name)
     {

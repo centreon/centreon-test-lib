@@ -17,9 +17,37 @@
 
 namespace Centreon\Test\Behat\Administration;
 
-class WidgetsListingPage implements ListingPage
+class WidgetsListingPage extends \Centreon\Test\Behat\ListingPage
 {
-    private $context;
+    protected $validField = 'tr.ListHeader';
+
+    protected $properties = array(
+        'name' => array(
+            'text',
+            'td:nth-child(1)'
+        ),
+        'description' => array(
+            'text',
+            'td:nth-child(2)'
+        ),
+        'version' => array(
+            'text',
+            'td:nth-child(3)'
+        ),
+        'author' => array(
+            'text',
+            'td:nth-child(4)'
+        ),
+        'id' => array(
+            'attribute',
+            'td:nth-child(5)',
+            'id'
+        ),
+        'actions' => array(
+            'custom',
+            'actions'
+        )
+    );
 
     /**
      *  Widget list page.
@@ -46,65 +74,50 @@ class WidgetsListingPage implements ListingPage
     }
 
     /**
-     *  Check that the current page is matching this class.
+     * Validate entry integrity
      *
-     * @return True if the current page matches this class.
+     * @param $element
+     * @return bool
      */
-    public function isPageValid()
+    public function validateEntry($element)
     {
-        return $this->context->getSession()->getPage()->has('css', 'tr.ListHeader');
+        $valid = true;
+        try {
+            $this->context->assertFindIn($element, 'css', 'td:nth-child(1) a')->getText();
+        } catch (\Exception $e) {
+            $valid = false;
+        }
+
+        return $valid;
     }
 
     /**
-     *  Get the list of templates.
-     */
-    public function getEntries()
-    {
-        $entries = array();
-        $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
-        foreach ($elements as $element) {
-            try {
-                $this->context->assertFindIn($element, 'css', 'td:nth-child(1) a')->getText();
-            } catch (\Exception $e) {
-                continue;
-            }
-            $entry = array();
-            $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(1)')->getText();
-            $entry['description'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
-            $entry['version'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
-            $entry['author'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(4)')->getText();
-            $entry['id'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getAttribute('id');
-            $actionsComponent = $this->context->assertFindIn($element, 'css', 'td:nth-child(5)');
-            if ($actionsComponent->has('css', 'img[src$="generate_conf.png"]')) {
-                $entry['actions']['install'] = true;
-            }
-            if ($actionsComponent->has('css', 'img[src$="upgrade.png"]')) {
-                $entry['actions']['upgrade'] = true;
-            }
-            if ($actionsComponent->has('css', 'img[src$="delete.png"]')) {
-                $entry['actions']['remove'] = true;
-            }
-            $entries[$entry['name']] = $entry;
-        }
-        return $entries;
-    }
-
-    /**
-     *  Get a widget.
+     * Get list of actions
      *
-     * @param $widget  widget name.
-     *
-     * @return An array of properties.
+     * @param $element
+     * @return array
      */
-    public function getEntry($widget)
+    public function getActions($element)
     {
-        $widgets = $this->getEntries();
-        if (!array_key_exists($widget, $widgets)) {
-            throw new \Exception('could not find widget ' . $widget);
-        }
-        return $widgets[$widget];
-    }
+        $actions = array(
+            'install' => false,
+            'upgrade' => false,
+            'remove' => false
+        );
 
+        $actionsComponent = $this->context->assertFindIn($element, 'css', 'td:nth-child(9)');
+        if ($actionsComponent->has('css', 'img[src$="generate_conf.png"]')) {
+            $actions['install'] = true;
+        }
+        if ($actionsComponent->has('css', 'img[src$="upgrade.png"]')) {
+            $actions['upgrade'] = true;
+        }
+        if ($actionsComponent->has('css', 'img[src$="delete.png"]')) {
+            $actions['remove'] = true;
+        }
+
+        return $actions;
+    }
 
     /**
      *  Install a widget.
@@ -153,9 +166,10 @@ class WidgetsListingPage implements ListingPage
     }
 
     /**
-     *  Upgrade a widget.
+     * Upgrade a widget
      *
-     * @param $name  Widget name.
+     * @param $name
+     * @throws \Exception
      */
     public function upgrade($name)
     {

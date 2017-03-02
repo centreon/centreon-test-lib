@@ -30,9 +30,9 @@ class BackupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     const DAY_SATURDAY = 6;
     const DAY_SUNDAY = 0;
 
-    protected $context;
+    protected $validField = 'input[name="backup_enabled[backup_enabled]"]';
 
-    private static $properties = array(
+    protected $properties = array(
         'enabled' => array(
             'radio',
             'input[name="backup_enabled[backup_enabled]"]'
@@ -107,80 +107,6 @@ class BackupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page is matching this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="backup_enabled[backup_enabled]"]');
-    }
-
-    /**
-     *  Get backup configuration properties.
-     *
-     *  @return An array of the backup configuration properties.
-     */
-    public function getProperties()
-    {
-        throw new \Exception(__METHOD__ . ' not implemented');
-    }
-
-    /**
-     *  Set backup configuration properties.
-     *
-     *  @param $properties  Backup configuration properties.
-     */
-    public function setProperties($properties)
-    {
-        foreach ($properties as $property => $value) {
-            // Check that property exist.
-            if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown backup property ' . $property . '.');
-            }
-
-            // Set property meta-data in variables.
-            $propertyType = self::$properties[$property][0];
-            $propertyLocator = self::$properties[$property][1];
-
-            // Set property with its value.
-            switch ($propertyType) {
-                case 'checkbox':
-                    if ($value) {
-                        $this->context->assertFind('css', $propertyLocator)->check();
-                    } else {
-                        $this->context->assertFind('css', $propertyLocator)->uncheck();
-                    }
-                    break ;
-                case 'custom':
-                    $method = 'set' . $propertyLocator;
-                    $this->$method($value);
-                    break ;
-                case 'radio':
-                    $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
-                    break ;
-                case 'text':
-                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
-                    break ;
-                default:
-                    throw new \Exception(
-                        'Unknown property type ' . $propertyType .
-                        ' found while configuring backup property ' .
-                        $property . '.'
-                    );
-            }
-        }
-    }
-
-    /**
-     *  Save backup configuration form.
-     */
-    public function save()
-    {
-        $this->context->assertFindButton('submitC')->click();
     }
 
     /**
