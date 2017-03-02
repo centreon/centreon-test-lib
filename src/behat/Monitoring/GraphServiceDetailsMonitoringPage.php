@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Centreon\Test\Behat;
 
-class GraphServiceDetailsMonitoringPage implements Page
+namespace Centreon\Test\Behat\Monitoring;
+
+class GraphServiceDetailsMonitoringPage implements \Centreon\Test\Behat\Interfaces\Page
 {
     private $context;
 

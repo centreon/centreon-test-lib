@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Monitoring;
 
-class HostMonitoringDetailsPage implements Page
+class HostMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Page
 {
     const SERVICE_STATUS_TAB = 1;
     const PERFORMANCE_TAB = 2;

@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Home;
 
-class CustomViewsPage implements Page
+class CustomViewsPage implements \Centreon\Test\Behat\Interfaces\Page
 {
-    protected $context;
+    private $context;
 
     /**
      *  Navigate to and/or check that we are on the custom views page.

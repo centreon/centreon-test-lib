@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Monitoring;
 
-class ServiceMonitoringDetailsPage implements Page
+class ServiceMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Page
 {
     protected $context;
 
