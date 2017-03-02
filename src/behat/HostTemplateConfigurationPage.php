@@ -17,9 +17,123 @@
 
 namespace Centreon\Test\Behat;
 
-class HostTemplateConfigurationPage extends HostConfigurationPage
+class HostTemplateConfigurationPage implements ConfigurationPage
 {
+    const CONFIGURATION_TAB = 1;
+    const NOTIFICATION_TAB = 2;
+    const RELATIONS_TAB = 3;
+    const DATA_TAB = 4;
+    const EXTENDED_TAB = 5;
+
     protected $context;
+
+    protected $properties = array(
+        // Configuration tab.
+        'name' => array(
+            self::CONFIGURATION_TAB,
+            'text',
+            'input[name="host_name"]'
+        ),
+        'alias' => array(
+            self::CONFIGURATION_TAB,
+            'text',
+            'input[name="host_alias"]'
+        ),
+        'address' => array(
+            self::CONFIGURATION_TAB,
+            'text',
+            'input[name="host_address"]'
+        ),
+        'macros' => array(
+            self::CONFIGURATION_TAB,
+            'custom',
+            'Macros'
+        ),
+        'location' => array(
+            self::CONFIGURATION_TAB,
+            'select2',
+            'select#host_location'
+        ),
+        'templates' => array(
+            self::CONFIGURATION_TAB,
+            'custom',
+            'Templates'
+        ),
+        'check_command' => array(
+            self::CONFIGURATION_TAB,
+            'select2',
+            'select#command_command_id'
+        ),
+        'max_check_attempts' => array(
+            self::CONFIGURATION_TAB,
+            'text',
+            'input[name="host_max_check_attempts"]'
+        ),
+        'normal_check_interval' => array(
+            self::CONFIGURATION_TAB,
+            'text',
+            'input[name="host_check_interval"]'
+        ),
+        'retry_check_interval' => array(
+            self::CONFIGURATION_TAB,
+            'text',
+            'input[name="host_retry_check_interval"]'
+        ),
+        'active_checks_enabled' => array(
+            self::CONFIGURATION_TAB,
+            'radio',
+            'input[name="host_active_checks_enabled[host_active_checks_enabled]"]'
+        ),
+        'passive_checks_enabled' => array(
+            self::CONFIGURATION_TAB,
+            'radio',
+            'input[name="host_passive_checks_enabled[host_passive_checks_enabled]"]'
+        ),
+        // Notification tab.
+        'notifications_enabled' => array(
+            self::NOTIFICATION_TAB,
+            'radio',
+            'input[name="host_notifications_enabled[host_notifications_enabled]"]'
+        ),
+        'notify_on_recovery' => array(
+            self::NOTIFICATION_TAB,
+            'checkbox',
+            'input[name="host_notifOpts[r]"]'
+        ),
+        'notify_on_down' => array(
+            self::NOTIFICATION_TAB,
+            'checkbox',
+            'input[name="host_notifOpts[d]"]'
+        ),
+        'notification_interval' => array(
+            self::NOTIFICATION_TAB,
+            'text',
+            'input[name="host_notification_interval"]'
+        ),
+        'notification_period' => array(
+            self::NOTIFICATION_TAB,
+            'select2',
+            'select#timeperiod_tp_id2'),
+        'first_notification_delay' => array(
+            self::NOTIFICATION_TAB,
+            'text',
+            'input[name="host_first_notification_delay"]'
+        ),
+        'recovery_notification_delay' => array(
+            self::NOTIFICATION_TAB,
+            'text',
+            'input[name="host_recovery_notification_delay"]'
+        ),
+        'cs' => array(
+            self::NOTIFICATION_TAB,
+            'select2',
+            'select#host_cs'),
+        // Data tab.
+        'acknowledgement_timeout' => array(
+            self::DATA_TAB,
+            'text',
+            'input[name="host_acknowledgement_timeout"]')
+    );
 
     /**
      *  Host template edit page.
@@ -53,6 +167,218 @@ class HostTemplateConfigurationPage extends HostConfigurationPage
     public function isPageValid()
     {
         return $this->context->getSession()->getPage()->has('css', 'input[name="host_name"]');
+    }
+
+    /**
+     *  Get host properties.
+     *
+     *  @return Host properties.
+     */
+    public function getProperties()
+    {
+        // Begin with first tab.
+        $tab = self::CONFIGURATION_TAB;
+        $this->switchTab($tab);
+        $properties = array();
+
+        // Browse all properties.
+        foreach ($this->properties as $property => $metadata) {
+            // Set property meta-data in variables.
+            $targetTab = $metadata[0];
+            $propertyType = $metadata[1];
+            $propertyLocator = $metadata[2];
+
+            // Switch between tabs if required.
+            if ($tab != $targetTab) {
+                $this->switchTab($targetTab);
+                $tab = $targetTab;
+            }
+
+            // Get properties.
+            switch ($propertyType) {
+                case 'radio':
+                case 'checkbox':
+                case 'select2':
+                case 'text':
+                    $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
+                    break ;
+                case 'custom':
+                    $methodName = 'get' . $propertyLocator;
+                    $properties[$property] = $this->$methodName();
+                    break;
+                case 'select':
+                    $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
+                    break ;
+                default:
+                    throw new \Exception(
+                        'Unknown property type ' . $propertyType
+                        . ' found while retrieving host properties.');
+            }
+        }
+
+        return $properties;
+    }
+
+    /**
+     *  Set host properties.
+     *
+     *  @param $properties  New host properties.
+     */
+    public function setProperties($properties)
+    {
+        // Begin with first tab.
+        $tab = self::CONFIGURATION_TAB;
+        $this->switchTab($tab);
+
+        // Browse all properties.
+        foreach ($properties as $property => $value) {
+            // Check that property exist.
+            if (!array_key_exists($property, $this->properties)) {
+                throw new \Exception('Unknown host property ' . $property . '.');
+            }
+
+            // Set property meta-data in variables.
+            $targetTab = $this->properties[$property][0];
+            $propertyType = $this->properties[$property][1];
+            $propertyLocator = $this->properties[$property][2];
+
+            // Switch between tabs if required.
+            if ($tab != $targetTab) {
+                $this->switchTab($targetTab);
+                $tab = $targetTab;
+            }
+
+            // Set property with its value.
+            switch ($propertyType) {
+                case 'custom':
+                    $setter = 'set' . $propertyLocator;
+                    $this->$setter($value);
+                    break ;
+                case 'checkbox':
+                case 'radio':
+                    $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
+                    break ;
+                case 'select':
+                    $this->context->selectInList($propertyLocator, $value);
+                    break ;
+                case 'select2':
+                    if (!is_array($value)) {
+                        $value = array($value);
+                    }
+                    foreach ($value as $element) {
+                        $this->context->selectToSelectTwo($propertyLocator, $element);
+                    }
+                    break ;
+                case 'text':
+                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
+                    break ;
+                default:
+                    throw new \Exception(
+                        'Unknown property type ' . $propertyType
+                        . ' found while setting host property ' . $property . '.');
+            }
+        }
+    }
+
+    /**
+     *  Save the current host configuration page.
+     */
+    public function save()
+    {
+        $button = $this->context->getSession()->getPage()->findButton('submitA');
+        if (isset($button)) {
+            $button->click();
+        } else {
+            $this->context->assertFindButton('submitC')->click();
+        }
+    }
+
+    /**
+     *  Switch between tabs.
+     *
+     *  @param $tab  Tab ID.
+     */
+    public function switchTab($tab)
+    {
+        $this->context->assertFind('css', 'li#c' . $tab . ' a')->click();
+    }
+
+    /**
+     *  Get macros.
+     *
+     *  @return macros
+     */
+    private function getMacros()
+    {
+        $macros = array();
+
+        $i = 0;
+        while (true) {
+            $name = $this->context->getSession()->getPage()->findField('macroInput_' . $i);
+            if (is_null($name)) {
+                break ;
+            }
+            $value = $this->context->assertFindField('macroValue_' . $i);
+            $macros[$name->getValue()] = $value->getValue();
+            ++$i;
+        }
+
+        return $macros;
+    }
+
+    /**
+     *  Get host templates.
+     *
+     *  @return host templates
+     */
+    private function getTemplates()
+    {
+        $templates = array();
+
+        $elements = $this->context->getSession()->getPage()->findAll('css', '[id^="tpSelect_"] option[selected="selected"]');
+        foreach ($elements as $element) {
+            $templateName = $element->getText();
+            if ($templateName != '') {
+                $templates[] = $templateName;
+            }
+        }
+
+        return $templates;
+    }
+
+    /**
+     *  Set macros.
+     *
+     *  @param $macros Macros.
+     */
+    private function setMacros($macros)
+    {
+        $currentMacros = $this->getMacros();
+        $i = count($currentMacros);
+        foreach ($macros as $name => $value) {
+            $this->context->assertFind('css' , '#macro_add p')->click();
+            $this->context->assertFindField('macroInput_' . $i)->setValue($name);
+            $this->context->assertFindField('macroValue_' . $i)->setValue($value);
+            $i++;
+        }
+    }
+
+    /**
+     *  Set host templates.
+     *
+     *  @param $templates  Parent templates.
+     */
+    private function setTemplates($templates)
+    {
+        if (!is_array($templates)) {
+            $templates = array($templates);
+        }
+        $i = 0;
+        foreach ($templates as $tpl) {
+            $this->context->assertFind('css', '#template_add span')->click();
+            $this->context->selectInList('#tpSelect_' . $i, $tpl);
+            $i++;
+        }
     }
 }
 
