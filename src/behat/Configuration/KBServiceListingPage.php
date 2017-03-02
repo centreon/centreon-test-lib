@@ -15,11 +15,13 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class KBServiceListingPage implements ListingPage
+class KBServiceListingPage extends \Centreon\Test\Behat\ListingPage
 {
-    protected $context;
+    protected $validField = 'input[name="searchHasNoProcedure"]';
+
+    protected $properties = array();
 
     /**
      *  Navigate to and/or check that we are on the KB service listing
@@ -47,57 +49,10 @@ class KBServiceListingPage implements ListingPage
     }
 
     /**
-     *  Check that the current page is matching this class.
+     * Create wiki page
      *
-     *  @return True if current page is matching this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="searchHasNoProcedure"]');
-    }
-
-    /**
-     *  Get all entries listed in this page.
-     *
-     *  @return An array associating each entry with its properties.
-     */
-    public function getEntries()
-    {
-        throw new \Exception('Not yet implemented.');
-    }
-
-    /**
-     *  Get properties of a single entry.
-     *
-     *  @param $hostservice  Entry name.
-     *
-     *  @return An array of properties.
-     */
-    public function getEntry($hostservice)
-    {
-        throw new \Exception('Not yet implemented.');
-    }
-
-    /**
-     *  Inspect an element.
-     *
-     *  Will throw.
-     *
-     *  @param $hostservice  Unused.
-     */
-    public function inspect($hostservice)
-    {
-        throw new \Exception(
-            'Entries cannot be inspected on the KB service listing page.'
-        );
-    }
-
-    /**
-     *  Create wiki page.
-     *
-     *  @param $hostservice  Target service. This should be an
-     *                       associative array with 'host' and 'service'
-     *                       keys.
+     * @param $hostservice
+     * @throws \Exception
      */
     public function createWikiPage($hostservice)
     {

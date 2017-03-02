@@ -15,15 +15,15 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class PollerConfigurationPage implements ConfigurationPage
+class PollerConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
-    static private $properties = array(
+    protected $validField = 'input[name="ns_ip_address"]';
+
+    protected $properties = array(
         'name' => array('text', 'input[name="name"]')
     );
-
-    protected $context;
 
     /**
      *  Navigate to and/or edit a poller configuration.
@@ -47,71 +47,5 @@ class PollerConfigurationPage implements ConfigurationPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page matches this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="ns_ip_address"]');
-    }
-
-    /**
-     *  Get poller properties.
-     *
-     *  @return An array of poller properties.
-     */
-    public function getProperties()
-    {
-        throw new \Exception(__METHOD__ . ' not yet implemented.');
-    }
-
-    /**
-     *  Set poller properties.
-     *
-     *  @param $properties  Poller properties.
-     */
-    public function setProperties($properties)
-    {
-        // Browse all properties.
-        foreach ($properties as $property => $value) {
-            // Check that property exist.
-            if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown poller property ' . $property . '.');
-            }
-
-            // Set property meta-data in variables.
-            $propertyType = self::$properties[$property][0];
-            $propertyLocator = self::$properties[$property][1];
-
-            // Set property with its value.
-            switch ($propertyType) {
-                case 'text':
-                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
-                    break ;
-                default:
-                    throw new \Exception(
-                        'Unknown property type ' . $propertyType .
-                        ' found while setting poller property ' . $property . '.'
-                    );
-            }
-        }
-    }
-
-    /**
-     *  Save configuration form.
-     */
-    public function save()
-    {
-        $button = $this->context->getSession()->getPage()->findButton('submitA');
-        if (isset($button)) {
-            $button->click();
-        }
-        else {
-            $this->context->assertFindButton('submitC')->click();
-        }
     }
 }

@@ -15,11 +15,41 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class ServiceTemplateConfigurationListingPage implements ListingPage
+class ServiceTemplateConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 {
-    private $context;
+    protected $validField = 'input[name="searchST"]';
+
+    protected $properties = array(
+        'description' => array(
+            'text',
+            'td:nth-child(2)'
+        ),
+        'icon' => array(
+            'attribute',
+            'td:nth-child(2) img',
+            'src'
+        ),
+        'alias' => array(
+            'text',
+            'td:nth-child(3)'
+        ),
+        'parents' => array(
+            'custom',
+            'parents'
+        ),
+        'status' => array(
+            'text',
+            'td:nth-child(6)'
+        ),
+        'locked' => array(
+            'custom',
+            'locked'
+        )
+    );
+
+    protected $objectClass = '\Centreon\Test\Behat\Configuration\ServiceTemplateConfigurationPage';
 
     /**
      *  Service template list page.
@@ -46,61 +76,25 @@ class ServiceTemplateConfigurationListingPage implements ListingPage
     }
 
     /**
-     *  Check that the current page is matching this class.
+     * Get parent templates
      *
-     *  @return True if the current page matches this class.
+     * @param $element
+     * @return array
      */
-    public function isPageValid()
+    private function getParents($element)
     {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="searchST"]');
+        $parents = $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText();
+        $parents = explode(' ', $parents);
+
+        return $parents;
     }
 
     /**
-     *  Get the list of templates.
+     * @param $element
+     * @return bool
      */
-    public function getEntries()
+    private function getLocked($element)
     {
-        $entries = array();
-        $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
-        foreach ($elements as $element) {
-            $descriptionComponent = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)');
-            $imageComponent = $this->context->assertFindIn($descriptionComponent, 'css', 'img');
-            $entry = array();
-            $entry['description'] = $descriptionComponent->getText();
-            $entry['icon'] = $imageComponent->getAttribute('src');
-            $entry['alias'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
-            $entry['parents'] = explode(' ', $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText());
-            $entry['status'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(6)')->getText();
-            $entry['locked'] = (null === $element->find('css', 'input:nth-child(2)'));
-            $entries[$entry['description']] = $entry;
-        }
-        return $entries;
-    }
-
-    /**
-     *  Get properties of a service template.
-     *
-     *  @param $svctmpl  Service template name.
-     *
-     *  @return An array of properties.
-     */
-    public function getEntry($svctmpl)
-    {
-        $templates = $this->getEntries();
-        if (!array_key_exists($svctmpl, $templates)) {
-            throw new \Exception('could not find service template ' . $svctmpl);
-        }
-        return $templates[$svctmpl];
-    }
-
-    /**
-     *  Edit a template.
-     *
-     *  @param $name  Service template name.
-     */
-    public function inspect($name)
-    {
-        $this->context->assertFindLink($name)->click();
-        return new ServiceTemplateConfigurationPage($this->context, false);
+        return (null === $element->find('css', 'input:nth-child(2)'));
     }
 }

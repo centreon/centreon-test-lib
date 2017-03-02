@@ -15,14 +15,13 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class MetaServiceConfigurationPage implements ConfigurationPage
+class MetaServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
-    protected $context;
+    protected $validField = 'input[name="meta_name"]';
 
-    private static $properties = array(
-
+    protected $properties = array(
         'name' => array(
             'text',
             'input[name="meta_name"]'
@@ -93,93 +92,4 @@ class MetaServiceConfigurationPage implements ConfigurationPage
     {
         return $this->context->getSession()->getPage()->has('css', 'input[name="meta_name"]');
     }
-
-    /**
-     *  Get properties of the service.
-     *
-     * @return Properties of the service.
-     */
-    public function getProperties()
-    {
-        $properties = array();
-
-        // Browse all properties.
-        foreach (self::$properties as $property => $metadata) {
-
-            // Set property meta-data in variables.
-            $propertyType = $metadata[0];
-            $propertyLocator = $metadata[1];
-
-            // Get properties.
-            switch ($propertyType) {
-                case 'radio':
-                    throw new \Behat\Behat\Tester\Exception\PendingException(__METHOD__);
-                case 'select2':
-                    $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
-                    break;
-                case 'text':
-                    $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
-                    break;
-            }
-        }
-        return $properties;
-    }
-
-    /**
-     *  Set properties of the service.
-     *
-     * @param $properties  Properties to set.
-     */
-    public function setProperties($properties)
-    {
-        // Browse all properties.
-        foreach ($properties as $property => $value) {
-            // Check that property exist.
-            if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown meta-service property ' . $property . '.');
-            }
-
-            // Set property meta-data in variables.
-            $propertyType = self::$properties[$property][0];
-            $propertyLocator = self::$properties[$property][1];
-
-            // Set property with its value.
-            switch ($propertyType) {
-                case 'checkbox':
-                case 'radio':
-                    $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
-                    break;
-                case 'select2':
-                    if (is_array($value)) {
-                        foreach ($value as $element) {
-                            $this->context->selectToSelectTwo($propertyLocator, $element);
-                        }
-                    } else {
-                        $this->context->selectToSelectTwo($propertyLocator, $value);
-                    }
-                    break;
-                case 'text':
-                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
-                    break;
-                default:
-                    throw new \Exception(
-                        'Unknown property type ' . $propertyType
-                        . ' found while setting meta-service property ' . $property . '.');
-            }
-        }
-    }
-
-    /**
-     *  Save the service.
-     */
-    public function save()
-    {
-        $button = $this->context->getSession()->getPage()->findButton('submitA');
-        if (isset($button)) {
-            $button->click();
-        } else {
-            $this->context->assertFindButton('submitC')->click();
-        }
-    }
-
 }

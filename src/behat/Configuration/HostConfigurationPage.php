@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
 class HostConfigurationPage extends HostTemplateConfigurationPage
 {
@@ -30,9 +30,9 @@ class HostConfigurationPage extends HostTemplateConfigurationPage
     public function __construct($context, $visit = TRUE)
     {
         $this->properties['poller'] = array(
-            self::CONFIGURATION_TAB,
             'select',
-            'select[name="nagios_server_id"]'
+            'select[name="nagios_server_id"]',
+            self::CONFIGURATION_TAB
         );
 
         // Visit page.

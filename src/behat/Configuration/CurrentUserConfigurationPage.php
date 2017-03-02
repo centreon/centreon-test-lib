@@ -15,37 +15,41 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Exception;
 
-class CurrentUserConfigurationPage implements ConfigurationPage
+class CurrentUserConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
     const TAB_INFORMATION = 1;
     const TAB_NOTIFICATION = 2;
 
-    protected $context;
+    protected $validField = 'input[name="contact_name"]';
 
-    private static $properties = array(
-        // Configuration tab.
+    protected $properties = array(
         'alias' => array(
-            self::TAB_INFORMATION,
             'text',
-            'input[name="contact_alias"]'),
+            'input[name="contact_alias"]',
+            self::TAB_INFORMATION
+        ),
         'name' => array(
-            self::TAB_INFORMATION,
             'text',
-            'input[name="contact_name"]'),
+            'input[name="contact_name"]',
+            self::TAB_INFORMATION
+        ),
         'email' => array(
-            self::TAB_INFORMATION,
             'text',
-            'input[name="contact_email"]'),
+            'input[name="contact_email"]',
+            self::TAB_INFORMATION
+        ),
         'location' => array(
-            self::TAB_INFORMATION,
             'select2',
-            'select#contact_location'),
+            'select#contact_location',
+            self::TAB_INFORMATION
+        ),
         'autologin_key' => array(
-            self::TAB_INFORMATION,
             'text',
-            'input[name="contact_autologin_key"]')
+            'input[name="contact_autologin_key"]',
+            self::TAB_INFORMATION
+        )
     );
 
     /**
@@ -72,142 +76,5 @@ class CurrentUserConfigurationPage implements ConfigurationPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page is matching this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="contact_name"]');
-    }
-
-
-    /**
-     *  Get host properties.
-     *
-     *  @return Host properties.
-     */
-    public function getProperties()
-    {
-        // Begin with first tab.
-        $tab = self::TAB_INFORMATION;
-        $this->switchTab($tab);
-        $properties = array();
-
-        // Browse all properties.
-        foreach (self::$properties as $property => $metadata) {
-            // Set property meta-data in variables.
-            $targetTab = $metadata[0];
-            $propertyType = $metadata[1];
-            $propertyLocator = $metadata[2];
-
-            // Switch between tabs if required.
-            if ($tab != $targetTab) {
-                $this->switchTab($targetTab);
-                $tab = $targetTab;
-            }
-
-            // Get properties.
-            switch ($propertyType) {
-            case 'radio':
-                throw new \Behat\Behat\Tester\Exception\PendingException(__FUNCTION__);
-                break ;
-            case 'select2':
-                $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
-                break ;
-            case 'text':
-                $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
-                break ;
-            default:
-                throw new \Exception(
-                    'Unknown property type ' . $propertyType
-                    . ' found while retrieving host properties.');
-            }
-        }
-        return $properties;
-    }
-
-    /**
-     *  Set host properties.
-     *
-     *  @param $properties  New host properties.
-     */
-    public function setProperties($properties)
-    {
-        // Begin with first tab.
-        $tab = self::TAB_INFORMATION;
-        $this->switchTab($tab);
-
-        // Browse all properties.
-        foreach ($properties as $property => $value) {
-            // Check that property exist.
-            if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown host property ' . $property . '.');
-            }
-
-            // Set property meta-data in variables.
-            $targetTab = self::$properties[$property][0];
-            $propertyType = self::$properties[$property][1];
-            $propertyLocator = self::$properties[$property][2];
-
-            // Switch between tabs if required.
-            if ($tab != $targetTab) {
-                $this->switchTab($targetTab);
-                $tab = $targetTab;
-            }
-
-            // Set property with its value.
-            switch ($propertyType) {
-            case 'custom':
-                $setter = 'set' . $propertyLocator;
-                $this->$setter($value);
-                break ;
-            case 'checkbox':
-            case 'radio':
-                $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
-                break ;
-            case 'select2':
-                if (!is_array($value)) {
-                    $value = array($value);
-                }
-                foreach ($value as $element) {
-                    $this->context->selectToSelectTwo($propertyLocator, $element);
-                }
-                break ;
-            case 'text':
-                $this->context->assertFind('css', $propertyLocator)->setValue($value);
-                break ;
-            default:
-                throw new \Exception(
-                    'Unknown property type ' . $propertyType
-                    . ' found while setting host property ' . $property . '.');
-            }
-        }
-    }
-
-    /**
-     *  Save the current contact configuration page.
-     */
-    public function save()
-    {
-        $button = $this->context->getSession()->getPage()->findButton('submitA');
-        if (isset($button)) {
-            $button->click();
-        } else {
-            $this->context->assertFindButton('submitC')->click();
-        }
-    }
-
-    /**
-     *  Switch between tabs.
-     *
-     *  @param $tab  Tab ID.
-     */
-    public function switchTab($tab)
-    {
-        $this->context->assertFind('css', 'li#c' . $tab . ' a')->click();
     }
 }

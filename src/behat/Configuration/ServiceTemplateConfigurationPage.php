@@ -15,11 +15,29 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class ServiceTemplateConfigurationPage implements ConfigurationPage
+class ServiceTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
-    private $context;
+    const TAB_CONFIGURATION = 1;
+    const TAB_AUTHENTICATION = 2;
+    const TAB_EXTENDED = 3;
+
+    protected $validField = 'input[name="service_description"]';
+
+    protected $properties = array(
+        // General tab.
+        'description' => array(
+            'text',
+            'input[name="service_description"]',
+            self::GENERAL_TAB
+        ),
+        'alias' => array(
+            'text',
+            'input[name="service_alias"]',
+            self::GENERAL_TAB
+        )
+    );
 
     /**
      *  Service template edit page.
@@ -43,64 +61,6 @@ class ServiceTemplateConfigurationPage implements ConfigurationPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page matches this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="service_description"]');
-    }
-
-    /**
-     *  Get template properties.
-     *
-     *  @return Service template properties.
-     */
-    public function getProperties()
-    {
-        $properties = array();
-        $properties['description'] = $this->context->assertFindField('service_description')->getValue();
-        $properties['alias'] = $this->context->assertFindField('service_alias')->getValue();
-        return ($properties);
-    }
-
-    /**
-     *  Set template properties.
-     *
-     *  @param $properties  Service template properties.
-     */
-    public function setProperties($properties)
-    {
-        foreach ($properties as $key => $value) {
-            switch ($key) {
-            case 'description':
-                $this->context->assertFindField('service_description')->setValue($value);
-                break ;
-            case 'alias':
-                $this->context->assertFindField('service_alias')->setValue($value);
-                break ;
-            default:
-                throw new \Exception('Unsupported service template property: ' . $key);
-            }
-        }
-    }
-
-    /**
-     *  Save service template.
-     */
-    public function save()
-    {
-        $button = $this->context->getSession()->getPage()->findButton('submitA');
-        if (isset($button)) {
-            $button->click();
-        }
-        else {
-            $this->context->assertFindButton('submitC')->click();
-        }
     }
 }
 

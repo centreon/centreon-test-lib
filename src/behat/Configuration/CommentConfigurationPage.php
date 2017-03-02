@@ -15,11 +15,18 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class CommentConfigurationPage implements ConfigurationPage
+class CommentConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
-    protected $context;
+    protected $validField = 'textarea[name="comment"]';
+
+    protected $properties = array(
+        'comment' => array(
+            'text',
+            'textarea[name="comment"]'
+        )
+    );
 
     /**
      *  Navigate to the comment creation page and/or check that it
@@ -47,56 +54,5 @@ class CommentConfigurationPage implements ConfigurationPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page is matching this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has(
-            'css',
-            'textarea[name="comment"]'
-        );
-    }
-
-    /**
-     *  Get properties printed on the comment configuration page.
-     *
-     *  @return An array with detailed properties.
-     */
-    public function getProperties()
-    {
-        throw new \Exception('Not yet implemented.');
-    }
-
-    /**
-     *  Set properties printed in the comment configuration page.
-     *
-     *  @param $properties  New comment properties.
-     */
-    public function setProperties($properties)
-    {
-        foreach ($properties as $property => $value) {
-            switch ($property) {
-                case 'comment':
-                    $this->context->assertFind('css', 'textarea[name="comment"]')->setValue($value);
-                    break ;
-                default:
-                    throw new \Exception(
-                        'Unknown property ' . $property . '.'
-                    );
-            }
-        }
-    }
-
-    /**
-     *  Save form.
-     */
-    public function save()
-    {
-        $this->context->assertFindButton('submitA')->click();
     }
 }

@@ -15,66 +15,66 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class TimeperiodConfigurationPage implements ConfigurationPage
+class TimeperiodConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
     const TAB_CONFIGURATION = 1;
     const TAB_EXCEPTION = 2;
 
-    protected $context;
+    protected $validField = 'input[name="tp_name"]';
 
-    private static $properties = array(
+    protected $properties = array(
         // Configuration tab.
         'name' => array(
-            self::TAB_CONFIGURATION,
             'text',
-            'input[name="tp_name"]'
+            'input[name="tp_name"]',
+            self::TAB_CONFIGURATION
         ),
         'alias' => array(
-            self::TAB_CONFIGURATION,
             'text',
-            'input[name="tp_alias"]'
+            'input[name="tp_alias"]',
+            self::TAB_CONFIGURATION
         ),
         'sunday' => array(
-            self::TAB_CONFIGURATION,
             'text',
-            'input[name="tp_sunday"]'
+            'input[name="tp_sunday"]',
+            self::TAB_CONFIGURATION
         ),
         'monday' => array(
-            self::TAB_CONFIGURATION,
             'text',
-            'input[name="tp_monday"]'
+            'input[name="tp_monday"]',
+            self::TAB_CONFIGURATION
         ),
         'tuesday' => array(
-            self::TAB_CONFIGURATION,
             'text',
-            'input[name="tp_tuesday"]'
+            'input[name="tp_tuesday"]',
+            self::TAB_CONFIGURATION
         ),
         'wednesday' => array(
-            self::TAB_CONFIGURATION,
             'text',
-            'input[name="tp_wednesday"]'
+            'input[name="tp_wednesday"]',
+            self::TAB_CONFIGURATION
         ),
         'thursday' => array(
-            self::TAB_CONFIGURATION,
             'text',
-            'input[name="tp_thursday"]'
+            'input[name="tp_thursday"]',
+            self::TAB_CONFIGURATION
         ),
         'friday' => array(
-            self::TAB_CONFIGURATION,
             'text',
-            'input[name="tp_friday"]'
+            'input[name="tp_friday"]',
+            self::TAB_CONFIGURATION
         ),
         'saturday' => array(
-            self::TAB_CONFIGURATION,
             'text',
-            'input[name="tp_saturday"]'
+            'input[name="tp_saturday"]',
+            self::TAB_CONFIGURATION
         ),
         'templates' => array(
-            self::TAB_CONFIGURATION,
             'select2',
-            'select#tp_include'
+            'select#tp_include',
+            self::TAB_CONFIGURATION
         ),
     );
 
@@ -100,130 +100,5 @@ class TimeperiodConfigurationPage implements ConfigurationPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page is matching this class.
-     *
-     * @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="tp_name"]');
-    }
-
-    /**
-     *  Get timeperiods properties.
-     *
-     * @return timeperiods properties.
-     */
-    public function getProperties()
-    {
-        // Begin with first tab.
-        $tab = self::TAB_CONFIGURATION;
-        $this->switchTab($tab);
-        $properties = array();
-
-        // Browse all properties.
-        foreach (self::$properties as $property => $metadata) {
-            // Set property meta-data in variables.
-            $targetTab = $metadata[0];
-            $propertyType = $metadata[1];
-            $propertyLocator = $metadata[2];
-
-            // Switch between tabs if required.
-            if ($tab != $targetTab) {
-                $this->switchTab($targetTab);
-                $tab = $targetTab;
-            }
-
-            // Get properties.
-            switch ($propertyType) {
-                case 'select2':
-                    $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
-                    break;
-                case 'text':
-                    $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
-                    break;
-                default:
-                    throw new \Exception(
-                        'Unknown property type ' . $propertyType
-                        . ' found while retrieving host properties.');
-            }
-        }
-        return $properties;
-    }
-
-    /**
-     *  Set timeperiods properties.
-     *
-     * @param $properties New timeperiods properties.
-     */
-    public function setProperties($properties)
-    {
-        // Begin with first tab.
-        $tab = self::TAB_CONFIGURATION;
-        $this->switchTab($tab);
-
-        // Browse all properties.
-        foreach ($properties as $property => $value) {
-            // Check that property exist.
-            if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown host property ' . $property . '.');
-            }
-
-            // Set property meta-data in variables.
-            $targetTab = self::$properties[$property][0];
-            $propertyType = self::$properties[$property][1];
-            $propertyLocator = self::$properties[$property][2];
-
-            // Switch between tabs if required.
-            if ($tab != $targetTab) {
-                $this->switchTab($targetTab);
-                $tab = $targetTab;
-            }
-
-            // Set property with its value.
-            switch ($propertyType) {
-                case 'select2':
-                    if (!is_array($value)) {
-                        $value = array($value);
-                    }
-                    foreach ($value as $element) {
-                        $this->context->selectToSelectTwo($propertyLocator, $element);
-                    }
-                    break;
-                case 'text':
-                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
-                    break;
-                default:
-                    throw new \Exception(
-                        'Unknown property type ' . $propertyType
-                        . ' found while setting host property ' . $property . '.');
-            }
-        }
-    }
-
-    /**
-     *  Save the current timeperiod configuration page.
-     */
-    public function save()
-    {
-        $button = $this->context->getSession()->getPage()->findButton('submitA');
-        if (isset($button)) {
-            $button->click();
-        } else {
-            $this->context->assertFindButton('submitC')->click();
-        }
-    }
-
-    /**
-     *  Switch between tabs.
-     *
-     * @param $tab  Tab ID.
-     */
-    public function switchTab($tab)
-    {
-        $this->context->assertFind('css', 'li#c' . $tab . ' a')->click();
     }
 }

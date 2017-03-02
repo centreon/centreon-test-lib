@@ -15,15 +15,19 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class PollerConfigurationListingPage implements ListingPage
+class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 {
     const ACTION_DUPLICATE = 'm';
     const ACTION_DELETE = 'd';
     const ACTION_UPDATE = 'i';
 
-    protected $context;
+    protected $validField = 'input[name="searchP"]';
+
+    protected $properties = array();
+
+    protected $objectClass = '\Centreon\Test\Behat\Configuration\PollerConfigurationPage';
 
     /**
      *  Navigate to the poller configuration listing page.
@@ -47,51 +51,6 @@ class PollerConfigurationListingPage implements ListingPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page matches this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="searchP"]');
-    }
-
-    /**
-     *  Get poller entries.
-     *
-     *  @return An array of poller entries.
-     */
-    public function getEntries()
-    {
-        throw new \Exception(__METHOD__ . ' not yet implemented');
-    }
-
-    /**
-     *  Get a specific poller entry.
-     *
-     *  @param $entry  Poller name.
-     */
-    public function getEntry($entry)
-    {
-        $pollers = $this->getEntries();
-        if (!array_key_exists($entry, $pollers)) {
-            throw new \Exception('Poller ' . $entry . ' was not found.');
-        }
-        return $pollers[$entry];
-    }
-
-    /**
-     *  Edit a poller.
-     *
-     *  @param $poller  Poller name.
-     */
-    public function inspect($poller)
-    {
-        $this->context->assertFindLink($poller)->click();
-        return new PollerConfigurationPage($this, false);
     }
 
     /**

@@ -15,18 +15,16 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-namespace Centreon\Test\Behat;
-
-class DowntimeConfigurationPage implements ConfigurationPage
+class DowntimeConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
     const TYPE_HOST = 1;
     const TYPE_SERVICE = 2;
 
-    protected $context;
+    protected $validField = 'input[name="start"]';
 
-    private static $properties = array(
+    protected $properties = array(
         'type' => array('radio', 'input[name="downtimeType[downtimeType]"]'),
         'host' => array('select2', 'select#host_id'),
         'service' => array('select2', 'select#service_id'),
@@ -64,116 +62,5 @@ class DowntimeConfigurationPage implements ConfigurationPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page is matching this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="start"]');
-    }
-
-    /**
-     *  Get downtime properties.
-     *
-     *  @return An array of downtime properties.
-     */
-    public function getProperties()
-    {
-
-        $properties = array();
-
-        // Browse all properties.
-        foreach (self::$properties as $property => $metadata) {
-            // Set property meta-data in variables.
-            $propertyType = $metadata[0];
-            $propertyLocator = $metadata[1];
-
-            // Get properties.
-            switch ($propertyType) {
-                case 'radio':
-                    break ;
-                case 'select2':
-                    $properties[$property] = $this->context->assertFind('css',$propertyLocator)->getValue();
-                    break ;
-                case 'text':
-                    $properties[$property] = $this->context->assertFind('css',$propertyLocator)->getValue();
-                    break ;
-                case 'select':
-                    $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
-                    break ;
-                case 'checkbox':
-                    break ;
-                default:
-                    throw new \Exception(
-                        'Unknown property type ' . $propertyType
-                        . ' found while retrieving host properties.');
-            }
-        }
-        return $properties;
-
-    }
-
-    /**
-     *  Set downtime properties.
-     *
-     *  @param $properties  Set downtime properties.
-     */
-    public function setProperties($properties)
-    {
-        foreach ($properties as $property => $value) {
-            // Check that property exist.
-            if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown downtime property ' . $property . '.');
-            }
-
-            // Set property meta-data in variables.
-            $propertyType = self::$properties[$property][0];
-            $propertyLocator = self::$properties[$property][1];
-
-            // Set property with its value.
-            switch ($propertyType) {
-                case 'checkbox':
-                    if ($value) {
-                        $this->context->assertFind('css', $propertyLocator)->check();
-                    } else {
-                        $this->context->assertFind('css', $propertyLocator)->uncheck();
-                    }
-                    break ;
-                case 'radio':
-                    $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
-                    break ;
-                case 'select':
-                    $this->context->selectInList($propertyLocator, $value);
-                    break ;
-                case 'select2':
-                    if (!is_array($value)) {
-                        $value = array($value);
-                    }
-                    foreach ($value as $element) {
-                        $this->context->selectToSelectTwo($propertyLocator, $element);
-                    }
-                    break ;
-                case 'text':
-                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
-                    break ;
-                default:
-                    throw new \Exception(
-                        'Unknown property type ' . $propertyType
-                        . ' found while setting downtime property '
-                        . $property . '.');
-            }
-        }
-    }
-
-    /**
-     *  Save.
-     */
-    public function save()
-    {
-        $this->context->assertFindButton('submitA')->click();
     }
 }

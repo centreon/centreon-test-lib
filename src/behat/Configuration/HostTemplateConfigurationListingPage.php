@@ -15,11 +15,45 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class HostTemplateConfigurationListingPage implements ListingPage
+class HostTemplateConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 {
-    private $context;
+    protected $validField = 'input[name="searchHT"]';
+
+    protected $properties = array(
+        'name' => array(
+            'text',
+            'td:nth-child(2)'
+        ),
+        'id' => array(
+            'custom',
+            'id'
+        ),
+        'icon' => array(
+            'attribute',
+            'td:nth-child(2) img',
+            'src'
+        ),
+        'description' => array(
+            'text',
+            'td:nth-child(3)'
+        ),
+        'linked_services' => array(
+            'text',
+            'td:nth-child(4)'
+        ),
+        'parents' => array(
+            'custom',
+            'parents'
+        ),
+        'locked' => array(
+            'custom',
+            'locked'
+        )
+    );
+
+    protected $objectClass = '\Centreon\Test\Behat\Configuration\HostTemplateConfigurationPage';
 
     /**
      *  Host template list page.
@@ -46,64 +80,38 @@ class HostTemplateConfigurationListingPage implements ListingPage
     }
 
     /**
-     *  Check that the current page is matching this class.
-     *
-     *  @return True if the current page matches this class.
+     * @param $element
+     * @return null
      */
-    public function isPageValid()
+    private function getId($element)
     {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="searchHT"]');
+        $idComponent = $this->context->assertFindIn($element, 'css', 'input[type="checkbox"]')->getAttribute('name');
+        $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
+
+        return $id;
     }
 
     /**
-     *  Get the list of templates.
+     * Get parent templates
+     *
+     * @param $element
+     * @return array
      */
-    public function getEntries()
+    private function getParents($element)
     {
-        $entries = array();
-        $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
-        foreach ($elements as $element) {
-            $idComponent = $this->context->assertFindIn($element, 'css', 'input[type="checkbox"]')->getAttribute('name');
-            $nameComponent = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)');
-            $imageComponent = $this->context->assertFindIn($nameComponent, 'css', 'img');
-            $entry = array();
-            $entry['id'] = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
-            $entry['name'] = $nameComponent->getText();
-            $entry['icon'] = $imageComponent->getAttribute('src');
-            $entry['description'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
-            $entry['linked_services'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(4)')->getText();
-            $entry['parents'] = explode(' ', str_replace('| ', '', $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText()));
-            $entry['locked'] = (null === $element->find('css', 'input:nth-child(2)'));
-            $entries[$entry['name']] = $entry;
-        }
-        return $entries;
+        $parents = $this->context->assertFindIn($element, 'css', 'td:nth-child(7)')->getText();
+        $parents = explode(' ', str_replace('| ', '', $parents));
+
+        return $parents;
     }
 
     /**
-     *  Get a host template.
-     *
-     *  @param $tmpl  Host template name.
-     *
-     *  @return An array of properties.
+     * @param $element
+     * @return bool
      */
-    public function getEntry($tmpl)
+    private function getLocked($element)
     {
-        $templates = $this->getEntries();
-        if (!array_key_exists($tmpl, $templates)) {
-            throw new \Exception('could not find host template ' . $tmpl);
-        }
-        return $templates[$tmpl];
-    }
-
-    /**
-     *  Edit a template.
-     *
-     *  @param $name  Host template name.
-     */
-    public function inspect($name)
-    {
-        $this->context->assertFindLink($name)->click();
-        return new HostTemplateConfigurationPage($this->context, false);
+        return (null === $element->find('css', 'input:nth-child(2)'));
     }
 
     /**

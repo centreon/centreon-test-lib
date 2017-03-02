@@ -15,11 +15,41 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class HostConfigurationListingPage implements ListingPage
+class HostConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 {
-    private $context;
+    protected $validField = 'input[name="searchH"]';
+
+    protected $properties = array(
+        'name' => array(
+            'text',
+            'td:nth-child(2)'
+        ),
+        'icon' => array(
+            'attribute',
+            'td:nth-child(2) img',
+            'src'
+        ),
+        'alias' => array(
+            'text',
+            'td:nth-child(4)'
+        ),
+        'ip_address' => array(
+            'text',
+            'td:nth-child(5)'
+        ),
+        'poller' => array(
+            'text',
+            'td:nth-child(6)'
+        ),
+        'parents' => array(
+            'custom',
+            'parents'
+        )
+    );
+
+    protected $objectClass = '\Centreon\Test\Behat\Configuration\HostConfigurationPage';
 
     /**
      *  Host template list page.
@@ -46,62 +76,17 @@ class HostConfigurationListingPage implements ListingPage
     }
 
     /**
-     *  Check that the current page is matching this class.
+     * Get parent templates
      *
-     *  @return True if the current page matches this class.
+     * @param $element
+     * @return array
      */
-    public function isPageValid()
+    private function getParents($element)
     {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="searchH"]');
-    }
+        $parents = $this->context->assertFindIn($element, 'css', 'td:nth-child(7)')->getText();
+        $parents = explode(' ', str_replace('| ', '', $parents));
 
-    /**
-     *  Get the list of templates.
-     */
-    public function getEntries()
-    {
-        $entries = array();
-        $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
-        foreach ($elements as $element) {
-            $nameComponent = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)');
-            $imageComponent = $this->context->assertFindIn($nameComponent, 'css', 'img');
-            $entry = array();
-            $entry['name'] = $nameComponent->getText();
-            $entry['icon'] = $imageComponent->getAttribute('src');
-            $entry['alias'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(4)')->getText();
-            $entry['ip_address'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText();
-            $entry['poller'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(6)')->getText();
-            $entry['parents'] = explode(' ', str_replace('| ', '', $this->context->assertFindIn($element, 'css', 'td:nth-child(7)')->getText()));
-            $entries[$entry['name']] = $entry;
-        }
-        return $entries;
-    }
-
-    /**
-     *  Get a host.
-     *
-     *  @param $host  Host name.
-     *
-     *  @return An array of properties.
-     */
-    public function getEntry($host)
-    {
-        $hosts = $this->getEntries();
-        if (!array_key_exists($host, $hosts)) {
-            throw new \Exception('could not find host ' . $host);
-        }
-        return $hosts[$host];
-    }
-
-    /**
-     *  Edit an host.
-     *
-     *  @param $name  Host name.
-     */
-    public function inspect($name)
-    {
-        $this->context->assertFindLink($name)->click();
-        return new HostConfigurationPage($this->context, false);
+        return $parents;
     }
 
     /**

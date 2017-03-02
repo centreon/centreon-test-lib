@@ -15,11 +15,24 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class EscalationConfigurationListingPage implements ListingPage
+class EscalationConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 {
-    protected $context;
+    protected $validField = 'input[name="searchC"]';
+
+    protected $properties = array(
+        'name' => array(
+            'text',
+            'td:nth-child(2)'
+        ),
+        'escalation_line' => array(
+            'text',
+            'td:nth-child(3)'
+        )
+    );
+
+    protected $objectClass = '\Centreon\Test\Behat\Configuration\EscalationConfigurationPage';
 
     /**
      *  Escalation list page.
@@ -37,16 +50,6 @@ class EscalationConfigurationListingPage implements ListingPage
 
         // Check that page is valid for this class.
         $this->waitForValidPage();
-    }
-
-    /**
-     *  Check that the current page matches this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="searchC"]');
     }
 
     /**
@@ -101,33 +104,6 @@ class EscalationConfigurationListingPage implements ListingPage
             }
         }
         return $entries;
-    }
-
-    /**
-     *  Get a escalation.
-     *
-     *  @param $escname  Escalation name.
-     *
-     *  @return An array of properties.
-     */
-    public function getEntry($escname)
-    {
-        $escalations = $this->getEntries();
-        if (!array_key_exists($escname, $escalations)) {
-            throw new \Exception('could not find escalation ' . $escname);
-        }
-        return $escalations[$escname];
-    }
-
-    /**
-     *  Edit a escalation.
-     *
-     *  @param $escalation  Escalation name.
-     */
-    public function inspect($escalation)
-    {
-        $this->context->assertFindLink($escalation)->click();
-        return new EscalationConfigurationPage($this, false);
     }
 
     /**

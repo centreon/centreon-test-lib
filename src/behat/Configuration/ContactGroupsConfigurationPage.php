@@ -15,14 +15,13 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class ContactGroupsConfigurationPage implements ConfigurationPage
+class ContactGroupsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
-    protected $context;
+    protected $validField = 'input[name="cg_name"]';
 
-    private static $properties = array(
-        // Configuration tab.
+    protected $properties = array(
         'name' => array(
             'text',
             'input[name="cg_name"]'
@@ -72,113 +71,5 @@ class ContactGroupsConfigurationPage implements ConfigurationPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page is matching this class.
-     *
-     * @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="cg_name"]');
-    }
-
-
-    /**
-     *  Get CG properties.
-     *
-     * @return CG properties.
-     */
-    public function getProperties()
-    {
-        $properties = array();
-
-        // Browse all properties.
-        foreach (self::$properties as $property => $metadata) {
-            // Set property meta-data in variables.
-            $propertyType = $metadata[0];
-            $propertyLocator = $metadata[1];
-
-
-            // Get properties.
-            switch ($propertyType) {
-                case 'radio':
-                case 'checkbox':
-                    break;
-                case 'select2':
-                    $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
-                    break;
-                case 'text':
-                    $properties[$property] = $this->assertFindField($propertyLocator)->getValue();
-                    break;
-                default:
-                    throw new \Exception(
-                        'Unknown property type ' . $propertyType
-                        . ' found while retrieving host properties.');
-            }
-        }
-        return $properties;
-    }
-
-    /**
-     *  Set CG properties.
-     *
-     * @param $properties  New CG properties.
-     */
-    public function setProperties($properties)
-    {
-
-        // Browse all properties.
-        foreach ($properties as $property => $value) {
-            // Check that property exist.
-            if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown host property ' . $property . '.');
-            }
-
-            // Set property meta-data in variables.
-            $propertyType = self::$properties[$property][0];
-            $propertyLocator = self::$properties[$property][1];
-
-            // Set property with its value.
-            switch ($propertyType) {
-                case 'custom':
-                    $setter = 'set' . $propertyLocator;
-                    $this->$setter($value);
-                    break;
-                case 'checkbox':
-                case 'radio':
-                    $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
-                    break;
-                case 'select2':
-                    if (!is_array($value)) {
-                        $value = array($value);
-                    }
-                    foreach ($value as $element) {
-                        $this->context->selectToSelectTwo($propertyLocator, $element);
-                    }
-                    break;
-                case 'text':
-                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
-                    break;
-                default:
-                    throw new \Exception(
-                        'Unknown property type ' . $propertyType
-                        . ' found while setting host property ' . $property . '.');
-            }
-        }
-    }
-
-    /**
-     *  Save the current contact group configuration page.
-     */
-    public function save()
-    {
-        $button = $this->context->getSession()->getPage()->findButton('submitA');
-        if (isset($button)) {
-            $button->click();
-        } else {
-            $this->context->assertFindButton('submitC')->click();
-        }
     }
 }

@@ -15,16 +15,16 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class PollerConfigurationExportPage implements Page
+class PollerConfigurationExportPage extends \Centreon\Test\Behat\ConfigurationPage
 {
     const METHOD_RELOAD = 1;
     const METHOD_RESTART = 2;
 
-    protected $context;
+    protected $validField = '#nrestart_mode';
 
-    static private $properties = array(
+    protected $properties = array(
         'pollers' => array('custom', 'Pollers'),
         'generate_files' => array('checkbox', 'input[name="gen"]'),
         'run_debug' => array('checkbox', 'input[name="debug"]'),
@@ -56,59 +56,6 @@ class PollerConfigurationExportPage implements Page
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page matches this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', '#nrestart_mode');
-    }
-
-    /**
-     *  Set export properties.
-     *
-     *  @param $properties  Export properties.
-     */
-    public function setProperties($properties)
-    {
-        // Browse all properties.
-        foreach ($properties as $property => $value) {
-            // Check that property exist.
-            if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown export property ' . $property . '.');
-            }
-
-            // Set property meta-data in variables.
-            $propertyType = self::$properties[$property][0];
-            $propertyLocator = self::$properties[$property][1];
-
-            // Set property with its valid.
-            switch ($propertyType) {
-                case 'checkbox':
-                    if ($value) {
-                        $this->context->assertFind('css', $propertyLocator)->check();
-                    } else {
-                        $this->context->assertFind('css', $propertyLocator)->uncheck();
-                    }
-                    break ;
-                case 'custom':
-                    $method = 'set' . $propertyLocator;
-                    $this->$method($value);
-                    break ;
-                case 'select':
-                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
-                    break ;
-                default:
-                    throw new \Exception(
-                        'Unknown property type ' . $propertyType .
-                        ' found while setting export property ' . $property . '.'
-                    );
-            }
-        }
     }
 
     /**

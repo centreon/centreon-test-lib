@@ -15,85 +15,96 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class ContactConfigurationPage implements ConfigurationPage
+class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
     const TAB_CONFIGURATION = 1;
     const TAB_AUTHENTICATION = 2;
     const TAB_EXTENDED = 3;
 
-    protected $context;
+    protected $validField = 'input[name="contact_name"]';
 
-    private static $properties = array(
+    protected $properties = array(
         // Configuration tab.
         'alias' => array(
-            self::TAB_CONFIGURATION,
             'text',
-            'input[name="contact_alias"]'),
+            'input[name="contact_alias"]',
+            self::TAB_CONFIGURATION
+        ),
         'name' => array(
-            self::TAB_CONFIGURATION,
             'text',
-            'input[name="contact_name"]'),
+            'input[name="contact_name"]',
+            self::TAB_CONFIGURATION
+        ),
         'email' => array(
-            self::TAB_CONFIGURATION,
             'text',
-            'input[name="contact_email"]'),
+            'input[name="contact_email"]',
+            self::TAB_CONFIGURATION
+        ),
         'notifications_enabled' => array(
-            self::TAB_CONFIGURATION,
             'radio',
-            'input[name="contact_enable_notifications[contact_enable_notifications]"]'),
+            'input[name="contact_enable_notifications[contact_enable_notifications]"]',
+            self::TAB_CONFIGURATION
+        ),
         'host_notify_on_recovery' => array(
-            self::TAB_CONFIGURATION,
             'checkbox',
-            'input[name="contact_hostNotifOpts[r]"]'),
+            'input[name="contact_hostNotifOpts[r]"]',
+            self::TAB_CONFIGURATION
+        ),
         'host_notify_on_down' => array(
-            self::TAB_CONFIGURATION,
             'checkbox',
-            'input[name="contact_hostNotifOpts[d]"]'),
+            'input[name="contact_hostNotifOpts[d]"]',
+            self::TAB_CONFIGURATION
+        ),
         'host_notification_command' => array(
-            self::TAB_CONFIGURATION,
             'select2',
-            'select#contact_hostNotifCmds'),
+            'select#contact_hostNotifCmds',
+            self::TAB_CONFIGURATION
+        ),
         'service_notify_on_recovery' => array(
-            self::TAB_CONFIGURATION,
             'checkbox',
-            'input[name="contact_svNotifOpts[r]"]'),
+            'input[name="contact_svNotifOpts[r]"]',
+            self::TAB_CONFIGURATION
+        ),
         'service_notify_on_critical' => array(
-            self::TAB_CONFIGURATION,
             'checkbox',
-            'input[name="contact_svNotifOpts[c]"]'),
+            'input[name="contact_svNotifOpts[c]"]',
+            self::TAB_CONFIGURATION
+        ),
         'service_notification_command' => array(
-            self::TAB_CONFIGURATION,
             'select2',
-            'select#contact_svNotifCmds'),
+            'select#contact_svNotifCmds',
+            self::TAB_CONFIGURATION
+        ),
         'password' => array(
-            self::TAB_AUTHENTICATION,
             'text',
             'input#passwd1',
+            self::TAB_AUTHENTICATION,
             false // Do not exist on ldap contact
         ),
         'password2' => array(
-            self::TAB_AUTHENTICATION,
             'text',
             'input#passwd2',
+            self::TAB_AUTHENTICATION,
             false // Do not exist on ldap contact
         ),
         'dn' => array(
-            self::TAB_AUTHENTICATION,
             'text',
             'input[name="contact_ldap_dn"]',
+            self::TAB_AUTHENTICATION,
             false // Do not exist when no ldap is configured
         ),
         'admin' => array(
-            self::TAB_AUTHENTICATION,
             'radio',
-            'input[name="contact_admin[contact_admin]"]'
+            'input[name="contact_admin[contact_admin]"]',
+            self::TAB_AUTHENTICATION
         ),
         'location' => array(
-            self::TAB_AUTHENTICATION,
             'select2',
-            'select#contact_location'),
+            'select#contact_location',
+            self::TAB_AUTHENTICATION
+        )
     );
 
     /**
@@ -119,147 +130,5 @@ class ContactConfigurationPage implements ConfigurationPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page is matching this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="contact_name"]');
-    }
-
-    /**
-     *  Get host properties.
-     *
-     *  @return Host properties.
-     */
-    public function getProperties()
-    {
-        // Begin with first tab.
-        $tab = self::TAB_CONFIGURATION;
-        $this->switchTab($tab);
-        $properties = array();
-
-        // Browse all properties.
-        foreach (self::$properties as $property => $metadata) {
-            // Set property meta-data in variables.
-            $targetTab = $metadata[0];
-            $propertyType = $metadata[1];
-            $propertyLocator = $metadata[2];
-
-            // Switch between tabs if required.
-            if ($tab != $targetTab) {
-                $this->switchTab($targetTab);
-                $tab = $targetTab;
-            }
-
-            // Get properties.
-            switch ($propertyType) {
-            case 'radio':
-            case 'checkbox':
-                break ;
-            case 'select2':
-                $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
-                break ;
-            case 'text':
-                try {
-                    $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
-                } catch (\Exception $e) {
-                    if (!isset($metadata[3]) || $metadata[3]) {
-                        throw $e;
-                    }
-                }
-                break ;
-            default:
-                throw new \Exception(
-                    'Unknown property type ' . $propertyType
-                    . ' found while retrieving host properties.');
-            }
-        }
-        return $properties;
-    }
-
-    /**
-     *  Set host properties.
-     *
-     *  @param $properties  New host properties.
-     */
-    public function setProperties($properties)
-    {
-        // Begin with first tab.
-        $tab = self::TAB_CONFIGURATION;
-        $this->switchTab($tab);
-
-        // Browse all properties.
-        foreach ($properties as $property => $value) {
-            // Check that property exist.
-            if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown host property ' . $property . '.');
-            }
-
-            // Set property meta-data in variables.
-            $targetTab = self::$properties[$property][0];
-            $propertyType = self::$properties[$property][1];
-            $propertyLocator = self::$properties[$property][2];
-
-            // Switch between tabs if required.
-            if ($tab != $targetTab) {
-                $this->switchTab($targetTab);
-                $tab = $targetTab;
-            }
-
-            // Set property with its value.
-            switch ($propertyType) {
-            case 'custom':
-                $setter = 'set' . $propertyLocator;
-                $this->$setter($value);
-                break ;
-            case 'checkbox':
-            case 'radio':
-                $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
-                break ;
-            case 'select2':
-                if (!is_array($value)) {
-                    $value = array($value);
-                }
-                foreach ($value as $element) {
-                    $this->context->selectToSelectTwo($propertyLocator, $element);
-                }
-                break ;
-            case 'text':
-                $this->context->assertFind('css', $propertyLocator)->setValue($value);
-                break ;
-            default:
-                throw new \Exception(
-                    'Unknown property type ' . $propertyType
-                    . ' found while setting host property ' . $property . '.');
-            }
-        }
-    }
-
-    /**
-     *  Save the current contact configuration page.
-     */
-    public function save()
-    {
-        $button = $this->context->getSession()->getPage()->findButton('submitA');
-        if (isset($button)) {
-            $button->click();
-        } else {
-            $this->context->assertFindButton('submitC')->click();
-        }
-    }
-
-    /**
-     *  Switch between tabs.
-     *
-     *  @param $tab  Tab ID.
-     */
-    public function switchTab($tab)
-    {
-        $this->context->assertFind('css', 'li#c' . $tab . ' a')->click();
     }
 }

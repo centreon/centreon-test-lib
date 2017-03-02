@@ -15,63 +15,74 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class BrokerConfigurationPage implements ConfigurationPage
+class BrokerConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
     const TAB_GENERAL = 1;
     const TAB_INPUT = 2;
     const TAB_LOGGER = 3;
     const TAB_OUTPUT = 4;
 
-    protected $context;
+    protected $validField = 'select[name="ns_nagios_server"]';
 
-    private static $properties = array(
+    protected $properties = array(
         // Configuration tab.
         'requester' => array(
-            self::TAB_GENERAL,
             'select',
-            'select[name="ns_nagios_server"]'),
+            'select[name="ns_nagios_server"]',
+            self::TAB_GENERAL,
+        ),
         'name' => array(
-            self::TAB_GENERAL,
             'text',
-            'input[name="name"]'),
+            'input[name="name"]',
+            self::TAB_GENERAL
+        ),
         'daemon' => array(
-            self::TAB_GENERAL,
             'radio',
-            'input[name="activate_watchdog[activate_watchdog]"]'),
+            'input[name="activate_watchdog[activate_watchdog]"]',
+            self::TAB_GENERAL
+        ),
         'filename' => array(
-            self::TAB_GENERAL,
             'text',
-            'input[name="filename"]'),
+            'input[name="filename"]',
+            self::TAB_GENERAL
+        ),
         'cache_directory' => array(
-            self::TAB_GENERAL,
             'text',
-            'input[name="cache_directory"]'),
+            'input[name="cache_directory"]',
+            self::TAB_GENERAL
+        ),
         'status' => array(
-            self::TAB_GENERAL,
             'radio',
-            'input[name="activate[activate]"]'),
+            'input[name="activate[activate]"]',
+            self::TAB_GENERAL
+        ),
         'timestamp' => array(
-            self::TAB_GENERAL,
             'radio',
-            'input[name="write_timestamp[write_timestamp]"]'),
+            'input[name="write_timestamp[write_timestamp]"]',
+            self::TAB_GENERAL
+        ),
         'thread_id' => array(
-            self::TAB_GENERAL,
             'radio',
-            'input[name="write_thread_id[write_thread_id]"]'),
+            'input[name="write_thread_id[write_thread_id]"]',
+            self::TAB_GENERAL
+        ),
         'statistics' => array(
-            self::TAB_GENERAL,
             'radio',
-            'input[name="stats_activate[stats_activate]"]'),
+            'input[name="stats_activate[stats_activate]"]',
+            self::TAB_GENERAL
+        ),
         'event_queue_max_size' => array(
-            self::TAB_GENERAL,
             'text',
-            'input[name="event_queue_max_size"]'),
+            'input[name="event_queue_max_size"]',
+            self::TAB_GENERAL
+        ),
         'command_file' => array(
-            self::TAB_GENERAL,
             'text',
-            'input[name="command_file"]'),
+            'input[name="command_file"]',
+            self::TAB_GENERAL
+        ),
     );
 
     /**
@@ -95,127 +106,5 @@ class BrokerConfigurationPage implements ConfigurationPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page is matching this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'select[name="ns_nagios_server"]');
-    }
-
-    /**
-     * @return array
-     * @throws \Exception
-     */
-    public function getProperties()
-    {
-        // Begin with first tab.
-        $tab = self::TAB_GENERAL;
-        $this->switchTab($tab);
-        $properties = array();
-
-        // Browse all properties.
-        foreach (self::$properties as $property => $metadata) {
-            // Set property meta-data in variables.
-            $targetTab = $metadata[0];
-            $propertyType = $metadata[1];
-            $propertyLocator = $metadata[2];
-
-            // Switch between tabs if required.
-            if ($tab != $targetTab) {
-                $this->switchTab($targetTab);
-                $tab = $targetTab;
-            }
-
-            // Get properties.
-            switch ($propertyType) {
-                case 'radio':
-                case 'select':
-                case 'text':
-                    $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
-                    break ;
-                default:
-                    throw new \Exception(
-                        'Unknown property type ' . $propertyType
-                        . ' found while retrieving broker properties.');
-            }
-        }
-
-        return $properties;
-    }
-
-    /**
-     *  Set host properties.
-     *
-     *  @param $properties  New host properties.
-     */
-    public function setProperties($properties)
-    {
-        // Begin with first tab.
-        $tab = self::TAB_GENERAL;
-        $this->switchTab($tab);
-
-        // Browse all properties.
-        foreach ($properties as $property => $value) {
-            // Check that property exist.
-            if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown broker property ' . $property . '.');
-            }
-
-            // Set property meta-data in variables.
-            $targetTab = self::$properties[$property][0];
-            $propertyType = self::$properties[$property][1];
-            $propertyLocator = self::$properties[$property][2];
-
-            // Switch between tabs if required.
-            if ($tab != $targetTab) {
-                $this->switchTab($targetTab);
-                $tab = $targetTab;
-            }
-
-            // Set property with its value.
-            switch ($propertyType) {
-                case 'radio':
-                    $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
-                    break ;
-                case 'text':
-                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
-                    break ;
-                case 'select':
-                    $this->context->selectInList($propertyLocator, $value);
-                    break;
-                default:
-                    throw new \Exception(
-                        'Unknown property type ' . $propertyType
-                        . ' found while setting broker property ' . $property . '.');
-            }
-        }
-    }
-
-    /**
-     *  Save the current broker configuration page.
-     */
-    public function save()
-    {
-        $button = $this->context->getSession()->getPage()->findButton('submitA');
-        if (isset($button)) {
-            $button->click();
-        } else {
-            $this->context->assertFindButton('submitC')->click();
-        }
-    }
-
-    /**
-     *  Switch between tabs.
-     *
-     *  @param $tab  Tab ID.
-     */
-    public function switchTab($tab)
-    {
-        $this->context->assertFind('css', 'li#c' . $tab . ' a')->click();
     }
 }

@@ -15,16 +15,45 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class CommandConfigurationListingPage implements ListingPage
+class CommandConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 {
     const TYPE_CHECK = 2;
     const TYPE_NOTIFICATION = 1;
     const TYPE_DISCOVERY = 4;
     const TYPE_MISC = 3;
 
-    protected $context;
+    protected $validField = 'input[name="searchC"]';
+
+    protected $properties = array(
+        'name' => array(
+            'text',
+            'td:nth-child(2)'
+        ),
+        'request' => array(
+            'text',
+            'td:nth-child(3)'
+        ),
+        'inputs' => array(
+            'text',
+            'td:nth-child(4)'
+        ),
+        'outputs' => array(
+            'text',
+            'td:nth-child(5)'
+        ),
+        'loggers' => array(
+            'text',
+            'td:nth-child(6)'
+        ),
+        'status' => array(
+            'text',
+            'td:nth-child(7)'
+        )
+    );
+
+    protected $objectClass = '\Centreon\Test\Behat\Configuration\CommandConfigurationPage';
 
     /**
      *  Command list page.
@@ -44,16 +73,6 @@ class CommandConfigurationListingPage implements ListingPage
 
         // Check that page is valid for this class.
         $this->waitForValidPage();
-    }
-
-    /**
-     *  Check that the current page matches this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="searchC"]');
     }
 
     /**
@@ -108,33 +127,6 @@ class CommandConfigurationListingPage implements ListingPage
             }
         }
         return $entries;
-    }
-
-    /**
-     *  Get a command.
-     *
-     *  @param $cmdname  Command name.
-     *
-     *  @return An array of properties.
-     */
-    public function getEntry($cmdname)
-    {
-        $commands = $this->getEntries();
-        if (!array_key_exists($cmdname, $commands)) {
-            throw new \Exception('could not find command ' . $cmdname);
-        }
-        return $commands[$cmdname];
-    }
-
-    /**
-     *  Edit a command.
-     *
-     *  @param $command  Command name.
-     */
-    public function inspect($command)
-    {
-        $this->context->assertFindLink($command)->click();
-        return new CommandConfigurationPage($this, false);
     }
 
     /**

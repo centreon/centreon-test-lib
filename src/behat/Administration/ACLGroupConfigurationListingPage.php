@@ -44,7 +44,7 @@ class ACLGroupConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
         )
     );
 
-    protected $objectClass = '\Centreon\Test\Behat\AdministrationACLGroupConfigurationPage';
+    protected $objectClass = '\Centreon\Test\Behat\Administration\ACLGroupConfigurationPage';
 
     /**
      *  Contact list page.

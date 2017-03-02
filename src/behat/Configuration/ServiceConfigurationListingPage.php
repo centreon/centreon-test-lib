@@ -15,11 +15,13 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class ServiceConfigurationListingPage implements ListingPage
+class ServiceConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 {
-    private $context;
+    protected $validField = 'input[name="searchS"]';
+
+    protected $properties = array();
 
     /**
      *  Service list page.
@@ -43,16 +45,6 @@ class ServiceConfigurationListingPage implements ListingPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page matches this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="searchS"]');
     }
 
     /**
@@ -112,18 +104,6 @@ class ServiceConfigurationListingPage implements ListingPage
             $thrown = true;
         }
         return !$thrown;
-    }
-
-    /**
-     *  Edit a service.
-     *
-     *  @param $hostservice  Array with host and service.
-     *
-     *  @return A new ServiceConfigurationPage.
-     */
-    public function inspect($hostservice)
-    {
-        throw new \Exception(__METHOD__ . ' not implemented');
     }
 
     /**

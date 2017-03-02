@@ -15,24 +15,26 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class CommandConfigurationPage implements ConfigurationPage
+class CommandConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
     const TYPE_CHECK = 2;
     const TYPE_NOTIFICATION = 1;
     const TYPE_DISCOVERY = 4;
     const TYPE_MISC = 3;
 
-    protected $context;
+    protected $validField = 'input[name="command_name"]';
 
-    private static $properties = array(
+    protected $properties = array(
         'command_name' => array(
             'text',
-            'input[name="command_name"]'),
+            'input[name="command_name"]'
+        ),
         'command_line' => array(
             'text',
-            'textarea[name="command_line"]')
+            'textarea[name="command_line"]'
+        )
     );
 
     /**
@@ -61,65 +63,5 @@ class CommandConfigurationPage implements ConfigurationPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page is matching this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="command_name"]');
-    }
-
-    /**
-     *  Get properties of the command.
-     *
-     *  @return Properties of the command.
-     */
-    public function getProperties()
-    {
-        throw new \Behat\Behat\Tester\Exception\PendingException(__METHOD__);
-    }
-
-    /**
-     *  Set properties of the command.
-     *
-     *  @param $properties  Properties of the command.
-     */
-    public function setProperties($properties)
-    {
-        // Browse all properties.
-        foreach ($properties as $property => $value) {
-            // Check that property exist.
-            if (!array_key_exists($property, self::$properties)) {
-                throw new \Exception('Unknown command property ' . $property . '.');
-            }
-
-            // Set property.
-            $propertyType = self::$properties[$property][0];
-            switch ($propertyType) {
-            case 'text':
-                $this->context->assertFind('css', self::$properties[$property][1])->setValue($value);
-                break ;
-            default:
-                throw new \Exception(
-                    'Unknown property type ' . $propertyType . '.');
-            }
-        }
-    }
-
-    /**
-     *  Save form.
-     */
-    public function save()
-    {
-        $button = $this->context->getSession()->getPage()->findButton('submitA');
-        if (isset($button)) {
-            $button->click();
-        } else {
-            $this->context->assertFindButton('submitC')->click();
-        }
     }
 }

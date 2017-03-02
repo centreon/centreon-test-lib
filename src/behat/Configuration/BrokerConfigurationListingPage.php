@@ -15,14 +15,44 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class BrokerConfigurationListingPage implements ListingPage
+class BrokerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 {
-    private $context;
+    protected $validField = 'table.ListTable';
+
+    protected $properties = array(
+        'name' => array(
+            'text',
+            'td:nth-child(2)'
+        ),
+        'request' => array(
+            'text',
+            'td:nth-child(3)'
+        ),
+        'inputs' => array(
+            'text',
+            'td:nth-child(4)'
+        ),
+        'outputs' => array(
+            'text',
+            'td:nth-child(5)'
+        ),
+        'loggers' => array(
+            'text',
+            'td:nth-child(6)'
+        ),
+        'status' => array(
+            'text',
+            'td:nth-child(7)'
+        )
+    );
+
+    protected $objectClass = '\Centreon\Test\Behat\Configuration\BrokerConfigurationPage';
 
     /**
      * BrokerConfigurationListingPage constructor.
+     *
      * @param $context
      * @param bool $visit
      */
@@ -42,60 +72,5 @@ class BrokerConfigurationListingPage implements ListingPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page matches this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'table.ListTable');
-    }
-
-    /**
-     * @return array
-     */
-    public function getEntries()
-    {
-        $entries = array();
-        $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
-        foreach ($elements as $element) {
-            $entry = array();
-            $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
-            $entry['requester'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
-            $entry['inputs'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(4)')->getText();
-            $entry['outputs'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText();
-            $entry['loggers'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(6)')->getText();
-            $entry['status'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(7)')->getText();
-            $entries[$entry['name']] = $entry;
-        }
-        return $entries;
-    }
-
-    /**
-     * @param string $brokerName
-     * @return array
-     * @throws \Exception
-     */
-    public function getEntry($brokerName)
-    {
-        $brokers = $this->getEntries();
-        if (!array_key_exists($brokerName, $brokers)) {
-            throw new \Exception('could not find broker configuration ' . $brokerName);
-        }
-        return $brokers[$brokerName];
-    }
-
-    /**
-     * @param $name
-     * @return BrokerConfigurationPage
-     */
-    public function inspect($name)
-    {
-        $brokers = $this->context->assertFind('css', 'table.ListTable');
-        $this->context->assertFindLinkIn($brokers, $name)->click();
-        return new BrokerConfigurationPage($this->context, false);
     }
 }

@@ -15,11 +15,13 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class SnmpTrapsConfigurationListingPage implements ListingPage
+class SnmpTrapsConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 {
-    private $context;
+    protected $validField = 'input[name="searchT"]';
+
+    protected $properties = array();
 
     /**
      *  SNMP traps list page.
@@ -43,46 +45,6 @@ class SnmpTrapsConfigurationListingPage implements ListingPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page is matching this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'input[name="searchT"]');
-    }
-
-    /**
-     *  Get the list of traps.
-     */
-    public function getEntries()
-    {
-
-    }
-
-    /**
-     *  Get a traps.
-     *
-     *  @param $tmpl traps name.
-     *
-     *  @return An array of properties.
-     */
-    public function getEntry($tmpl)
-    {
-
-    }
-
-    /**
-     *  Edit a traps.
-     *
-     *  @param $name  trap name.
-     */
-    public function inspect($name)
-    {
-
     }
 
     /**

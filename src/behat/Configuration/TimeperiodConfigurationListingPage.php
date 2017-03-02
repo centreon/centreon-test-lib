@@ -15,11 +15,29 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class TimeperiodConfigurationListingPage implements ListingPage
+class TimeperiodConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 {
-    private $context;
+    protected $validField = 'table.ListTable';
+
+    protected $properties = array(
+        'name' => array(
+            'text',
+            'td:nth-child(2)'
+        ),
+        'icon' => array(
+            'attribute',
+            'td:nth-child(2) img',
+            'src'
+        ),
+        'description' => array(
+            'text',
+            'td:nth-child(3)'
+        )
+    );
+
+    protected $objectClass = '\Centreon\Test\Behat\Configuration\TimeperiodConfigurationPage';
 
     /**
      *  Time periods list page.
@@ -43,63 +61,5 @@ class TimeperiodConfigurationListingPage implements ListingPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Check that the current page matches this class.
-     *
-     * @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', 'table.ListTable');
-    }
-
-    /**
-     *  Get the list of time periods.
-     */
-    public function getEntries()
-    {
-        $entries = array();
-        $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
-        foreach ($elements as $element) {
-            $nameComponent = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)');
-            $imageComponent = $this->context->assertFindIn($nameComponent, 'css', 'img');
-
-            $entry = array();
-            $entry['name'] = $nameComponent->getText();
-            $entry['icon'] = $imageComponent->getAttribute('src');
-            $entry['description'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
-            $entries[$entry['name']] = $entry;
-        }
-        return $entries;
-    }
-
-    /**
-     *  Get a timeperiod.
-     *
-     * @param $tpname timeperiod name.
-     *
-     * @return An array of properties.
-     */
-    public function getEntry($tpname)
-    {
-        $timeperiods = $this->getEntries($tpname);
-        if (!array_key_exists($tpname, $timeperiods)) {
-            throw new \Exception('could not find timeperiod ' . $tpname);
-        }
-        return $timeperiods[$tpname];
-    }
-
-    /**
-     *  Edit a timeperiod.
-     *
-     * @param $name  timeperiod name.
-     */
-    public function inspect($name)
-    {
-        $timeperiods = $this->context->assertFind('css', 'table.ListTable');
-        $this->context->assertFindLinkIn($timeperiods, $name)->click();
-        return new TimeperiodConfigurationPage($this->context, false);
     }
 }

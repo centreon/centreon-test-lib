@@ -15,11 +15,42 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\Configuration;
 
-class DowntimeConfigurationListingPage implements ListingPage
+class DowntimeConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 {
-    protected $context;
+    protected $validField = 'input[name="search_author"]';
+
+    protected $properties = array(
+        'service' => array(
+            'text',
+            'td:nth-child(3)'
+        ),
+        'host' => array(
+            'text',
+            'td:nth-child(2)'
+        ),
+        'start' => array(
+            'text',
+            'td:nth-child(4)'
+        ),
+        'end' => array(
+            'text',
+            'td:nth-child(5)'
+        ),
+        'author' => array(
+            'text',
+            'td:nth-child(7)'
+        ),
+        'comment' => array(
+            'text',
+            'td:nth-child(8)'
+        ),
+        'started' => array(
+            'text',
+            'td:nth-child(9)'
+        )
+    );
 
     /**
      *  Navigate to the downtime configuration listing page.
@@ -46,17 +77,6 @@ class DowntimeConfigurationListingPage implements ListingPage
         );
     }
 
-
-    /**
-     *  Check that current page matches this class.
-     *
-     * @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->assertFind('css', 'input[name="search_author"]');
-    }
-
     /**
      *  Get downtime listing.
      *
@@ -64,68 +84,15 @@ class DowntimeConfigurationListingPage implements ListingPage
      */
     public function getEntries()
     {
-        $entries = array();
-        $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
-        foreach ($elements as $element) {
-            // Fetch entry.
-            $entry = array();
-            $entry['host'] = $this->context->assertFindIn(
-                $element,
-                'css',
-                'td:nth-child(2)'
-            )->getText();
-            $entry['service'] = $this->context->assertFindIn(
-                $element,
-                'css',
-                'td:nth-child(3)'
-            )->getText();
-            $entry['start'] = $this->context->assertFindIn(
-                $element,
-                'css',
-                'td:nth-child(4)'
-            )->getText();
-            $entry['end'] = $this->context->assertFindIn(
-                $element,
-                'css',
-                'td:nth-child(5)'
-            )->getText();
-            $entry['author'] = $this->context->assertFindIn(
-                $element,
-                'css',
-                'td:nth-child(7)'
-            )->getText();
-            $entry['comment'] = $this->context->assertFindIn(
-                $element,
-                'css',
-                'td:nth-child(8)'
-            )->getText();
-            $entry['started'] = $this->context->assertFindIn(
-                $element,
-                'css',
-                'td:nth-child(9)'
-            )->getText();
+        $finalEntries = array();
+
+        $entries = parent::getEntries();
+        foreach ($entries as $entry) {
             $entry['started'] = ($entry['started'] == 'Yes') ? true : false;
-
-            // Store entry in result set.
-            $entries[] = $entry;
+            $finalEntries[] = $entry;
         }
-        return $entries;
-    }
 
-    /**
-     *  Get a specific downtime.
-     *
-     * @param $entry  Downtime entry number in the listing.
-     *
-     * @return An array with the downtime properties.
-     */
-    public function getEntry($entry)
-    {
-        $downtimes = $this->getEntries();
-        if (!array_key_exists($entry, $downtimes)) {
-            throw new \Exception('Downtime entry ' . $entry . ' does not exist');
-        }
-        return $downtimes[$entry];
+        return $finalEntries;
     }
 
     /**
@@ -139,20 +106,11 @@ class DowntimeConfigurationListingPage implements ListingPage
     }
 
     /**
-     *  Throw an exception. Downtimes are not inspectable.
+     * Select a downtime
      *
-     * @param $entry  Downtime entry number in the listing.
-     */
-    public function inspect($entry)
-    {
-        throw new \Exception('Downtimes are not inspectable');
-    }
-
-    /**
-     *  Select an entry.
-     *
-     * @param $entry   Downtime entry number in the listing.
-     * @param $select  True to select entry, false to unselect.
+     * @param $entry
+     * @param bool $select
+     * @throws \Exception
      */
     public function selectEntry($entry, $select = true)
     {

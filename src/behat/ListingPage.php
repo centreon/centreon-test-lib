@@ -73,7 +73,7 @@ abstract class ListingPage implements \Centreon\Test\Behat\Interfaces\ListingPag
                         $entry[$property] = $component->getAttribute($metadata[2]);
                         break;
                     case 'custom':
-                        $methodName = 'get' . $propertyLocator;
+                        $methodName = 'get' . ucfirst($propertyLocator);
                         $entry[$property] = $this->$methodName($element);
                         break;
                 }
