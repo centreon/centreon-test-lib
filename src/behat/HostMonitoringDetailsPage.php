@@ -24,6 +24,10 @@ class HostMonitoringDetailsPage implements Page
     const HOST_INFORMATIONS_TAB = 3;
     const COMMENTS_TAB = 4;
 
+    const STATE_UP = 'UP';
+    const STATE_DOWN = 'DOWN';
+    const STATE_UNREACHABLE = 'UNREACHABLE';
+
     protected $context;
     protected $hostname;
 
@@ -78,13 +82,19 @@ class HostMonitoringDetailsPage implements Page
         $tab = self::HOST_INFORMATIONS_TAB;
         $this->switchTab($tab);
         $table = $this->context->assertFind('css', '#tab' . $tab . ' table.ListTable');
-
-        // Timezone.
-        $result['timezone'] = $this->context->assertFindIn(
-            $table,
-            'css',
-            'tr:nth-child(16) td.ListColLeft span'
-        )->getText();
+        $context = $this->context;
+        $getTableData = function ($child) use ($context, $table) {
+            return $context->assertFindIn(
+                $table,
+                'css',
+                'tr:nth-child(' . $child . ') td:nth-child(2)'
+            )->getText();
+        };
+        $result['state'] = $getTableData(2);
+        $result['output'] = $getTableData(3);
+        $result['perfdata'] = $getTableData(4);
+        $result['poller'] = $getTableData(5);
+        $result['timezone'] = $getTableData(16);
 
         return $result;
     }

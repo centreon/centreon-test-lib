@@ -32,19 +32,23 @@ class HostConfigurationPage implements ConfigurationPage
         'name' => array(
             self::CONFIGURATION_TAB,
             'text',
-            'input[name="host_name"]'),
+            'input[name="host_name"]'
+        ),
         'alias' => array(
             self::CONFIGURATION_TAB,
             'text',
-            'input[name="host_alias"]'),
+            'input[name="host_alias"]'
+        ),
         'address' => array(
             self::CONFIGURATION_TAB,
             'text',
-            'input[name="host_address"]'),
-        'check_command' => array(
+            'input[name="host_address"]'
+        ),
+        'poller' => array(
             self::CONFIGURATION_TAB,
-            'select2',
-            'select#command_command_id'),
+            'select',
+            'select[name="nagios_server_id"]'
+        ),
         'macros' => array(
             self::CONFIGURATION_TAB,
             'custom',
@@ -53,48 +57,64 @@ class HostConfigurationPage implements ConfigurationPage
         'location' => array(
             self::CONFIGURATION_TAB,
             'select2',
-            'select#host_location'),
+            'select#host_location'
+        ),
         'templates' => array(
             self::CONFIGURATION_TAB,
             'custom',
-            'Templates'),
+            'Templates'
+        ),
+        'check_command' => array(
+            self::CONFIGURATION_TAB,
+            'select2',
+            'select#command_command_id'
+        ),
         'max_check_attempts' => array(
             self::CONFIGURATION_TAB,
             'text',
-            'input[name="host_max_check_attempts"]'),
+            'input[name="host_max_check_attempts"]'
+        ),
         'normal_check_interval' => array(
             self::CONFIGURATION_TAB,
             'text',
-            'input[name="host_check_interval"]'),
+            'input[name="host_check_interval"]'
+        ),
         'retry_check_interval' => array(
             self::CONFIGURATION_TAB,
             'text',
-            'input[name="host_retry_check_interval"]'),
+            'input[name="host_retry_check_interval"]'
+        ),
         'active_checks_enabled' => array(
             self::CONFIGURATION_TAB,
             'radio',
-            'input[name="host_active_checks_enabled[host_active_checks_enabled]"]'),
+            'input[name="host_active_checks_enabled[host_active_checks_enabled]"]'
+        ),
         'passive_checks_enabled' => array(
             self::CONFIGURATION_TAB,
             'radio',
-            'input[name="host_passive_checks_enabled[host_passive_checks_enabled]"]'),
+            'input[name="host_passive_checks_enabled[host_passive_checks_enabled]"]'
+        ),
         // Notification tab.
         'notifications_enabled' => array(
             self::NOTIFICATION_TAB,
             'radio',
-            'input[name="host_notifications_enabled[host_notifications_enabled]"]'),
+            'input[name="host_notifications_enabled[host_notifications_enabled]"]'
+        ),
         'notify_on_recovery' => array(
             self::NOTIFICATION_TAB,
             'checkbox',
-            'input[name="host_notifOpts[r]"]'),
+            'input[name="host_notifOpts[r]"]'
+        ),
         'notify_on_down' => array(
             self::NOTIFICATION_TAB,
             'checkbox',
-            'input[name="host_notifOpts[d]"]'),
+            'input[name="host_notifOpts[d]"]'
+        ),
         'notification_interval' => array(
             self::NOTIFICATION_TAB,
             'text',
-            'input[name="host_notification_interval"]'),
+            'input[name="host_notification_interval"]'
+        ),
         'notification_period' => array(
             self::NOTIFICATION_TAB,
             'select2',
@@ -102,11 +122,13 @@ class HostConfigurationPage implements ConfigurationPage
         'first_notification_delay' => array(
             self::NOTIFICATION_TAB,
             'text',
-            'input[name="host_first_notification_delay"]'),
+            'input[name="host_first_notification_delay"]'
+        ),
         'recovery_notification_delay' => array(
             self::NOTIFICATION_TAB,
             'text',
-            'input[name="host_recovery_notification_delay"]'),
+            'input[name="host_recovery_notification_delay"]'
+        ),
         'cs' => array(
             self::NOTIFICATION_TAB,
             'select2',
@@ -191,6 +213,9 @@ class HostConfigurationPage implements ConfigurationPage
                 $methodName = 'get' . $propertyLocator;
                 $properties[$property] = $this->$methodName();
                 break;
+            case 'select':
+                $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
+                break ;
             default:
                 throw new \Exception(
                     'Unknown property type ' . $propertyType
@@ -239,6 +264,9 @@ class HostConfigurationPage implements ConfigurationPage
             case 'checkbox':
             case 'radio':
                 $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
+                break ;
+            case 'select':
+                $this->context->selectInList($propertyLocator, $value);
                 break ;
             case 'select2':
                 if (!is_array($value)) {
