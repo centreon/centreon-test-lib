@@ -98,7 +98,7 @@ class ACLActionConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     public function selectAll()
     {
         $properties = array();
-        foreach (self::$properties as $name => $parameters) {
+        foreach ($this->properties as $name => $parameters) {
             if ($parameters[0] == 'checkbox') {
                 $properties[$name] = true;
             }

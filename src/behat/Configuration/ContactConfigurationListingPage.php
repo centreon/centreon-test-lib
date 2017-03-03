@@ -90,4 +90,17 @@ class ContactConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
             'Current page does not match class ' . __CLASS__
         );
     }
+
+    /**
+     * Edit a contact
+     *
+     * @param $name
+     * @return ContactConfigurationPage
+     */
+    public function inspect($name)
+    {
+        $contacts = $this->context->assertFind('css', 'table.ListTable');
+        $this->context->assertFindLinkIn($contacts, $name)->click();
+        return new ContactConfigurationPage($this->context, false);
+    }
 }

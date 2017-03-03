@@ -91,7 +91,7 @@ class ACLResourceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
     public function selectAll()
     {
         $properties = array();
-        foreach (self::$properties as $name => $parameters) {
+        foreach ($this->properties as $name => $parameters) {
             if ($parameters[1] == 'checkbox') {
                 $properties[$name] = true;
             }
