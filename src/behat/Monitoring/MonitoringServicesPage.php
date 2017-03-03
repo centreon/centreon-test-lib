@@ -89,7 +89,11 @@ class MonitoringServicesPage
         // As we cannot use the page because of incompatibilites between
         // XSLT and PhantomJS, we will read the value directly in
         // database.
-        $query = 'SELECT s.acknowledged AS acknowledged FROM services AS s LEFT JOIN hosts AS h ON s.host_id=h.host_id WHERE h.name=:hostname AND s.description=:description';
+        $query = 'SELECT s.acknowledged AS acknowledged '
+            . 'FROM services AS s '
+            . 'LEFT JOIN hosts AS h ON s.host_id = h.host_id '
+            . 'WHERE h.name=:hostname '
+            . 'AND s.description=:description ';
         $stmt = $this->ctx->getStorageDatabase()->prepare($query);
         $stmt->execute(array(':hostname' => $hostname, ':description' => $servicename));
         $res = $stmt->fetch();

@@ -132,7 +132,6 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
         ),
         // Data tab.
         'acknowledgement_timeout' => array(
-            self::DATA_TAB,
             'text',
             'input[name="host_acknowledgement_timeout"]',
             self::DATA_TAB
@@ -168,7 +167,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
      *
      *  @return macros
      */
-    private function getMacros()
+    protected function getMacros()
     {
         $macros = array();
 
@@ -191,7 +190,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
      *
      *  @return host templates
      */
-    private function getTemplates()
+    protected function getTemplates()
     {
         $templates = array();
 
@@ -211,7 +210,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
      *
      *  @param $macros Macros.
      */
-    private function setMacros($macros)
+    protected function setMacros($macros)
     {
         $currentMacros = $this->getMacros();
         $i = count($currentMacros);
@@ -228,7 +227,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
      *
      *  @param $templates  Parent templates.
      */
-    private function setTemplates($templates)
+    protected function setTemplates($templates)
     {
         if (!is_array($templates)) {
             $templates = array($templates);

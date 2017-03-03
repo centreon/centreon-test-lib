@@ -19,8 +19,8 @@ namespace Centreon\Test\Behat\Configuration;
 
 class PollerConfigurationExportPage extends \Centreon\Test\Behat\ConfigurationPage
 {
-    const METHOD_RELOAD = 1;
-    const METHOD_RESTART = 2;
+    const METHOD_RELOAD = 'Reload';
+    const METHOD_RESTART = 'Restart';
 
     protected $validField = '#nrestart_mode';
 

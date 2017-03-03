@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\External;
 
-class LoginPage implements Page
+class LoginPage implements \Centreon\Test\Behat\Interfaces\Page
 {
     protected $context;
 

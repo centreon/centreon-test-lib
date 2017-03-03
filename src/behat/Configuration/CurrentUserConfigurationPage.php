@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Centreon\Test\Behat\Exception;
+namespace Centreon\Test\Behat\Configuration;
 
 class CurrentUserConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {

@@ -27,8 +27,7 @@ class HostTemplateConfigurationListingPage extends \Centreon\Test\Behat\ListingP
             'td:nth-child(2)'
         ),
         'id' => array(
-            'custom',
-            'id'
+            'custom'
         ),
         'icon' => array(
             'attribute',
@@ -44,12 +43,10 @@ class HostTemplateConfigurationListingPage extends \Centreon\Test\Behat\ListingP
             'td:nth-child(4)'
         ),
         'parents' => array(
-            'custom',
-            'parents'
+            'custom'
         ),
         'locked' => array(
-            'custom',
-            'locked'
+            'custom'
         )
     );
 
@@ -83,7 +80,7 @@ class HostTemplateConfigurationListingPage extends \Centreon\Test\Behat\ListingP
      * @param $element
      * @return null
      */
-    private function getId($element)
+    protected function getId($element)
     {
         $idComponent = $this->context->assertFindIn($element, 'css', 'input[type="checkbox"]')->getAttribute('name');
         $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
@@ -97,7 +94,7 @@ class HostTemplateConfigurationListingPage extends \Centreon\Test\Behat\ListingP
      * @param $element
      * @return array
      */
-    private function getParents($element)
+    protected function getParents($element)
     {
         $parents = $this->context->assertFindIn($element, 'css', 'td:nth-child(7)')->getText();
         $parents = explode(' ', str_replace('| ', '', $parents));
@@ -109,7 +106,7 @@ class HostTemplateConfigurationListingPage extends \Centreon\Test\Behat\ListingP
      * @param $element
      * @return bool
      */
-    private function getLocked($element)
+    protected function getLocked($element)
     {
         return (null === $element->find('css', 'input:nth-child(2)'));
     }

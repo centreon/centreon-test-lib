@@ -107,14 +107,14 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
             }
 
             // Set property meta-data in variables.
-
             $propertyType = $this->properties[$property][0];
             $propertyLocator = $this->properties[$property][1];
 
             // Switch between tabs if required.
-            if (isset($metadata[2]) && !empty($metadata[2]) && $tab != $metadata[2]) {
-                $this->switchTab($metadata[2]);
-                $tab = $metadata[2];
+            if (isset($this->properties[$property][2]) && !empty($this->properties[$property][2]) &&
+                $tab != $this->properties[$property][2]) {
+                $this->switchTab($this->properties[$property][2]);
+                $tab = $this->properties[$property][2];
             }
 
             // Set property with its value.

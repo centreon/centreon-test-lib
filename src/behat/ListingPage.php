@@ -62,18 +62,19 @@ abstract class ListingPage implements \Centreon\Test\Behat\Interfaces\ListingPag
 
                 // Set property meta-data in variables.
                 $propertyType = $metadata[0];
-                $propertyLocator = $metadata[1];
+                $propertyLocator = isset($metadata[1]) ? $metadata[1] : '';
 
-                $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
                 switch ($propertyType) {
                     case 'text':
+                        $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
                         $entry[$property] = $component->getText();
                         break;
                     case 'attribute':
+                        $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
                         $entry[$property] = $component->getAttribute($metadata[2]);
                         break;
                     case 'custom':
-                        $methodName = 'get' . ucfirst($propertyLocator);
+                        $methodName = 'get' . ucfirst($property);
                         $entry[$property] = $this->$methodName($element);
                         break;
                 }

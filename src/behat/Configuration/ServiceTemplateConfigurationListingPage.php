@@ -36,16 +36,14 @@ class ServiceTemplateConfigurationListingPage extends \Centreon\Test\Behat\Listi
             'td:nth-child(3)'
         ),
         'parents' => array(
-            'custom',
-            'parents'
+            'custom'
         ),
         'status' => array(
             'text',
             'td:nth-child(6)'
         ),
         'locked' => array(
-            'custom',
-            'locked'
+            'custom'
         )
     );
 

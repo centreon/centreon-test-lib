@@ -87,7 +87,8 @@ class ServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         ),
         'notification_interval' => array(
             'text',
-            'input[name="service_notification_interval"]'
+            'input[name="service_notification_interval"]',
+            self::NOTIFICATIONS_TAB
         ),
         'notification_period' => array(
             'select2',

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Centreon\Test\Behat;
+namespace Centreon\Test\Behat\External;
 
 use Behat\Behat\Context\Context;
 use GuzzleHttp\Client;
