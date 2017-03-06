@@ -36,9 +36,9 @@ class ServiceDowntimeConfigurationPage extends \Centreon\Test\Behat\Configuratio
             'input[name="downtime_description"]',
             self::CONFIGURATION_TAB
         ),
-        'periods' => array(
-            'checkbox',
-            'input[name="periods[1][days][]"]',
+        'days' => array(
+            'custom',
+            'days',
             self::CONFIGURATION_TAB
         ),
         'start' => array(
@@ -95,6 +95,27 @@ class ServiceDowntimeConfigurationPage extends \Centreon\Test\Behat\Configuratio
             },
             'Current page does not match class ' . __CLASS__
         );
+    }
+
+    /**
+     * Get downtime days
+     */
+    protected function getDays()
+    {
+        // @todo
+    }
+
+    /**
+     * Set downtime days
+     */
+    protected function setDays($days)
+    {
+        if (!is_array($days)) {
+            $days = array($days);
+        }
+        foreach ($days as $day) {
+            $this->context->assertFind('css', 'input[name="periods[1][days][]"][value="' . $day . '"]')->click();
+        }
     }
 
     /**
