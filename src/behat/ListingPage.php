@@ -70,7 +70,11 @@ abstract class ListingPage implements \Centreon\Test\Behat\Interfaces\ListingPag
                         $entry[$property] = $component->getText();
                         break;
                     case 'attribute':
-                        $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
+                        if (is_null($propertyLocator) || empty($propertyLocator)) {
+                            $component = $element;
+                        } else {
+                            $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
+                        }
                         $entry[$property] = $component->getAttribute($metadata[2]);
                         break;
                     case 'custom':
