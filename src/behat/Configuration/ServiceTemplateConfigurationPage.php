@@ -30,12 +30,12 @@ class ServiceTemplateConfigurationPage extends \Centreon\Test\Behat\Configuratio
         'description' => array(
             'text',
             'input[name="service_description"]',
-            self::GENERAL_TAB
+            self::TAB_CONFIGURATION
         ),
         'alias' => array(
             'text',
             'input[name="service_alias"]',
-            self::GENERAL_TAB
+            self::TAB_CONFIGURATION
         )
     );
 

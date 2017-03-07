@@ -29,6 +29,7 @@ class HostConfigurationPage extends HostTemplateConfigurationPage
      */
     public function __construct($context, $visit = TRUE)
     {
+        unset($this->properties['service_templates']);
         $this->properties['poller'] = array(
             'select',
             'select[name="nagios_server_id"]',
