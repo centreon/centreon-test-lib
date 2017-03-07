@@ -81,6 +81,24 @@ class ModuleListingPage extends \Centreon\Test\Behat\ListingPage
     }
 
     /**
+     * Validate entry integrity
+     *
+     * @param $element
+     * @return bool
+     */
+    public function validateEntry($element)
+    {
+        $valid = true;
+        try {
+            $this->context->assertFindIn($element, 'css', 'td:nth-child(1) a')->getText();
+        } catch (\Exception $e) {
+            $valid = false;
+        }
+
+        return $valid;
+    }
+
+    /**
      * Get list of actions
      *
      * @param $element
