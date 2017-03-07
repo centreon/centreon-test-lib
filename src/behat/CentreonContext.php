@@ -47,13 +47,30 @@ class CentreonContext extends UtilsContext
      */
     public function unsetContainer(AfterScenarioScope $scope)
     {
+        // Failure logs.
         if (isset($this->container) && !$scope->getTestResult()->isPassed()) {
-            $filename = $this->composeFiles['log_directory'] . '/' . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '.txt';
+            // Container logs.
+            $basepath = $this->composeFiles['log_directory'] . '/' . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-';
+            $filename = $basepath . 'container.txt';
             file_put_contents($filename, $this->container->getLogs());
+
+            // Centreon SQL errors.
+            $output = $this->container->execute('cat /var/log/centreon/sql-error.log', 'web', false);
+            $filename = $basepath . 'sql-error.txt';
+            file_put_contents($filename, $output['output']);
+
+            // MySQL errors.
+            $output = $this->container->execute('cat /var/log/mysql/*.err', 'web', false);
+            $filename = $basepath . 'mysql.txt';
+            file_put_contents($filename, $output['output']);
         }
+
+        // Stop Mink.
         if ($this->getMink()->isSessionStarted()) {
             $this->getMink()->getSession()->stop();
         }
+
+        // Destroy container.
         unset($this->container);
     }
 
