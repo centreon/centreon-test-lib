@@ -81,7 +81,7 @@ class HostConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      * @param $element
      * @return array
      */
-    private function getParents($element)
+    protected function getParents($element)
     {
         $parents = $this->context->assertFindIn($element, 'css', 'td:nth-child(7)')->getText();
         $parents = explode(' ', str_replace('| ', '', $parents));
