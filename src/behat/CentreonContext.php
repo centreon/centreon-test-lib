@@ -63,6 +63,11 @@ class CentreonContext extends UtilsContext
             $output = $this->container->execute('cat /var/lib/mysql/*.err 2>/dev/null', 'web', false);
             $filename = $basepath . 'mysql.txt';
             file_put_contents($filename, $output['output']);
+
+            // MySQL queries.
+            $output = $this->container->execute('cat /var/lib/mysql/enable_sql_logs.log 2>/dev/null', 'web', false);
+            $filename = $basepath . 'mysql_queries.txt';
+            file_put_contents($filename, $output['output']);
         }
 
         // Stop Mink.
