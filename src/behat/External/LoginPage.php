@@ -61,18 +61,22 @@ class LoginPage implements \Centreon\Test\Behat\Interfaces\Page
     public function login($user, $password)
     {
         // Send login form.
-        $this->context->assertFind('css', 'input[name="useralias"]')->setValue($user);
-        $this->context->assertFind('css', 'input[name="password"]')->setValue($password);
-        $this->context->assertFind('css', 'input[name="submitLogin"]')->click();
+        try {
+            $this->context->assertFind('css', 'input[name="useralias"]')->setValue($user);
+            $this->context->assertFind('css', 'input[name="password"]')->setValue($password);
+            $this->context->assertFind('css', 'input[name="submitLogin"]')->click();
+        } catch (\Exception $e) {
+            throw new \Exception("Cannot login.\n" . $e->getMessage());
+        }
 
-        // Wait for connexion.
+        // Wait for connection.
         $this->context->spin(
             function ($context) {
                 return $context->getSession()->getPage()->has(
                     'css',
                     'a[href="index.php?disconnect=1"]'
                 );
-            }
+            }, 'Login failed.', 10
         );
     }
 }

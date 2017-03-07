@@ -192,7 +192,10 @@ class CentreonContext extends UtilsContext
     {
         $composeFile = $this->getContainerComposeFile($name);
         if (empty($composeFile)) {
-            throw new \Exception('Could not launch containers without Docker Compose file for ' . $name . ': check the configuration of your ContainerExtension in behat.yml.');
+            throw new \Exception(
+                'Could not launch containers without Docker Compose file for ' . $name . ': '
+                . 'check the configuration of your ContainerExtension in behat.yml.'
+            );
         }
         $this->container = new Container($composeFile);
         $this->setContainerWebDriver();
@@ -241,15 +244,24 @@ class CentreonContext extends UtilsContext
      */
     public function setContainerWebDriver()
     {
-        $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
-        $sessionName = $this->getMink()->getDefaultSessionName();
-        $driver = new \Behat\Mink\Driver\Selenium2Driver('phantomjs', null, $url);
-        $driver->setTimeouts(array(
-            'page load' => 120000,
-            'script' => 120000
-        ));
-        $session = new \Behat\Mink\Session($driver);
-        $this->getMink()->registerSession($sessionName, $session);
+        try {
+            $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
+            $driver = new \Behat\Mink\Driver\Selenium2Driver('phantomjs', null, $url);
+            $driver->setTimeouts(array(
+                'page load' => 120000,
+                'script' => 120000
+            ));
+        } catch (\Exception $e) {
+            throw new \Exception("Cannot instantiate mink driver.\n" . $e->getMessage());
+        }
+
+        try {
+            $sessionName = $this->getMink()->getDefaultSessionName();
+            $session = new \Behat\Mink\Session($driver);
+            $this->getMink()->registerSession($sessionName, $session);
+        } catch (\Exception $e) {
+            throw new \Exception("Cannot register mink session.\n" . $e->getMessage());
+        }
     }
 
     /**
