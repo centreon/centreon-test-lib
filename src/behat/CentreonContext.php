@@ -55,12 +55,12 @@ class CentreonContext extends UtilsContext
             file_put_contents($filename, $this->container->getLogs());
 
             // Centreon SQL errors.
-            $output = $this->container->execute('cat /var/log/centreon/sql-error.log', 'web', false);
+            $output = $this->container->execute('cat /var/log/centreon/sql-error.log 2>/dev/null', 'web', false);
             $filename = $basepath . 'sql-error.txt';
             file_put_contents($filename, $output['output']);
 
             // MySQL errors.
-            $output = $this->container->execute('cat /var/log/mysql/*.err', 'web', false);
+            $output = $this->container->execute('cat /var/lib/mysql/*.err 2>/dev/null', 'web', false);
             $filename = $basepath . 'mysql.txt';
             file_put_contents($filename, $output['output']);
         }
