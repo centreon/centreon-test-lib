@@ -79,7 +79,7 @@ class ServiceTemplateConfigurationListingPage extends \Centreon\Test\Behat\Listi
      * @param $element
      * @return array
      */
-    private function getParents($element)
+    protected function getParents($element)
     {
         $parents = $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText();
         $parents = explode(' ', $parents);
@@ -91,7 +91,7 @@ class ServiceTemplateConfigurationListingPage extends \Centreon\Test\Behat\Listi
      * @param $element
      * @return bool
      */
-    private function getLocked($element)
+    protected function getLocked($element)
     {
         return (null === $element->find('css', 'input:nth-child(2)'));
     }
