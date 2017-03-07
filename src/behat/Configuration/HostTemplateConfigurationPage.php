@@ -134,7 +134,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
         'service_templates' => array(
             'select2',
             'select#host_svTpls',
-            self::NOTIFICATION_TAB
+            self::RELATIONS_TAB
         ),
         // Data tab.
         'acknowledgement_timeout' => array(
