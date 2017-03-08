@@ -264,10 +264,11 @@ class UtilsContext extends RawMinkContext
     }
 
     /**
-     *  Select an element in advMultiSelect.
+     * Select an element in advMultiSelect.
      *
-     *  @param $css_id  The ID of the select.
-     *  @param $value   The requested value.
+     * @param $css_id
+     * @param array $values
+     * @throws \Exception
      */
     public function selectInAdvMultiSelect($css_id, $values = array())
     {
@@ -275,26 +276,31 @@ class UtilsContext extends RawMinkContext
             $values = array($values);
         }
 
-        $elements = $this->getSession()->getPage()->findAll('css', $css_id . ' option');
-
-        /* Select Add button */
-        $buttonSelector = $css_id;
-        if (preg_match('/.*name=\"(\S+)\[/', $css_id, $matches)) {
-            $buttonSelector = 'input[type="button"][onclick*="' . $matches[1] . '"]';
+        $elements = $this->getSession()->getPage()->findAll('xpath', '//tr[td/select]');
+        $options = null;
+        $addButton = null;
+        foreach ($elements as $element) {
+            if ($element->has('css', $css_id) && $element->has('css', 'input[type="button"][value="Add"]')) {
+                $options = $element->findAll('css', $css_id . ' option');
+                $addButton = $this->assertFindIn($element, 'css', 'input[type="button"][value="Add"]');
+            }
         }
-        $addButton = $this->assertFind('css', $buttonSelector);
+        if (is_null($options) || is_null($addButton)) {
+            throw new \Exception('Cannot find advmultiselect ' . $css_id);
+        }
 
         foreach ($values as $value) {
-            $found = FALSE;
+            $found = false;
 
-            foreach ($elements as $element) {
-                if ($element->getText() == $value) {
-                    $element->click();
+            foreach ($options as $option) {
+                if ($option->getText() == $value) {
+                    $option->click();
                     $addButton->click();
-                    $found = TRUE;
+                    $found = true;
                     break;
                 }
             }
+
             if (!$found) {
                 throw new \Exception(
                     'Could not find value ' . $value
@@ -304,10 +310,11 @@ class UtilsContext extends RawMinkContext
     }
 
     /**
-     *  Select an element in a select two.
+     * Select an element in a select two.
      *
-     *  @param $css_id  The id of the select two.
-     *  @param $what    What to select.
+     * @param $css_id
+     * @param $what
+     * @throws \Exception
      */
     public function selectToSelectTwo($css_id, $what)
     {
