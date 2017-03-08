@@ -78,6 +78,15 @@ class CentreonContext extends UtilsContext
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
+            // MySQL process list.
+            $logTitle = "\n\n"
+                . "######################\n"
+                . "# Mysql process list #\n"
+                . "######################\n\n";
+            $output = $this->container->execute('mysql -e "SHOW FULL PROCESSLIST" 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
             // MySQL queries.
             $logTitle = "\n\n"
                 . "#################\n"
