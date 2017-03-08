@@ -87,6 +87,15 @@ class CentreonContext extends UtilsContext
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
+            // MySQL slow queries.
+            $logTitle = "\n\n"
+                . "######################\n"
+                . "# Mysql slow queries #\n"
+                . "######################\n\n";
+            $output = $this->container->execute('cat /var/lib/mysql/slow_queries.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
             // MySQL queries.
             $logTitle = "\n\n"
                 . "#################\n"
