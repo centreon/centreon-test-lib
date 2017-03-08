@@ -49,25 +49,43 @@ class CentreonContext extends UtilsContext
     {
         // Failure logs.
         if (isset($this->container) && !$scope->getTestResult()->isPassed()) {
+            $filename = $this->composeFiles['log_directory'] . '/'
+                . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '.txt';
+
             // Container logs.
-            $basepath = $this->composeFiles['log_directory'] . '/' . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-';
-            $filename = $basepath . 'container.txt';
-            file_put_contents($filename, $this->container->getLogs());
+            $logTitle = "\n"
+                . "##################\n"
+                . "# Container logs #\n"
+                . "##################\n\n";
+            file_put_contents($filename, $logTitle);
+            file_put_contents($filename, $this->container->getLogs(), FILE_APPEND);
 
             // Centreon SQL errors.
+            $logTitle = "\n\n"
+                . "#######################\n"
+                . "# Centreon sql errors #\n"
+                . "#######################\n\n";
             $output = $this->container->execute('cat /var/log/centreon/sql-error.log 2>/dev/null', 'web', false);
-            $filename = $basepath . 'sql-error.txt';
-            file_put_contents($filename, $output['output']);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
 
             // MySQL errors.
+            $logTitle = "\n\n"
+                . "################\n"
+                . "# Mysql errors #\n"
+                . "################\n\n";
             $output = $this->container->execute('cat /var/lib/mysql/*.err 2>/dev/null', 'web', false);
-            $filename = $basepath . 'mysql.txt';
-            file_put_contents($filename, $output['output']);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
 
             // MySQL queries.
-            $output = $this->container->execute('cat /var/lib/mysql/enable_sql_logs.log 2>/dev/null', 'web', false);
-            $filename = $basepath . 'mysql_queries.txt';
-            file_put_contents($filename, $output['output']);
+            $logTitle = "\n\n"
+                . "#################\n"
+                . "# Mysql queries #\n"
+                . "#################\n\n";
+            $output = $this->container->execute('cat /var/lib/mysql/queries.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
         }
 
         // Stop Mink.
