@@ -302,24 +302,30 @@ class CentreonContext extends UtilsContext
      */
     public function setContainerWebDriver()
     {
+        // Create Selenium driver for Mink.
         try {
             $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
-            $driver = new \Behat\Mink\Driver\Selenium2Driver('phantomjs', null, $url);
+            $driver = new \Behat\Mink\Driver\Selenium2Driver('chrome', null, $url);
             $driver->setTimeouts(array(
                 'page load' => 120000,
                 'script' => 120000
             ));
         } catch (\Exception $e) {
-            throw new \Exception("Cannot instantiate mink driver.\n" . $e->getMessage());
+            throw new \Exception("Cannot instantiate Mink driver.\n" . $e->getMessage());
         }
 
+        // Create new session associated with driver.
         try {
             $sessionName = $this->getMink()->getDefaultSessionName();
             $session = new \Behat\Mink\Session($driver);
             $this->getMink()->registerSession($sessionName, $session);
         } catch (\Exception $e) {
-            throw new \Exception("Cannot register mink session.\n" . $e->getMessage());
+            throw new \Exception("Cannot register Mink session.\n" . $e->getMessage());
         }
+
+        // Resize browser. We need a big window to make all elements
+        // appear within and prevent issues with overlays.
+        $this->getSession()->resizeWindow(1600, 2000);
     }
 
     /**
