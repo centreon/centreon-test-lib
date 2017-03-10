@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Centreon
+ * Copyright 2016-2017 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,123 @@
 
 namespace Centreon\Test\Behat;
 
-/**
- *  This represents a listing page where multiple objects are printed
- *  and can usually be inspected by clicking on them.
- */
-interface ListingPage extends Page
+abstract class ListingPage implements \Centreon\Test\Behat\Interfaces\ListingPage
 {
-    public function getEntries();
-    public function getEntry($entry);
-    public function inspect($entry);
+    protected $context;
+
+    protected $validField;
+
+    protected $lineSelector = '.list_one,.list_two';
+
+    protected $properties = array();
+
+    protected $objectClass;
+
+    /**
+     *  Check that the current page is valid for this class.
+     *
+     *  @return True if the current page matches this class.
+     */
+    public function isPageValid()
+    {
+        return $this->context->getSession()->getPage()->has('css', $this->validField);
+    }
+
+    /**
+     *  Get the list of objects.
+     */
+    public function getEntries()
+    {
+        $entries = array();
+
+        $propertyTitle = '';
+
+        $elements = $this->context->getSession()->getPage()->findAll('css', $this->lineSelector);
+        foreach ($elements as $element) {
+            if (!$this->validateEntry($element)) {
+                continue;
+            }
+
+            $entry = array();
+            foreach ($this->properties as $property => $metadata) {
+                if (empty($propertyTitle)) {
+                    $propertyTitle = $property;
+                }
+
+                // Set property meta-data in variables.
+                $propertyType = $metadata[0];
+                $propertyLocator = isset($metadata[1]) ? $metadata[1] : '';
+
+                switch ($propertyType) {
+                    case 'text':
+                        $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
+                        $entry[$property] = $component->getText();
+                        break;
+                    case 'attribute':
+                        if (is_null($propertyLocator) || empty($propertyLocator)) {
+                            $component = $element;
+                        } else {
+                            $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
+                        }
+                        $entry[$property] = $component->getAttribute($metadata[2]);
+                        break;
+                    case 'custom':
+                        $methodName = 'get' . ucfirst($property);
+                        $entry[$property] = $this->$methodName($element);
+                        break;
+                }
+            }
+
+            $entries[$entry[$propertyTitle]] = $entry;
+        }
+
+        return $entries;
+    }
+
+    /**
+     * Validate entry integrity
+     *
+     * @param $element
+     * @return bool
+     */
+    public function validateEntry($element)
+    {
+        return true;
+    }
+
+    /**
+     * Get object info
+     *
+     * @param $name
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getEntry($name)
+    {
+        $objects = $this->getEntries();
+        if (!array_key_exists($name, $objects)) {
+            throw new \Exception('could not find object ' . $name);
+        }
+        return $objects[$name];
+    }
+
+    /**
+     * Edit an object
+     *
+     * @param $name
+     * @return mixed
+     */
+    public function inspect($name)
+    {
+        $this->context->assertFindLink($name)->click();
+
+        if (isset($this->objectClass) && !is_null($this->objectClass)) {
+            $objectClass = $this->objectClass;
+            return new $objectClass($this->context, false);
+        }
+
+        return null;
+    }
 }
+
+?>

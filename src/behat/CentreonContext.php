@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Centreon
+ * Copyright 2016-2017 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,8 @@ namespace Centreon\Test\Behat;
 
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use WebDriver\WebDriver;
-use Centreon\Test\Behat\HostConfigurationPage;
-use Centreon\Test\Behat\PollerConfigurationExportPage;
-use Centreon\Test\Behat\ServiceConfigurationPage;
-use Centreon\Test\Behat\UtilsContext;
+use Centreon\Test\Behat\External\LoginPage;
+use Centreon\Test\Behat\Configuration\PollerConfigurationExportPage;
 
 class CentreonContext extends UtilsContext
 {
@@ -49,13 +47,71 @@ class CentreonContext extends UtilsContext
      */
     public function unsetContainer(AfterScenarioScope $scope)
     {
+        // Failure logs.
         if (isset($this->container) && !$scope->getTestResult()->isPassed()) {
-            $filename = $this->composeFiles['log_directory'] . '/' . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '.txt';
-            file_put_contents($filename, $this->container->getLogs());
+            $filename = $this->composeFiles['log_directory'] . '/'
+                . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '.txt';
+
+            // Container logs.
+            $logTitle = "\n"
+                . "##################\n"
+                . "# Container logs #\n"
+                . "##################\n\n";
+            file_put_contents($filename, $logTitle);
+            file_put_contents($filename, $this->container->getLogs(), FILE_APPEND);
+
+            // Centreon SQL errors.
+            $logTitle = "\n\n"
+                . "#######################\n"
+                . "# Centreon sql errors #\n"
+                . "#######################\n\n";
+            $output = $this->container->execute('cat /var/log/centreon/sql-error.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // MySQL errors.
+            $logTitle = "\n\n"
+                . "################\n"
+                . "# Mysql errors #\n"
+                . "################\n\n";
+            $output = $this->container->execute('cat /var/lib/mysql/*.err 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // MySQL process list.
+            $logTitle = "\n\n"
+                . "######################\n"
+                . "# Mysql process list #\n"
+                . "######################\n\n";
+            $output = $this->container->execute('mysql -e "SHOW FULL PROCESSLIST" 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // MySQL slow queries.
+            $logTitle = "\n\n"
+                . "######################\n"
+                . "# Mysql slow queries #\n"
+                . "######################\n\n";
+            $output = $this->container->execute('cat /var/lib/mysql/slow_queries.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // MySQL queries.
+            $logTitle = "\n\n"
+                . "#################\n"
+                . "# Mysql queries #\n"
+                . "#################\n\n";
+            $output = $this->container->execute('cat /var/lib/mysql/queries.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
         }
+
+        // Stop Mink.
         if ($this->getMink()->isSessionStarted()) {
             $this->getMink()->getSession()->stop();
         }
+
+        // Destroy container.
         unset($this->container);
     }
 
@@ -82,7 +138,7 @@ class CentreonContext extends UtilsContext
      */
     public function iAmLoggedIn()
     {
-        /* Prepare credentials */
+        // Prepare credentials.
         $user = 'admin';
         $password = 'centreon';
         if (isset($this->parameters['centreon_user'])) {
@@ -92,34 +148,17 @@ class CentreonContext extends UtilsContext
             $password = $this->parameters['centreon_password'];
         }
 
-        $this->visit('/');
-
-        /* Login to Centreon */
-        $page = $this->getSession()->getPage();
-        $userField = $this->assertFind('css', 'input[name="useralias"]');
-        $userField->setValue($user);
-        $passwordField = $this->assertFind('css', 'input[name="password"]');
-        $passwordField->setValue($password);
-        $formLogin = $this->assertFind('css', 'form[name="login"]');
-        $formLogin->submit();
-        $this->spin(
-            function ($context) use ($page) {
-                return $page->has('css', 'a[href="main.php?p=103"]');
-            }
-        );
+        // Login.
+        $page = new LoginPage($this);
+        $page->login($user, $password);
     }
 
     public function iAmLoggedOut()
     {
+        // LoginPage constructor will automatically throw if we are
+        // not on the login page.
         $this->visit('index.php?disconnect=1');
-
-        $page = $this->getSession()->getPage();
-        $mythis = $this;
-        $this->spin(
-            function ($mythis) use ($page) {
-                return $page->has('css', 'input[name="useralias"]');
-            }
-        );
+        return new LoginPage($this, false);
     }
 
     /**
@@ -205,12 +244,16 @@ class CentreonContext extends UtilsContext
      *  Launch Centreon Web container and setup context.
      *
      * @param $name Entry name.
+     * @throws \Exception
      */
     public function launchCentreonWebContainer($name)
     {
         $composeFile = $this->getContainerComposeFile($name);
         if (empty($composeFile)) {
-            throw new \Exception('Could not launch containers without Docker Compose file for ' . $name . ': check the configuration of your ContainerExtension in behat.yml.');
+            throw new \Exception(
+                'Could not launch containers without Docker Compose file for ' . $name . ': '
+                . 'check the configuration of your ContainerExtension in behat.yml.'
+            );
         }
         $this->container = new Container($composeFile);
         $this->setContainerWebDriver();
@@ -221,13 +264,13 @@ class CentreonContext extends UtilsContext
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $res = curl_exec($ch);
-        $limit = time() + 50;
+        $limit = time() + 60;
         while ((time() < $limit) && (($res === false) || empty($res))) {
             sleep(1);
             $res = curl_exec($ch);
         }
         if (time() >= $limit) {
-            throw new \Exception('WebDriver did not respond within a 50 seconds time frame.');
+            throw new \Exception('WebDriver did not respond within a 60 seconds time frame.');
         }
 
         // Real application test, create an API authentication token.
@@ -241,13 +284,13 @@ class CentreonContext extends UtilsContext
             CURLOPT_POSTFIELDS,
             array('username' => 'admin', 'password' => 'centreon'));
         $res = curl_exec($ch);
-        $limit = time() + 50;
+        $limit = time() + 120;
         while ((time() < $limit) && (($res === false) || empty($res))) {
             sleep(1);
             $res = curl_exec($ch);
         }
         if (time() >= $limit) {
-            throw new \Exception('Centreon Web did not respond within a 50 seconds time frame (API authentication test).');
+            throw new \Exception('Centreon Web did not respond within a 120 seconds time frame (API authentication test).');
         }
 
         // Set Mink parameter.
@@ -259,15 +302,24 @@ class CentreonContext extends UtilsContext
      */
     public function setContainerWebDriver()
     {
-        $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
-        $sessionName = $this->getMink()->getDefaultSessionName();
-        $driver = new \Behat\Mink\Driver\Selenium2Driver('phantomjs', null, $url);
-        $driver->setTimeouts(array(
-            'page load' => 120000,
-            'script' => 120000
-        ));
-        $session = new \Behat\Mink\Session($driver);
-        $this->getMink()->registerSession($sessionName, $session);
+        try {
+            $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
+            $driver = new \Behat\Mink\Driver\Selenium2Driver('phantomjs', null, $url);
+            $driver->setTimeouts(array(
+                'page load' => 120000,
+                'script' => 120000
+            ));
+        } catch (\Exception $e) {
+            throw new \Exception("Cannot instantiate mink driver.\n" . $e->getMessage());
+        }
+
+        try {
+            $sessionName = $this->getMink()->getDefaultSessionName();
+            $session = new \Behat\Mink\Session($driver);
+            $this->getMink()->registerSession($sessionName, $session);
+        } catch (\Exception $e) {
+            throw new \Exception("Cannot register mink session.\n" . $e->getMessage());
+        }
     }
 
     /**
@@ -359,6 +411,23 @@ class CentreonContext extends UtilsContext
     }
 
     /**
+     *  Reload all pollers.
+     */
+    public function reloadAllPollers()
+    {
+        $page = new PollerConfigurationExportPage($this);
+        $page->setProperties(array(
+            'pollers' => 'all',
+            'generate_files' => true,
+            'run_debug' => true,
+            'move_files' => true,
+            'restart_engine' => true,
+            'restart_method' => PollerConfigurationExportPage::METHOD_RELOAD
+        ));
+        $page->export();
+    }
+
+    /**
      *  Run yum update centreon-web in the container.
      */
     public function yumUpdateCentreonWeb()
@@ -370,6 +439,30 @@ class CentreonContext extends UtilsContext
         $this->context->container->execute(
             'yum update -y --nogpgcheck centreon-web',
             'web'
+        );
+    }
+
+    /**
+     * Get polling state in top counter
+     */
+    public function getPollingState()
+    {
+        $title = $this->assertFind('css', 'img#img_pollingState')->getAttribute('title');
+        if (preg_match('/^OK/', $title)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Reload ACL with command line
+     */
+    public function reloadACL()
+    {
+        $this->container->execute(
+            'su -s /bin/sh apache -c "/usr/bin/php -q /usr/share/centreon/cron/centAcl.php"',
+            'web',
+            false
         );
     }
 }

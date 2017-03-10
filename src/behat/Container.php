@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Centreon
+ * Copyright 2016-2017 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -200,12 +200,12 @@ class Container
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        $limit = time() + 50;
+        $limit = time() + 60;
         while ((time() < $limit) && !curl_exec($ch)) {
             sleep(1);
         }
         if (time() >= $limit) {
-            throw new \Exception('URL ' . $url . ' did not respond within a 50 seconds time frame.');
+            throw new \Exception('URL ' . $url . ' did not respond within a 60 seconds time frame.');
         }
     }
 }
