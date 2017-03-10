@@ -62,7 +62,7 @@ class CentreonDB
      */
     public function quote($string)
     {
-        return $string;
+        return "'" . $string . "'";
     }
     
     /**
