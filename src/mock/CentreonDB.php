@@ -55,6 +55,17 @@ class CentreonDB
     }
     
     /**
+     * Stub quote function
+     *
+     * @param string $string The string to escape
+     * @return string The string escaped
+     */
+    public function quote($string)
+    {
+        return $string;
+    }
+    
+    /**
      * Add a resultset to the mock
      *
      * @param string $query The query to catch
