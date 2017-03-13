@@ -278,8 +278,9 @@ class CentreonContext extends UtilsContext
             throw new \Exception('Centreon Web did not respond within a 120 seconds time frame (API authentication test).');
         }
 
-        // Set Mink parameter.
+        // Set session parameters.
         $this->setMinkParameter('base_url', 'http://web/centreon');
+        $this->getSession()->resizeWindow(1600, 2000);
     }
 
     /**
@@ -304,7 +305,7 @@ class CentreonContext extends UtilsContext
 
         try {
             $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
-            $driver = new \Behat\Mink\Driver\Selenium2Driver('phantomjs', null, $url);
+            $driver = new \Behat\Mink\Driver\Selenium2Driver('chrome', null, $url);
             $driver->setTimeouts(array(
                 'page load' => 120000,
                 'script' => 120000
