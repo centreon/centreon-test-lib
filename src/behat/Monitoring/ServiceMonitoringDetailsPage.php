@@ -19,6 +19,12 @@ namespace Centreon\Test\Behat\Monitoring;
 
 class ServiceMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Page
 {
+    const STATE_OK = 'OK';
+    const STATE_WARNING = 'WARNING';
+    const STATE_CRITICAL = 'CRITICAL';
+    const STATE_UNKNOWN = 'UNKNOWN';
+    const STATE_PENDING = 'PENDING';
+
     protected $context;
 
     /**
@@ -69,6 +75,12 @@ class ServiceMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Pa
     {
         $table = $this->context->assertFind('css', 'table.ListTable');
         $result = array();
+
+        // State
+        $result['state'] = $this->context->assertFindIn(
+            $table,
+            'css', 'tbody tr:nth-child(2) td:nth-child(2)'
+        )->getText();
 
         // Performance data
         $perfdata = $this->context->assertFindIn($table, 'css', 'tbody tr:nth-child(5) td:nth-child(2) pre')->getText();

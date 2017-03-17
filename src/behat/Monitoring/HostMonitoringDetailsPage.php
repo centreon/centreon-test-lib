@@ -27,6 +27,7 @@ class HostMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Page
     const STATE_UP = 'UP';
     const STATE_DOWN = 'DOWN';
     const STATE_UNREACHABLE = 'UNREACHABLE';
+    const STATE_PENDING = 'PENDING';
 
     protected $context;
     protected $hostname;
