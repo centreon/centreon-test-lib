@@ -289,7 +289,8 @@ class CentreonContext extends UtilsContext
     public function setContainerWebDriver()
     {
         // Wait for WebDriver container.
-        $ch = curl_init('http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/status');
+        $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/status';
+        $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -300,7 +301,9 @@ class CentreonContext extends UtilsContext
             $res = curl_exec($ch);
         }
         if (time() >= $limit) {
-            throw new \Exception('WebDriver did not respond within a 60 seconds time frame.');
+            throw new \Exception(
+                'WebDriver did not respond within a 60 seconds time frame (url: ' . $url . ').'
+            );
         }
 
         try {

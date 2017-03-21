@@ -25,20 +25,9 @@ class Container
     private $id;
 
     /**
-     *  Execute a command on local host.
-     */
-    private function exec($cmd)
-    {
-        exec($cmd . ' 2>&1', $output, $returnVar);
-        if ($returnVar != 0) {
-            throw new \Exception('Cannot execute container control command: ' . $cmd . " \n " . implode("\n", $output) . ' (code ' . $returnVar . ')');
-        }
-    }
-
-    /**
-     * Constructor.
-     *
+     * Container constructor.
      * @param $composeFile Docker Compose file used to run the services.
+     * @throws \Exception
      */
     public function __construct($composeFile)
     {
@@ -60,6 +49,17 @@ class Container
                 sleep(1);
             }
         } while ($errors != 0);
+    }
+
+    /**
+     *  Execute a command on local host.
+     */
+    private function exec($cmd)
+    {
+        exec($cmd . ' 2>&1', $output, $returnVar);
+        if ($returnVar != 0) {
+            throw new \Exception('Cannot execute container control command: ' . $cmd . " \n " . implode("\n", $output) . ' (code ' . $returnVar . ')');
+        }
     }
 
     /**
