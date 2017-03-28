@@ -135,7 +135,6 @@ class ModuleListingPage extends \Centreon\Test\Behat\ListingPage
     public function install($name)
     {
         $mythis = $this;
-        $i = 0;
         $module = $this->getEntry($name);
         if ($module['actions']['install']) {
             $moduleInstallImg = $this->context->assertFind('css', '#action' . $name . ' img[title="Install Module"]');
@@ -210,6 +209,24 @@ class ModuleListingPage extends \Centreon\Test\Behat\ListingPage
                 throw new \Exception('Cannot upgrade the module : ' . $name);
             }
             $module = $this->getEntry($name);
+        }
+    }
+
+    /**
+     * Remove a module
+     *
+     * @param $name
+     * @throws \Exception
+     */
+    public function remove($name)
+    {
+        $module = $this->getEntry($name);
+        if ($module['actions']['remove']) {
+            $this->context->setConfirmBox(true);
+            $moduleRemoveImg = $this->context->assertFind('css', '#action' . $name . ' img[title="Uninstall Module"]');
+            $moduleRemoveImg->click();;
+        } else {
+            throw new \Exception('Module ' . $name . ' has not remove flag.');
         }
     }
 }
