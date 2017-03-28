@@ -224,7 +224,7 @@ class ModuleListingPage extends \Centreon\Test\Behat\ListingPage
         if ($module['actions']['remove']) {
             $this->context->setConfirmBox(true);
             $moduleRemoveImg = $this->context->assertFind('css', '#action' . $name . ' img[title="Uninstall Module"]');
-            $moduleRemoveImg->click();;
+            $moduleRemoveImg->click();
         } else {
             throw new \Exception('Module ' . $name . ' has not remove flag.');
         }

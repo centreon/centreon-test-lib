@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat\Administration;
 
-class WidgetsListingPage extends \Centreon\Test\Behat\ListingPage
+class WidgetListingPage extends \Centreon\Test\Behat\ListingPage
 {
     protected $validField = 'tr.ListHeader';
 
@@ -74,24 +74,6 @@ class WidgetsListingPage extends \Centreon\Test\Behat\ListingPage
     }
 
     /**
-     * Validate entry integrity
-     *
-     * @param $element
-     * @return bool
-     */
-    public function validateEntry($element)
-    {
-        $valid = true;
-        try {
-            $this->context->assertFindIn($element, 'css', 'td:nth-child(1) a')->getText();
-        } catch (\Exception $e) {
-            $valid = false;
-        }
-
-        return $valid;
-    }
-
-    /**
      * Get list of actions
      *
      * @param $element
@@ -105,7 +87,7 @@ class WidgetsListingPage extends \Centreon\Test\Behat\ListingPage
             'remove' => false
         );
 
-        $actionsComponent = $this->context->assertFindIn($element, 'css', 'td:nth-child(9)');
+        $actionsComponent = $this->context->assertFindIn($element, 'css', 'td:nth-child(5)');
         if ($actionsComponent->has('css', 'img[src$="generate_conf.png"]')) {
             $actions['install'] = true;
         }
@@ -127,39 +109,14 @@ class WidgetsListingPage extends \Centreon\Test\Behat\ListingPage
      */
     public function install($name)
     {
-
-        $mythis = $this;
-        $i = 0;
         $widget = $this->getEntry($name);
 
         $widget['id'];
 
         if ($widget['actions']['install']) {
-
+            $this->context->setConfirmBox(true);
             $widgetInstallImg = $this->context->assertFind('css', '#'. $widget['id'] . ' .installBtn ');
             $widgetInstallImg->click();
-
-            // Install widget.
-            $this->context->spin(
-                function ($context) use ($mythis) {
-                    return $mythis->context->getSession()->getPage()->has('css', 'input[name="install"]');
-                },
-                'Could not install widget ' . $name . '.'
-            );
-
-            $validInstallImg = $this->context->assertFind('css', 'input[name="install"]');
-            $validInstallImg->click();
-
-            // Back.
-            $this->context->spin(
-                function ($context) use ($mythis) {
-                    return $mythis->context->getSession()->getPage()->has('css', 'input[name="list"]');
-                },
-                'Could not go back after installation of widget ' . $name . '.'
-            );
-
-            $validInstallImg = $this->context->assertFind('css', 'input[name="list"]');
-            $validInstallImg->click();
         } else {
             throw new \Exception('Widget ' . $name . ' is already installed.');
         }
@@ -176,10 +133,11 @@ class WidgetsListingPage extends \Centreon\Test\Behat\ListingPage
         $mythis = $this;
         $i = 0;
         $widget = $this->getEntry($name);
+        $this->context->setConfirmBox(true);
         while ($widget['actions']['upgrade']) {
             $i++;
             if ($widget['actions']['upgrade']) {
-                $widgetUpgradeImg = $this->context->assertFind('css', '#'. $widget['id'] . ' .installBtn ');;
+                $widgetUpgradeImg = $this->context->assertFind('css', '#'. $widget['id'] . ' .installBtn ');
                 $widgetUpgradeImg->click();
 
                 // Update.
@@ -208,6 +166,24 @@ class WidgetsListingPage extends \Centreon\Test\Behat\ListingPage
                 throw new \Exception('Cannot upgrade the module : ' . $name);
             }
             $widget = $this->getEntry($name);
+        }
+    }
+
+    /**
+     * Remove a widget
+     *
+     * @param $name
+     * @throws \Exception
+     */
+    public function remove($name)
+    {
+        $widget = $this->getEntry($name);
+        if ($widget['actions']['remove']) {
+            $this->context->setConfirmBox(true);
+            $widgetRemoveImg = $this->context->assertFind('css', '#' . $widget['id'] . ' .uninstallBtn ');
+            $widgetRemoveImg->click();
+        } else {
+            throw new \Exception('Widget ' . $name . ' has not remove flag.');
         }
     }
 }
