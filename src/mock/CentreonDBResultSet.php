@@ -68,6 +68,17 @@ class CentreonDBResultSet
     }
 
     /**
+     * Return all results
+     *
+     * @return array
+     */
+    public function fetchAll()
+    {
+        $this->pos = count($this->resultset);
+        return $this->resultset;
+    }
+
+    /**
      * Reset the position of resultset
      */
     public function resetResultSet()
