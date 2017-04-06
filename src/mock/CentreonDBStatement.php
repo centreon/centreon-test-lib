@@ -24,9 +24,10 @@ namespace Centreon\Test\Mock;
  * @package centreon-license-manager
  * @subpackage test
  */
-class CentreonDBResultSet
+class CentreonDBStatement
 {
-    private $resultset = array();
+    private $query;
+    private $resultset;
     private $pos = 0;
     
     /**
@@ -34,16 +35,27 @@ class CentreonDBResultSet
      *
      * @param array $resultset The resultset for a query
      */
-    public function __construct($resultset)
+    public function __construct($query, $resultset)
     {
+        $this->query = $query;
         $this->resultset = $resultset;
     }
 
-    public function getResultset()
+    /*
+     * Bind parameter
+     */
+    public function bindParam()
     {
-        return $this->resultset;
+
     }
-    
+
+    /*
+     * Execute statement
+     */
+    public function execute()
+    {
+    }
+
     /**
      * Return a result
      *

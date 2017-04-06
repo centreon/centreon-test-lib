@@ -75,15 +75,18 @@ class CentreonDB
     {
         $this->queries[$query] = new CentreonDBResultSet($result);
     }
-    
+
     /**
-     * 
-     * @param string $query
-     * @return string
+     * @param $query
+     * @return CentreonDBStatement
+     * @throws \Exception
      */
     public function prepare($query)
     {
-        return $query;
+        if (!isset($this->queries[$query])) {
+            throw new \Exception('Query is not set.' . "\nQuery : " . $query);
+        }
+        return new CentreonDBStatement($query, $this->queries[$query]->getResultset());
     }
 
     /**
@@ -92,7 +95,7 @@ class CentreonDB
      * @param array $values
      * @return mixed
      */
-    public function execute($query, $values)
+    public function execute($query = null, $values = null)
     {
         return $this->query($query);
     }
@@ -104,7 +107,7 @@ class CentreonDB
      */
     public function autoCommit($enable)
     {
-        return ;
+        return;
     }
 
     /**
