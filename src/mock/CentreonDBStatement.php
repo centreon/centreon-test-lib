@@ -54,6 +54,7 @@ class CentreonDBStatement
      */
     public function execute()
     {
+        return true;
     }
 
     /**
