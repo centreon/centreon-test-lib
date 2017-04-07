@@ -57,6 +57,14 @@ class CentreonDBStatement
         return true;
     }
 
+    /*
+     * Count of updated lines
+     */
+    public function rowCount()
+    {
+        return 1;
+    }
+
     /**
      * Return a result
      *
