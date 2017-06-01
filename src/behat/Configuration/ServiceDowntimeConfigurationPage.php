@@ -22,7 +22,7 @@ class ServiceDowntimeConfigurationPage extends \Centreon\Test\Behat\Configuratio
     const CONFIGURATION_TAB = 1;
     const RELATIONS_TAB = 2;
 
-    protected $validField = 'input#start_period_1';
+    protected $validField = 'input[name="downtime_name"]';
 
     protected $properties = array(
         // configuration tab.
