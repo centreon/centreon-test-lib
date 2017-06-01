@@ -50,6 +50,14 @@ class CentreonDBStatement
     }
 
     /*
+     * Bind value
+     */
+    public function bindValue()
+    {
+
+    }
+
+    /*
      * Execute statement
      */
     public function execute()
