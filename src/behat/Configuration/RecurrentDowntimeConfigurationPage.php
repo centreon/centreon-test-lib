@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat\Configuration;
 
-class ServiceDowntimeConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
+class RecurrentDowntimeConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
     const CONFIGURATION_TAB = 1;
     const RELATIONS_TAB = 2;
