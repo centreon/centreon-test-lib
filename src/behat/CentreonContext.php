@@ -75,7 +75,7 @@ class CentreonContext extends UtilsContext
                 . "###############\n"
                 . "# Broker logs #\n"
                 . "###############\n\n";
-            $output = $this->container->execute('cat /var/log/centreon-broker/*.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute('bash -c "cat /var/log/centreon-broker/*.log 2>/dev/null"', 'web', false);
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -102,7 +102,7 @@ class CentreonContext extends UtilsContext
                 . "################\n"
                 . "# Mysql errors #\n"
                 . "################\n\n";
-            $output = $this->container->execute('cat /var/lib/mysql/*.err 2>/dev/null', 'web', false);
+            $output = $this->container->execute('bash -c "cat /var/lib/mysql/*.err 2>/dev/null"', 'web', false);
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
