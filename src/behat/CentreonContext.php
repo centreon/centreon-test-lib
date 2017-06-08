@@ -49,8 +49,9 @@ class CentreonContext extends UtilsContext
     {
         // Failure logs.
         if (isset($this->container) && !$scope->getTestResult()->isPassed()) {
+            $scenarioTitle = preg_replace('/\s+/', '_', $scope->getFeature()->getTitle());
             $filename = $this->composeFiles['log_directory'] . '/'
-                . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '.txt';
+                . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-' . $scenarioTitle . '.txt';
 
             // Container logs.
             $logTitle = "\n"
@@ -59,6 +60,33 @@ class CentreonContext extends UtilsContext
                 . "##################\n\n";
             file_put_contents($filename, $logTitle);
             file_put_contents($filename, $this->container->getLogs(), FILE_APPEND);
+
+            // Centreon Engine logs.
+            $logTitle = "\n\n"
+                . "###############\n"
+                . "# Engine logs #\n"
+                . "###############\n\n";
+            $output = $this->container->execute('cat /var/log/centreon-engine/centengine.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // Centreon Broker logs.
+            $logTitle = "\n\n"
+                . "###############\n"
+                . "# Broker logs #\n"
+                . "###############\n\n";
+            $output = $this->container->execute('cat /var/log/centreon-broker/*.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // Centreon Broker logs.
+            $logTitle = "\n\n"
+                . "#################\n"
+                . "# Centcore logs #\n"
+                . "#################\n\n";
+            $output = $this->container->execute('cat /var/log/centreon/centcore.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
 
             // Centreon SQL errors.
             $logTitle = "\n\n"
