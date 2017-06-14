@@ -20,6 +20,13 @@ namespace Centreon\Test\Behat\Configuration;
 class HostConfigurationPage extends HostTemplateConfigurationPage
 {
     /**
+     *
+     * @var type 
+     */
+    protected $listingClass =
+        '\Centreon\Test\Behat\Configuration\HostConfigurationListingPage';
+    
+    /**
      *  Navigate to and/or check that we are on a host configuration
      *  page.
      *

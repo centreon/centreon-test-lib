@@ -180,7 +180,10 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
         } else {
             $this->context->assertFindButton('submitC')->click();
         }
+        
+        if (isset($this->listingClass)) {
+            $listingClass = $this->listingClass;
+            return new $listingClass($this->context, false);
+        }
     }
 }
-
-?>
