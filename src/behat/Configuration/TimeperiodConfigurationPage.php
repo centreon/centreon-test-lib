@@ -79,6 +79,11 @@ class TimeperiodConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     );
 
     /**
+     * @var string
+     */
+    protected $listingClass = '\Centreon\Test\Behat\Configuration\TimeperiodConfigurationListingPage';
+
+    /**
      *  Navigate to and/or check that we are on a timeperiod configuration page.
      *
      * @param $context  Centreon context.

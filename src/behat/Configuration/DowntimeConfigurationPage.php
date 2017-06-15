@@ -39,6 +39,11 @@ class DowntimeConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     );
 
     /**
+     * @var string
+     */
+    protected $listingClass = '\Centreon\Test\Behat\Configuration\DowntimeConfigurationListingPage';
+
+    /**
      *  Navigate to and/or check that we are on a service downtime
      *  configuration page.
      *

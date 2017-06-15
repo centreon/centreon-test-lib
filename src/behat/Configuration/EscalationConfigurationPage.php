@@ -141,6 +141,11 @@ class EscalationConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     );
 
     /**
+     * @var string
+     */
+    protected $listingClass = '\Centreon\Test\Behat\Configuration\EscalationConfigurationListingPage';
+
+    /**
      *  Navigate to and/or check that we are on a escalation configuration
      *  page.
      *

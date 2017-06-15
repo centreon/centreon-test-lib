@@ -86,6 +86,11 @@ class BrokerConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     );
 
     /**
+     * @var string
+     */
+    protected $listingClass = '\Centreon\Test\Behat\Configuration\BrokerConfigurationListingPage';
+
+    /**
      * BrokerConfigurationPage constructor.
      * @param $context
      * @param bool $visit

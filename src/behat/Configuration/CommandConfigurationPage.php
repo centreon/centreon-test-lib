@@ -38,6 +38,11 @@ class CommandConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     );
 
     /**
+     * @var string
+     */
+    protected $listingClass = '\Centreon\Test\Behat\Configuration\CommandConfigurationListingPage';
+
+    /**
      *  Navigate to and/or check that we are on a command configuration
      *  page.
      *

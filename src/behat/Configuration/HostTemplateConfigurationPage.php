@@ -145,6 +145,11 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
     );
 
     /**
+     * @var string
+     */
+    protected $listingClass = '\Centreon\Test\Behat\Configuration\HostTemplateConfigurationListingPage';
+
+    /**
      *  Host template edit page.
      *
      *  @param $context  Centreon context object.
