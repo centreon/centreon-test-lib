@@ -22,7 +22,7 @@ class RecurrentDowntimeConfigurationPage extends \Centreon\Test\Behat\Configurat
     const CONFIGURATION_TAB = 1;
     const RELATIONS_TAB = 2;
 
-    protected $validField = 'input[name="downtime_name"]';
+    protected $validField = 'input[id="start_period_1"]';
 
     protected $properties = array(
         // configuration tab.
