@@ -80,7 +80,22 @@ class UtilsContext extends RawMinkContext
     public function takeScreenshotOnError(AfterStepScope $scope)
     {
         if (!$scope->getTestResult()->isPassed()) {
-            $filename = date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '.png';
+            $scenario = 'unknown';
+
+            $feature = $scope->getFeature();
+            $step = $scope->getStep();
+            $line = $step->getLine();
+
+            foreach ($feature->getScenarios() as $tmp) {
+                if ($tmp->getLine() > $line) {
+                    break;
+                }
+
+                $scenario = $tmp->getTitle();
+            }
+
+            $scenarioTitle = preg_replace('/\s+/', '_', $scenario);
+            $filename = date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-' . $scenarioTitle . '.png';
             $this->saveScreenshot($filename, $this->composeFiles['log_directory']);
         }
     }

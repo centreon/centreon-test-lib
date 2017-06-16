@@ -19,7 +19,7 @@ namespace Centreon\Test\Behat\Configuration;
 
 class EscalationConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 {
-    protected $validField = 'input[name="searchC"]';
+    protected $validField = 'input[name="searchE"]';
 
     protected $properties = array(
         'name' => array(

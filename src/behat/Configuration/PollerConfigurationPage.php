@@ -26,6 +26,11 @@ class PollerConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     );
 
     /**
+     * @var string
+     */
+    protected $listingClass = '\Centreon\Test\Behat\Configuration\PollerConfigurationListingPage';
+
+    /**
      *  Navigate to and/or edit a poller configuration.
      *
      *  @param $context  Centreon context.

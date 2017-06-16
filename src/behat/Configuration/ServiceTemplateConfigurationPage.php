@@ -40,6 +40,11 @@ class ServiceTemplateConfigurationPage extends \Centreon\Test\Behat\Configuratio
     );
 
     /**
+     * @var string
+     */
+    protected $listingClass = '\Centreon\Test\Behat\Configuration\ServiceTemplateConfigurationListingPage';
+
+    /**
      *  Service template edit page.
      *
      *  @param $context  Centreon context object.

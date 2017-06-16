@@ -108,6 +108,11 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     );
 
     /**
+     * @var string
+     */
+    protected $listingClass = '\Centreon\Test\Behat\Configuration\ContactConfigurationListingPage';
+
+    /**
      *  Navigate to and/or check that we are on a contact configuration
      *  page.
      *

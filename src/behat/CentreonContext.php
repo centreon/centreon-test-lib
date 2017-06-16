@@ -49,8 +49,9 @@ class CentreonContext extends UtilsContext
     {
         // Failure logs.
         if (isset($this->container) && !$scope->getTestResult()->isPassed()) {
+            $scenarioTitle = preg_replace('/\s+/', '_', $scope->getScenario()->getTitle());
             $filename = $this->composeFiles['log_directory'] . '/'
-                . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '.txt';
+                . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-' . $scenarioTitle . '.txt';
 
             // Container logs.
             $logTitle = "\n"
@@ -59,6 +60,33 @@ class CentreonContext extends UtilsContext
                 . "##################\n\n";
             file_put_contents($filename, $logTitle);
             file_put_contents($filename, $this->container->getLogs(), FILE_APPEND);
+
+            // Centreon Engine logs.
+            $logTitle = "\n\n"
+                . "###############\n"
+                . "# Engine logs #\n"
+                . "###############\n\n";
+            $output = $this->container->execute('cat /var/log/centreon-engine/centengine.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // Centreon Broker logs.
+            $logTitle = "\n\n"
+                . "###############\n"
+                . "# Broker logs #\n"
+                . "###############\n\n";
+            $output = $this->container->execute('bash -c "cat /var/log/centreon-broker/*.log 2>/dev/null"', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // Centreon Broker logs.
+            $logTitle = "\n\n"
+                . "#################\n"
+                . "# Centcore logs #\n"
+                . "#################\n\n";
+            $output = $this->container->execute('cat /var/log/centreon/centcore.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
 
             // Centreon SQL errors.
             $logTitle = "\n\n"
@@ -74,7 +102,7 @@ class CentreonContext extends UtilsContext
                 . "################\n"
                 . "# Mysql errors #\n"
                 . "################\n\n";
-            $output = $this->container->execute('cat /var/lib/mysql/*.err 2>/dev/null', 'web', false);
+            $output = $this->container->execute('bash -c "cat /var/lib/mysql/*.err 2>/dev/null"', 'web', false);
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -258,8 +286,14 @@ class CentreonContext extends UtilsContext
         $this->container = new Container($composeFile);
         $this->setContainerWebDriver();
 
+        // Set session parameters.
+        $this->setMinkParameter('base_url', 'http://web/centreon');
+
         // Real application test, create an API authentication token.
-        $ch = curl_init('http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon/api/index.php?action=authenticate');
+        $ch = curl_init(
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') .
+            '/centreon/api/index.php?action=authenticate'
+        );
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -274,13 +308,12 @@ class CentreonContext extends UtilsContext
             sleep(1);
             $res = curl_exec($ch);
         }
-        if (time() >= $limit) {
-            throw new \Exception('Centreon Web did not respond within a 120 seconds time frame (API authentication test).');
-        }
 
-        // Set session parameters.
-        $this->setMinkParameter('base_url', 'http://web/centreon');
-        $this->getSession()->resizeWindow(1600, 2000);
+        if (time() >= $limit) {
+            throw new \Exception(
+                'Centreon Web did not respond within a 120 seconds time frame (API authentication test).'
+            );
+        }
     }
 
     /**
@@ -308,7 +341,26 @@ class CentreonContext extends UtilsContext
 
         try {
             $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
-            $driver = new \Behat\Mink\Driver\Selenium2Driver('chrome', null, $url);
+            $driver = new \Behat\Mink\Driver\Selenium2Driver(
+                'chrome',
+                array(
+                    'chrome' => array(
+                        'args' => array(
+                            '--window-size=1600,2000',
+                            '--disable-sync',
+                            '--single-process',
+                            '--disable-remote-fonts',
+                            '--disable-canvas-aa',
+                            '--disable-lcd-text'
+                        )
+                    ),
+                    'browserName' => 'chrome',
+                    'platform' => 'ANY',
+                    'browser' => 'chrome',
+                    'name' => 'Behat Test'
+                ),
+                $url
+            );
             $driver->setTimeouts(array(
                 'page load' => 120000,
                 'script' => 120000
