@@ -286,8 +286,14 @@ class CentreonContext extends UtilsContext
         $this->container = new Container($composeFile);
         $this->setContainerWebDriver();
 
+        // Set session parameters.
+        $this->setMinkParameter('base_url', 'http://web/centreon');
+
         // Real application test, create an API authentication token.
-        $ch = curl_init('http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon/api/index.php?action=authenticate');
+        $ch = curl_init(
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') .
+            '/centreon/api/index.php?action=authenticate'
+        );
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -302,13 +308,12 @@ class CentreonContext extends UtilsContext
             sleep(1);
             $res = curl_exec($ch);
         }
-        if (time() >= $limit) {
-            throw new \Exception('Centreon Web did not respond within a 120 seconds time frame (API authentication test).');
-        }
 
-        // Set session parameters.
-        $this->setMinkParameter('base_url', 'http://web/centreon');
-        $this->getSession()->resizeWindow(1600, 2000);
+        if (time() >= $limit) {
+            throw new \Exception(
+                'Centreon Web did not respond within a 120 seconds time frame (API authentication test).'
+            );
+        }
     }
 
     /**
@@ -336,7 +341,26 @@ class CentreonContext extends UtilsContext
 
         try {
             $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
-            $driver = new \Behat\Mink\Driver\Selenium2Driver('chrome', null, $url);
+            $driver = new \Behat\Mink\Driver\Selenium2Driver(
+                'chrome',
+                array(
+                    'chrome' => array(
+                        'args' => array(
+                            '--window-size=1600,2000',
+                            '--disable-sync',
+                            '--single-process',
+                            '--disable-remote-fonts',
+                            '--disable-canvas-aa',
+                            '--disable-lcd-text'
+                        )
+                    ),
+                    'browserName' => 'chrome',
+                    'platform' => 'ANY',
+                    'browser' => 'chrome',
+                    'name' => 'Behat Test'
+                ),
+                $url
+            );
             $driver->setTimeouts(array(
                 'page load' => 120000,
                 'script' => 120000
