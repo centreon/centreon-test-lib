@@ -352,7 +352,12 @@ class CentreonContext extends UtilsContext
                             '--disable-remote-fonts',
                             '--disable-canvas-aa',
                             '--disable-lcd-text'
+                        ),
+                        /*
+                        'prefs' => array(
+                            'profile.default_content_setting_values.images' => 2
                         )
+                        */
                     ),
                     'browserName' => 'chrome',
                     'platform' => 'ANY',
