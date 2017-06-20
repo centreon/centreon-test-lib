@@ -88,6 +88,8 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
 
         return $properties;
     }
+    
+    
 
     /**
      * Set properties
@@ -157,6 +159,21 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     );
             }
         }
+    }
+    
+    /**
+     * 
+     * @param type $propertyName
+     * @return type
+     * @throws \Exception
+     */
+    public function getProperty($propertyName) 
+    {
+        $properties = $this->getProperties();
+        if (!array_key_exists($propertyName, $properties)) {
+            throw new \Exception($propertyName . 'property not found');
+        }
+        return $properties[$propertyName];
     }
 
     /**
