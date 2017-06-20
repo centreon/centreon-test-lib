@@ -171,7 +171,7 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
     {
         $properties = $this->getProperties();
         if (!array_key_exists($propertyName, $properties)) {
-            throw new \Exception($propertyName . 'property not found');
+            throw new \Exception($propertyName . ' property not found');
         }
         return $properties[$propertyName];
     }
