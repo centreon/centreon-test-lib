@@ -351,7 +351,8 @@ class CentreonContext extends UtilsContext
                             '--single-process',
                             '--disable-remote-fonts',
                             '--disable-canvas-aa',
-                            '--disable-lcd-text'
+                            '--disable-lcd-text',
+                            '--no-sandbox'
                         ),
                         /*
                         'prefs' => array(
