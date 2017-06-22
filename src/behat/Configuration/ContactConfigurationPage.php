@@ -95,6 +95,11 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_AUTHENTICATION,
             false // Do not exist when no ldap is configured
         ),
+        'access' => array(
+            'radio',
+            'input[name="contact_oreon[contact_oreon]"]',
+            self::TAB_AUTHENTICATION
+        ),
         'admin' => array(
             'radio',
             'input[name="contact_admin[contact_admin]"]',
@@ -104,6 +109,11 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'select2',
             'select#contact_location',
             self::TAB_AUTHENTICATION
+        ),
+        'status' => array(
+            'radio',
+            'input[name="contact_activate[contact_activate]"]',
+            self::TAB_EXTENDED
         )
     );
 
