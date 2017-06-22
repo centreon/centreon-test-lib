@@ -60,11 +60,11 @@ class ContactConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
         ),
         'admin' => array(
             'text',
-            'td:nth-child(8)'
+            'td:nth-child(9)'
         ),
         'status' => array(
             'text',
-            'td:nth-child(8)'
+            'td:nth-child(10)'
         )
     );
 
