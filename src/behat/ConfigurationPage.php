@@ -35,59 +35,23 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
         return $this->context->getSession()->getPage()->has('css', $this->validField);
     }
 
-    /**
-     * Get properties
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public function getProperties()
+    public function getProperties($propertiesList = array())
     {
         $properties = array();
-        $tab = '';
 
-        // Browse all properties.
-        foreach ($this->properties as $property => $metadata) {
-            // Set property meta-data in variables.
-            $propertyType = $metadata[0];
-            $propertyLocator = $metadata[1];
-            $mandatory = isset($metadata[3]) ? $metadata[3] : true;
-
-            // Switch between tabs if required.
-            if (isset($metadata[2]) && !empty($metadata[2]) && $tab != $metadata[2]) {
-                $this->switchTab($metadata[2]);
-                $tab = $metadata[2];
-            }
-
-            try {
-                // Get properties.
-                switch ($propertyType) {
-                    case 'radio':
-                    case 'checkbox':
-                    case 'select':
-                    case 'select2':
-                    case 'text':
-                        $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
-                        break;
-                    case 'custom':
-                        $methodName = 'get' . $propertyLocator;
-                        $properties[$property] = $this->$methodName();
-                        break;
-                    default:
-                        throw new \Exception(
-                            'Unknown property type ' . $propertyType
-                            . ' found while retrieving host properties.'
-                        );
-                }
-            } catch (\Exception $e) {
-                if ($mandatory) {
-                    throw new \Exception($e);
-                }
-            }
+        if (isset($propertiesList)) {
+            
+            foreach ($propertiesList as $property ) {
+            
+            $properties[$property] = $this->getProperty($property);
+         }
+        
+        return $properties;
+        
         }
 
-        return $properties;
-    }
+        
+     }
 
     /**
      * Set properties
@@ -157,6 +121,51 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     );
             }
         }
+    }
+    
+    public function getProperty($propertyName) 
+    {
+        //var_dump($this->properties);
+        
+        $metadata = $this->properties[$propertyName];
+        $tab = '';
+         
+        // Set property meta-data in variables.
+        $propertyType = $metadata[0];
+        $propertyLocator = $metadata[1];
+        $mandatory = isset($metadata[3]) ? $metadata[3] : true;
+        // Switch between tabs if required.
+        if (isset($metadata[2]) && !empty($metadata[2]) && $tab != $metadata[2]) {
+            $this->switchTab($metadata[2]);
+            $tab = $metadata[2];
+        }
+            try {
+                
+                switch ($propertyType) {
+                    case 'radio':
+                    case 'checkbox':
+                    case 'select':
+                    case 'select2':
+                    case 'text':
+                       $property = $this->context->assertFind('css', $propertyLocator)->getValue();
+                        break;
+                    case 'custom':
+                        $methodName = 'get' . $propertyLocator;
+                        $property = $this->$methodName();
+                        break;
+                    default:
+                        throw new \Exception(
+                            'Unknown property type ' . $propertyType
+                            . ' found while retrieving host properties.'
+                        );
+                    }
+                } catch (\Exception $e) {
+                    if ($mandatory) {
+                        throw new \Exception($e);
+                    }
+                }
+   
+        return $property;
     }
 
     /**
