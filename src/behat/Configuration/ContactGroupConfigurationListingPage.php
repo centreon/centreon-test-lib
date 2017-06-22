@@ -22,6 +22,17 @@ class ContactGroupConfigurationListingPage extends \Centreon\Test\Behat\ListingP
     protected $validField = 'input[name="searchCG"]';
 
     protected $properties = array(
+        'name' => array(
+            'text',
+            'td:nth-child(2)'
+        ),
+        'description' => array(
+            'text',
+            'td:nth-child(3)'
+        ),
+        'id' => array(
+            'custom'
+        )
     );
 
     protected $objectClass = '\Centreon\Test\Behat\Configuration\ContactGroupsConfigurationPage';
@@ -48,5 +59,15 @@ class ContactGroupConfigurationListingPage extends \Centreon\Test\Behat\ListingP
             },
             'Current page does not match class ' . __CLASS__
         );
+    }
+
+   /**
+     * Get id
+     */
+    public function getId($element)
+    {
+        $idComponent =$this->context->assertFindIn($element,'css','input[type="checkbox"]')->getAttribute('name');
+        $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
+        return $id;
     }
 }
