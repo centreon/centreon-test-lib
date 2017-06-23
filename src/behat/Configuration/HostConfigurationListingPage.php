@@ -26,6 +26,9 @@ class HostConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
             'text',
             'td:nth-child(2)'
         ),
+        'id' => array(
+            'custom'
+        ),
         'icon' => array(
             'attribute',
             'td:nth-child(2) img',
@@ -73,6 +76,16 @@ class HostConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
             },
             'Current page does not match class ' . __CLASS__
         );
+    }
+
+    /**
+     * Get id
+     */
+    protected function getId($element)
+    {
+        $idComponent =$this->context->assertFindIn($element,'css','input[type="checkbox"]')->getAttribute('name');
+        $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
+        return $id;
     }
 
     /**
