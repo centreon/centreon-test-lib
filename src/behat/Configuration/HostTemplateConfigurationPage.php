@@ -143,7 +143,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             self::DATA_TAB
         ),
         //Extended tab
-        'status' => array(
+        'enabled' => array(
             'radio',
             'input[name="host_activate[host_activate]"]',
             self::EXTENDED_TAB
