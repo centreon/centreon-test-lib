@@ -49,6 +49,10 @@ class HostConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
         'parents' => array(
             'custom',
             'parents'
+        ),
+        'status' => array(
+            'text',
+            'td:nth-child(8)'
         )
     );
 
