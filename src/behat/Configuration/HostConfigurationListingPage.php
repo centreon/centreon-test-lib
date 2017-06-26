@@ -96,7 +96,6 @@ class HostConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      */
     protected function getEnabled($element)
     {
-        var_dump('tot');
         return $this->context->assertFindIn('css', 'td:nth-child')->getValue() == 'ENABLED' ? true : false;
     }
 
