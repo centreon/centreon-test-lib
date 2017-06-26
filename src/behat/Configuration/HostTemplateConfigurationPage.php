@@ -141,8 +141,13 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             'text',
             'input[name="host_acknowledgement_timeout"]',
             self::DATA_TAB
-        )
-    );
+        ),
+        //Extended tab
+        'enabled' => array(
+            'radio',
+            'input[name="host_activate[host_activate]"]',
+            self::EXTENDED_TAB
+    ));
 
     /**
      * @var string

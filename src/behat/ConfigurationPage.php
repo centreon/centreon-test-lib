@@ -39,6 +39,39 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
     {
         $properties = array();
 
+            // Switch between tabs if required.
+            if (isset($metadata[2]) && !empty($metadata[2]) && $tab != $metadata[2]) {
+                $this->switchTab($metadata[2]);
+                $tab = $metadata[2];
+            }
+
+            try {
+                // Get properties.
+                switch ($propertyType) {
+                    case 'radio':
+                    case 'checkbox':
+                    case 'select':
+                    case 'text':
+                        $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
+                        break;
+                    case 'select2':
+                        $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getText();
+                        break;
+                    case 'custom':
+                        $methodName = 'get' . $propertyLocator;
+                        $properties[$property] = $this->$methodName();
+                        break;
+                    default:
+                        throw new \Exception(
+                            'Unknown property type ' . $propertyType
+                            . ' found while retrieving host properties.'
+                        );
+                }
+            } catch (\Exception $e) {
+                if ($mandatory) {
+                    throw new \Exception($e);
+                }
+            }
         if (isset($propertiesList)) {
             
             foreach ($propertiesList as $property ) {
