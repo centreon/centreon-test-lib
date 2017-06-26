@@ -147,7 +147,8 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             'radio',
             'input[name="host_activate[host_activate]"]',
             self::EXTENDED_TAB
-    ));
+        )
+    );
 
     /**
      * @var string
