@@ -11,12 +11,16 @@ class LdapConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
          'configuration_name' => array(
             'text',
             'td:nth-child(2)'
-        ),
-        'id' => array(
+            ),
+         'id' => array(
             'custom'
-        )
+            ),
+         'status' => array(
+            'text',
+            'td:nth-child(4)'   
+            )
        
-    );
+        );
     
     protected $objectClass = '\Centreon\Test\Behat\Administration\LdapConfigurationPage';
     
