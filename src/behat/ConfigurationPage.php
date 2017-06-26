@@ -38,6 +38,16 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
     public function getProperties($propertiesList = array())
     {
         $properties = array();
+        
+        if (isset($propertiesList)) {
+            
+            foreach ($propertiesList as $property ) {
+            
+            $properties[$property] = $this->getProperty($property);
+         }
+        
+        return $properties;
+        }
 
             // Switch between tabs if required.
             if (isset($metadata[2]) && !empty($metadata[2]) && $tab != $metadata[2]) {
@@ -72,18 +82,7 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     throw new \Exception($e);
                 }
             }
-        if (isset($propertiesList)) {
-            
-            foreach ($propertiesList as $property ) {
-            
-            $properties[$property] = $this->getProperty($property);
-         }
-        
-        return $properties;
-        
-        }
 
-        
      }
 
     /**
