@@ -35,60 +35,24 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
         return $this->context->getSession()->getPage()->has('css', $this->validField);
     }
 
-    public function getProperties($propertiesList = array())
+    /**
+    * Get properties		
+    *		
+    * @return array		
+    * @throws \Exception		
+    */
+    public function getProperties($properties = array())
     {
-        $properties = array();
-        
-        if (isset($propertiesList) && !empty($propertiesList)) {           
-            foreach ($propertiesList as $property ) {  
-            $properties[$property] = $this->getProperty($property);
-         }
-        
-        return $properties;
-        } else {
-              
-        $tab = '';
-        // Browse all properties.
-        foreach ($this->properties as $property => $metadata) {
-            // Set property meta-data in variables.
-            $propertyType = $metadata[0];
-            $propertyLocator = $metadata[1];
-            $mandatory = isset($metadata[3]) ? $metadata[3] : true;
-            // Switch between tabs if required.
-            if (isset($metadata[2]) && !empty($metadata[2]) && $tab != $metadata[2]) {
-                $this->switchTab($metadata[2]);
-                $tab = $metadata[2];
-            }
-            try {
-                // Get properties.
-                switch ($propertyType) {
-                    case 'radio':
-                    case 'checkbox':
-                    case 'select':
-                    case 'text':
-                        $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getValue();
-                        break;
-                    case 'select2':
-                        $properties[$property] = $this->context->assertFind('css', $propertyLocator)->getText();
-                        break;
-                    case 'custom':
-                        $methodName = 'get' . $propertyLocator;
-                        $properties[$property] = $this->$methodName();
-                        break;
-                    default:
-                        throw new \Exception(
-                            'Unknown property type ' . $propertyType
-                            . ' found while retrieving host properties.'
-                        );
-                }
-            } catch (\Exception $e) {
-                if ($mandatory) {
-                    throw new \Exception($e);
-                }
-            }
+        if (empty($properties)) {
+            $properties = array_keys($this->properties);
         }
-        return $properties;
+        
+        $values = array();
+        foreach ($properties as $propertyName) {
+            $values[$propertyName] = $this->getProperty($propertyName);
         }
+        
+        return $values;
     }
 
     /**
@@ -161,8 +125,18 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
         }
     }
     
+    /**
+     * Get property
+     *
+     * @return string		
+     * @throws \Exception		
+     */
     public function getProperty($propertyName) 
     {
+        if (!isset($this->properties[$propertyName])) {
+            throw new \Exception('Unknow property name : ' . $propertyName);
+        }
+        
         $metadata = $this->properties[$propertyName];
         $tab = '';
          
@@ -170,38 +144,40 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
         $propertyType = $metadata[0];
         $propertyLocator = $metadata[1];
         $mandatory = isset($metadata[3]) ? $metadata[3] : true;
+        
         // Switch between tabs if required.
         if (isset($metadata[2]) && !empty($metadata[2]) && $tab != $metadata[2]) {
             $this->switchTab($metadata[2]);
             $tab = $metadata[2];
         }
-            try {
-                
-                switch ($propertyType) {
-                    case 'radio':
-                    case 'checkbox':
-                    case 'select':
-                    case 'select2':
-                       $property = $this->context->assertFind('css', $propertyLocator)->getText();
-                        break;
-                    case 'text':
-                       $property = $this->context->assertFind('css', $propertyLocator)->getValue();
-                        break;
-                    case 'custom':
-                        $methodName = 'get' . $propertyLocator;
-                        $property = $this->$methodName();
-                        break;
-                    default:
-                        throw new \Exception(
-                            'Unknown property type ' . $propertyType
-                            . ' found while retrieving host properties.'
-                        );
-                    }
-                } catch (\Exception $e) {
-                    if ($mandatory) {
-                        throw new \Exception($e);
-                    }
-                }
+        
+        try {
+            switch ($propertyType) {
+                case 'radio':
+                case 'checkbox':
+                case 'select':
+                case 'select2':
+                    $property = $this->context->assertFind('css', $propertyLocator)->getText();
+                    break;
+                case 'text':
+                    $property = $this->context->assertFind('css', $propertyLocator)->getValue();
+                    break;
+                case 'custom':
+                    $methodName = 'get' . $propertyLocator;
+                    $property = $this->$methodName();
+                    break;
+                default:
+                    throw new \Exception(
+                        'Unknown property type ' . $propertyType
+                        . ' found while retrieving host properties.'
+                    );
+            }
+        } catch (\Exception $e) {
+            if ($mandatory) {
+                throw new \Exception($e);
+            }
+        }
+        
         return $property;
     }
 
