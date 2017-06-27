@@ -202,7 +202,6 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                         throw new \Exception($e);
                     }
                 }
-   
         return $property;
     }
 
