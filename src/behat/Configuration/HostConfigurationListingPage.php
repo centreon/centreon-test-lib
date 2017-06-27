@@ -49,6 +49,9 @@ class HostConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
         'parents' => array(
             'custom',
             'parents'
+        ),
+        'enabled' => array(
+            'custom'
         )
     );
 
@@ -86,6 +89,15 @@ class HostConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
         $idComponent =$this->context->assertFindIn($element,'css','input[type="checkbox"]')->getAttribute('name');
         $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
         return $id;
+    }
+
+    /**
+     * Get enabled
+     */
+    protected function getEnabled($element)
+    {
+        return $this->context->assertFindIn($element, 'css', 'td:nth-child(8)')->getText() == 'ENABLED' ?
+            true : false;
     }
 
     /**

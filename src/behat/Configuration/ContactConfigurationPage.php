@@ -57,6 +57,11 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'input[name="contact_hostNotifOpts[d]"]',
             self::TAB_CONFIGURATION
         ),
+        'host_notification_period' => array(
+            'select2',
+            'select#timeperiod_tp_id',
+            self::TAB_CONFIGURATION
+        ),
         'host_notification_command' => array(
             'select2',
             'select#contact_hostNotifCmds',
@@ -70,6 +75,11 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         'service_notify_on_critical' => array(
             'checkbox',
             'input[name="contact_svNotifOpts[c]"]',
+            self::TAB_CONFIGURATION
+        ),
+        'service_notification_period' => array(
+            'select2',
+            'select#timeperiod_tp_id2',
             self::TAB_CONFIGURATION
         ),
         'service_notification_command' => array(
@@ -95,6 +105,11 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_AUTHENTICATION,
             false // Do not exist when no ldap is configured
         ),
+        'access' => array(
+            'radio',
+            'input[name="contact_oreon[contact_oreon]"]',
+            self::TAB_AUTHENTICATION
+        ),
         'admin' => array(
             'radio',
             'input[name="contact_admin[contact_admin]"]',
@@ -104,6 +119,11 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'select2',
             'select#contact_location',
             self::TAB_AUTHENTICATION
+        ),
+        'status' => array(
+            'radio',
+            'input[name="contact_activate[contact_activate]"]',
+            self::TAB_EXTENDED
         )
     );
 

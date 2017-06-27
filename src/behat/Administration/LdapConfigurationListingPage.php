@@ -19,7 +19,6 @@ class LdapConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
             'text',
             'td:nth-child(4)'   
             )
-       
         );
     
     protected $objectClass = '\Centreon\Test\Behat\Administration\LdapConfigurationPage';
