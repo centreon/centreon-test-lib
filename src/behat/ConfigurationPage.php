@@ -182,6 +182,7 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     case 'checkbox':
                     case 'select':
                     case 'select2':
+                       $property = $this->context->assertFind('css', $propertyLocator)->getText();
                     case 'text':
                        $property = $this->context->assertFind('css', $propertyLocator)->getValue();
                         break;
