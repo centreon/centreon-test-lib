@@ -20,7 +20,7 @@ class LdapConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'text',
             'textarea[name="ar_description"]'
         ),
-        'enable_authentification' => array(
+        'enable_authentication' => array(
             'radio',
             'input[name="ldap_auth_enable[ldap_auth_enable]"]'
         ),

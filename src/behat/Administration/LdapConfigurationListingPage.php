@@ -8,14 +8,17 @@ class LdapConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     protected $validField = 'input[name="searchLdap"]';
     
     protected $properties = array(
-         'configuration_name' => array(
+        'configuration_name' => array(
             'text',
             'td:nth-child(2)'
         ),
         'id' => array(
             'custom'
+        ),
+        'status' => array(
+            'text',
+            'td:nth-child(4)'   
         )
-       
     );
     
     protected $objectClass = '\Centreon\Test\Behat\Administration\LdapConfigurationPage';
