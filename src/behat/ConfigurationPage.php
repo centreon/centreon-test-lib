@@ -39,15 +39,13 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
     {
         $properties = array();
         
-        if (isset($propertiesList)) {
-            $properties = array();
-            foreach ($propertiesList as $property ) {
-            
+        if (isset($propertiesList) && !empty($propertiesList)) {           
+            foreach ($propertiesList as $property ) {  
             $properties[$property] = $this->getProperty($property);
          }
         
         return $properties;
-        } 
+        } else {
               
         $tab = '';
         // Browse all properties.
@@ -90,6 +88,7 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
             }
         }
         return $properties;
+        }
     }
 
     /**
