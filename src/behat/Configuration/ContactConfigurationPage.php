@@ -57,6 +57,11 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'input[name="contact_hostNotifOpts[d]"]',
             self::TAB_CONFIGURATION
         ),
+        'host_notification_period' => array(
+            'select2',
+            'select#timeperiod_tp_id',
+            self::TAB_CONFIGURATION
+        ),
         'host_notification_command' => array(
             'select2',
             'select#contact_hostNotifCmds',
@@ -70,6 +75,11 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         'service_notify_on_critical' => array(
             'checkbox',
             'input[name="contact_svNotifOpts[c]"]',
+            self::TAB_CONFIGURATION
+        ),
+        'service_notification_period' => array(
+            'select2',
+            'select#timeperiod_tp_id2',
             self::TAB_CONFIGURATION
         ),
         'service_notification_command' => array(
