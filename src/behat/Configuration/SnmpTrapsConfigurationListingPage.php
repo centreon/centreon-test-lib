@@ -23,6 +23,8 @@ class SnmpTrapsConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 
     protected $properties = array();
 
+    protected $objectClass = '\Centreon\Test\Behat\Configuration\SnmpTrapsConfigurationPage';
+
     /**
      *  SNMP traps list page.
      *
