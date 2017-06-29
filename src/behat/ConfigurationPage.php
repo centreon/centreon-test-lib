@@ -36,22 +36,22 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
     }
 
     /**
-    * Get properties		
-    *		
-    * @return array		
-    * @throws \Exception		
+    * Get properties
+    *
+    * @return array
+    * @throws \Exception
     */
     public function getProperties($properties = array())
     {
         if (empty($properties)) {
             $properties = array_keys($this->properties);
         }
-        
+
         $values = array();
         foreach ($properties as $propertyName) {
             $values[$propertyName] = $this->getProperty($propertyName);
         }
-        
+
         return $values;
     }
 
@@ -124,41 +124,41 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
             }
         }
     }
-    
+
     /**
      * Get property
      *
-     * @return string		
-     * @throws \Exception		
+     * @return string
+     * @throws \Exception
      */
-    public function getProperty($propertyName) 
+    public function getProperty($propertyName)
     {
         if (!isset($this->properties[$propertyName])) {
             throw new \Exception('Unknow property name : ' . $propertyName);
         }
-        
+
         $metadata = $this->properties[$propertyName];
         $tab = '';
-         
+
         // Set property meta-data in variables.
         $propertyType = $metadata[0];
         $propertyLocator = $metadata[1];
         $mandatory = isset($metadata[3]) ? $metadata[3] : true;
-        
+
         // Switch between tabs if required.
         if (isset($metadata[2]) && !empty($metadata[2]) && $tab != $metadata[2]) {
             $this->switchTab($metadata[2]);
             $tab = $metadata[2];
         }
-        
+
         try {
             switch ($propertyType) {
-                case 'radio':
                 case 'checkbox':
                 case 'select':
                 case 'select2':
                     $property = $this->context->assertFind('css', $propertyLocator)->getText();
                     break;
+                case 'radio':
                 case 'text':
                     $property = $this->context->assertFind('css', $propertyLocator)->getValue();
                     break;
@@ -177,7 +177,7 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                 throw new \Exception($e);
             }
         }
-        
+
         return $property;
     }
 
@@ -202,7 +202,7 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
         } else {
             $this->context->assertFindButton('submitC')->click();
         }
-        
+
         if (isset($this->listingClass)) {
             $listingClass = $this->listingClass;
             return new $listingClass($this->context, false);
