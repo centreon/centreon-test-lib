@@ -34,7 +34,7 @@ class BrokerConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_GENERAL,
         ),
         'name' => array(
-            'text',
+            'input',
             'input[name="name"]',
             self::TAB_GENERAL
         ),
@@ -44,12 +44,12 @@ class BrokerConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_GENERAL
         ),
         'filename' => array(
-            'text',
+            'input',
             'input[name="filename"]',
             self::TAB_GENERAL
         ),
         'cache_directory' => array(
-            'text',
+            'input',
             'input[name="cache_directory"]',
             self::TAB_GENERAL
         ),
@@ -74,12 +74,12 @@ class BrokerConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_GENERAL
         ),
         'event_queue_max_size' => array(
-            'text',
+            'input',
             'input[name="event_queue_max_size"]',
             self::TAB_GENERAL
         ),
         'command_file' => array(
-            'text',
+            'input',
             'input[name="command_file"]',
             self::TAB_GENERAL
         ),

@@ -27,12 +27,12 @@ class RecurrentDowntimeConfigurationPage extends \Centreon\Test\Behat\Configurat
     protected $properties = array(
         // configuration tab.
         'name' => array(
-            'text',
+            'input',
             'input[name="downtime_name"]',
             self::CONFIGURATION_TAB
         ),
         'alias' => array(
-            'text',
+            'input',
             'input[name="downtime_description"]',
             self::CONFIGURATION_TAB
         ),
@@ -42,12 +42,12 @@ class RecurrentDowntimeConfigurationPage extends \Centreon\Test\Behat\Configurat
             self::CONFIGURATION_TAB
         ),
         'start' => array(
-            'text',
+            'input',
             'input[name="periods[1][start_period]"]',
             self::CONFIGURATION_TAB
         ),
         'end' => array(
-            'text',
+            'input',
             'input[name="periods[1][end_period]"]',
             self::CONFIGURATION_TAB
         ),

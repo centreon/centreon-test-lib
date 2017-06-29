@@ -29,12 +29,12 @@ class ACLResourceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
 
     protected $properties = array(
         'acl_name' => array(
-            'text',
+            'input',
             'input[name="acl_res_name"]',
             self::GENERAL_TAB
         ),
         'acl_alias' => array(
-            'text',
+            'input',
             'input[name="acl_res_alias"]',
             self::GENERAL_TAB
         ),

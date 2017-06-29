@@ -6,18 +6,18 @@ namespace Centreon\Test\Behat\Administration;
 class LdapConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
    protected $validField = 'input[name="ar_name"]';
-   
+
    protected $listingClass =
         '\Centreon\Test\Behat\Administration\LdapConfigurationListingPage';
-    
+
    protected $properties = array(
         // Configuration fields. general information
         'configuration_name' => array(
-            'text',
+            'input',
             'input[name="ar_name"]'
         ),
         'description' => array(
-            'text',
+            'input',
             'textarea[name="ar_description"]'
         ),
         'enable_authentication' => array(
@@ -33,11 +33,11 @@ class LdapConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'input[name="ldap_auto_import[ldap_auto_import]"]'
         ),
         'search_size_limit' => array(
-            'text',
+            'input',
             'input[name="ldap_search_limit"]'
         ),
         'search_timeout' => array(
-            'text',
+            'input',
             'input[name="ldap_search_timeout"]'
         ),
         'use_service_dns' => array(
@@ -46,11 +46,11 @@ class LdapConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         ),
          // LDAP servers
         'servers_host_address' => array(
-            'text',
+            'input',
             'input[name="address[0]"]'
         ),
         'servers_host_port' => array(
-            'text',
+            'input',
             'input[name="port[0]"]'
         ),
         'server_ssl' => array(
@@ -59,7 +59,7 @@ class LdapConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         ),
        //LDAP Information
         'bind_user' => array(
-            'text',
+            'input',
             'input[name="bind_dn"]'
         ),
         'bind_password' => array(
@@ -75,61 +75,61 @@ class LdapConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'select#ldap_template'
         ),
         'search_user_base_dn' => array(
-            'text',
+            'input',
             'input[name="user_base_search"]'
         ),
         'search_group_base_dn' => array(
-            'text',
+            'input',
             'input[name="group_base_search"]'
         ),
         'user_filter' => array(
-            'text',
+            'input',
             'input[name="user_filter"]'
         ),
         'Login attribute' => array(
-            'text',
+            'input',
             'input[name="alias"]'
         ),
         'user_group_attribute' => array(
-            'text',
+            'input',
             'input[name="user_group"]'
         ),
         'user_displayname_attribute' => array(
-            'text',
+            'input',
             'input[name="user_name"]'
         ),
         'user_firstname_attribute' => array(
-            'text',
+            'input',
             'input[name="user_firstname"]'
         ),
         'user_lastname_attribute' => array(
-            'text',
+            'input',
             'input[name="user_lastname"]'
         ),
         'user_email_attribute' => array(
-            'text',
+            'input',
             'input[name="user_email"]'
         ),
         'user_pager_attribute' => array(
-            'text',
+            'input',
             'input[name="user_pager"]'
         ),
        'group_filter' => array(
-            'text',
+            'input',
             'input[name="group_filter"]'
         ),
        'group_attribute' => array(
-            'text',
+            'input',
             'input[name="group_name"]'
         ),
        'group_member_attribute' => array(
-            'text',
+            'input',
             'input[name="group_member"]'
         )
     );
-   
+
    /**
-    * 
+    *
     * @param type $context
     * @param type $visit
     */
@@ -138,7 +138,7 @@ class LdapConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         // Visit page.
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('main.php?p=50113&o=ldap&new=1'); 
+            $this->context->visit('main.php?p=50113&o=ldap&new=1');
         }
 
         // Check that page is valid for this class.

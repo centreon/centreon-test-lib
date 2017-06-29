@@ -17,55 +17,59 @@
 
 namespace Centreon\Test\Behat\Configuration;
 
-class CurrentUserConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
+class ServiceCategoryConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
-    const TAB_INFORMATION = 1;
-    const TAB_NOTIFICATION = 2;
-
-    protected $validField = 'input[name="contact_name"]';
+    protected $validField = 'input[name="sc_name"]';
 
     protected $properties = array(
-        'alias' => array(
-            'input',
-            'input[name="contact_alias"]',
-            self::TAB_INFORMATION
-        ),
         'name' => array(
             'input',
-            'input[name="contact_name"]',
-            self::TAB_INFORMATION
+            'input[name="sc_name"]'
         ),
-        'email' => array(
+        'description' => array(
             'input',
-            'input[name="contact_email"]',
-            self::TAB_INFORMATION
+            'input[name="sc_description"]'
         ),
-        'location' => array(
-            'select2',
-            'select#contact_location',
-            self::TAB_INFORMATION
+        'template' => array(
+            'select',
+            'select#sc_svcTpl'
         ),
-        'autologin_key' => array(
+        'severity' => array(
+            'checkbox',
+            'input[name="sc_type"]'
+        ),
+        'level' => array(
             'input',
-            'input[name="contact_autologin_key"]',
-            self::TAB_INFORMATION
+            'input[name="sc_severity_level"]'
+        ),
+        'icon' => array(
+            'select',
+            'select#icon_id'
+        ),
+        'status' => array(
+            'radio',
+            'input[name="sc_activate[sc_activate]"]'
         )
     );
 
     /**
-     *  Navigate to and/or check that we are on a contact configuration
+     * @var string
+     */
+    //protected $listingClass = '\Centreon\Test\Behat\Configuration\ServiceCategoryConfigurationListingPage';
+
+    /**
+     *  Navigate to and/or check that we are on a service category configuration
      *  page.
      *
      *  @param $context  Centreon context.
-     *  @param $visit    True to navigate to a blank host configuration
-     *                   page.
+     *  @param bool $visit    True to navigate to a blank configuration page.
      */
     public function __construct($context, $visit = TRUE)
     {
         // Visit page.
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('main.php?p=50104&o=c');
+            $this->context->visit('main.php?p=60209&o=a');
         }
 
         // Check that page is valid for this class.

@@ -28,17 +28,17 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     protected $properties = array(
         // Configuration tab.
         'alias' => array(
-            'text',
+            'input',
             'input[name="contact_alias"]',
             self::TAB_CONFIGURATION
         ),
         'name' => array(
-            'text',
+            'input',
             'input[name="contact_name"]',
             self::TAB_CONFIGURATION
         ),
         'email' => array(
-            'text',
+            'input',
             'input[name="contact_email"]',
             self::TAB_CONFIGURATION
         ),
@@ -88,19 +88,19 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_CONFIGURATION
         ),
         'password' => array(
-            'text',
+            'input',
             'input#passwd1',
             self::TAB_AUTHENTICATION,
             false // Do not exist on ldap contact
         ),
         'password2' => array(
-            'text',
+            'input',
             'input#passwd2',
             self::TAB_AUTHENTICATION,
             false // Do not exist on ldap contact
         ),
         'dn' => array(
-            'text',
+            'input',
             'input[name="contact_ldap_dn"]',
             self::TAB_AUTHENTICATION,
             false // Do not exist when no ldap is configured

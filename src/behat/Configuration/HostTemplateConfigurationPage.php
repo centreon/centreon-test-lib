@@ -30,17 +30,17 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
     protected $properties = array(
         // Configuration tab.
         'name' => array(
-            'text',
+            'input',
             'input[name="host_name"]',
             self::CONFIGURATION_TAB
         ),
         'alias' => array(
-            'text',
+            'input',
             'input[name="host_alias"]',
             self::CONFIGURATION_TAB
         ),
         'address' => array(
-            'text',
+            'input',
             'input[name="host_address"]',
             self::CONFIGURATION_TAB
         ),
@@ -65,17 +65,17 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             self::CONFIGURATION_TAB
         ),
         'max_check_attempts' => array(
-            'text',
+            'input',
             'input[name="host_max_check_attempts"]',
             self::CONFIGURATION_TAB
         ),
         'normal_check_interval' => array(
-            'text',
+            'input',
             'input[name="host_check_interval"]',
             self::CONFIGURATION_TAB
         ),
         'retry_check_interval' => array(
-            'text',
+            'input',
             'input[name="host_retry_check_interval"]',
             self::CONFIGURATION_TAB
         ),
@@ -106,7 +106,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             self::NOTIFICATION_TAB
         ),
         'notification_interval' => array(
-            'text',
+            'input',
             'input[name="host_notification_interval"]',
             self::NOTIFICATION_TAB
         ),
@@ -116,12 +116,12 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             self::NOTIFICATION_TAB
         ),
         'first_notification_delay' => array(
-            'text',
+            'input',
             'input[name="host_first_notification_delay"]',
             self::NOTIFICATION_TAB
         ),
         'recovery_notification_delay' => array(
-            'text',
+            'input',
             'input[name="host_recovery_notification_delay"]',
             self::NOTIFICATION_TAB
         ),
@@ -138,7 +138,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
         ),
         // Data tab.
         'acknowledgement_timeout' => array(
-            'text',
+            'input',
             'input[name="host_acknowledgement_timeout"]',
             self::DATA_TAB
         ),

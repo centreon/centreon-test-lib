@@ -26,12 +26,12 @@ class ACLGroupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 
     protected $properties = array(
         'group_name' => array(
-            'text',
+            'input',
             'input[name="acl_group_name"]',
             self::GROUP_TAB
         ),
         'group_alias' => array(
-            'text',
+            'input',
             'input[name="acl_group_alias"]',
             self::GROUP_TAB
         ),

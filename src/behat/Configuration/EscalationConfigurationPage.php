@@ -28,27 +28,27 @@ class EscalationConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     protected $properties = array(
         // Configuration tab.
         'name' => array(
-            'text',
+            'input',
             'input[name="esc_name"]',
             self::TAB_INFORMATIONS
         ),
         'alias' => array(
-            'text',
+            'input',
             'input[name="esc_alias"]',
             self::TAB_INFORMATIONS
         ),
         'first_notification' => array(
-            'text',
+            'input',
             'input[name="first_notification"]',
             self::TAB_INFORMATIONS
         ),
         'last_notification' => array(
-            'text',
+            'input',
             'input[name="last_notification"]',
             self::TAB_INFORMATIONS
         ),
         'notification_interval' => array(
-            'text',
+            'input',
             'input[name="notification_interval"]',
             self::TAB_INFORMATIONS
         ),
@@ -98,7 +98,7 @@ class EscalationConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_INFORMATIONS
         ),
         'comment' => array(
-            'text',
+            'input',
             'input[name="esc_comment"]',
             self::TAB_INFORMATIONS
         ),

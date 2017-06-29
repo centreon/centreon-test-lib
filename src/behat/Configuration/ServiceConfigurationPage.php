@@ -35,7 +35,7 @@ class ServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::GENERAL_TAB
         ),
         'description' => array(
-            'text',
+            'input',
             'input[name="service_description"]',
             self::GENERAL_TAB
         ),
@@ -55,17 +55,17 @@ class ServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::GENERAL_TAB
         ),
         'max_check_attempts' => array(
-            'text',
+            'input',
             'input[name="service_max_check_attempts"]',
             self::GENERAL_TAB
         ),
         'normal_check_interval' => array(
-            'text',
+            'input',
             'input[name="service_normal_check_interval"]',
             self::GENERAL_TAB
         ),
         'retry_check_interval' => array(
-            'text',
+            'input',
             'input[name="service_retry_check_interval"]',
             self::GENERAL_TAB
         ),
@@ -86,7 +86,7 @@ class ServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::NOTIFICATIONS_TAB
         ),
         'notification_interval' => array(
-            'text',
+            'input',
             'input[name="service_notification_interval"]',
             self::NOTIFICATIONS_TAB
         ),
@@ -106,12 +106,12 @@ class ServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::NOTIFICATIONS_TAB
         ),
         'first_notification_delay' => array(
-            'text',
+            'input',
             'input[name="service_first_notification_delay"]',
             self::NOTIFICATIONS_TAB
         ),
         'recovery_notification_delay' => array(
-            'text',
+            'input',
             'input[name="service_recovery_notification_delay"]',
             self::NOTIFICATIONS_TAB
         ),
@@ -122,7 +122,7 @@ class ServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         ),
         // Data tab.
         'acknowledgement_timeout' => array(
-            'text',
+            'input',
             'input[name="service_acknowledgement_timeout"]',
             self::DATA_TAB
         )

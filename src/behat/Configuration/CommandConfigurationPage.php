@@ -28,11 +28,11 @@ class CommandConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 
     protected $properties = array(
         'command_name' => array(
-            'text',
+            'input',
             'input[name="command_name"]'
         ),
         'command_line' => array(
-            'text',
+            'input',
             'textarea[name="command_line"]'
         )
     );

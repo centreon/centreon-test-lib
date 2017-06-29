@@ -28,12 +28,12 @@ class ServiceTemplateConfigurationPage extends \Centreon\Test\Behat\Configuratio
     protected $properties = array(
         // General tab.
         'description' => array(
-            'text',
+            'input',
             'input[name="service_description"]',
             self::TAB_CONFIGURATION
         ),
         'alias' => array(
-            'text',
+            'input',
             'input[name="service_alias"]',
             self::TAB_CONFIGURATION
         )

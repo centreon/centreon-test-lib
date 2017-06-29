@@ -23,7 +23,7 @@ class CommentConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 
     protected $properties = array(
         'comment' => array(
-            'text',
+            'input',
             'textarea[name="comment"]'
         )
     );
