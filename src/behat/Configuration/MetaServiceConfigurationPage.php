@@ -23,19 +23,19 @@ class MetaServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
 
     protected $properties = array(
         'name' => array(
-            'text',
+            'input',
             'input[name="meta_name"]'
         ),
         'output_format' => array(
-            'text',
+            'input',
             'input[name="meta_display"]'
         ),
         'warning_level' => array(
-            'text',
+            'input',
             'input[name="warning"]'
         ),
         'critical_level' => array(
-            'text',
+            'input',
             'input[name="critical"]'
         ),
         'check_period' => array(
@@ -43,15 +43,15 @@ class MetaServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
             'select#check_period'
         ),
         'max_check_attempts' => array(
-            'text',
+            'input',
             'input[name="max_check_attempts"]'
         ),
         'normal_check_interval' => array(
-            'text',
+            'input',
             'input[name="normal_check_interval"]'
         ),
         'retry_check_interval' => array(
-            'text',
+            'input',
             'input[name="retry_check_interval"]'
         )
     );

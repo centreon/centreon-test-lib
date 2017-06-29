@@ -33,7 +33,7 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
     **
     ** protected $properties = array(
     **     'alias' => array(
-    **         'text',
+    **         'input',
     **         'input[name="contact_alias"]',
     **         self::TAB_CONFIGURATION
     **     ),
@@ -48,7 +48,7 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
     **   - checkbox       = input[type="checkbox"]
     **   - custom         = custom type, get$locator() and set$locator() methods
     **                      must be defined
-    **   - input          = input
+    **   - input          = input, textarea, ...
     **   - radio          = input[type="radio"]
     **   - select         = select
     **   - select2        = select2

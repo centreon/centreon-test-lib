@@ -22,7 +22,7 @@ class PollerConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     protected $validField = 'input[name="ns_ip_address"]';
 
     protected $properties = array(
-        'name' => array('text', 'input[name="name"]')
+        'name' => array('input', 'input[name="name"]')
     );
 
     /**

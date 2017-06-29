@@ -24,19 +24,19 @@ class ParametersCentreonUiPage extends \Centreon\Test\Behat\ConfigurationPage
     protected $properties = array(
         // Configuration tab.
         'directory' => array(
-            'text',
+            'input',
             'input[name="oreon_path"]'
         ),
         'web_directory' => array(
-            'text',
+            'input',
             'input[name="oreon_web_path"]'
         ),
         'web_base_root' => array(
-            'text',
+            'input',
             'input[name="centreon_web_base_root"]'
         ),
         'default_limit_page' => array(
-            'text',
+            'input',
             'input[name="maxViewConfiguration"]'
         ),
         'monitoring_limit_page' => array(
@@ -44,23 +44,23 @@ class ParametersCentreonUiPage extends \Centreon\Test\Behat\ConfigurationPage
             'select[name="maxViewMonitoring"]'
         ),
         'graph_per_page' => array(
-            'text',
+            'input',
             'input[name="maxGraphPerformances"]'
         ),
         'elements_loaded' => array(
-            'text',
+            'input',
             'input[name="selectPaginationSize"]'
         ),
         'sessions_time' => array(
-            'text',
+            'input',
             'input[name="session_expire"]'
         ),
         'refresh_statistics' => array(
-            'text',
+            'input',
             'input[name="AjaxTimeReloadStatistic"]'
         ),
         'refresh_monitoring' => array(
-            'text',
+            'input',
             'input[name="AjaxTimeReloadMonitoring"]'
         ),
         'display_sort_by' => array(
@@ -80,19 +80,19 @@ class ParametersCentreonUiPage extends \Centreon\Test\Behat\ConfigurationPage
             'select[name="problem_sort_order"]'
         ),
         'proxy_url' => array(
-            'text',
+            'input',
             'input[name="proxy_url"]'
         ),
         'proxy_port' => array(
-            'text',
+            'input',
             'input[name="proxy_port"]'
         ),
         'proxy_user' => array(
-            'text',
+            'input',
             'input[name="proxy_user"]'
         ),
         'proxy_password' => array(
-            'text',
+            'input',
             'input[name="proxy_password"]'
         ),
         'enable autologin' => array(

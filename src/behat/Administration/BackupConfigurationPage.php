@@ -38,11 +38,11 @@ class BackupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'input[name="backup_enabled[backup_enabled]"]'
         ),
         'backup_directory' => array(
-            'text',
+            'input',
             'input[name="backup_backup_directory"]'
         ),
         'temp_directory' => array(
-            'text',
+            'input',
             'input[name="backup_tmp_directory"]'
         ),
         'backup_centreon_db' => array(
@@ -66,7 +66,7 @@ class BackupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'PartialBackupDays'
         ),
         'backup_retention' => array(
-            'text',
+            'input',
             'input[name="backup_retention"]'
         ),
         'backup_configuration_files' => array(
@@ -74,11 +74,11 @@ class BackupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'input[name="backup_configuration_files"]'
         ),
         'mysql_configuration_file' => array(
-            'text',
+            'input',
             'input[name="backup_mysql_conf"]'
         ),
         'zend_configuration_file' => array(
-            'text',
+            'input',
             'input[name="backup_zend_conf"]'
         )
     );

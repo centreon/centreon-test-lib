@@ -27,47 +27,47 @@ class TimeperiodConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     protected $properties = array(
         // Configuration tab.
         'name' => array(
-            'text',
+            'input',
             'input[name="tp_name"]',
             self::TAB_CONFIGURATION
         ),
         'alias' => array(
-            'text',
+            'input',
             'input[name="tp_alias"]',
             self::TAB_CONFIGURATION
         ),
         'sunday' => array(
-            'text',
+            'input',
             'input[name="tp_sunday"]',
             self::TAB_CONFIGURATION
         ),
         'monday' => array(
-            'text',
+            'input',
             'input[name="tp_monday"]',
             self::TAB_CONFIGURATION
         ),
         'tuesday' => array(
-            'text',
+            'input',
             'input[name="tp_tuesday"]',
             self::TAB_CONFIGURATION
         ),
         'wednesday' => array(
-            'text',
+            'input',
             'input[name="tp_wednesday"]',
             self::TAB_CONFIGURATION
         ),
         'thursday' => array(
-            'text',
+            'input',
             'input[name="tp_thursday"]',
             self::TAB_CONFIGURATION
         ),
         'friday' => array(
-            'text',
+            'input',
             'input[name="tp_friday"]',
             self::TAB_CONFIGURATION
         ),
         'saturday' => array(
-            'text',
+            'input',
             'input[name="tp_saturday"]',
             self::TAB_CONFIGURATION
         ),

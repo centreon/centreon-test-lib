@@ -26,17 +26,17 @@ class CurrentUserConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
 
     protected $properties = array(
         'alias' => array(
-            'text',
+            'input',
             'input[name="contact_alias"]',
             self::TAB_INFORMATION
         ),
         'name' => array(
-            'text',
+            'input',
             'input[name="contact_name"]',
             self::TAB_INFORMATION
         ),
         'email' => array(
-            'text',
+            'input',
             'input[name="contact_email"]',
             self::TAB_INFORMATION
         ),
@@ -46,7 +46,7 @@ class CurrentUserConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
             self::TAB_INFORMATION
         ),
         'autologin_key' => array(
-            'text',
+            'input',
             'input[name="contact_autologin_key"]',
             self::TAB_INFORMATION
         )

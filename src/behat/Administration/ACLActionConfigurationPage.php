@@ -23,11 +23,11 @@ class ACLActionConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 
     protected $properties = array(
         'acl_name' => array(
-            'text',
+            'input',
             'input[name="acl_action_name"]'
         ),
         'acl_alias' => array(
-            'text',
+            'input',
             'input[name="acl_action_description"]'
         ),
         'acl_groups' => array(

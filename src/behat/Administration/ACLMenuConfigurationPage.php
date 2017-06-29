@@ -23,11 +23,11 @@ class ACLMenuConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 
     protected $properties = array(
         'acl_name' => array(
-            'text',
+            'input',
             'input[name="acl_topo_name"]'
         ),
         'acl_alias' => array(
-            'text',
+            'input',
             'input[name="acl_topo_alias"]'
         ),
         'acl_groups' => array(

@@ -23,11 +23,11 @@ class ContactGroupsConfigurationPage extends \Centreon\Test\Behat\ConfigurationP
 
     protected $properties = array(
         'name' => array(
-            'text',
+            'input',
             'input[name="cg_name"]'
         ),
         'alias' => array(
-            'text',
+            'input',
             'input[name="cg_alias"]'
         ),
         'contacts' => array(
@@ -43,7 +43,7 @@ class ContactGroupsConfigurationPage extends \Centreon\Test\Behat\ConfigurationP
             'input[name="cg_activate[cg_activate]"]'
         ),
         'comments' => array(
-            'text',
+            'input',
             'textarea[name="cg_comment"]'
         )
     );
