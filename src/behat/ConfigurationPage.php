@@ -23,6 +23,39 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
 
     protected $validField;
 
+    /*
+    ** $properties should be an array of elements that can be retrieved (getProperties)
+    ** and set (setProperties). This associative array associates a property name
+    ** (string) to an array containing the property meta-data, composed of three
+    ** elements in the following order: property type, property locator and tab ID.
+    **
+    ** Here is an example of a fake but properly constructed properties array.
+    **
+    ** protected $properties = array(
+    **     'alias' => array(
+    **         'text',
+    **         'input[name="contact_alias"]',
+    **         self::TAB_CONFIGURATION
+    **     ),
+    **     'host_notify_on_down' => array(
+    **         'checkbox',
+    **         'input[name="contact_hostNotifOpts[r]"]',
+    **         self::TAB_NOTIFICATION
+    **
+    ** Available types are as follow.
+    **
+    **   - advmultiselect = advanced multi-select, specific to Centreon
+    **   - checkbox       = input[type="checkbox"]
+    **   - custom         = custom type, get$locator() and set$locator() methods
+    **                      must be defined
+    **   - input          = input
+    **   - radio          = input[type="radio"]
+    **   - select         = select
+    **   - select2        = select2
+    **
+    ** Proper field type is required for the getProperties() and setProperties()
+    ** methods to work properly, as navigator control can be tricky.
+    */
     protected $properties = array();
 
     /**
@@ -69,7 +102,7 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
         foreach ($properties as $property => $value) {
             // Check that property exist.
             if (!array_key_exists($property, $this->properties)) {
-                throw new \Exception('Unknown host property ' . $property . '.');
+                throw new \Exception('Unknown property ' . $property . '.');
             }
 
             // Set property meta-data in variables.
@@ -85,9 +118,8 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
 
             // Set property with its value.
             switch ($propertyType) {
-                case 'custom':
-                    $setter = 'set' . $propertyLocator;
-                    $this->$setter($value);
+                case 'advmultiselect':
+                    $this->context->selectInAdvMultiSelect($propertyLocator, $value);
                     break;
                 case 'checkbox':
                     if ($value) {
@@ -95,6 +127,13 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     } else {
                         $this->context->assertFind('css', $propertyLocator)->uncheck();
                     }
+                    break;
+                case 'custom':
+                    $setter = 'set' . $propertyLocator;
+                    $this->$setter($value);
+                    break;
+                case 'input':
+                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
                     break;
                 case 'radio':
                     $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
@@ -110,16 +149,10 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                         $this->context->selectToSelectTwo($propertyLocator, $element);
                     }
                     break;
-                case 'advmultiselect':
-                    $this->context->selectInAdvMultiSelect($propertyLocator, $value);
-                    break;
-                case 'text':
-                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
-                    break;
                 default:
                     throw new \Exception(
                         'Unknown property type ' . $propertyType
-                        . ' found while setting host property ' . $property . '.'
+                        . ' found while setting property ' . $property . '.'
                     );
             }
         }
@@ -153,23 +186,24 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
 
         try {
             switch ($propertyType) {
+                // advmultiselect not yet handled
                 case 'checkbox':
+                case 'input':
                 case 'radio':
                 case 'select':
                     $property = $this->context->assertFind('css', $propertyLocator)->getValue();
-                    break;
-                case 'select2':
-                case 'text':
-                    $property = $this->context->assertFind('css', $propertyLocator)->getText();
                     break;
                 case 'custom':
                     $methodName = 'get' . $propertyLocator;
                     $property = $this->$methodName();
                     break;
+                case 'select2':
+                    $property = $this->context->assertFind('css', $propertyLocator)->getText();
+                    break;
                 default:
                     throw new \Exception(
                         'Unknown property type ' . $propertyType
-                        . ' found while retrieving host properties.'
+                        . ' found while retrieving properties.'
                     );
             }
         } catch (\Exception $e) {
@@ -192,7 +226,7 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
     }
 
     /**
-     *  Save the current host configuration page.
+     *  Save the current configuration page.
      */
     public function save()
     {
