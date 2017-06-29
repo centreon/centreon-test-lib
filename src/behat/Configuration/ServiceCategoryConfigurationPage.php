@@ -23,11 +23,11 @@ class ServiceCategoryConfigurationPage extends \Centreon\Test\Behat\Configuratio
 
     protected $properties = array(
         'name' => array(
-            'text',
+            'input',
             'input[name="sc_name"]'
         ),
         'description' => array(
-            'text',
+            'input',
             'input[name="sc_description"]'
         ),
         'template' => array(
@@ -39,7 +39,7 @@ class ServiceCategoryConfigurationPage extends \Centreon\Test\Behat\Configuratio
             'input[name="sc_type"]'
         ),
         'level' => array(
-            'text',
+            'input',
             'input[name="sc_severity_level"]'
         ),
         'icon' => array(
