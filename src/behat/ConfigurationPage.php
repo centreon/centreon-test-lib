@@ -154,13 +154,13 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
         try {
             switch ($propertyType) {
                 case 'checkbox':
-                case 'select':
-                case 'select2':
-                    $property = $this->context->assertFind('css', $propertyLocator)->getText();
-                    break;
                 case 'radio':
-                case 'text':
+                case 'select':
                     $property = $this->context->assertFind('css', $propertyLocator)->getValue();
+                    break;
+                case 'select2':
+                case 'text':
+                    $property = $this->context->assertFind('css', $propertyLocator)->getText();
                     break;
                 case 'custom':
                     $methodName = 'get' . $propertyLocator;
