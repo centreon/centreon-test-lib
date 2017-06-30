@@ -214,7 +214,6 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         }
         $ruleArray['string'] = $rule->getValue();
         $ruleArray['regexp'] = $this->context->getSession()->getPage()->findField('regexp[' . $i . ']')->getValue();
-        //$ruleArray['status'] = $this->context->assertFind('css', 'rulestatus[' . $i . ']' . ' option:selected')->getText();
         $ruleArray['status'] = $this->context->assertFind('css', 'select#rulestatus_' . $i . ' option:selected')->getText();
         $ruleArray['severity'] = $this->context->assertFind('css', 'select#ruleseverity_' . $i . ' option:selected')->getText();
         return $ruleArray;
