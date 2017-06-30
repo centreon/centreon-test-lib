@@ -67,24 +67,9 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'select[name="traps_advanced_treatment_default"]',
             self::TAB_MAIN
         ),
-        'rule_string' => array(
-            'text',
-            'input[name="rule[0]"]',
-            self::TAB_MAIN
-        ),
-        'rule_regexp' => array(
-            'text',
-            'input#regexp_0',
-            self::TAB_MAIN
-        ),
-        'rule_status' => array(
-            'select',
-            'select#rulestatus_0',
-            self::TAB_MAIN
-        ),
-        'rule_severity' => array(
-            'select',
-            'select[name="ruleseverity[0]"]',
+        'rule' => array(
+            'custom',
+            'Rule',
             self::TAB_MAIN
         ),
         'submit' => array(
@@ -214,6 +199,71 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             },
             'Current page does not match class ' . __CLASS__
         );
+    }
+
+    /**
+     *get rule array
+     *
+     *@return rule array
+     */
+    protected function getRuleArray($i)
+    {
+        $rule = $this->context->getSession()->getPage()->findField('rule[' . $i . ']');
+        if (is_null($rule)) {
+            return null;
+        }
+        $ruleArray['string'] = $rule->getValue();
+        $ruleArray['regexp'] = $this->context->getSession()->getPage()->findField('regexp[' . $i . ']')->getValue();
+        //$ruleArray['status'] = $this->context->assertFind('css', 'rulestatus[' . $i . ']' . ' option:selected')->getText();
+        $ruleArray['status'] = $this->context->assertFind('css', 'select#rulestatus_' . $i . ' option:selected')->getText();
+        $ruleArray['severity'] = $this->context->assertFind('css', 'select#ruleseverity_' . $i . ' option:selected')->getText();
+        return $ruleArray;
+    }
+
+    /**
+     *get rule
+     *
+     *@return rule
+     */
+    protected function getRule()
+    {
+        $rule = array();
+        $i = 0;
+        while (true) {
+            if (is_null($this->getRuleArray($i))) {
+                break;
+            }
+            $rule[] = $this->getRuleArray($i);
+            ++$i;
+        }
+        return $rule;
+    }
+
+    /**
+     * set rule
+     */
+    protected function setRule($ruleArray)
+    {
+        $currentRule = $this->getRule();
+        $i = count($currentRule);
+        $b = FALSE;
+        if ($i == 1) {
+            if ($this->context->assertFindField('rule[0]')->getValue() == '@OUTPUT@') {
+                $i--;
+                $b = TRUE;
+            }
+        }
+        foreach ($ruleArray as $array) {
+            if (!$b) {
+                $this->context->assertFind('css',  '#matchingrules_add span')->click();
+            }
+            $this->context->assertFindField('rule['. $i . ']')->setValue($array['string']);
+            $this->context->assertFindField('regexp[' . $i . ']')->setValue($array['regexp']);
+            $this->context->selectInList('select#rulestatus_'  . $i, $array['status']);
+            $this->context->selectInList('select#ruleseverity_' . $i, $array['severity']);
+            $i++;
+            $b = FALSE;
+        }
     }
 
     /**
