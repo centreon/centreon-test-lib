@@ -28,12 +28,12 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     protected $properties = array(
         //Main tab.
         'name' => array(
-            'text',
+            'input',
             'input[name="traps_name"]',
             self::TAB_MAIN
         ),
         'oid' => array(
-            'text',
+            'input',
             'input[name="traps_oid"]',
             self::TAB_MAIN
         ),
@@ -43,7 +43,7 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_MAIN
         ),
         'output' => array(
-            'text',
+            'input',
             'input[name="traps_args"]',
             self::TAB_MAIN
         ),
@@ -88,12 +88,12 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_MAIN
         ),
         'special_command' => array(
-            'text',
+            'input',
             'input[name="traps_execution_command"]',
             self::TAB_MAIN
         ),
         'comments' => array(
-            'text',
+            'input',
             'textarea[name="traps_comments"]',
             self::TAB_MAIN
         ),
@@ -115,12 +115,12 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_ADVANCED
         ),
         'routing_definition' => array(
-            'text',
+            'input',
             'input[name="traps_routing_value"]',
             self::TAB_ADVANCED
         ),
         'filter_services' => array(
-            'text',
+            'input',
             'input[name="traps_routing_filter_services"]',
             self::TAB_ADVANCED
         ),
@@ -135,12 +135,12 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_ADVANCED
         ),
         'timeout' => array(
-            'text',
+            'input',
             'input[name="traps_timeout"]',
             self::TAB_ADVANCED
         ),
         'execution_interval' => array(
-            'text',
+            'input',
             'input[name="traps_exec_interval"]',
             self::TAB_ADVANCED
         ),
@@ -160,12 +160,12 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_ADVANCED
         ),
         'output_transform' => array(
-            'text',
+            'input',
             'input[name="traps_output_transform"]',
             self::TAB_ADVANCED
         ),
         'custom_code' => array(
-            'text',
+            'input',
             'textarea[name="traps_customcode"]',
             self::TAB_ADVANCED
         )
