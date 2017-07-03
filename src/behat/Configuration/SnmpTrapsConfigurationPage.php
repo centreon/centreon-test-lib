@@ -202,31 +202,6 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     }
 
     /**
-     *get rule array
-     *
-     *@return rule array
-     */
-    protected function getRuleArray($i)
-    {
-        $rule = $this->context->getSession()->getPage()->findField('rule[' . $i . ']');
-        if (is_null($rule)) {
-            return null;
-        }
-        $ruleArray['string'] = $rule->getValue();
-        $ruleArray['regexp'] = $this->context->getSession()->getPage()->findField('regexp[' . $i . ']')->getValue();
-        if ($this->context->getSession()->getPage()->findField('rulestatus[' . $i . ']')->getValue() != 0) {
-            $ruleArray['status'] = $this->context->assertFind('css', 'select#rulestatus_' . $i . ' option:selected')->getText();
-        }
-        else {
-            $ruleArray['status'] = 'OK';
-        }
-        if ($this->context->getSession()->getPage()->findField('ruleseverity[' . $i . ']')->getValue() != 0) {
-            $ruleArray['severity'] = $this->context->assertFind('css', 'select#ruleseverity_' . $i . ' option:selected')->getText();
-        }
-        return $ruleArray;
-    }
-
-    /**
      *get rule
      *
      *@return rule
