@@ -214,11 +214,13 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         }
         $ruleArray['string'] = $rule->getValue();
         $ruleArray['regexp'] = $this->context->getSession()->getPage()->findField('regexp[' . $i . ']')->getValue();
-        //var_dump($this->context->getSession()->getPage()->findField('#rulestatus_' . $i)->getValue());
-        if (!is_null($this->context->getSession()->getPage()->findField('#rulestatus_' . $i))) {
+        if ($this->context->getSession()->getPage()->findField('rulestatus[' . $i . ']')->getValue() != 0) {
             $ruleArray['status'] = $this->context->assertFind('css', 'select#rulestatus_' . $i . ' option:selected')->getText();
         }
-        if (!is_null($this->context->getSession()->getPage()->findField('#ruleseverity_' . $i))) {
+        else {
+            $ruleArray['status'] = 'OK';
+        }
+        if ($this->context->getSession()->getPage()->findField('ruleseverity[' . $i . ']')->getValue() != 0) {
             $ruleArray['severity'] = $this->context->assertFind('css', 'select#ruleseverity_' . $i . ' option:selected')->getText();
         }
         return $ruleArray;
@@ -231,16 +233,29 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
      */
     protected function getRule()
     {
-        $rule = array();
+        $rules = array();
         $i = 0;
+        $lines = $this->context->getSession()->getPage()->findAll('css', '#matchingrules');
         while (true) {
-            if (is_null($this->getRuleArray($i))) {
+            if (is_null($this->context->getSession()->getPage()->findField('rule[' . $i . ']'))) {
                 break;
             }
-            $rule[] = $this->getRuleArray($i);
+            $rule = array();
+            $rule['string'] = $this->context->getSession()->getPage()->findField('rule[' . $i . ']')->getValue();
+            $rule['regexp'] = $this->context->getSession()->getPage()->findField('regexp[' . $i . ']')->getValue();
+            if ($this->context->getSession()->getPage()->findField('rulestatus[' . $i . ']')->getValue() != 0) {
+                $rule['status'] = $this->context->assertFind('css', 'select#rulestatus_' . $i . ' option:selected')->getText();
+            }
+            else {
+                $rule['status'] = 'OK';
+            }
+            if ($this->context->getSession()->getPage()->findField('ruleseverity[' . $i . ']')->getValue() != 0) {
+                $rule['severity'] = $this->context->assertFind('css', 'select#ruleseverity_' . $i . ' option:selected')->getText();
+            }
             ++$i;
+            $rules[] = $rule;
         }
-        return $rule;
+        return $rules;
     }
 
     /**
@@ -250,11 +265,11 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     {
         $currentRule = $this->getRule();
         $i = count($currentRule);
-        $b = FALSE;
+        $b = false;
         if ($i == 1) {
             if ($this->context->assertFindField('rule[0]')->getValue() == '@OUTPUT@') {
                 $i--;
-                $b = TRUE;
+                $b = true;
             }
         }
         foreach ($ruleArray as $array) {
@@ -266,7 +281,7 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             $this->context->selectInList('select#rulestatus_'  . $i, $array['status']);
             $this->context->selectInList('select#ruleseverity_' . $i, $array['severity']);
             $i++;
-            $b = FALSE;
+            $b = false;
         }
     }
 
