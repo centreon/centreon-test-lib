@@ -28,12 +28,12 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     protected $properties = array(
         //Main tab.
         'name' => array(
-            'text',
+            'input',
             'input[name="traps_name"]',
             self::TAB_MAIN
         ),
         'oid' => array(
-            'text',
+            'input',
             'input[name="traps_oid"]',
             self::TAB_MAIN
         ),
@@ -43,7 +43,7 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_MAIN
         ),
         'output' => array(
-            'text',
+            'input',
             'input[name="traps_args"]',
             self::TAB_MAIN
         ),
@@ -88,12 +88,12 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_MAIN
         ),
         'special_command' => array(
-            'text',
+            'input',
             'input[name="traps_execution_command"]',
             self::TAB_MAIN
         ),
         'comments' => array(
-            'text',
+            'input',
             'textarea[name="traps_comments"]',
             self::TAB_MAIN
         ),
@@ -115,12 +115,12 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_ADVANCED
         ),
         'routing_definition' => array(
-            'text',
+            'input',
             'input[name="traps_routing_value"]',
             self::TAB_ADVANCED
         ),
         'filter_services' => array(
-            'text',
+            'input',
             'input[name="traps_routing_filter_services"]',
             self::TAB_ADVANCED
         ),
@@ -135,12 +135,12 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_ADVANCED
         ),
         'timeout' => array(
-            'text',
+            'input',
             'input[name="traps_timeout"]',
             self::TAB_ADVANCED
         ),
         'execution_interval' => array(
-            'text',
+            'input',
             'input[name="traps_exec_interval"]',
             self::TAB_ADVANCED
         ),
@@ -160,12 +160,12 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_ADVANCED
         ),
         'output_transform' => array(
-            'text',
+            'input',
             'input[name="traps_output_transform"]',
             self::TAB_ADVANCED
         ),
         'custom_code' => array(
-            'text',
+            'input',
             'textarea[name="traps_customcode"]',
             self::TAB_ADVANCED
         )
@@ -202,45 +202,32 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     }
 
     /**
-     *get rule array
-     *
-     *@return rule array
-     */
-    protected function getRuleArray($i)
-    {
-        $rule = $this->context->getSession()->getPage()->findField('rule[' . $i . ']');
-        if (is_null($rule)) {
-            return null;
-        }
-        $ruleArray['string'] = $rule->getValue();
-        $ruleArray['regexp'] = $this->context->getSession()->getPage()->findField('regexp[' . $i . ']')->getValue();
-        //var_dump($this->context->getSession()->getPage()->findField('#rulestatus_' . $i)->getValue());
-        if (!is_null($this->context->getSession()->getPage()->findField('#rulestatus_' . $i))) {
-            $ruleArray['status'] = $this->context->assertFind('css', 'select#rulestatus_' . $i . ' option:selected')->getText();
-        }
-        if (!is_null($this->context->getSession()->getPage()->findField('#ruleseverity_' . $i))) {
-            $ruleArray['severity'] = $this->context->assertFind('css', 'select#ruleseverity_' . $i . ' option:selected')->getText();
-        }
-        return $ruleArray;
-    }
-
-    /**
      *get rule
      *
      *@return rule
      */
     protected function getRule()
     {
-        $rule = array();
+        $rules = array();
         $i = 0;
-        while (true) {
-            if (is_null($this->getRuleArray($i))) {
-                break;
+        $lines = $this->context->getSession()->getPage()->findAll('css', '[id^="matchingrules_template"] div');
+        foreach ($lines as $line) {
+            $rule = array();
+            $rule['string'] = $this->context->assertFindIn($line, 'css', 'input#rule_' . $i)->getValue();
+            $rule['regexp'] = $this->context->assertFindIn($line, 'css', 'input#regexp_' . $i)->getValue();
+            if ($this->context->assertFindIn($line, 'css', 'select#rulestatus_' . $i)->getValue() != 0) {
+                $rule['status'] = $this->context->assertFindIn($line, 'css', 'select#rulestatus_' . $i . ' option:selected')->getText();
             }
-            $rule[] = $this->getRuleArray($i);
+            else {
+                $rule['status'] = 'OK';
+            }
+            if ($this->context->assertFindIn($line, 'css', 'select#ruleseverity_' . $i)->getValue() != 0) {
+                $rule['severity'] = $this->context->assertFindIn($line, 'css', 'select#ruleseverity_' . $i . ' option:selected')->getText();
+            }
             ++$i;
+            $rules[] = $rule;
         }
-        return $rule;
+        return $rules;
     }
 
     /**
@@ -250,11 +237,11 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     {
         $currentRule = $this->getRule();
         $i = count($currentRule);
-        $b = FALSE;
+        $b = false;
         if ($i == 1) {
             if ($this->context->assertFindField('rule[0]')->getValue() == '@OUTPUT@') {
                 $i--;
-                $b = TRUE;
+                $b = true;
             }
         }
         foreach ($ruleArray as $array) {
@@ -266,7 +253,7 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             $this->context->selectInList('select#rulestatus_'  . $i, $array['status']);
             $this->context->selectInList('select#ruleseverity_' . $i, $array['severity']);
             $i++;
-            $b = FALSE;
+            $b = false;
         }
     }
 
