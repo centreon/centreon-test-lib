@@ -196,11 +196,16 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                         'css',
                         'select[name="' . $propertyLocator . '-t[]"] option'
                     );
-                    $property = array_map(
+                    $property = array_filter(
+                        array_map(
+                            function ($option) {
+                                return trim($option->getText());
+                            },
+                            $options
+                        ),
                         function ($option) {
-                            return $option->getText();
-                        },
-                        $options
+                            return !empty($option);
+                        }
                     );
                     break;
                 case 'select':
