@@ -32,7 +32,7 @@ class ACLActionConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         ),
         'acl_groups' => array(
             'advmultiselect',
-            'select[name="acl_groups'
+            'acl_groups'
         ),
         'action_top_counter_overview' => array(
             'checkbox',

@@ -40,7 +40,7 @@ class ACLResourceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
         ),
         'acl_groups' => array(
             'advmultiselect',
-            'select[name="acl_groups',
+            'acl_groups',
             self::GENERAL_TAB
         ),
         'all_hosts' => array(
