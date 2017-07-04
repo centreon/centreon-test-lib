@@ -28,12 +28,12 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     protected $properties = array(
         //Main tab.
         'name' => array(
-            'text',
+            'input',
             'input[name="traps_name"]',
             self::TAB_MAIN
         ),
         'oid' => array(
-            'text',
+            'input',
             'input[name="traps_oid"]',
             self::TAB_MAIN
         ),
@@ -43,7 +43,7 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_MAIN
         ),
         'output' => array(
-            'text',
+            'input',
             'input[name="traps_args"]',
             self::TAB_MAIN
         ),
@@ -88,12 +88,12 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_MAIN
         ),
         'special_command' => array(
-            'text',
+            'input',
             'input[name="traps_execution_command"]',
             self::TAB_MAIN
         ),
         'comments' => array(
-            'text',
+            'input',
             'textarea[name="traps_comments"]',
             self::TAB_MAIN
         ),
@@ -115,12 +115,12 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_ADVANCED
         ),
         'routing_definition' => array(
-            'text',
+            'input',
             'input[name="traps_routing_value"]',
             self::TAB_ADVANCED
         ),
         'filter_services' => array(
-            'text',
+            'input',
             'input[name="traps_routing_filter_services"]',
             self::TAB_ADVANCED
         ),
@@ -135,12 +135,12 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_ADVANCED
         ),
         'timeout' => array(
-            'text',
+            'input',
             'input[name="traps_timeout"]',
             self::TAB_ADVANCED
         ),
         'execution_interval' => array(
-            'text',
+            'input',
             'input[name="traps_exec_interval"]',
             self::TAB_ADVANCED
         ),
@@ -160,12 +160,12 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_ADVANCED
         ),
         'output_transform' => array(
-            'text',
+            'input',
             'input[name="traps_output_transform"]',
             self::TAB_ADVANCED
         ),
         'custom_code' => array(
-            'text',
+            'input',
             'textarea[name="traps_customcode"]',
             self::TAB_ADVANCED
         )
@@ -210,22 +210,19 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     {
         $rules = array();
         $i = 0;
-        $lines = $this->context->getSession()->getPage()->findAll('css', '#matchingrules');
-        while (true) {
-            if (is_null($this->context->getSession()->getPage()->findField('rule[' . $i . ']'))) {
-                break;
-            }
+        $lines = $this->context->getSession()->getPage()->findAll('css', '[id^="matchingrules_template"] div');
+        foreach ($lines as $line) {
             $rule = array();
-            $rule['string'] = $this->context->getSession()->getPage()->findField('rule[' . $i . ']')->getValue();
-            $rule['regexp'] = $this->context->getSession()->getPage()->findField('regexp[' . $i . ']')->getValue();
-            if ($this->context->getSession()->getPage()->findField('rulestatus[' . $i . ']')->getValue() != 0) {
-                $rule['status'] = $this->context->assertFind('css', 'select#rulestatus_' . $i . ' option:selected')->getText();
+            $rule['string'] = $this->context->assertFindIn($line, 'css', 'input#rule_' . $i)->getValue();
+            $rule['regexp'] = $this->context->assertFindIn($line, 'css', 'input#regexp_' . $i)->getValue();
+            if ($this->context->assertFindIn($line, 'css', 'select#rulestatus_' . $i)->getValue() != 0) {
+                $rule['status'] = $this->context->assertFindIn($line, 'css', 'select#rulestatus_' . $i . ' option:selected')->getText();
             }
             else {
                 $rule['status'] = 'OK';
             }
-            if ($this->context->getSession()->getPage()->findField('ruleseverity[' . $i . ']')->getValue() != 0) {
-                $rule['severity'] = $this->context->assertFind('css', 'select#ruleseverity_' . $i . ' option:selected')->getText();
+            if ($this->context->assertFindIn($line, 'css', 'select#ruleseverity_' . $i)->getValue() != 0) {
+                $rule['severity'] = $this->context->assertFindIn($line, 'css', 'select#ruleseverity_' . $i . ' option:selected')->getText();
             }
             ++$i;
             $rules[] = $rule;
