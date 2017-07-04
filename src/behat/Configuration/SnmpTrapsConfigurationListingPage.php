@@ -21,7 +21,15 @@ class SnmpTrapsConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 {
     protected $validField = 'input[name="searchT"]';
 
-    protected $properties = array();
+    protected $properties = array(
+        'name' => array(
+            'text',
+            'td:nth-child(2)'
+        ),
+        'id' => array(
+            'custom'
+        )
+    );
 
     protected $objectClass = '\Centreon\Test\Behat\Configuration\SnmpTrapsConfigurationPage';
 
@@ -47,6 +55,16 @@ class SnmpTrapsConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
             },
             'Current page does not match class ' . __CLASS__
         );
+    }
+
+    /**
+     * Get id
+     */
+    protected function getId($element)
+    {
+        $idComponent =$this->context->assertFindIn($element,'css','input[type="checkbox"]')->getAttribute('name');
+        $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
+        return $id;
     }
 
     /**
