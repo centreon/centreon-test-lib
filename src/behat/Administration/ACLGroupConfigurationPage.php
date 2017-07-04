@@ -37,12 +37,12 @@ class ACLGroupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         ),
         'contacts' => array(
             'advmultiselect',
-            'select[name="cg_contacts-f[]"]',
+            'select[name="cg_contacts',
             self::GROUP_TAB
         ),
         'contactgroups' => array(
             'advmultiselect',
-            'select[name="cg_contactGroups-f[]"]',
+            'select[name="cg_contactGroups',
             self::GROUP_TAB
         )
     );
