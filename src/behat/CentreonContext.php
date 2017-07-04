@@ -201,6 +201,15 @@ class CentreonContext extends UtilsContext
     }
 
     /**
+     * @Given I am logged in a Centreon server with a configured ldap
+     */
+    public function iAmLoggedInACentreonServerWithAConfiguredLdap()
+    {
+        $this->launchCentreonWebContainer('web_openldap');
+        $this->iAmLoggedIn();
+    }
+
+    /**
      * Make sure we have a freshly installed Centreon server and log in.
      *
      * @Given I am logged in a freshly installed Centreon server
