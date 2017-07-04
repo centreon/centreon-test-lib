@@ -186,7 +186,6 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
 
         try {
             switch ($propertyType) {
-                // advmultiselect not yet handled
                 case 'checkbox':
                 case 'input':
                 case 'radio':
