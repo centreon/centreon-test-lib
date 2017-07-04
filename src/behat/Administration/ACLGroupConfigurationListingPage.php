@@ -26,22 +26,26 @@ class ACLGroupConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
             'text',
             'td:nth-child(2)'
         ),
+        'id' => array(
+            'custom'
+        ),
         'description' => array(
             'text',
             'td:nth-child(3)'
         ),
         'count_contacts' => array(
             'text',
-            'td:nth-child(3)'
+            'td:nth-child(4)'
         ),
         'count_contactgroups' => array(
             'text',
-            'td:nth-child(4)'
+            'td:nth-child(5)'
         ),
         'status' => array(
             'text',
-            'td:nth-child(5)'
-        )
+            'td:nth-child(6)'
+        ),
+        
     );
 
     protected $objectClass = '\Centreon\Test\Behat\Administration\ACLGroupConfigurationPage';
@@ -68,5 +72,13 @@ class ACLGroupConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
             },
             'Current page does not match class ' . __CLASS__
         );
+    }
+    
+    protected function getId($element)
+    {
+        $idComponent = $this->context->assertFindIn($element, 'css', 'input[type="checkbox"]')->getAttribute('name');
+        $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
+
+        return $id;
     }
 }
