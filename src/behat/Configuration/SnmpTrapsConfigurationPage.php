@@ -216,13 +216,15 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             $rule['string'] = $this->context->assertFindIn($line, 'css', 'input#rule_' . $i)->getValue();
             $rule['regexp'] = $this->context->assertFindIn($line, 'css', 'input#regexp_' . $i)->getValue();
             if ($this->context->assertFindIn($line, 'css', 'select#rulestatus_' . $i)->getValue() != 0) {
-                $rule['status'] = $this->context->assertFindIn($line, 'css', 'select#rulestatus_' . $i . ' option:selected')->getText();
+                $rule['status'] = $this->context->assertFindIn($line, 'css', 'select#rulestatus_' . $i . ' option:selected')
+                    ->getText();
             }
             else {
                 $rule['status'] = 'OK';
             }
             if ($this->context->assertFindIn($line, 'css', 'select#ruleseverity_' . $i)->getValue() != 0) {
-                $rule['severity'] = $this->context->assertFindIn($line, 'css', 'select#ruleseverity_' . $i . ' option:selected')->getText();
+                $rule['severity'] = $this->context->assertFindIn($line, 'css', 'select#ruleseverity_' . $i . ' option:selected')
+                    ->getText();
             }
             ++$i;
             $rules[] = $rule;
