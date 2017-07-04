@@ -35,16 +35,17 @@ class ACLGroupConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
         ),
         'count_contacts' => array(
             'text',
-            'td:nth-child(3)'
+            'td:nth-child(4)'
         ),
         'count_contactgroups' => array(
             'text',
-            'td:nth-child(4)'
+            'td:nth-child(5)'
         ),
         'status' => array(
             'text',
-            'td:nth-child(5)'
-        )
+            'td:nth-child(6)'
+        ),
+        
     );
 
     protected $objectClass = '\Centreon\Test\Behat\Administration\ACLGroupConfigurationPage';
