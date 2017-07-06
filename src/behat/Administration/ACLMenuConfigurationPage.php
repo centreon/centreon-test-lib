@@ -32,7 +32,7 @@ class ACLMenuConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         ),
         'acl_groups' => array(
             'advmultiselect',
-            'select[name="acl_groups-f[]"]'
+            'acl_groups'
         ),
         'menu_home' => array(
             'checkbox',
@@ -54,6 +54,10 @@ class ACLMenuConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'checkbox',
             'input[type="checkbox"][id="i4"]'
         ),
+        'comments' => array(
+            'input',
+            'textarea[name="acl_comments"]'
+        )
     );
 
     /**
