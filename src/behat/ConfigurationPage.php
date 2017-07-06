@@ -119,6 +119,8 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
             // Set property with its value.
             switch ($propertyType) {
                 case 'advmultiselect':
+                    $object = $this->getProperty($property);
+                    $this->context->deleteInAdvMultiSelect('select[name="' . $propertyLocator . '-t[]"]', $object);
                     $this->context->selectInAdvMultiSelect('select[name="' . $propertyLocator . '-f[]"]', $value);
                     break;
                 case 'checkbox':
@@ -191,6 +193,10 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                 case 'radio':
                     $property = $this->context->assertFind('css', $propertyLocator)->getValue();
                     break;
+                case 'custom':
+                    $methodName = 'get' . $propertyLocator;
+                    $property = $this->$methodName();
+                    break;
                 case 'advmultiselect':
                     $options = $this->context->getSession()->getPage()->findAll(
                         'css',
@@ -210,10 +216,6 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     break;
                 case 'select':
                     $property = $this->context->assertFind('css', $propertyLocator .' option:selected')->getText();
-                    break;
-                case 'custom':
-                    $methodName = 'get' . $propertyLocator;
-                    $property = $this->$methodName();
                     break;
                 case 'select2':
                     $property = $this->context->assertFind('css', $propertyLocator)->getText();
