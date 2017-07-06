@@ -119,7 +119,9 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
             // Set property with its value.
             switch ($propertyType) {
                 case 'advmultiselect':
-                    $this->context->selectInAdvMultiSelect($propertyLocator, $value);
+                    $object = $this->getProperty($property);
+                    $this->context->deleteInAdvMultiSelect('select[name="' . $propertyLocator . '-t[]"]', $object);
+                    $this->context->selectInAdvMultiSelect('select[name="' . $propertyLocator . '-f[]"]', $value);
                     break;
                 case 'checkbox':
                     if ($value) {
@@ -186,16 +188,34 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
 
         try {
             switch ($propertyType) {
-                // advmultiselect not yet handled
                 case 'checkbox':
                 case 'input':
                 case 'radio':
-                case 'select':
                     $property = $this->context->assertFind('css', $propertyLocator)->getValue();
                     break;
                 case 'custom':
                     $methodName = 'get' . $propertyLocator;
                     $property = $this->$methodName();
+                    break;
+                case 'advmultiselect':
+                    $options = $this->context->getSession()->getPage()->findAll(
+                        'css',
+                        'select[name="' . $propertyLocator . '-t[]"] option'
+                    );
+                    $property = array_filter(
+                        array_map(
+                            function ($option) {
+                                return trim($option->getText());
+                            },
+                            $options
+                        ),
+                        function ($option) {
+                            return !empty($option);
+                        }
+                    );
+                    break;
+                case 'select':
+                    $property = $this->context->assertFind('css', $propertyLocator .' option:selected')->getText();
                     break;
                 case 'select2':
                     $property = $this->context->assertFind('css', $propertyLocator)->getText();

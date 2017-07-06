@@ -325,6 +325,52 @@ class UtilsContext extends RawMinkContext
     }
 
     /**
+     * Delete an element in advMultiSelect.
+     *
+     * @param $css_id
+     * @param array $values
+     * @throws \Exception
+     */
+    public function deleteInAdvMultiSelect($css_id, $values = array())
+    {
+        if (!is_array($values)) {
+            $values = array($values);
+        }
+
+        $elements = $this->getSession()->getPage()->findAll('xpath', '//tr[td/select]');
+        $options = null;
+        $addButton = null;
+        foreach ($elements as $element) {
+            if ($element->has('css', $css_id) && $element->has('css', 'input[type="button"][value="Remove"]')) {
+                $options = $element->findAll('css', $css_id . ' option');
+                $addButton = $this->assertFindIn($element, 'css', 'input[type="button"][value="Remove"]');
+            }
+        }
+        if (is_null($options) || is_null($addButton)) {
+            throw new \Exception('Cannot find advmultiselect ' . $css_id);
+        }
+
+        foreach ($values as $value) {
+            $found = false;
+
+            foreach ($options as $option) {
+                if ($option->getText() == $value) {
+                    $option->click();
+                    $addButton->click();
+                    $found = true;
+                    break;
+                }
+            }
+
+            if (!$found) {
+                throw new \Exception(
+                    'Could not find value ' . $value
+                    . ' in selection list ' . $css_id . '.');
+            }
+        }
+    }
+
+    /**
      * Select an element in a select two.
      *
      * @param $css_id
