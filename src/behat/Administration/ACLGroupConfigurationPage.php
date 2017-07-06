@@ -37,18 +37,33 @@ class ACLGroupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         ),
         'contacts' => array(
             'advmultiselect',
-            'select[name="cg_contacts-f[]"]',
+            'cg_contacts',
             self::GROUP_TAB
         ),
         'contactgroups' => array(
             'advmultiselect',
-            'select[name="cg_contactGroups-f[]"]',
+            'cg_contactGroups',
             self::GROUP_TAB
         ),
         'status' => array(
             'input',
             'input[name="acl_group_activate[acl_group_activate]"]',
             self::GROUP_TAB
+        ),
+        'resources' => array(
+            'advmultiselect',
+            'resourceAccess',
+            self::AUTHORIZATION_TAB
+        ),
+        'menu' => array(
+            'advmultiselect',
+            'menuAccess',
+            self::AUTHORIZATION_TAB
+        ),
+        'actions' => array(
+            'advmultiselect',
+            'actionAccess',
+            self::AUTHORIZATION_TAB
         )
     );
 
