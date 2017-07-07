@@ -68,6 +68,11 @@ class ACLGroupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     );
 
     /**
+     * @var string
+     */
+    protected $listingClass = '\Centreon\Test\Behat\Administration\ACLGroupConfigurationListingPage';
+
+    /**
      *  Navigate to and/or check that we are on a command configuration
      *  page.
      *
