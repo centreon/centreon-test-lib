@@ -114,18 +114,4 @@ class ACLResourceConfigurationListingPage extends \Centreon\Test\Behat\ListingPa
         $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
         return $id;
     }
-
-    /*
-     * Select all resource access
-     */
-    public function selectAll()
-    {
-        $properties = array();
-        foreach ($this->properties as $name => $parameters) {
-            if ($parameters[1] == 'checkbox') {
-                $properties[$name] = true;
-            }
-        }
-        $this->setProperties($properties);
-    }
 }
