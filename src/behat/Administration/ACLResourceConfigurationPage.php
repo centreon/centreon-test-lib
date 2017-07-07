@@ -28,6 +28,7 @@ class ACLResourceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
     protected $validField = 'input[name="acl_res_name"]';
 
     protected $properties = array(
+        //general tab
         'acl_name' => array(
             'input',
             'input[name="acl_res_name"]',
@@ -43,9 +44,25 @@ class ACLResourceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
             'acl_groups',
             self::GENERAL_TAB
         ),
+        'enabled' => array(
+            'radio',
+            'input[name="acl_res_activate[acl_res_activate]"]',
+            self::GENERAL_TAB
+        ),
+        'comments' => array(
+            'input',
+            'textarea[name="acl_res_comment"]',
+            self::GENERAL_TAB
+        ),
+        //host tab
         'all_hosts' => array(
             'checkbox',
             'input[type="checkbox"][id="all_hosts"]',
+            self::HOST_TAB
+        ),
+        'hosts' => array(
+            'advmultiselect',
+            'acl_hosts',
             self::HOST_TAB
         ),
         'all_hostgroups' => array(
@@ -53,12 +70,55 @@ class ACLResourceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
             'input[type="checkbox"][id="all_hostgroups"]',
             self::HOST_TAB
         ),
+        'host_groups' => array(
+            'advmultiselect',
+            'acl_hostgroup',
+            self::HOST_TAB
+        ),
+        'excluded_hosts' => array(
+            'advmultiselect',
+            'acl_hostexclude',
+            self::HOST_TAB
+        ),
+        //service tab
         'all_servicegroups' => array(
             'checkbox',
             'input[type="checkbox"][id="all_servicegroups"]',
             self::SERVICE_TAB
+        ),
+        'service_groups' => array(
+            'advmultiselect',
+            'acl_sg',
+            self::SERVICE_TAB
+        ),
+        //meta tab
+        'meta_services' => array(
+            'advmultiselect',
+            'acl_meta',
+            self::META_TAB
+        ),
+        //filter tab
+        'pollers' => array(
+            'advmultiselect',
+            'acl_pollers',
+            self::FILTER_TAB
+        ),
+        'host_category' => array(
+            'advmultiselect',
+            'acl_hc',
+            self::FILTER_TAB
+        ),
+        'service_category' => array(
+            'advmultiselect',
+            'acl_sc',
+            self::FILTER_TAB
         )
     );
+
+    /**
+     * @var string
+     */
+    protected $listingClass = '\Centreon\Test\Behat\Administration\ACLResourceConfigurationListingPage';
 
     /**
      *  Navigate to and/or check that we are on a command configuration
@@ -83,19 +143,5 @@ class ACLResourceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /*
-     * Select all menu access
-     */
-    public function selectAll()
-    {
-        $properties = array();
-        foreach ($this->properties as $name => $parameters) {
-            if ($parameters[1] == 'checkbox') {
-                $properties[$name] = true;
-            }
-        }
-        $this->setProperties($properties);
     }
 }
