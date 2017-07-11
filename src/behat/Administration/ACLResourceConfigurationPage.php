@@ -144,4 +144,18 @@ class ACLResourceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
             'Current page does not match class ' . __CLASS__
         );
     }
+
+    /*
+     * Select all action access
+     */
+    public function selectAll()
+    {
+        $properties = array();
+        foreach ($this->properties as $name => $parameters) {
+            if ($parameters[1] == 'checkbox') {
+                $properties[$name] = true;
+            }
+        }
+        $this->setProperties($properties);
+    }
 }
