@@ -34,6 +34,7 @@ class ACLActionConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'advmultiselect',
             'acl_groups'
         ),
+        //Global Functionalities Access
         'action_top_counter_overview' => array(
             'checkbox',
             'input[type="checkbox"][name="top_counter"]'
@@ -46,6 +47,7 @@ class ACLActionConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'checkbox',
             'input[type="checkbox"][name="poller_listing"]'
         ),
+        //Configuration Actions
         'action_generate_configuration' => array(
             'checkbox',
             'input[type="checkbox"][name="generate_cfg"]'
@@ -54,19 +56,183 @@ class ACLActionConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'checkbox',
             'input[type="checkbox"][name="generate_trap"]'
         ),
+        //Global Monitoring Engine Actions
         'action_engine' => array(
             'checkbox',
             'input[type="checkbox"][name="all_engine"]'
         ),
+        'action_shutdown' => array(
+            'checkbox',
+            'input[name="global_shutdown"]'
+        ),
+        'action_restart' => array(
+            'checkbox',
+            'input[name="global_restart"]'
+        ),
+        'action_notifications' => array(
+            'checkbox',
+            'input[name="global_notifications"]'
+        ),
+        'action_service_checks' => array(
+            'checkbox',
+            'input[name="global_service_checks"]'
+        ),
+        'action_service_passive_checks' => array(
+            'checkbox',
+            'input[name="global_service_passive_checks"]'
+        ),
+        'action_host_checks' => array(
+            'checkbox',
+            'input[name="global_host_checks"]'
+        ),
+        'action_host_passive_checks' => array(
+            'checkbox',
+            'input[name="global_host_passive_checks"]'
+        ),
+        'action_event_handler' => array(
+            'checkbox',
+            'input[name="global_event_handler"]'
+        ),
+        'action_flap_detection' => array(
+            'checkbox',
+            'input[name="global_flap_detection"]'
+        ),
+        'action_service_obsess' => array(
+            'checkbox',
+            'input[name="global_service_obsess"]'
+        ),
+        'action_host_obsess' => array(
+            'checkbox',
+            'input[name="global_host_obsess"]'
+        ),
+        'action_perf_data' => array(
+            'checkbox',
+            'input[name="global_perf_data"]'
+        ),
+        //Services Actions Access
         'action_service' => array(
             'checkbox',
             'input[type="checkbox"][name="all_service"]'
         ),
+        'action_service_checks' => array(
+            'checkbox',
+            'input[name="service_checks"]'
+        ),
+        'action_service_notifications' => array(
+            'checkbox',
+            'input[name="service_notifications"]'
+        ),
+        'action_service_acknowledgement' => array(
+            'checkbox',
+            'input[name="service_acknowledgement"]'
+        ),
+        'action_service_disacknowledgement' => array(
+            'checkbox',
+            'input[name="service_disacknowledgement"]'
+        ),
+        'action_service_schedule_check' => array(
+            'checkbox',
+            'input[name="service_schedule_check"]'
+        ),
+        'action_service_schedule_forced_check' => array(
+            'checkbox',
+            'input[name="service_schedule_forced_check"]'
+        ),
+        'action_service_schedule_downtime' => array(
+            'checkbox',
+            'input[name="service_schedule_downtime"]'
+        ),
+        'action_service_comment' => array(
+            'checkbox',
+            'input[name="service_comment"]'
+        ),
+        'action_service_event_handler' => array(
+            'checkbox',
+            'input[name="service_event_handler"]'
+        ),
+        'action_service_flap_detection' => array(
+            'checkbox',
+            'input[name="service_flap_detection"]'
+        ),
+        'action_service_passive_checks' => array(
+            'checkbox',
+            'input[name="service_passive_checks"]'
+        ),
+        'action_service_submit_result' => array(
+            'checkbox',
+            'input[name="service_submit_result"]'
+        ),
+        'action_service_display_command' => array(
+            'checkbox',
+            'input[name="service_display_command"]'
+        ),
+        //Hosts Actions Access
         'action_host' => array(
             'checkbox',
             'input[type="checkbox"][name="all_host"]'
+        ),
+        'action_host_checks' => array(
+            'checkbox',
+            'input[name="host_checks"]'
+        ),
+        'action_host_notifications' => array(
+            'checkbox',
+            'input[name="host_notifications"]'
+        ),
+        'action_host_acknowledgement' => array(
+            'checkbox',
+            'input[name="host_acknowledgement"]'
+        ),
+        'action_host_disacknowledgement' => array(
+            'checkbox',
+            'input[name="host_disacknowledgement"]'
+        ),
+        'action_host_schedule_check' => array(
+            'checkbox',
+            'input[name="host_schedule_check"]'
+        ),
+        'action_host_schedule_forced_check' => array(
+            'checkbox',
+            'input[name="host_schedule_forced_check"]'
+        ),
+        'action_host_schedule_downtime' => array(
+            'checkbox',
+            'input[name="host_schedule_downtime"]'
+        ),
+        'action_host_comment' => array(
+            'checkbox',
+            'input[name="host_comment"]'
+        ),
+        'action_host_event_handler' => array(
+            'checkbox',
+            'input[name="host_event_handler"]'
+        ),
+        'action_host_flap_detection' => array(
+            'checkbox',
+            'input[name="host_flap_detection"]'
+        ),
+        'action_host_checks_for_services' => array(
+            'checkbox',
+            'input[name="host_checks_for_services"]'
+        ),
+        'action_host_notifications_for_services' => array(
+            'checkbox',
+            'input[name="host_notifications_for_services"]'
+        ),
+        'action_name_submit_result' => array(
+            'checkbox',
+            'input[name="host_submit_result"]'
+        ),
+        'enabled' => array(
+            'radio',
+            'input[name="acl_action_activate[acl_action_activate]"]'
         )
     );
+
+    /**
+     * @var string
+     */
+    protected $listingClass = '\Centreon\Test\Behat\Administration\ACLActionConfigurationListingPage';
 
     /**
      *  Navigate to and/or check that we are on an acl page
