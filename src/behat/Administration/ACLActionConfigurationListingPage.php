@@ -43,10 +43,10 @@ class ACLActionConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Contact list page.
      *
-     *  @param $context  Centreon context class.
-     *  @param $visit    True to navigate to page.
+     * @param $context  Centreon context class.
+     * @param $visit    True to navigate to page.
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = true)
     {
         // Visit page.
         $this->context = $context;
@@ -64,7 +64,7 @@ class ACLActionConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
         );
     }
 
-     /**
+    /**
      * Get enabled
      */
     protected function getEnabled($element)
@@ -77,9 +77,8 @@ class ACLActionConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      */
     protected function getId($element)
     {
-        $idComponent =$this->context->assertFindIn($element,'css','input[type="checkbox"]')->getAttribute('name');
+        $idComponent = $this->context->assertFindIn($element, 'css', 'input[type="checkbox"]')->getAttribute('name');
         $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
         return $id;
     }
 }
-
