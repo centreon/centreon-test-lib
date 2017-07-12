@@ -73,19 +73,19 @@ class ACLActionConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'checkbox',
             'input[name="global_notifications"]'
         ),
-        'action_service_checks' => array(
+        'action_global_service_checks' => array(
             'checkbox',
             'input[name="global_service_checks"]'
         ),
-        'action_service_passive_checks' => array(
+        'action_global_service_passive_checks' => array(
             'checkbox',
             'input[name="global_service_passive_checks"]'
         ),
-        'action_host_checks' => array(
+        'action_global_host_checks' => array(
             'checkbox',
             'input[name="global_host_checks"]'
         ),
-        'action_host_passive_checks' => array(
+        'action_global_host_passive_checks' => array(
             'checkbox',
             'input[name="global_host_passive_checks"]'
         ),
@@ -97,11 +97,11 @@ class ACLActionConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'checkbox',
             'input[name="global_flap_detection"]'
         ),
-        'action_service_obsess' => array(
+        'action_global_service_obsess' => array(
             'checkbox',
             'input[name="global_service_obsess"]'
         ),
-        'action_host_obsess' => array(
+        'action_global_host_obsess' => array(
             'checkbox',
             'input[name="global_host_obsess"]'
         ),
