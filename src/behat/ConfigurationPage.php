@@ -61,7 +61,7 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
     /**
      *  Check that the current page is valid for this class.
      *
-     *  @return True if the current page matches this class.
+     * @return True if the current page matches this class.
      */
     public function isPageValid()
     {
@@ -69,11 +69,11 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
     }
 
     /**
-    * Get properties
-    *
-    * @return array
-    * @throws \Exception
-    */
+     * Get properties
+     *
+     * @return array
+     * @throws \Exception
+     */
     public function getProperties($properties = array())
     {
         if (empty($properties)) {
@@ -111,7 +111,8 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
 
             // Switch between tabs if required.
             if (isset($this->properties[$property][2]) && !empty($this->properties[$property][2]) &&
-                $tab != $this->properties[$property][2]) {
+                $tab != $this->properties[$property][2]
+            ) {
                 $this->switchTab($this->properties[$property][2]);
                 $tab = $this->properties[$property][2];
             }
@@ -120,7 +121,9 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
             switch ($propertyType) {
                 case 'advmultiselect':
                     $object = $this->getProperty($property);
-                    $this->context->deleteInAdvMultiSelect('select[name="' . $propertyLocator . '-t[]"]', $object);
+                    if (!empty($object)) {
+                        $this->context->deleteInAdvMultiSelect('select[name="' . $propertyLocator . '-t[]"]', $object);
+                    }
                     $this->context->selectInAdvMultiSelect('select[name="' . $propertyLocator . '-f[]"]', $value);
                     break;
                 case 'checkbox':
@@ -215,7 +218,7 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     );
                     break;
                 case 'select':
-                    $property = $this->context->assertFind('css', $propertyLocator .' option:selected')->getText();
+                    $property = $this->context->assertFind('css', $propertyLocator . ' option:selected')->getText();
                     break;
                 case 'select2':
                     $property = $this->context->assertFind('css', $propertyLocator)->getText();
@@ -238,7 +241,7 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
     /**
      *  Switch between tabs.
      *
-     *  @param $tab  Tab ID.
+     * @param $tab  Tab ID.
      */
     public function switchTab($tab)
     {
