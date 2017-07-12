@@ -237,8 +237,8 @@ class ACLActionConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     /**
      *  Navigate to and/or check that we are on an acl page
      *
-     *  @param $context  Centreon context.
-     *  @param bool $visit True to navigate to configuration page.
+     * @param $context  Centreon context.
+     * @param bool $visit True to navigate to configuration page.
      */
     public function __construct($context, $visit = true)
     {
