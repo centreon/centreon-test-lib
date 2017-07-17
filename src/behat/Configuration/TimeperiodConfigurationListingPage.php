@@ -34,6 +34,9 @@ class TimeperiodConfigurationListingPage extends \Centreon\Test\Behat\ListingPag
         'description' => array(
             'text',
             'td:nth-child(3)'
+        ),
+        'id' => array(
+            'custom'
         )
     );
 
@@ -62,4 +65,15 @@ class TimeperiodConfigurationListingPage extends \Centreon\Test\Behat\ListingPag
             'Current page does not match class ' . __CLASS__
         );
     }
+
+    /**
+     * Get id
+     */
+    public function getId($element)
+    {
+        $idComponent =$this->context->assertFindIn($element,'css','input[type="checkbox"]')->getAttribute('name');
+        $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
+        return $id;
+    }
+
 }

@@ -76,6 +76,11 @@ class TimeperiodConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'select#tp_include',
             self::TAB_CONFIGURATION
         ),
+        'exceptions' => array(
+            'custom',
+            'Exceptions',
+            self::TAB_EXCEPTION
+        )
     );
 
     /**
@@ -94,7 +99,7 @@ class TimeperiodConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         // Visit page.
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('main.php?p=60304&o=c');
+            $this->context->visit('main.php?p=60304&o=a');
         }
 
         // Check that page is valid for this class.
@@ -105,5 +110,43 @@ class TimeperiodConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             },
             'Current page does not match class ' . __CLASS__
         );
+    }
+
+    /**
+     * get exceptions
+     */
+    protected function getExceptions()
+    {
+        $exceptions = array();
+        $i = 0;
+        while (true) {
+            $exception = array();
+            $day = $this->context->getSession()->getPage()->findField('exceptionInput_' . $i);
+            if (is_null($day)) {
+                break;
+            }
+            $exception['day'] = $day->getValue();
+            $exception['timeRange'] =
+                $this->context->getSession()->getPage()->findField('exceptionTimerange_' . $i)->getValue();
+            $i++;
+            $exceptions[] = $exception;
+        }
+        return $exceptions;
+    }
+
+    /**
+     * set exceptions
+     */
+    protected function setExceptions($exceptionsArray)
+    {
+        $currentExceptions = $this->getExceptions();
+        $i = count($currentExceptions);
+        $b = false;
+        foreach ($exceptionsArray as $array) {
+            $this->context->assertFind('css', '#tab2 span')->click();
+            $this->context->assertFindField('exceptionInput_' . $i)->setValue($array['day']);
+            $this->context->assertFindField('exceptionTimerange_' . $i)->setValue($array['timeRange']);
+            $i++;
+        }
     }
 }
