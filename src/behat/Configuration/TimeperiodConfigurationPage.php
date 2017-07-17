@@ -141,7 +141,6 @@ class TimeperiodConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     {
         $currentExceptions = $this->getExceptions();
         $i = count($currentExceptions);
-        $b = false;
         foreach ($exceptionsArray as $array) {
             $this->context->assertFind('css', '#tab2 span')->click();
             $this->context->assertFindField('exceptionInput_' . $i)->setValue($array['day']);
