@@ -31,16 +31,16 @@ class MetricsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'input[name="cg_alias"]'
         ),
         'def_type' => array(
-            'select2',
+            'select',
             'select[name="def_type"]'
         ),
         'known_metrics' => array(
-            'select2',
+            'select',
             'select#sl_list_metrics'
         ),
         'function' => array(
             'text',
-            'textarea[name="rpn_function"]'
+            'input[name="rpn_function"]'
         ),
         'hidden_graph' => array(
             'checkbox',
