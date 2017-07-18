@@ -39,8 +39,8 @@ class MetricsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'select#sl_list_metrics'
         ),
         'function' => array(
-            'text',
-            'input[name="rpn_function"]'
+            'input',
+            'textarea[name="rpn_function"]'
         ),
         'hidden_graph' => array(
             'checkbox',
