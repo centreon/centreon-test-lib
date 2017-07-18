@@ -71,9 +71,8 @@ class TimeperiodConfigurationListingPage extends \Centreon\Test\Behat\ListingPag
      */
     public function getId($element)
     {
-        $idComponent =$this->context->assertFindIn($element,'css','input[type="checkbox"]')->getAttribute('name');
+        $idComponent = $this->context->assertFindIn($element, 'css', 'input[type="checkbox"]')->getAttribute('name');
         $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
         return $id;
     }
-
 }
