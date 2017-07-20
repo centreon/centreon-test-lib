@@ -23,16 +23,16 @@ class HostConfigurationPage extends HostTemplateConfigurationPage
      * @var string
      */
     protected $listingClass = '\Centreon\Test\Behat\Configuration\HostConfigurationListingPage';
-    
+
     /**
      *  Navigate to and/or check that we are on a host configuration
      *  page.
      *
-     *  @param $context  Centreon context.
-     *  @param $visit    True to navigate to a blank host configuration
+     * @param $context  Centreon context.
+     * @param $visit    True to navigate to a blank host configuration
      *                   page.
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = true)
     {
         unset($this->properties['service_templates']);
         $this->properties['monitored_from'] = array(
@@ -86,6 +86,4 @@ class HostConfigurationPage extends HostTemplateConfigurationPage
             'Current page does not match class ' . __CLASS__
         );
     }
-
-
 }
