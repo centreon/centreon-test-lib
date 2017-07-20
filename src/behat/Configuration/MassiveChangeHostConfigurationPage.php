@@ -440,7 +440,7 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
             }
             $value = $this->context->assertFindField('macroValue_' . $i);
             $macros[$name->getValue()] = $value->getValue();
-            ++$i;
+            $i++;
         }
 
         return $macros;
