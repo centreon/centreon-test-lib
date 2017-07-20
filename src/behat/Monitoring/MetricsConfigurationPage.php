@@ -27,8 +27,8 @@ class MetricsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'input[name="vmetric_name"]'
         ),
         'linked-host_services' => array(
-            'input',
-            'input[name="cg_alias"]'
+            'select2',
+            'select#host_id'
         ),
         'def_type' => array(
             'select',
