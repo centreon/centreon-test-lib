@@ -24,23 +24,26 @@ class MetricsConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     protected $properties = array(
         'name' => array(
             'text',
-            'td:nth-child(2)'
+            'td:nth-child(3)'
+        ),
+        'id' => array(
+            'custom'
         ),
         'function' => array(
             'text',
-            'td:nth-child(4)'
+            'td:nth-child(5)'
         ),
         'def_type' => array(
             'text',
-            'td:nth-child(6)'
+            'td:nth-child(7)'
         ),
         'hidden' => array(
             'text',
-            'td:nth-child(7)'
+            'td:nth-child(8)'
         ),
         'status' => array(
             'text',
-            'td:nth-child(8)'
+            'td:nth-child(9)'
         )
     );
 
