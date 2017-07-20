@@ -303,11 +303,6 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             'input[name="ehi_icon_image_alt"]',
             self::EXTENDED_TAB
         ),
-        'vrml_image' => array(
-            'select',
-            'select#ehi_vrml_image',
-            self::EXTENDED_TAB
-        ),
         'status_map_image' => array(
             'select',
             'select#ehi_statusmap_image',
