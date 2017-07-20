@@ -243,7 +243,7 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
         'parent_hosts' => array(
             'select2',
             'select#host_parents',
-             self::RELATIONS_TAB
+            self::RELATIONS_TAB
         ),
         'update_mode_hch' => array(
             'radio',
@@ -402,12 +402,12 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
     /**
      *  Host template edit page.
      *
-     *  @param $context  Centreon context object.
-     *  @param $visit    True to navigate to a blank edit page.
+     * @param $context  Centreon context object.
+     * @param $visit    True to navigate to a blank edit page.
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = true)
     {
-        // Visit page. 
+        // Visit page.
         $this->context = $context;
         if ($visit) {
             $this->context->visit('main.php?p=6');
@@ -426,7 +426,7 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
     /**
      *  Get macros.
      *
-     *  @return macros
+     * @return macros
      */
     protected function getMacros()
     {
@@ -436,7 +436,7 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
         while (true) {
             $name = $this->context->getSession()->getPage()->findField('macroInput_' . $i);
             if (is_null($name)) {
-                break ;
+                break;
             }
             $value = $this->context->assertFindField('macroValue_' . $i);
             $macros[$name->getValue()] = $value->getValue();
@@ -449,13 +449,16 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
     /**
      *  Get host templates.
      *
-     *  @return host templates
+     * @return host templates
      */
     protected function getTemplates()
     {
         $templates = array();
 
-        $elements = $this->context->getSession()->getPage()->findAll('css', '[id^="tpSelect_"] option[selected="selected"]');
+        $elements = $this->context->getSession()->getPage()->findAll(
+            'css',
+            '[id^="tpSelect_"] option[selected="selected"]'
+        );
         foreach ($elements as $element) {
             $templateName = $element->getText();
             if ($templateName != '') {
@@ -469,14 +472,14 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
     /**
      *  Set macros.
      *
-     *  @param $macros Macros.
+     * @param $macros Macros.
      */
     protected function setMacros($macros)
     {
         $currentMacros = $this->getMacros();
         $i = count($currentMacros);
         foreach ($macros as $name => $value) {
-            $this->context->assertFind('css' , '#macro_add p')->click();
+            $this->context->assertFind('css', '#macro_add p')->click();
             $this->context->assertFindField('macroInput_' . $i)->setValue($name);
             $this->context->assertFindField('macroValue_' . $i)->setValue($value);
             $i++;
@@ -486,7 +489,7 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
     /**
      *  Set host templates.
      *
-     *  @param $templates  Parent templates.
+     * @param $templates  Parent templates.
      */
     protected function setTemplates($templates)
     {
@@ -500,6 +503,4 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
             $i++;
         }
     }
-
 }
-?>
