@@ -21,6 +21,8 @@ use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use WebDriver\WebDriver;
 use Centreon\Test\Behat\External\LoginPage;
 use Centreon\Test\Behat\Configuration\PollerConfigurationExportPage;
+use Centreon\Test\Behat\Configuration\HostConfigurationPage;
+use Centreon\Test\Behat\Configuration\ServiceConfigurationPage;
 
 class CentreonContext extends UtilsContext
 {
@@ -207,6 +209,16 @@ class CentreonContext extends UtilsContext
     {
         $this->launchCentreonWebContainer('web_openldap');
         $this->iAmLoggedIn();
+    }
+    
+    /**
+     * @Given I am logged in a Centreon server with a configured metrics
+     */
+    public function iAmLoggedInACentreonServerWithAConfiguredMetrics()
+    {
+        $this->aCentreonServer();
+        $this->iAmLoggedIn();
+        $this->getServiceWithSeveralMetrics();
     }
 
     /**
@@ -534,6 +546,66 @@ class CentreonContext extends UtilsContext
             'su -s /bin/sh apache -c "/usr/bin/php -q /usr/share/centreon/cron/centAcl.php"',
             'web',
             false
+        );
+    }
+    
+    public function getServiceWithSeveralMetrics() 
+    {
+        // Create host.
+        $hostConfig = new HostConfigurationPage($this);
+        $hostProperties = array(
+            'name' => 'MetricTestHostname',
+            'alias' => 'MetricTestHostname',
+            'address' => 'localhost',
+            'max_check_attempts' => 1,
+            'normal_check_interval' => 1,
+            'retry_check_interval' => 1,
+            'active_checks_enabled' => "0",
+            'passive_checks_enabled' => "1"
+        );
+        $hostConfig->setProperties($hostProperties);
+        $hostConfig->save();
+
+        // Create service.
+        $serviceConfig = new ServiceConfigurationPage($this);
+        $serviceProperties = array(
+            'description' => 'MetricTestService',
+            'hosts' => 'MetricTestHostname',
+            'templates' => 'generic-service',
+            'check_command' => 'check_centreon_dummy',
+            'check_period' => '24x7',
+            'active_checks_enabled' => "0",
+            'passive_checks_enabled' => "1"
+        );
+        $serviceConfig->setProperties($serviceProperties);
+        $serviceConfig->save();
+
+        // Ensure service is monitored.
+        $this->restartAllPollers();
+        sleep(7);
+
+        // Send multiple perfdata.
+        $perfdata = '';
+        for ($i = 0; $i < 20; $i++) {
+            $perfdata .= 'test' . $i . '=1s ';
+        }
+        $this->submitServiceResult('MetricTestHostname', 'MetricTestService', 'OK', 'OK', $perfdata);
+
+        // Ensure perfdata were processed.
+        $this->spin(
+            function ($context) {
+                $page = new ServiceMonitoringDetailsPage(
+                    $context,
+                    'MetricTestHostname',
+                    'MetricTestService'
+                );
+                $properties = $page->getProperties();
+                if (count($properties['perfdata']) < 20) {
+                    return false;
+                }
+                return true;
+            },
+            'Cannot get performance data of MetricTestHostname / MetricTestService'
         );
     }
 }
