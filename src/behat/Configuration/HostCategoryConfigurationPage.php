@@ -43,7 +43,7 @@ class HostCategoryConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             'input[name="hc_type"]'
         ),
         'severity_level' => array(
-            'input[]',
+            'input',
             'input[name="hc_severity_level"]'
         ),
         'severity_icon' => array(
