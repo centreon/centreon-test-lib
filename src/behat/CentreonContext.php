@@ -21,6 +21,8 @@ use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use WebDriver\WebDriver;
 use Centreon\Test\Behat\External\LoginPage;
 use Centreon\Test\Behat\Configuration\PollerConfigurationExportPage;
+use Centreon\Test\Behat\Configuration\HostConfigurationPage;
+use Centreon\Test\Behat\Configuration\ServiceConfigurationPage;
 
 class CentreonContext extends UtilsContext
 {
