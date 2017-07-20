@@ -257,7 +257,7 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
         if (isset($button)) {
             $button->click();
         } else {
-            $button = $this->context->getSession()->getPage()->findButton('submitA');
+            $button = $this->context->getSession()->getPage()->findButton('submitC');
             if (isset($button)) {
                 $button->click();
             } else {
