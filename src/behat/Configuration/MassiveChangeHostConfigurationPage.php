@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat\Configuration;
 
-class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
+class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 {
     const CONFIGURATION_TAB = 1;
     const NOTIFICATION_TAB = 2;
@@ -25,25 +25,10 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
     const DATA_TAB = 4;
     const EXTENDED_TAB = 5;
 
-    protected $validField = 'input[name="host_name"]';
+    protected $validField = 'input[name="host_snmp_community"]';
 
     protected $properties = array(
-        // Configuration tab.
-        'name' => array(
-            'input',
-            'input[name="host_name"]',
-            self::CONFIGURATION_TAB
-        ),
-        'alias' => array(
-            'input',
-            'input[name="host_alias"]',
-            self::CONFIGURATION_TAB
-        ),
-        'address' => array(
-            'input',
-            'input[name="host_address"]',
-            self::CONFIGURATION_TAB
-        ),
+        // Configuration tab
         'snmp_community' => array(
             'input',
             'input[name="host_snmp_community"]',
@@ -54,9 +39,14 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             'select[name="host_snmp_version"]',
             self::CONFIGURATION_TAB
         ),
-        'macros' => array(
-            'custom',
-            'Macros',
+        'monitored_from' => array(
+            'select',
+            'select[name="nagios_server_id"]',
+            self::CONFIGURATION_TAB
+        ),
+        'monitored_option' => array(
+            'radio',
+            'input[name="mc_mod_nsid[mc_mod_nsid]"]',
             self::CONFIGURATION_TAB
         ),
         'location' => array(
@@ -64,9 +54,19 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             'select#host_location',
             self::CONFIGURATION_TAB
         ),
+        'update_mode_tplp' => array(
+            'radio',
+            'input[name="mc_mod_tplp[mc_mod_tplp]"]',
+            self::CONFIGURATION_TAB
+        ),
         'templates' => array(
             'custom',
             'Templates',
+            self::CONFIGURATION_TAB
+        ),
+        'service_linked_to_template' => array(
+            'radio',
+            'input[name="dupSvTplAssoc[dupSvTplAssoc]"]',
             self::CONFIGURATION_TAB
         ),
         'check_command' => array(
@@ -77,6 +77,11 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
         'command_arguments' => array(
             'input',
             'input[name="command_command_id_arg1"]',
+            self::CONFIGURATION_TAB
+        ),
+        'macros' => array(
+            'custom',
+            'Macros',
             self::CONFIGURATION_TAB
         ),
         'check_period' => array(
@@ -109,10 +114,15 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             'input[name="host_passive_checks_enabled[host_passive_checks_enabled]"]',
             self::CONFIGURATION_TAB
         ),
-        // Notification tab.
+        // Notification tab
         'notifications_enabled' => array(
             'radio',
             'input[name="host_notifications_enabled[host_notifications_enabled]"]',
+            self::NOTIFICATION_TAB
+        ),
+        'contact_additive_inheritance' => array(
+            'radio',
+            'input[name="mc_contact_additive_inheritance[mc_contact_additive_inheritance]"]',
             self::NOTIFICATION_TAB
         ),
         'contacts' => array(
@@ -120,9 +130,9 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             'select[name="host_cs[]"]',
             self::NOTIFICATION_TAB
         ),
-        'contact_additive_inheritance' => array(
+        'contact_group_additive_inheritance' => array(
             'radio',
-            'input[name="contact_additive_inheritance"]',
+            'input[name="mc_cg_additive_inheritance[mc_cg_additive_inheritance]"]',
             self::NOTIFICATION_TAB
         ),
         'contact_groups' => array(
@@ -130,24 +140,23 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             'select[name="host_cgs[]"]',
             self::NOTIFICATION_TAB
         ),
-        'contact_group_additive_inheritance' => array(
+        'update_mode_notifopts' => array(
             'radio',
-            'input[name="cg_additive_inheritance"]',
-            self::NOTIFICATION_TAB
-        ),
-        'notify_on_unreachable' => array(
-            'checkbox',
-            'input[name="host_notifOpts[u]"]',
-            self::NOTIFICATION_TAB
-        ),
-        'notify_on_recovery' => array(
-            'checkbox',
-            'input[name="host_notifOpts[r]"]',
+            'input[name="mc_mod_notifopts[mc_mod_notifopts]"]',
             self::NOTIFICATION_TAB
         ),
         'notify_on_down' => array(
             'checkbox',
             'input[name="host_notifOpts[d]"]',
+            self::NOTIFICATION_TAB
+        ),
+        'notify_on_unreachable' => array(
+            'checkbox',
+            'input[name="host_notifOpts[u]"]',
+        ),
+        'notify_on_recovery' => array(
+            'checkbox',
+            'input[name="host_notifOpts[r]"]',
             self::NOTIFICATION_TAB
         ),
         'notify_on_flapping' => array(
@@ -162,7 +171,17 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
         ),
         'notify_on_none' => array(
             'checkbox',
-            'input[name="host_notifOpts[r]"]',
+            'input[name="host_notifOpts[n]"]',
+            self::NOTIFICATION_TAB
+        ),
+        'update_mode_hcg' => array(
+            'radio',
+            'input[name="mc_mod_hcg[mc_mod_hcg]"]',
+            self::NOTIFICATION_TAB
+        ),
+        'update_mode_notif_interval' => array(
+            'radio',
+            'input[name="mc_mod_notifopt_notification_interval[mc_mod_notifopt_notification_interval]"]',
             self::NOTIFICATION_TAB
         ),
         'notification_interval' => array(
@@ -170,9 +189,19 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             'input[name="host_notification_interval"]',
             self::NOTIFICATION_TAB
         ),
+        'update_mode_timeperiod' => array(
+            'radio',
+            'input[name="mc_mod_notifopt_timeperiod[mc_mod_notifopt_timeperiod]"]',
+            self::NOTIFICATION_TAB
+        ),
         'notification_period' => array(
             'select2',
             'select#timeperiod_tp_id2',
+            self::NOTIFICATION_TAB
+        ),
+        'update_mode_first_notif_delay' => array(
+            'radio',
+            'input[name="mc_mod_notifopt_first_notification_delay[mc_mod_notifopt_first_notification_delay]"]',
             self::NOTIFICATION_TAB
         ),
         'first_notification_delay' => array(
@@ -185,15 +214,20 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             'input[name="host_recovery_notification_delay"]',
             self::NOTIFICATION_TAB
         ),
-        'cs' => array(
-            'select2',
-            'select#host_cs',
-            self::NOTIFICATION_TAB
-        ),
         // Relations tab
-        'service_templates' => array(
+        'update_mode_hhg' => array(
+            'radio',
+            'input[name="mc_mod_hhg[mc_mod_hhg]"]',
+            self::RELATIONS_TAB
+        ),
+        'parent_host_groups' => array(
             'select2',
-            'select#host_svTpls',
+            'select#host_hgs',
+            self::RELATIONS_TAB
+        ),
+        'update_mode_hhc' => array(
+            'radio',
+            'input[name="mc_mod_hhc[mc_mod_hhc]"]',
             self::RELATIONS_TAB
         ),
         'parent_host_categories' => array(
@@ -201,7 +235,27 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             'select#host_hcs',
             self::RELATIONS_TAB
         ),
-        // Data tab.
+        'update_mode_hpar' => array(
+            'radio',
+            'input[name="mc_mod_hpar[mc_mod_hpar]"]',
+            self::RELATIONS_TAB
+        ),
+        'parent_hosts' => array(
+            'select2',
+            'select#host_parents',
+            self::RELATIONS_TAB
+        ),
+        'update_mode_hch' => array(
+            'radio',
+            'input[name="mc_mod_hch[mc_mod_hch]"]',
+            self::RELATIONS_TAB
+        ),
+        'child_hosts' => array(
+            'select2',
+            'select#host_childs',
+            self::RELATIONS_TAB
+        ),
+        // Data tab
         'obsess_over_host' => array(
             'radio',
             'input[name="host_obsess_over_host[host_obsess_over_host]"]',
@@ -277,7 +331,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             'input[name="command_command_id_arg2"]',
             self::DATA_TAB
         ),
-        //Extended tab
+        // Extended tab
         'url' => array(
             'input',
             'input[name="ehi_notes_url"]',
@@ -303,10 +357,20 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             'input[name="ehi_icon_image_alt"]',
             self::EXTENDED_TAB
         ),
+        'vrml_image' => array(
+            'select',
+            'select#ehi_vrml_image',
+            self::EXTENDED_TAB
+        ),
         'status_map_image' => array(
             'select',
             'select#ehi_statusmap_image',
-            self::EXTENDED_TAB,
+            self::EXTENDED_TAB
+        ),
+        'geo_coordinates' => array(
+            'input',
+            'input[name="geo_coords"]',
+            self::EXTENDED_TAB
         ),
         '2d_coords' => array(
             'input',
@@ -336,11 +400,6 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
     );
 
     /**
-     * @var string
-     */
-    protected $listingClass = '\Centreon\Test\Behat\Configuration\HostTemplateConfigurationListingPage';
-
-    /**
      *  Host template edit page.
      *
      * @param $context  Centreon context object.
@@ -351,7 +410,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
         // Visit page.
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('main.php?p=60103&o=a');
+            $this->context->visit('main.php?p=6');
         }
 
         // Check that page is valid for this class.
@@ -381,7 +440,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             }
             $value = $this->context->assertFindField('macroValue_' . $i);
             $macros[$name->getValue()] = $value->getValue();
-            ++$i;
+            $i++;
         }
 
         return $macros;
