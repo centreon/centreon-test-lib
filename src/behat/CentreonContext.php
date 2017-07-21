@@ -23,6 +23,7 @@ use Centreon\Test\Behat\External\LoginPage;
 use Centreon\Test\Behat\Configuration\PollerConfigurationExportPage;
 use Centreon\Test\Behat\Configuration\HostConfigurationPage;
 use Centreon\Test\Behat\Configuration\ServiceConfigurationPage;
+use Centreon\Test\Behat\Monitoring\ServiceMonitoringDetailsPage;
 
 class CentreonContext extends UtilsContext
 {
