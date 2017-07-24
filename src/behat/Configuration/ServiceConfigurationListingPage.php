@@ -21,7 +21,13 @@ class ServiceConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 {
     protected $validField = 'input[name="searchS"]';
 
-    protected $properties = array();
+    protected $properties = array(
+        'id' => array(
+            'custom'
+        )
+    );
+
+    protected $objectClass = '\Centreon\Test\Behat\Configuration\ServiceConfigurationPage';
 
     /**
      *  Service list page.
@@ -47,6 +53,13 @@ class ServiceConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
         );
     }
 
+    protected function getId($element)
+    {
+        $idComponent =$this->context->assertFindIn($element,'css','input[type="checkbox"]')->getAttribute('name');
+        $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
+        return $id;
+    }
+
     /**
      *  Get services.
      */
@@ -63,6 +76,34 @@ class ServiceConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
             }
             $currentService = $this->context->assertFindIn($element, 'css', 'td:nth-child(3) a')->getText();
             $entries[$currentHost][$currentService] = array();
+            foreach ($this->properties as $property => $metadata) {
+                if (empty($propertyTitle)) {
+                    $propertyTitle = $property;
+                }
+
+                // Set property meta-data in variables.
+                $propertyType = $metadata[0];
+                $propertyLocator = isset($metadata[1]) ? $metadata[1] : '';
+
+                    switch ($propertyType) {
+                    case 'text':
+                        $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
+                        $entries[$currentHost][$currentService][$property] = $component->getText();
+                            break;
+                    case 'attribute':
+                            if (is_null($propertyLocator) || empty($propertyLocator)) {
+                                $component = $element;
+                        } else {
+                            $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
+                        }
+                        $entries[$currentHost][$currentService][$property] = $component->getAttribute($metadata[2]);
+                        break;
+                    case 'custom':
+                        $methodName = 'get' . ucfirst($property);
+                        $entries[$currentHost][$currentService][$property] = $this->$methodName($element);
+                        break;
+                }
+            }
         }
 
         return $entries;
