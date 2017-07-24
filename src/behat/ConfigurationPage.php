@@ -150,7 +150,7 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     if (!is_array($value)) {
                         $value = array($value);
                     }
-                    $object = $this->context->assertFind('css', $propertyLocator)/*->getText()*/;
+                    $object = $this->context->assertFind('css', $propertyLocator);
                     $parent = $object->getParent();
                     $this->context->assertFindIn($parent, 'css', 'img.ico-14')->click();
                     foreach ($value as $element) {
