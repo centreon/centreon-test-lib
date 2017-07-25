@@ -608,5 +608,93 @@ class CentreonContext extends UtilsContext
             },
             'Cannot get performance data of MetricTestHostname / MetricTestService'
         );
+        
+        if (!$this->isMetricAvailable('test10', 'MetricTestHostname', 'MetricTestService')) {
+            echo "No Metrics available or check rrd files!";
+        }  
+    }
+    
+    /**
+     * 
+     * @param string $metricName
+     * @param string $hostname
+     * @param string $serviceDescription
+     * @return boolean
+     */
+    private function isMetricAvailable($metricName, $hostname, $serviceDescription)
+    {
+        $metricId = $this->getMetricId($metricName, $hostname, $serviceDescription);
+        $isMetricAvailable = $this->checkRrdFilesAreAvalaible($metricId);
+        
+        return $isMetricAvailable;
+    }
+    
+    /**
+     * 
+     * @return string
+     * @throws \Exception
+     */
+    private function getRrdPath()
+    {
+        $query = "SELECT RRDdatabase_path FROM config";
+        
+        
+        $stmt = $this->getStorageDatabase()->prepare($query);
+        $stmt->execute(); 
+        $res = $stmt->fetch();
+        if ($res === false) {
+            throw new \Exception('Value do not appear in database.');
+        }
+        return $res['RRDdatabase_path'];
+    }
+    
+    /**
+     * 
+     * @param int $metricId
+     * @return boolean
+     */
+    private function checkRrdFilesAreAvalaible($metricId)
+    {
+        $rrdFileExist = false;
+        
+        $rrdMetricFile = $this->getRrdPath() . $metricId . '.rrd';
+        $output = $this->container->execute('ls ' . $rrdMetricFile .' 2>/dev/null', 'web', false);
+        
+        while ($output['output'] !== $rrdMetricFile) {
+        }
+        
+        $rrdFileExist = true;
+        
+        return $rrdFileExist;
+    }
+    
+    /**
+     * 
+     * @param string $metricName
+     * @param string $hostname
+     * @param string $serviceDescription
+     * @return int
+     * @throws \Exception
+     */
+    private function getMetricId($metricName, $hostname, $serviceDescription)
+    {
+        // Get Metrics Id From Hostname - Service Descriptionn and Metric name
+        $query = "SELECT m.metric_id "
+            . "FROM index_data i, metrics m "
+            . "WHERE i.host_name = :hostname "
+            . "AND i.service_description = :servicedescription "
+            . "AND m.metric_name = :metricname "
+            . "AND m.index_id = i.id";
+        
+        $stmt = $this->getStorageDatabase()->prepare($query);
+        $stmt->bindParam(':hostname', $hostname, \PDO::PARAM_STR);
+        $stmt->bindParam(':servicedescription', $serviceDescription, \PDO::PARAM_STR);
+        $stmt->bindParam(':metricname', $metricName, \PDO::PARAM_STR);
+        $stmt->execute(); 
+        $res = $stmt->fetch();
+         if ($res === false) {
+            throw new \Exception('Values do not appear in database.');
+        }
+        return $res['metric_id'];
     }
 }
