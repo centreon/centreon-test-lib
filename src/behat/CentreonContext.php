@@ -608,10 +608,8 @@ class CentreonContext extends UtilsContext
             },
             'Cannot get performance data of MetricTestHostname / MetricTestService'
         );
-        
-        if (!$this->isMetricAvailable('test10', 'MetricTestHostname', 'MetricTestService')) {
-            echo "No Metrics available or check rrd files!";
-        }  
+       
+        $this->checkForMetricAvaibility('test10', 'MetricTestHostname', 'MetricTestService');   
     }
     
     /**
@@ -619,14 +617,18 @@ class CentreonContext extends UtilsContext
      * @param string $metricName
      * @param string $hostname
      * @param string $serviceDescription
-     * @return boolean
      */
-    private function isMetricAvailable($metricName, $hostname, $serviceDescription)
+    public function checkForMetricAvaibility($metricName, $hostname, $serviceDescription)
     {
         $metricId = $this->getMetricId($metricName, $hostname, $serviceDescription);
-        $isMetricAvailable = $this->checkRrdFilesAreAvalaible($metricId);
+        $rrdMetricFile = $this->getRrdPath() . $metricId . '.rrd';
         
-        return $isMetricAvailable;
+        $this->spin(
+            function($context) use ($rrdMetricFile) {
+               return $context->checkRrdFilesAreAvalaible($rrdMetricFile);
+            },
+            'No Metrics available or check rrd files!'
+        );
     }
     
     /**
@@ -637,7 +639,6 @@ class CentreonContext extends UtilsContext
     private function getRrdPath()
     {
         $query = "SELECT RRDdatabase_path FROM config";
-        
         
         $stmt = $this->getStorageDatabase()->prepare($query);
         $stmt->execute(); 
@@ -650,21 +651,17 @@ class CentreonContext extends UtilsContext
     
     /**
      * 
-     * @param int $metricId
+     * @param string $rrdMetricFile
      * @return boolean
      */
-    private function checkRrdFilesAreAvalaible($metricId)
+    private function checkRrdFilesAreAvalaible($rrdMetricFile)
     {
         $rrdFileExist = false;
-        
-        $rrdMetricFile = $this->getRrdPath() . $metricId . '.rrd';
         $output = $this->container->execute('ls ' . $rrdMetricFile .' 2>/dev/null', 'web', false);
         
-        while ($output['output'] !== $rrdMetricFile) {
+        if ($output['output'] === $rrdMetricFile) {
+            $rrdFileExist = true;
         }
-        
-        $rrdFileExist = true;
-        
         return $rrdFileExist;
     }
     
