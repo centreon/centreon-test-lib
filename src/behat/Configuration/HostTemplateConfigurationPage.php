@@ -121,7 +121,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             self::NOTIFICATION_TAB
         ),
         'contact_additive_inheritance' => array(
-            'radio',
+            'checkbox',
             'input[name="contact_additive_inheritance"]',
             self::NOTIFICATION_TAB
         ),
@@ -131,7 +131,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             self::NOTIFICATION_TAB
         ),
         'contact_group_additive_inheritance' => array(
-            'radio',
+            'checkbox',
             'input[name="cg_additive_inheritance"]',
             self::NOTIFICATION_TAB
         ),
