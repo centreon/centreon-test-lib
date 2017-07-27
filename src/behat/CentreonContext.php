@@ -690,7 +690,7 @@ class CentreonContext extends UtilsContext
         $stmt->execute(); 
         $res = $stmt->fetch();
          if ($res === false) {
-            throw new \Exception('Values do not appear in database.');
+            throw new \Exception('Cannot get metric id in database.');
         }
         
         return $res['metric_id'];
