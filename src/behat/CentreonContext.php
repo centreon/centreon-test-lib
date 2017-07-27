@@ -213,9 +213,9 @@ class CentreonContext extends UtilsContext
     }
     
     /**
-     * @Given I am logged in a Centreon server with a configured metrics
+     * @Given I am logged in a Centreon server with configured metrics
      */
-    public function iAmLoggedInACentreonServerWithAConfiguredMetrics()
+    public function iAmLoggedInACentreonServerWithConfiguredMetrics()
     {
         $this->aCentreonServer();
         $this->iAmLoggedIn();
