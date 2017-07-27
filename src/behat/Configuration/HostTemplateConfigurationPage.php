@@ -162,7 +162,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
         ),
         'notify_on_none' => array(
             'checkbox',
-            'input[name="host_notifOpts[r]"]',
+            'input[name="host_notifOpts[n]"]',
             self::NOTIFICATION_TAB
         ),
         'notification_interval' => array(
