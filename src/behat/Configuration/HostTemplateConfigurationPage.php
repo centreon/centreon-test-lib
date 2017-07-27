@@ -162,7 +162,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
         ),
         'notify_on_none' => array(
             'checkbox',
-            'input[name="host_notifOpts[r]"]',
+            'input[name="host_notifOpts[n]"]',
             self::NOTIFICATION_TAB
         ),
         'notification_interval' => array(
@@ -421,8 +421,20 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
         $i = count($currentMacros);
         foreach ($macros as $name => $value) {
             $this->context->assertFind('css', '#macro_add p')->click();
-            $this->context->assertFindField('macroInput_' . $i)->setValue($name);
-            $this->context->assertFindField('macroValue_' . $i)->setValue($value);
+            $inputs = $this->context->getSession()->getPage()->findAll('css', '[id^=macroInput]');
+            foreach ($inputs as $input) {
+                $input_name = $input->getValue();
+                if ($input_name == '') {
+                    $input->setValue($name);
+                }
+            }
+            $inputs = $this->context->getSession()->getPage()->findAll('css', '[id^=macroValue]');
+            foreach ($inputs as $input) {
+                $input_value = $input->getValue();
+                if ($input_value == '') {
+                    $input->setValue($value);
+                }
+            }
             $i++;
         }
     }
