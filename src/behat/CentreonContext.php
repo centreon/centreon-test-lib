@@ -673,7 +673,7 @@ class CentreonContext extends UtilsContext
      * @return int
      * @throws \Exception
      */
-    private function getMetricId($metricName, $hostname, $serviceDescription)
+    private function getMetricId($hostname, $serviceDescription, $metricName)
     {
         // Get Metrics Id From Hostname - Service Descriptionn and Metric name
         $query = "SELECT m.metric_id "
