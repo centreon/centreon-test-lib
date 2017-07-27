@@ -583,7 +583,6 @@ class CentreonContext extends UtilsContext
 
         // Ensure service is monitored.
         $this->restartAllPollers();
-        sleep(7);
 
         // Send multiple perfdata.
         $perfdata = '';
@@ -609,7 +608,7 @@ class CentreonContext extends UtilsContext
             'Cannot get performance data of MetricTestHostname / MetricTestService'
         );
        
-        $this->checkForMetricAvaibility('test10', 'MetricTestHostname', 'MetricTestService');   
+        $this->checkForMetricAvaibility('MetricTestHostname', 'MetricTestService', 'test10');   
     }
     
     /**
@@ -618,9 +617,9 @@ class CentreonContext extends UtilsContext
      * @param string $hostname
      * @param string $serviceDescription
      */
-    public function checkForMetricAvaibility($metricName, $hostname, $serviceDescription)
+    public function checkForMetricAvaibility($hostname, $serviceDescription, $metricName)
     {
-        $metricId = $this->getMetricId($metricName, $hostname, $serviceDescription);
+        $metricId = $this->getMetricId($hostname, $serviceDescription, $metricName);
         $rrdMetricFile = $this->getRrdPath() . $metricId . '.rrd';
         
         $this->spin(
@@ -644,7 +643,7 @@ class CentreonContext extends UtilsContext
         $stmt->execute(); 
         $res = $stmt->fetch();
         if ($res === false) {
-            throw new \Exception('Value do not appear in database.');
+            throw new \Exception('Cannot get RRD path in database.');
         }
         return $res['RRDdatabase_path'];
     }
@@ -662,6 +661,7 @@ class CentreonContext extends UtilsContext
         if ($output['output'] === $rrdMetricFile) {
             $rrdFileExist = true;
         }
+        
         return $rrdFileExist;
     }
     
@@ -692,6 +692,7 @@ class CentreonContext extends UtilsContext
          if ($res === false) {
             throw new \Exception('Values do not appear in database.');
         }
+        
         return $res['metric_id'];
     }
 }
