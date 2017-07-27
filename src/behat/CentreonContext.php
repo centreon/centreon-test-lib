@@ -213,9 +213,9 @@ class CentreonContext extends UtilsContext
     }
     
     /**
-     * @Given I am logged in a Centreon server with a configured metrics
+     * @Given I am logged in a Centreon server with configured metrics
      */
-    public function iAmLoggedInACentreonServerWithAConfiguredMetrics()
+    public function iAmLoggedInACentreonServerWithConfiguredMetrics()
     {
         $this->aCentreonServer();
         $this->iAmLoggedIn();
@@ -583,7 +583,6 @@ class CentreonContext extends UtilsContext
 
         // Ensure service is monitored.
         $this->restartAllPollers();
-        sleep(7);
 
         // Send multiple perfdata.
         $perfdata = '';
@@ -608,5 +607,92 @@ class CentreonContext extends UtilsContext
             },
             'Cannot get performance data of MetricTestHostname / MetricTestService'
         );
+       
+        $this->checkForMetricAvaibility('MetricTestHostname', 'MetricTestService', 'test10');   
+    }
+    
+    /**
+     * 
+     * @param string $metricName
+     * @param string $hostname
+     * @param string $serviceDescription
+     */
+    public function checkForMetricAvaibility($hostname, $serviceDescription, $metricName)
+    {
+        $metricId = $this->getMetricId($hostname, $serviceDescription, $metricName);
+        $rrdMetricFile = $this->getRrdPath() . $metricId . '.rrd';
+        
+        $this->spin(
+            function($context) use ($rrdMetricFile) {
+               return $context->checkRrdFilesAreAvalaible($rrdMetricFile);
+            },
+            'No Metrics available or check rrd files!'
+        );
+    }
+    
+    /**
+     * 
+     * @return string
+     * @throws \Exception
+     */
+    private function getRrdPath()
+    {
+        $query = "SELECT RRDdatabase_path FROM config";
+        
+        $stmt = $this->getStorageDatabase()->prepare($query);
+        $stmt->execute(); 
+        $res = $stmt->fetch();
+        if ($res === false) {
+            throw new \Exception('Cannot get RRD path in database.');
+        }
+        return $res['RRDdatabase_path'];
+    }
+    
+    /**
+     * 
+     * @param string $rrdMetricFile
+     * @return boolean
+     */
+    private function checkRrdFilesAreAvalaible($rrdMetricFile)
+    {
+        $rrdFileExist = false;
+        $output = $this->container->execute('ls ' . $rrdMetricFile .' 2>/dev/null', 'web', false);
+        
+        if ($output['output'] === $rrdMetricFile) {
+            $rrdFileExist = true;
+        }
+        
+        return $rrdFileExist;
+    }
+    
+    /**
+     * 
+     * @param string $metricName
+     * @param string $hostname
+     * @param string $serviceDescription
+     * @return int
+     * @throws \Exception
+     */
+    private function getMetricId($metricName, $hostname, $serviceDescription)
+    {
+        // Get Metrics Id From Hostname - Service Descriptionn and Metric name
+        $query = "SELECT m.metric_id "
+            . "FROM index_data i, metrics m "
+            . "WHERE i.host_name = :hostname "
+            . "AND i.service_description = :servicedescription "
+            . "AND m.metric_name = :metricname "
+            . "AND m.index_id = i.id";
+        
+        $stmt = $this->getStorageDatabase()->prepare($query);
+        $stmt->bindParam(':hostname', $hostname, \PDO::PARAM_STR);
+        $stmt->bindParam(':servicedescription', $serviceDescription, \PDO::PARAM_STR);
+        $stmt->bindParam(':metricname', $metricName, \PDO::PARAM_STR);
+        $stmt->execute(); 
+        $res = $stmt->fetch();
+         if ($res === false) {
+            throw new \Exception('Cannot get metric id in database.');
+        }
+        
+        return $res['metric_id'];
     }
 }

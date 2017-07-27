@@ -39,8 +39,8 @@ class MetricsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'select#sl_list_metrics'
         ),
         'function' => array(
-            'input',
-            'textarea[name="rpn_function"]'
+            'custom',
+            'Function'
         ),
         'hidden_graph' => array(
             'checkbox',
@@ -77,5 +77,26 @@ class MetricsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             },
             'Current page does not match class ' . __CLASS__
         );
+    }
+    
+    /**
+     * 
+     * @param type $value
+     */
+    public function setFunction($value) 
+    {
+        if (!empty($value)) {
+            $this->context->spin(
+                function ($context) {
+                    $metricCount = count($context->getSession()->getPage()->findAll(
+                        'css',
+                        'select#sl_list_metrics option'
+                    ));
+                    return ($metricCount >= 2); 
+                },
+                'Can not load metrics before setting function'
+            );
+        }  
+        $this->context->assertFind('css', 'textarea[name="rpn_function"]')->setValue($value);
     }
 }
