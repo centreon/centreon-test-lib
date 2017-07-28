@@ -372,16 +372,19 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
     protected function getMacros()
     {
         $macros = array();
-
+        $array = array();
         $i = 0;
-        while (true) {
-            $name = $this->context->getSession()->getPage()->findField('macroInput_' . $i);
-            if (is_null($name)) {
-                break;
-            }
-            $value = $this->context->assertFindField('macroValue_' . $i);
-            $macros[$name->getValue()] = $value->getValue();
-            ++$i;
+
+        $inputs = $this->context->getSession()->getPage()->findAll('css', '[id^=macroInput]');
+        foreach ($inputs as $input) {
+            $array[$i] = $input->getValue();
+            $i++;
+        }
+        $i = 0;
+        $inputs = $this->context->getSession()->getPage()->findAll('css', '[id^=macroValue]');
+        foreach ($inputs as $input) {
+            $macros[$array[$i]] = $input->getValue();
+            $i++;
         }
 
         return $macros;
@@ -417,8 +420,6 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
      */
     protected function setMacros($macros)
     {
-        $currentMacros = $this->getMacros();
-        $i = count($currentMacros);
         foreach ($macros as $name => $value) {
             $this->context->assertFind('css', '#macro_add p')->click();
             $inputs = $this->context->getSession()->getPage()->findAll('css', '[id^=macroInput]');
@@ -435,7 +436,6 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
                     $input->setValue($value);
                 }
             }
-            $i++;
         }
     }
 
