@@ -20,10 +20,29 @@ namespace Centreon\Test\Behat\Monitoring;
 class MonitoringServicesPage
 {
     private $ctx;
-
+    protected $properties = array(
+        'host',
+        'service',
+        'status',
+        'duration',
+        'last_check',
+        'tries',
+        'status_information',
+    );
+    
+    
     public function __construct($context)
     {
         $this->ctx = $context;
+    }
+    
+    /**
+     * Set Service Status Filter to All
+     */
+    public function setFilterByAllService()
+    {
+        $this->listServices();
+        $this->ctx->selectInList('select#statusService', 'All');
     }
 
     /**
@@ -370,5 +389,21 @@ class MonitoringServicesPage
             $status = 'UNKNOWN';
         }
         return $status;
+    }
+    
+    public function getPropertiesByService($host, $servicename, $property)
+    {   
+        $this->setFilterByAllService();
+        $this->ctx->assertFind('css','input#host_search')->setValue($host);
+        $this->ctx->assertFind('css','input#input_search')->setValue($servicename);
+        //$table = $this->ctx->assertFind('css', 'table.ListTable');
+   
+        
+            if (!in_array($property, $this->properties)) {
+                throw new \Exception('the property "'. $property.'" does not exist');
+            }
+    
+        //$this->ctx->assertFindIn($table,'css','tr#trStatus td:nth-child(' . $child . '))->getText();
+
     }
 }
