@@ -372,19 +372,16 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
     protected function getMacros()
     {
         $macros = array();
-        $array = array();
-        $i = 0;
 
         $inputs = $this->context->getSession()->getPage()->findAll('css', '[id^=macroInput]');
         foreach ($inputs as $input) {
-            $array[$i] = $input->getValue();
-            $i++;
-        }
-        $i = 0;
-        $inputs = $this->context->getSession()->getPage()->findAll('css', '[id^=macroValue]');
-        foreach ($inputs as $input) {
-            $macros[$array[$i]] = $input->getValue();
-            $i++;
+            $elementId = $input->getAttribute('id');
+            if (preg_match('/macroInput_(\d+)/', $elementId, $matches)) {
+                $macroId = $matches[1];
+                $macroName = $input->getValue();
+                $macros[$macroName] =
+                    $this->context->assertFind('css', '#macroValue_' . $macroId)->getValue();
+            }
         }
 
         return $macros;
@@ -420,22 +417,30 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
      */
     protected function setMacros($macros)
     {
-        foreach ($macros as $name => $value) {
-            $this->context->assertFind('css', '#macro_add p')->click();
-            $inputs = $this->context->getSession()->getPage()->findAll('css', '[id^=macroInput]');
-            foreach ($inputs as $input) {
-                $input_name = $input->getValue();
-                if ($input_name == '') {
-                    $input->setValue($name);
-                }
+        $currentMacros = $this->getMacros();
+        $finalMacros = array_merge($macros, $currentMacros);
+        $countFinalMacros = count($finalMacros) - count($currentMacros);
+        $addButton = $this->context->assertFind('css', '#macro_add p');
+        for ($i = 0; $i < $countFinalMacros; $i++) {
+            $addButton->click();
+        }
+
+        $i = 0;
+
+        $inputs = $this->context->getSession()->getPage()->findAll('css', '[id^=macroInput]');
+        $macroNames = array_keys($finalMacros);
+        foreach ($inputs as $input) {
+            $elementId = $input->getAttribute('id');
+            if (preg_match('/macroInput_(\d+)/', $elementId, $matches)) {
+                $macroId = $matches[1];
+                $input->setValue($macroNames[$i]);
+                $macroName = $input->getValue();
+                $macros[$macroName] = $this->context->assertFind(
+                    'css',
+                    '#macroValue_' . $macroId)->setValue($finalMacros[$macroNames[$i]]
+                );
             }
-            $inputs = $this->context->getSession()->getPage()->findAll('css', '[id^=macroValue]');
-            foreach ($inputs as $input) {
-                $input_value = $input->getValue();
-                if ($input_value == '') {
-                    $input->setValue($value);
-                }
-            }
+            $i++;
         }
     }
 
