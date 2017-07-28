@@ -75,7 +75,7 @@ class HostGroupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     /**
      * @var string
      */
-    //protected $listingClass = '\Centreon\Test\Behat\Configuration\HostGroupConfigurationListingPage';
+    protected $listingClass = '\Centreon\Test\Behat\Configuration\HostGroupConfigurationListingPage';
 
     /**
      *  Navigate to and/or check that we are on a contact configuration
