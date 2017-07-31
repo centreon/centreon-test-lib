@@ -379,6 +379,7 @@ class UtilsContext extends RawMinkContext
      */
     public function selectToSelectTwo($css_id, $what)
     {
+        $array = explode(' ', $what);
         $inputField = $this->assertFind('css', $css_id);
         $choice = $inputField->getParent()->find('css', '.select2-selection');
         if (!$choice) {
@@ -389,8 +390,7 @@ class UtilsContext extends RawMinkContext
             'xpath',
             "//html/descendant-or-self::*[@class and contains(concat(' ', normalize-space(@class), ' '), ' select2-search__field ')]"
         );
-        //La ligne du dessous
-        $select2Input->postValue(['value' => [$what]]);
+        $select2Input->postValue(['value' => [$array[0]]]);
         $this->spin(
             function ($context) {
                 return count($context->getSession()->getPage()->findAll(
@@ -407,50 +407,6 @@ class UtilsContext extends RawMinkContext
             $html = $result->getHtml();
             if (preg_match('/>(.+)</', $html, $matches)) {
                 if (isset($matches[1]) && $matches[1] == $what) {
-                    $result->click();
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     * Select an element which includes a space in a select two.
-     *
-     * @param $css_id
-     * @param $what
-     * @throws \Exception
-     */
-    public function selectToSelectTwoWithSpace($css_id, $what1, $what2)
-    {
-        $inputField = $this->assertFind('css', $css_id);
-        $choice = $inputField->getParent()->find('css', '.select2-selection');
-        if (!$choice) {
-            throw new \Exception('No select2 choice found');
-        }
-        $choice->press();
-        $select2Input = $this->getSession()->getDriver()->getWebDriverSession()->activeElement(
-            'xpath',
-            "//html/descendant-or-self::*[@class and contains(concat(' ', normalize-space(@class), ' '), ' select2-search__field ')]"
-        );
-        //La ligne du dessous
-        $select2Input->postValue(['value' => [$what1]]);
-        $this->spin(
-            function ($context) {
-                return count($context->getSession()->getPage()->findAll(
-                    'css',
-                    'li.select2-results__option:not(.loading-results):not(.select2-results__message)'
-                )) != 0;
-            }
-        );
-        $chosenResults = $this->getSession()->getPage()->findAll(
-            'css',
-            'li.select2-results__option:not(.loading-results):not(.select2-results__message)'
-        );
-        foreach ($chosenResults as $result) {
-            $html = $result->getHtml();
-            if (preg_match('/>(.+)</', $html, $matches)) {
-                if (isset($matches[1]) && $matches[1] == $what2) {
                     $result->click();
                     break;
                 }
