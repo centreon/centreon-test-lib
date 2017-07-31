@@ -21,16 +21,29 @@ class MonitoringServicesPage
 {
     private $ctx;
     protected $properties = array(
-        'host',
-        'service',
-        'status',
-        'duration',
-        'last_check',
-        'tries',
-        'status_information',
+        'host' => array(
+            'td:nth-child(3)'
+        ),
+        'service' => array(
+            'td:nth-child(4)'
+        ),
+        'status' => array(
+            'td:nth-child(7)'
+        ),
+        'duration' => array(
+            'td:nth-child(8)'
+        ),
+        'last_check' => array(
+            'td:nth-child(9)'
+        ),
+        'tries' => array(
+            'td:nth-child(10)'
+        ),
+        'status_information' => array(
+            'td:nth-child(11)'
+        )
     );
-    
-    
+
     public function __construct($context)
     {
         $this->ctx = $context;
@@ -44,7 +57,6 @@ class MonitoringServicesPage
         $this->listServices();
         $this->ctx->selectInList('select#statusService', 'All');
     }
-
     /**
       * Set the filter hostname
       *
@@ -391,19 +403,27 @@ class MonitoringServicesPage
         return $status;
     }
     
-    public function getPropertiesByService($host, $servicename, $property)
+    /**
+     * Get the Value of a field from a given host and service.
+     * 
+     * @param string $host
+     * @param string $servicename
+     * @param string $propertyfield
+     * @return string
+     * @throws Exception
+     */
+    public function getOnePropertyByHostAndService($host, $servicename, $propertyfield)
     {   
         $this->setFilterByAllService();
         $this->ctx->assertFind('css','input#host_search')->setValue($host);
         $this->ctx->assertFind('css','input#input_search')->setValue($servicename);
-        //$table = $this->ctx->assertFind('css', 'table.ListTable');
-   
-        
-            if (!in_array($property, $this->properties)) {
-                throw new \Exception('the property "'. $property.'" does not exist');
-            }
-    
-        //$this->ctx->assertFindIn($table,'css','tr#trStatus td:nth-child(' . $child . '))->getText();
+        if (!array_key_exists($propertyfield, $this->properties)) {
+            throw new Exception($propertyfield . ' property does not exist, please verify the name');
+        }       
+        $locator = $this->properties[$propertyfield];
+        $propertyLocator = $locator[0];
+        $table = $this->ctx->assertFind('css', 'table.ListTable');
 
+        return $this->ctx->assertFindIn($table, 'css', 'tr#trStatus '. $propertyLocator)->getText();   
     }
 }
