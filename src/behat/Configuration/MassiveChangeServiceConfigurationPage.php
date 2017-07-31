@@ -222,10 +222,8 @@ class MassiveChangeServiceConfigurationPage extends \Centreon\Test\Behat\Configu
             self::RELATIONS_TAB
         ),
         'trap_relations' => array(
-            'custom',
-            'TrapRelations',
-            /*'select2',
-            'select#service_traps',*/
+            'select2',
+            'select#service_traps',
             self::RELATIONS_TAB
         ),
         // Data tab
@@ -405,28 +403,18 @@ class MassiveChangeServiceConfigurationPage extends \Centreon\Test\Behat\Configu
     {
         $macros = array();
 
-        $i = 0;
-        while (true) {
-            $name = $this->context->getSession()->getPage()->findField('macroInput_' . $i);
-            if (is_null($name)) {
-                break ;
+        $inputs = $this->context->getSession()->getPage()->findAll('css', '[id^=macroInput]');
+        foreach ($inputs as $input) {
+            $elementId = $input->getAttribute('id');
+            if (preg_match('/macroInput_(\d+)/', $elementId, $matches)) {
+                $macroId = $matches[1];
+                $macroName = $input->getValue();
+                $macros[$macroName] =
+                    $this->context->assertFind('css', '#macroValue_' . $macroId)->getValue();
             }
-            $value = $this->context->assertFindField('macroValue_' . $i);
-            $macros[$name->getValue()] = $value->getValue();
-            ++$i;
         }
 
         return $macros;
-    }
-
-    /**
-     *  Get trap_relations.
-     *
-     *  @return trap_relations
-     */
-    protected function getTrapRelations()
-    {
-        return $this->context->assertFind('css', $propertyLocator)->getText();
     }
 
     /**
@@ -437,25 +425,29 @@ class MassiveChangeServiceConfigurationPage extends \Centreon\Test\Behat\Configu
     protected function setMacros($macros)
     {
         $currentMacros = $this->getMacros();
-        $i = count($currentMacros);
-        foreach ($macros as $name => $value) {
-            $this->context->assertFind('css' , '#macro_add p')->click();
-            $this->context->assertFindField('macroInput_' . $i)->setValue($name);
-            $this->context->assertFindField('macroValue_' . $i)->setValue($value);
-            $i++;
+        $finalMacros = array_merge($macros, $currentMacros);
+        $countFinalMacros = count($finalMacros) - count($currentMacros);
+        $addButton = $this->context->assertFind('css', '#macro_add p');
+        for ($i = 0; $i < $countFinalMacros; $i++) {
+            $addButton->click();
         }
-    }
 
-    /**
-     *  Set trap_relations.
-     *
-     *  @param $trap_relations TrapRelations.
-     */
-    protected function setTrapRelations($trapRelations)
-    {
-        $css_id = 'select#service_traps';
-        foreach ($trapRelations as $what1 => $what2) {
-            $this->context->selectToSelectTwoWithSpace('select#service_traps', $what1, $what2);
+        $i = 0;
+
+        $inputs = $this->context->getSession()->getPage()->findAll('css', '[id^=macroInput]');
+        $macroNames = array_keys($finalMacros);
+        foreach ($inputs as $input) {
+            $elementId = $input->getAttribute('id');
+            if (preg_match('/macroInput_(\d+)/', $elementId, $matches)) {
+                $macroId = $matches[1];
+                $input->setValue($macroNames[$i]);
+                $macroName = $input->getValue();
+                $macros[$macroName] = $this->context->assertFind(
+                    'css',
+                    '#macroValue_' . $macroId)->setValue($finalMacros[$macroNames[$i]]
+                );
+            }
+            $i++;
         }
     }
 }
