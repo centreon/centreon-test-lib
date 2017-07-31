@@ -22,6 +22,14 @@ class ServiceConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     protected $validField = 'input[name="searchS"]';
 
     protected $properties = array(
+        'service' => array(
+            'text',
+            'td:nth-child(3)'
+        ),
+        'scheduling' => array(
+            'text',
+            'td:nth-child(4)'
+        ),
         'id' => array(
             'custom'
         )
