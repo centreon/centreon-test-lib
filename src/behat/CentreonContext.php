@@ -311,14 +311,12 @@ class CentreonContext extends UtilsContext
         // Set session parameters.
         $this->setMinkParameter(
             'base_url',
-            'http://' . $this->container->getContainerId('web') . ':' . $this->container->getPort(80, 'web') .
-            '/centreon'
+            'http://' . $this->container->getContainerId('web') . '/centreon'
         );
 
         // Real application test, create an API authentication token.
         $ch = curl_init(
-            'http://' . $this->container->getContainerId('web') . ':' . $this->container->getPort(80, 'web') .
-            '/centreon/api/index.php?action=authenticate'
+            'http://' . $this->container->getContainerId('web') . '/centreon/api/index.php?action=authenticate'
         );
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
