@@ -379,7 +379,12 @@ class UtilsContext extends RawMinkContext
      */
     public function selectToSelectTwo($css_id, $what)
     {
-        $array = explode(' ', $what);
+        if (is_array($what)) {
+            $array = $what;
+            $what = $array[1];
+        } else {
+            $array = explode(' ', $what);
+        }
         $inputField = $this->assertFind('css', $css_id);
         $choice = $inputField->getParent()->find('css', '.select2-selection');
         if (!$choice) {
