@@ -20,7 +20,7 @@ namespace Centreon\Test\Behat\Monitoring;
 class MonitoringServicesPage
 {
     private $ctx;
-    protected $properties = array(
+    private $properties = array(
         'host' => array(
             'td:nth-child(3)'
         ),
@@ -43,7 +43,7 @@ class MonitoringServicesPage
             'td:nth-child(11)'
         )
     );
-
+    
     public function __construct($context)
     {
         $this->ctx = $context;
@@ -408,11 +408,11 @@ class MonitoringServicesPage
      * 
      * @param string $host
      * @param string $servicename
-     * @param string $propertyfield
+     * @param string $propertyfield , The value of the field to retrieve
      * @return string
      * @throws Exception
      */
-    public function getOnePropertyByHostAndService($host, $servicename, $propertyfield)
+    public function getPropertyFromAHostAndService($host, $servicename, $propertyfield)
     {   
         $this->setFilterByAllService();
         $this->ctx->assertFind('css','input#host_search')->setValue($host);
@@ -426,4 +426,5 @@ class MonitoringServicesPage
 
         return $this->ctx->assertFindIn($table, 'css', 'tr#trStatus '. $propertyLocator)->getText();   
     }
+    
 }
