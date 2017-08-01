@@ -147,9 +147,7 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     $this->context->selectInList($propertyLocator, $value);
                     break;
                 case 'select2':
-                    if (!is_array($value)) {
-                        $value = array($value);
-                    }
+                    $value = array($value);
                     $object = $this->context->assertFind('css', $propertyLocator);
                     $parent = $object->getParent();
                     $this->context->assertFindIn($parent, 'css', 'img.ico-14')->click();
