@@ -344,7 +344,7 @@ class CentreonContext extends UtilsContext
     public function setContainerWebDriver()
     {
         // Wait for WebDriver container.
-        $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/status';
+        $url = 'http://' . $this->container->getHost() . ':4444/wd/hub/status';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
@@ -362,7 +362,7 @@ class CentreonContext extends UtilsContext
         }
 
         try {
-            $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
+            $url = 'http://' . $this->container->getHost() . ':4444/wd/hub';
             $driver = new \Behat\Mink\Driver\Selenium2Driver(
                 'chrome',
                 array(
