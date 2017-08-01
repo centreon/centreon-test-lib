@@ -76,14 +76,14 @@ class HostGroupServiceConfigurationListingPage extends \Centreon\Test\Behat\List
         // Browse all elements.
         $entries = array();
         $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two,.row_disabled');
-        $currentHost = '';
+        $currentHostGroup = '';
         foreach ($elements as $element) {
-            $tempHost = $this->context->assertFindIn($element, 'css', 'td:nth-child(2) a')->getText();
-            if (!empty($tempHost) && ($tempHost != $currentHost)) {
-                $currentHost = $tempHost;
+            $tempHostGroup = $this->context->assertFindIn($element, 'css', 'td:nth-child(2) a')->getText();
+            if (!empty($tempHostGroup) && ($tempHostGroup != $currentHostGroup)) {
+                $currentHostGroup = $tempHostGroup;
             }
             $currentService = $this->context->assertFindIn($element, 'css', 'td:nth-child(3) a')->getText();
-            $entries[$currentHost][$currentService] = array();
+            $entries[$currentHostGroup][$currentService] = array();
             foreach ($this->properties as $property => $metadata) {
                 if (empty($propertyTitle)) {
                     $propertyTitle = $property;
@@ -96,7 +96,7 @@ class HostGroupServiceConfigurationListingPage extends \Centreon\Test\Behat\List
                     switch ($propertyType) {
                     case 'text':
                         $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
-                        $entries[$currentHost][$currentService][$property] = $component->getText();
+                        $entries[$currentHostGroup][$currentService][$property] = $component->getText();
                             break;
                     case 'attribute':
                             if (is_null($propertyLocator) || empty($propertyLocator)) {
@@ -104,11 +104,11 @@ class HostGroupServiceConfigurationListingPage extends \Centreon\Test\Behat\List
                         } else {
                             $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
                         }
-                        $entries[$currentHost][$currentService][$property] = $component->getAttribute($metadata[2]);
+                        $entries[$currentHostGroup][$currentService][$property] = $component->getAttribute($metadata[2]);
                         break;
                     case 'custom':
                         $methodName = 'get' . ucfirst($property);
-                        $entries[$currentHost][$currentService][$property] = $this->$methodName($element);
+                        $entries[$currentHostGroup][$currentService][$property] = $this->$methodName($element);
                         break;
                 }
             }
@@ -120,34 +120,34 @@ class HostGroupServiceConfigurationListingPage extends \Centreon\Test\Behat\List
     /**
      *  Get a service.
      *
-     *  @param $hostservice  Array with host and service.
+     *  @param $hostgroupservice  Array with host_group and service.
      *
      *  @return Service properties.
      */
-    public function getEntry($hostservice)
+    public function getEntry($hostgroupservice)
     {
         $services = $this->getEntries();
-        if (!array_key_exists($hostservice['host'], $services) ||
-            !array_key_exists($hostservice['service'], $services[$hostservice['host']])) {
+        if (!array_key_exists($hostgroupservice['host_group'], $services) ||
+            !array_key_exists($hostgroupservice['service'], $services[$hostgroupservice['host_group']])) {
             throw new \Exception(
-                'could not find service ' . $hostservice['service'] .
-                ' of host ' . $hostservice['host']
+                'could not find service ' . $hostgroupservice['service'] .
+                ' of hostgroup ' . $hostgroupservice['host_group']
             );
         }
-        return $services[$hostservice['host']][$hostservice['service']];
+        return $services[$hostgroupservice['host_group']][$hostgroupservice['service']];
     }
 
     /**
      *  Check if a service exist.
      *
-     *  @param $hostservice  Array with host and service.
+     *  @param $hostgroupservice  Array with host_group and service.
      *
      *  @return True if service exist.
      */
-    public function hasEntry($hostservice)
+    public function hasEntry($hostgroupservice)
     {
         try {
-            $this->getEntry($hostservice);
+            $this->getEntry($hostgroupservice);
             $thrown = false;
         } catch (\Exception $e) {
             $thrown = true;
@@ -156,13 +156,13 @@ class HostGroupServiceConfigurationListingPage extends \Centreon\Test\Behat\List
     }
 
     /**
-     *  Set host search filter.
+     *  Set hostgroup search filter.
      *
-     *  @param $host  Host name.
+     *  @param $hostgroup  Hostgroup name.
      */
-    public function setHostFilter($host)
+    public function setHostGroupFilter($host)
     {
-        $this->context->assertFindField('hostgroups')->setValue($host);
+        $this->context->assertFindField('hostgroups')->setValue($hostgroup);
     }
 
     /**
