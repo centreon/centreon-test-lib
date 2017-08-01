@@ -309,7 +309,10 @@ class CentreonContext extends UtilsContext
         $this->setContainerWebDriver();
 
         // Set session parameters.
-        $this->setMinkParameter('base_url', 'http://web/centreon');
+        $this->setMinkParameter(
+            'base_url',
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon'
+        );
 
         // Real application test, create an API authentication token.
         $ch = curl_init(
