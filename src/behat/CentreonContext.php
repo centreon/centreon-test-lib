@@ -316,7 +316,8 @@ class CentreonContext extends UtilsContext
 
         // Real application test, create an API authentication token.
         $ch = curl_init(
-            'http://' . $this->container->getContainerId('web') . '/centreon/api/index.php?action=authenticate'
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') .
+            '/centreon/api/index.php?action=authenticate'
         );
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
@@ -327,7 +328,7 @@ class CentreonContext extends UtilsContext
             CURLOPT_POSTFIELDS,
             array('username' => 'admin', 'password' => 'centreon'));
         $res = curl_exec($ch);
-        $limit = time() + 120;
+        $limit = time() + 60;
         while ((time() < $limit) && (($res === false) || empty($res))) {
             sleep(1);
             $res = curl_exec($ch);
