@@ -121,11 +121,14 @@ class Container
      *
      *  @param $service Service name.
      */
-    public function getContainerId($service)
+    public function getContainerId($service, $longId = true)
     {
         exec('sh -c \'docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' ps -q ' . $service . ' | tr -d "\n"\'', $output, $returnVar);
         if ($returnVar != 0) {
             throw new \Exception('Cannot retrieve container ID of service ' . $service . ': ' . $output[0] . '.');
+        }
+        if (!$longId) {
+            $output[0] = substr($output[0], 0, 12);
         }
         return $output[0];
     }
