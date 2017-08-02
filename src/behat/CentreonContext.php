@@ -311,7 +311,7 @@ class CentreonContext extends UtilsContext
         // Set session parameters.
         $this->setMinkParameter(
             'base_url',
-            'http://' . $this->container->getContainerId('web') . '/centreon'
+            'http://' . $this->container->getContainerId('web', false) . '/centreon'
         );
 
         // Real application test, create an API authentication token.
