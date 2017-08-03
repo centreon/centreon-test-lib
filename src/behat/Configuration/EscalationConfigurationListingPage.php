@@ -37,8 +37,8 @@ class EscalationConfigurationListingPage extends \Centreon\Test\Behat\ListingPag
     /**
      *  Escalation list page.
      *
-     *  @param $context  Centreon context object.
-     *  @param $visit    True to navigate to the default escalation list page.
+     * @param $context  Centreon context object.
+     * @param $visit    True to navigate to the default escalation list page.
      */
     public function __construct($context, $visit = true)
     {
@@ -97,7 +97,7 @@ class EscalationConfigurationListingPage extends \Centreon\Test\Behat\ListingPag
                 '.ToolbarPagination a img[title="Next page"]'
             );
             if (is_null($nextLink)) {
-                break ;
+                break;
             } else {
                 $nextLink->click();
                 $this->waitForValidPage();
@@ -109,7 +109,7 @@ class EscalationConfigurationListingPage extends \Centreon\Test\Behat\ListingPag
     /**
      *  Set the escalation filter.
      *
-     *  @param string $escalationName Escalation name to select.
+     * @param string $escalationName Escalation name to select.
      */
     public function setEscalationFilter($escalationName)
     {
@@ -128,7 +128,7 @@ class EscalationConfigurationListingPage extends \Centreon\Test\Behat\ListingPag
     /**
      *  Set max escalation displayed in escalations list.
      *
-     *  @param string $limit  The value of limit in page limit dropdown.
+     * @param string $limit The value of limit in page limit dropdown.
      */
     public function setListingLimit($limit)
     {

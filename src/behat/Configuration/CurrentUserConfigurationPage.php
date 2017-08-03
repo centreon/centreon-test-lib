@@ -56,11 +56,11 @@ class CurrentUserConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
      *  Navigate to and/or check that we are on a contact configuration
      *  page.
      *
-     *  @param $context  Centreon context.
-     *  @param $visit    True to navigate to a blank host configuration
+     * @param $context  Centreon context.
+     * @param $visit    True to navigate to a blank host configuration
      *                   page.
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = true)
     {
         // Visit page.
         $this->context = $context;

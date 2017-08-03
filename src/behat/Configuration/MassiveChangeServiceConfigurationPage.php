@@ -21,7 +21,7 @@ class MassiveChangeServiceConfigurationPage extends \Centreon\Test\Behat\Configu
 {
     const GENERAL_TAB = 1;
     const NOTIFICATIONS_TAB = 2;
-    const RELATIONS_TAB  = 3;
+    const RELATIONS_TAB = 3;
     const DATA_TAB = 4;
     const EXTENDED_TAB = 5;
 
@@ -373,14 +373,14 @@ class MassiveChangeServiceConfigurationPage extends \Centreon\Test\Behat\Configu
     /**
      *  Service massive change page.
      *
-     *  @param $context  Centreon context object.
-     *  @param $visit    True to navigate to a blank edit page.
+     * @param $context  Centreon context object.
+     * @param $visit    True to navigate to a blank edit page.
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = true)
     {
-        // Visit page. 
+        // Visit page.
         $this->context = $context;
-        	if ($visit) {
+        if ($visit) {
             $this->context->visit('main.php?p=60201');
         }
 
@@ -397,7 +397,7 @@ class MassiveChangeServiceConfigurationPage extends \Centreon\Test\Behat\Configu
     /**
      *  Get macros.
      *
-     *  @return macros
+     * @return macros
      */
     protected function getMacros()
     {
@@ -420,7 +420,7 @@ class MassiveChangeServiceConfigurationPage extends \Centreon\Test\Behat\Configu
     /**
      *  Set macros.
      *
-     *  @param $macros Macros.
+     * @param $macros Macros.
      */
     protected function setMacros($macros)
     {
@@ -444,8 +444,8 @@ class MassiveChangeServiceConfigurationPage extends \Centreon\Test\Behat\Configu
                 $macroName = $input->getValue();
                 $macros[$macroName] = $this->context->assertFind(
                     'css',
-                    '#macroValue_' . $macroId)->setValue($finalMacros[$macroNames[$i]]
-                );
+                    '#macroValue_' . $macroId
+                )->setValue($finalMacros[$macroNames[$i]]);
             }
             $i++;
         }

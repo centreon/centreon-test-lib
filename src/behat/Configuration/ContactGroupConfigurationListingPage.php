@@ -40,8 +40,8 @@ class ContactGroupConfigurationListingPage extends \Centreon\Test\Behat\ListingP
     /**
      *  Contact group listing page.
      *
-     *  @param $context  Centreon context class.
-     *  @param $visit    True to navigate to page.
+     * @param $context  Centreon context class.
+     * @param $visit    True to navigate to page.
      */
     public function __construct($context, $visit = true)
     {
@@ -61,12 +61,12 @@ class ContactGroupConfigurationListingPage extends \Centreon\Test\Behat\ListingP
         );
     }
 
-   /**
+    /**
      * Get id
      */
     public function getId($element)
     {
-        $idComponent =$this->context->assertFindIn($element,'css','input[type="checkbox"]')->getAttribute('name');
+        $idComponent = $this->context->assertFindIn($element, 'css', 'input[type="checkbox"]')->getAttribute('name');
         $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
         return $id;
     }

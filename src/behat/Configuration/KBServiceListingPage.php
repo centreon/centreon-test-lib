@@ -27,8 +27,8 @@ class KBServiceListingPage extends \Centreon\Test\Behat\ListingPage
      *  Navigate to and/or check that we are on the KB service listing
      *  page.
      *
-     *  @param $context  Centreon context.
-     *  @param $visit    True to visit the page, false if already on it.
+     * @param $context  Centreon context.
+     * @param $visit    True to visit the page, false if already on it.
      */
     public function __construct($context, $visit = true)
     {
@@ -77,7 +77,7 @@ class KBServiceListingPage extends \Centreon\Test\Behat\ListingPage
                     'css',
                     'td:nth-child(6) a'
                 )->click();
-                return ;
+                return;
             }
         }
 

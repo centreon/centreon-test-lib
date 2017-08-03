@@ -82,10 +82,10 @@ class CommandConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
      *  Navigate to and/or check that we are on a command configuration
      *  page.
      *
-     *  @param $context  Centreon context.
-     *  @param $visit    True to navigate to a blank check command
+     * @param $context  Centreon context.
+     * @param $visit    True to navigate to a blank check command
      *                   configuration page.
-     *  @param $type     Command type if visit is enabled. Default to
+     * @param $type     Command type if visit is enabled. Default to
      *                   TYPE_CHECK.
      */
     public function __construct($context, $visit = true, $type = self::TYPE_CHECK)

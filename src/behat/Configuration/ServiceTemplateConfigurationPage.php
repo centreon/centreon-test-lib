@@ -43,7 +43,8 @@ class ServiceTemplateConfigurationPage extends \Centreon\Test\Behat\Configuratio
             'select2',
             'select#service_hPars',
             self::GENERAL_TAB
-        ),        'templates' => array(
+        ),
+        'templates' => array(
             'select2',
             'select#service_template_model_stm_id',
             self::GENERAL_TAB
@@ -332,10 +333,10 @@ class ServiceTemplateConfigurationPage extends \Centreon\Test\Behat\Configuratio
     /**
      *  Service template edit page.
      *
-     *  @param $context  Centreon context object.
-     *  @param $visit    True to navigate to a blank edit page.
+     * @param $context  Centreon context object.
+     * @param $visit    True to navigate to a blank edit page.
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = true)
     {
         // Visit.
         $this->context = $context;
@@ -356,7 +357,7 @@ class ServiceTemplateConfigurationPage extends \Centreon\Test\Behat\Configuratio
     /**
      *  Get macros.
      *
-     *  @return macros
+     * @return macros
      */
     protected function getMacros()
     {
@@ -379,7 +380,7 @@ class ServiceTemplateConfigurationPage extends \Centreon\Test\Behat\Configuratio
     /**
      *  Set macros.
      *
-     *  @param $macros Macros.
+     * @param $macros Macros.
      */
     protected function setMacros($macros)
     {
@@ -403,12 +404,10 @@ class ServiceTemplateConfigurationPage extends \Centreon\Test\Behat\Configuratio
                 $macroName = $input->getValue();
                 $macros[$macroName] = $this->context->assertFind(
                     'css',
-                    '#macroValue_' . $macroId)->setValue($finalMacros[$macroNames[$i]]
-                );
+                    '#macroValue_' . $macroId
+                )->setValue($finalMacros[$macroNames[$i]]);
             }
             $i++;
         }
     }
 }
-
-?>

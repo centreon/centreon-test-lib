@@ -36,8 +36,8 @@ class PollerConfigurationExportPage extends \Centreon\Test\Behat\ConfigurationPa
     /**
      *  Constructor.
      *
-     *  @param $context  Centreon context.
-     *  @param $visit    True to visit the poller configuration export
+     * @param $context  Centreon context.
+     * @param $visit    True to visit the poller configuration export
      *                   page.
      */
     public function __construct($context, $visit = true)
@@ -65,12 +65,12 @@ class PollerConfigurationExportPage extends \Centreon\Test\Behat\ConfigurationPa
     {
         $this->context->assertFind('css', '#exportBtn')->click();
         $this->context->spin(
-            function($context) {
+            function ($context) {
                 return (
                     $context->getSession()->getPage()->has(
                         'named',
-                        array('id', 'progressPct')) &&
-                    $context->getSession()->getPage()->find(
+                        array('id', 'progressPct')
+                    ) && $context->getSession()->getPage()->find(
                         'named',
                         array('id', 'progressPct')
                     )->getText() == '100%'
@@ -82,7 +82,7 @@ class PollerConfigurationExportPage extends \Centreon\Test\Behat\ConfigurationPa
     /**
      *  Set pollers.
      *
-     *  @param $pollers  Array of pollers.
+     * @param $pollers  Array of pollers.
      */
     public function setPollers($pollers)
     {

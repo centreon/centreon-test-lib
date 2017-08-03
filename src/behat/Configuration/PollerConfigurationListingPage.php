@@ -32,8 +32,8 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Navigate to the poller configuration listing page.
      *
-     *  @param $context  Centreon context.
-     *  @param $visit    True to navigate to the page.
+     * @param $context  Centreon context.
+     * @param $visit    True to navigate to the page.
      */
     public function __construct($context, $visit = true)
     {
@@ -56,8 +56,8 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Enable or disable a poller.
      *
-     *  @param $poller  Poller name.
-     *  @param $enable  True to enable, false to disable.
+     * @param $poller  Poller name.
+     * @param $enable  True to enable, false to disable.
      */
     public function enableEntry($poller, $enable = true)
     {
@@ -72,8 +72,8 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Select or unselect a poller.
      *
-     *  @param $poller  Poller name.
-     *  @param $select  True to check, false to uncheck.
+     * @param $poller  Poller name.
+     * @param $select  True to check, false to uncheck.
      */
     public function selectEntry($poller, $select = true)
     {
@@ -91,7 +91,7 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Go to the configuration export page.
      *
-     *  @return New PollerConfigurationExportPage.
+     * @return New PollerConfigurationExportPage.
      */
     public function exportConfiguration()
     {
@@ -105,7 +105,7 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      *  Beware, you might need to call setConfirmBox(true) to use this
      *  method effectively.
      *
-     *  @param $action  The action to perform on selected elements.
+     * @param $action  The action to perform on selected elements.
      */
     public function moreActions($action)
     {
