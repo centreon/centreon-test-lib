@@ -309,7 +309,10 @@ class CentreonContext extends UtilsContext
         $this->setContainerWebDriver();
 
         // Set session parameters.
-        $this->setMinkParameter('base_url', 'http://web/centreon');
+        $this->setMinkParameter(
+            'base_url',
+            'http://' . $this->container->getContainerId('web', false) . '/centreon'
+        );
 
         // Real application test, create an API authentication token.
         $ch = curl_init(
@@ -325,7 +328,7 @@ class CentreonContext extends UtilsContext
             CURLOPT_POSTFIELDS,
             array('username' => 'admin', 'password' => 'centreon'));
         $res = curl_exec($ch);
-        $limit = time() + 120;
+        $limit = time() + 60;
         while ((time() < $limit) && (($res === false) || empty($res))) {
             sleep(1);
             $res = curl_exec($ch);
@@ -344,7 +347,7 @@ class CentreonContext extends UtilsContext
     public function setContainerWebDriver()
     {
         // Wait for WebDriver container.
-        $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/status';
+        $url = 'http://' . $this->container->getHost() . ':4444/wd/hub/status';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
@@ -362,7 +365,7 @@ class CentreonContext extends UtilsContext
         }
 
         try {
-            $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
+            $url = 'http://' . $this->container->getHost() . ':4444/wd/hub';
             $driver = new \Behat\Mink\Driver\Selenium2Driver(
                 'chrome',
                 array(
