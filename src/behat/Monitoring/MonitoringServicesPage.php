@@ -20,12 +20,43 @@ namespace Centreon\Test\Behat\Monitoring;
 class MonitoringServicesPage
 {
     private $ctx;
-
+    private $properties = array(
+        'host' => array(
+            'td:nth-child(3)'
+        ),
+        'service' => array(
+            'td:nth-child(4)'
+        ),
+        'status' => array(
+            'td:nth-child(7)'
+        ),
+        'duration' => array(
+            'td:nth-child(8)'
+        ),
+        'last_check' => array(
+            'td:nth-child(9)'
+        ),
+        'tries' => array(
+            'td:nth-child(10)'
+        ),
+        'status_information' => array(
+            'td:nth-child(11)'
+        )
+    );
+    
     public function __construct($context)
     {
         $this->ctx = $context;
     }
-
+    
+    /**
+     * Set Service Status Filter to All
+     */
+    public function setFilterByAllService()
+    {
+        $this->listServices();
+        $this->ctx->selectInList('select#statusService', 'All');
+    }
     /**
       * Set the filter hostname
       *
@@ -371,4 +402,29 @@ class MonitoringServicesPage
         }
         return $status;
     }
+    
+    /**
+     * Get the Value of a field from a given host and service.
+     * 
+     * @param string $host
+     * @param string $servicename
+     * @param string $propertyfield , The value of the field to retrieve
+     * @return string
+     * @throws Exception
+     */
+    public function getPropertyFromAHostAndService($host, $servicename, $propertyfield)
+    {   
+        $this->setFilterByAllService();
+        $this->ctx->assertFind('css','input#host_search')->setValue($host);
+        $this->ctx->assertFind('css','input#input_search')->setValue($servicename);
+        if (!array_key_exists($propertyfield, $this->properties)) {
+            throw new Exception($propertyfield . ' property does not exist, please verify the name');
+        }       
+        $locator = $this->properties[$propertyfield];
+        $propertyLocator = $locator[0];
+        $table = $this->ctx->assertFind('css', 'table.ListTable');
+
+        return $this->ctx->assertFindIn($table, 'css', 'tr#trStatus '. $propertyLocator)->getText();   
+    }
+    
 }
