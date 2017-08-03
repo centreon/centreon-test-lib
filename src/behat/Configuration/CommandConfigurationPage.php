@@ -31,9 +31,45 @@ class CommandConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'input',
             'input[name="command_name"]'
         ),
+        'command_type' => array(
+            'radio',
+            'input[name="command_type[command_type]"]'
+        ),
         'command_line' => array(
             'input',
             'textarea[name="command_line"]'
+        ),
+        'enabled_shell' => array(
+            'checkbox',
+            'input[name="enable_shell"]'
+        ),
+        'argument_example' => array(
+            'input',
+            'input[name="command_example"]'
+        ),
+        'argument_description' => array(
+            'input',
+            'textarea[name="listOfArg"]'
+        ),
+        'macros_description' => array(
+            'input',
+            'textarea[name="listOfMacros"]'
+        ),
+        'connectors' => array(
+            'select',
+            'select[name="connectors"]'
+        ),
+        'graph_template' => array(
+            'select',
+            'select[name="graph_id"]'
+        ),
+        'enabled' => array(
+            'radio',
+            'input[name="command_activate[command_activate]"]'
+        ),
+        'comment' => array(
+            'input',
+            'textarea[name="command_comment"]'
         )
     );
 

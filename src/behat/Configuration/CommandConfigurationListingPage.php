@@ -31,25 +31,19 @@ class CommandConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
             'text',
             'td:nth-child(2)'
         ),
-        'request' => array(
+        'command_line' => array(
             'text',
             'td:nth-child(3)'
         ),
-        'inputs' => array(
+        'type' => array(
             'text',
             'td:nth-child(4)'
         ),
-        'outputs' => array(
-            'text',
-            'td:nth-child(5)'
+        'enabled' => array(
+            'custom'
         ),
-        'loggers' => array(
-            'text',
-            'td:nth-child(6)'
-        ),
-        'status' => array(
-            'text',
-            'td:nth-child(7)'
+        'id' => array(
+            'custom'
         )
     );
 
@@ -68,7 +62,20 @@ class CommandConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
         // Visit page.
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('main.php?p=608');
+            switch ($type) {
+                case 1:
+                    $this->context->visit('main.php?p=60802&type=1');
+                    break;
+                case 2:
+                    $this->context->visit('main.php?p=60801&type=2');
+                    break;
+                case 3:
+                    $this->context->visit('main.php?p=60803&type=3');
+                    break;
+                case 4:
+                    $this->context->visit('main.php?p=60807&type=4');
+                    break;
+            }
         }
 
         // Check that page is valid for this class.
@@ -87,46 +94,6 @@ class CommandConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
             },
             'Current page does not match class ' . __CLASS__
         );
-    }
-
-    /**
-     *  Get the list of commands.
-     */
-    public function getEntries()
-    {
-        // Go to first page.
-        $paginationLinks = $this->context->getSession()->getPage()->findAll('css', '.ToolbarPagination a');
-        foreach ($paginationLinks as $pageLink) {
-            if ($pageLink->getText() == '1') {
-                $pageLink->click();
-                $this->waitForValidPage();
-            }
-        }
-
-        // Browse all pages to find all commands.
-        $entries = array();
-        while (true) {
-            $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
-            foreach ($elements as $element) {
-                $entry = array();
-                $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
-                $entry['command_line'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
-                $entries[$entry['name']] = $entry;
-            }
-
-            // Go to next page or break.
-            $nextLink = $this->context->getSession()->getPage()->find(
-                'css',
-                '.ToolbarPagination a img[title="Next page"]'
-            );
-            if (is_null($nextLink)) {
-                break ;
-            } else {
-                $nextLink->click();
-                $this->waitForValidPage();
-            }
-        }
-        return $entries;
     }
 
     /**
@@ -158,5 +125,24 @@ class CommandConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
         $page = $this->context->getSession()->getPage();
         $toolbar_pagelimit = $page->find('css', '.Toolbar_pagelimit');
         $toolbar_pagelimit->selectFieldOption('l', $limit);
+    }
+
+    /**
+     * Get id
+     */
+    protected function getId($element)
+    {
+        $idComponent =$this->context->assertFindIn($element,'css','input[type="checkbox"]')->getAttribute('name');
+        $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
+        return $id;
+    }
+
+    /**
+     * Get enabled
+     */
+    protected function getEnabled($element)
+    {
+        return $this->context->assertFindIn($element, 'css', 'td:nth-child(5)')->getText() == 'ENABLED' ?
+            true : false;
     }
 }
