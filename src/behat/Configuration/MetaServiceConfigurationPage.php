@@ -38,6 +38,26 @@ class MetaServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
             'input',
             'input[name="critical"]'
         ),
+        'calculation_type' => array(
+            'select',
+            'select[name="calcul_type"]'
+        ),
+        'data_source_type' => array(
+            'select',
+            'select[name="data_source_type"]'
+        ),
+        'selection_mode' => array(
+            'radio',
+            'input[name="meta_select_mode[meta_select_mode]"]'
+        ),
+        'sql_like_clause_expression' => array(
+            'input',
+            'input[name="regexp_str"]'
+        ),
+        'metric' => array(
+            'select',
+            'select[name="metric"]'
+        ),
         'check_period' => array(
             'select2',
             'select#check_period'
@@ -53,8 +73,69 @@ class MetaServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
         'retry_check_interval' => array(
             'input',
             'input[name="retry_check_interval"]'
+        ),
+        'notification_enabled' => array(
+            'radio',
+            'input[name="notifications_enabled[notifications_enabled]"]'
+        ),
+        'contacts' => array(
+            'select2',
+            'select#ms_cs'
+        ),
+        'contact_groups' => array(
+            'select2',
+            'select#ms_cgs'
+        ),
+        'notification_interval' => array(
+            'input',
+            'input[name="notification_interval"]'
+        ),
+        'notification_period' => array(
+            'select2',
+            'select#notification_period'
+        ),
+        'notification_on_warning' => array(
+            'checkbox',
+            'input[name="ms_notifOpts[w]"]'
+        ),
+        'notification_on_unknown' => array(
+            'checkbox',
+            'input[name="ms_notifOpts[u]"]'
+        ),
+        'notification_on_critical' => array(
+            'checkbox',
+            'input[name="ms_notifOpts[c]"]'
+        ),
+        'notification_on_recovery' => array(
+            'checkbox',
+            'input[name="ms_notifOpts[r]"]'
+        ),
+        'notification_on_flapping' => array(
+            'checkbox',
+            'input[name="ms_notifOpts[f]"]'
+        ),
+        'geo_coordinates' => array(
+            'input',
+            'input[name="geo_coords"]'
+        ),
+        'graph_template' => array(
+            'select',
+            'select[name="graph_id"]'
+        ),
+        'enabled' => array(
+            'radio',
+            'input[name="meta_activate[meta_activate]"]'
+        ),
+        'comments' => array(
+            'input',
+            'textarea[name="meta_comment"]'
         )
     );
+
+    /**
+     * @var string
+     */
+    protected $listingClass = '\Centreon\Test\Behat\Configuration\MetaServiceConfigurationListingPage';
 
     /**
      *  Navigate to and/or check that we are on a service configuration
