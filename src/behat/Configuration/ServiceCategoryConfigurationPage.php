@@ -55,7 +55,7 @@ class ServiceCategoryConfigurationPage extends \Centreon\Test\Behat\Configuratio
     /**
      * @var string
      */
-    //protected $listingClass = '\Centreon\Test\Behat\Configuration\ServiceCategoryConfigurationListingPage';
+    protected $listingClass = '\Centreon\Test\Behat\Configuration\ServiceCategoryConfigurationListingPage';
 
     /**
      *  Navigate to and/or check that we are on a service category configuration
