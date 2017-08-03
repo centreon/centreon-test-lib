@@ -44,6 +44,9 @@ class ServiceTemplateConfigurationListingPage extends \Centreon\Test\Behat\Listi
         ),
         'locked' => array(
             'custom'
+        ),
+        'id' => array(
+            'custom'
         )
     );
 
@@ -94,5 +97,16 @@ class ServiceTemplateConfigurationListingPage extends \Centreon\Test\Behat\Listi
     protected function getLocked($element)
     {
         return (null === $element->find('css', 'input:nth-child(2)'));
+    }
+
+    /**
+     * @param $element
+     * @return id
+     */
+    protected function getId($element)
+    {
+        $idComponent =$this->context->assertFindIn($element,'css','input[type="checkbox"]')->getAttribute('name');
+        $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
+        return $id;
     }
 }
