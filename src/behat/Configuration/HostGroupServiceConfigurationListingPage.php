@@ -43,7 +43,7 @@ class HostGroupServiceConfigurationListingPage extends \Centreon\Test\Behat\List
      * @param $context  Centreon context class.
      * @param $visit    True to navigate to page.
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = true)
     {
         // Visit.
         $this->context = $context;
@@ -63,7 +63,7 @@ class HostGroupServiceConfigurationListingPage extends \Centreon\Test\Behat\List
 
     protected function getId($element)
     {
-        $idComponent =$this->context->assertFindIn($element,'css','input[type="checkbox"]')->getAttribute('name');
+        $idComponent = $this->context->assertFindIn($element, 'css', 'input[type="checkbox"]')->getAttribute('name');
         $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
         return $id;
     }
@@ -93,18 +93,19 @@ class HostGroupServiceConfigurationListingPage extends \Centreon\Test\Behat\List
                 $propertyType = $metadata[0];
                 $propertyLocator = isset($metadata[1]) ? $metadata[1] : '';
 
-                    switch ($propertyType) {
+                switch ($propertyType) {
                     case 'text':
                         $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
                         $entries[$currentHostGroup][$currentService][$property] = $component->getText();
-                            break;
+                        break;
                     case 'attribute':
-                            if (is_null($propertyLocator) || empty($propertyLocator)) {
-                                $component = $element;
+                        if (is_null($propertyLocator) || empty($propertyLocator)) {
+                            $component = $element;
                         } else {
                             $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
                         }
-                        $entries[$currentHostGroup][$currentService][$property] = $component->getAttribute($metadata[2]);
+                        $entries[$currentHostGroup][$currentService][$property] =
+                            $component->getAttribute($metadata[2]);
                         break;
                     case 'custom':
                         $methodName = 'get' . ucfirst($property);
@@ -120,9 +121,9 @@ class HostGroupServiceConfigurationListingPage extends \Centreon\Test\Behat\List
     /**
      *  Get a service.
      *
-     *  @param $hostgroupservice  Array with host_group and service.
+     * @param $hostgroupservice  Array with host_group and service.
      *
-     *  @return Service properties.
+     * @return Service properties.
      */
     public function getEntry($hostgroupservice)
     {
@@ -140,9 +141,9 @@ class HostGroupServiceConfigurationListingPage extends \Centreon\Test\Behat\List
     /**
      *  Check if a service exist.
      *
-     *  @param $hostgroupservice  Array with host_group and service.
+     * @param $hostgroupservice  Array with host_group and service.
      *
-     *  @return True if service exist.
+     * @return True if service exist.
      */
     public function hasEntry($hostgroupservice)
     {
@@ -158,7 +159,7 @@ class HostGroupServiceConfigurationListingPage extends \Centreon\Test\Behat\List
     /**
      *  Set hostgroup search filter.
      *
-     *  @param $hostgroup  Hostgroup name.
+     * @param $hostgroup  Hostgroup name.
      */
     public function setHostGroupFilter($host)
     {
@@ -168,7 +169,7 @@ class HostGroupServiceConfigurationListingPage extends \Centreon\Test\Behat\List
     /**
      *  Set service search filter.
      *
-     *  @param $service  Service description.
+     * @param $service  Service description.
      */
     public function setServiceFilter($service)
     {

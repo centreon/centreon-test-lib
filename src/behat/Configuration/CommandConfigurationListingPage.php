@@ -52,9 +52,9 @@ class CommandConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Command list page.
      *
-     *  @param $context  Centreon context object.
-     *  @param $visit    True to navigate to the default command list page.
-     *  @param $type     Command type if visit is enabled. Default to
+     * @param $context  Centreon context object.
+     * @param $visit    True to navigate to the default command list page.
+     * @param $type     Command type if visit is enabled. Default to
      *                   TYPE_CHECK.
      */
     public function __construct($context, $visit = true, $type = self::TYPE_CHECK)
@@ -99,7 +99,7 @@ class CommandConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Set the command filter.
      *
-     *  @param string $commandName Command name to select.
+     * @param string $commandName Command name to select.
      */
     public function setCommandFilter($commandName)
     {
@@ -118,7 +118,7 @@ class CommandConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Set max command displayed in commands list.
      *
-     *  @param string $limit  The value of limit in page limit dropdown.
+     * @param string $limit The value of limit in page limit dropdown.
      */
     public function setListingLimit($limit)
     {
@@ -132,7 +132,7 @@ class CommandConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      */
     protected function getId($element)
     {
-        $idComponent =$this->context->assertFindIn($element,'css','input[type="checkbox"]')->getAttribute('name');
+        $idComponent = $this->context->assertFindIn($element, 'css', 'input[type="checkbox"]')->getAttribute('name');
         $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
         return $id;
     }

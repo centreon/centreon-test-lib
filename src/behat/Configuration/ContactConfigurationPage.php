@@ -136,10 +136,10 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
      *  Navigate to and/or check that we are on a contact configuration
      *  page.
      *
-     *  @param $context  Centreon context.
-     *  @param bool $visit    True to navigate to a blank configuration page.
+     * @param $context  Centreon context.
+     * @param bool $visit True to navigate to a blank configuration page.
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = true)
     {
         // Visit page.
         $this->context = $context;

@@ -339,11 +339,11 @@ class ServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
      *  Navigate to and/or check that we are on a service configuration
      *  page.
      *
-     *  @param $context  Centreon context.
-     *  @param $visit    True to navigate to a blank service
+     * @param $context  Centreon context.
+     * @param $visit    True to navigate to a blank service
      *                   configuration page.
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = true)
     {
         // Visit page.
         $this->context = $context;
@@ -364,7 +364,7 @@ class ServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     /**
      *  Get macros.
      *
-     *  @return macros
+     * @return macros
      */
     protected function getMacros()
     {
@@ -387,7 +387,7 @@ class ServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     /**
      *  Set macros.
      *
-     *  @param $macros Macros.
+     * @param $macros Macros.
      */
     protected function setMacros($macros)
     {
@@ -411,8 +411,8 @@ class ServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
                 $macroName = $input->getValue();
                 $macros[$macroName] = $this->context->assertFind(
                     'css',
-                    '#macroValue_' . $macroId)->setValue($finalMacros[$macroNames[$i]]
-                );
+                    '#macroValue_' . $macroId
+                )->setValue($finalMacros[$macroNames[$i]]);
             }
             $i++;
         }

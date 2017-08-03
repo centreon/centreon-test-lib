@@ -95,7 +95,7 @@ class BrokerConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
      * @param $context
      * @param bool $visit
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = true)
     {
         // Visit page.
         $this->context = $context;

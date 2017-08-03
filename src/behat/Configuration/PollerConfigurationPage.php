@@ -33,8 +33,8 @@ class PollerConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     /**
      *  Navigate to and/or edit a poller configuration.
      *
-     *  @param $context  Centreon context.
-     *  @param $visit    True to visit a new poller configuration page.
+     * @param $context  Centreon context.
+     * @param $visit    True to visit a new poller configuration page.
      */
     public function __construct($context, $visit = true)
     {

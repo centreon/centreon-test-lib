@@ -147,7 +147,7 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         'execution_type' => array(
             'radio',
             'input[name="traps_exec_interval_type[traps_exec_interval_type]"]',
-             self::TAB_ADVANCED
+            self::TAB_ADVANCED
         ),
         'execution_method' => array(
             'radio',
@@ -180,10 +180,10 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
      *  Navigate to and/or check that we are on a SNMP trap configuration
      *  page.
      *
-     *  @param $context  Centreon context.
-     *  @param bool $visit    True to navigate to a blank configuration page.
+     * @param $context  Centreon context.
+     * @param bool $visit True to navigate to a blank configuration page.
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = true)
     {
         // Visit page.
         $this->context = $context;
@@ -204,7 +204,7 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     /**
      *get rule
      *
-     *@return rule
+     * @return rule
      */
     protected function getRule()
     {
@@ -216,15 +216,20 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             $rule['string'] = $this->context->assertFindIn($line, 'css', 'input#rule_' . $i)->getValue();
             $rule['regexp'] = $this->context->assertFindIn($line, 'css', 'input#regexp_' . $i)->getValue();
             if ($this->context->assertFindIn($line, 'css', 'select#rulestatus_' . $i)->getValue() != 0) {
-                $rule['status'] = $this->context->assertFindIn($line, 'css', 'select#rulestatus_' . $i . ' option:selected')
-                    ->getText();
-            }
-            else {
+                $rule['status'] = $this->context->assertFindIn(
+                    $line,
+                    'css',
+                    'select#rulestatus_' . $i . ' option:selected'
+                )->getText();
+            } else {
                 $rule['status'] = 'OK';
             }
             if ($this->context->assertFindIn($line, 'css', 'select#ruleseverity_' . $i)->getValue() != 0) {
-                $rule['severity'] = $this->context->assertFindIn($line, 'css', 'select#ruleseverity_' . $i . ' option:selected')
-                    ->getText();
+                $rule['severity'] = $this->context->assertFindIn(
+                    $line,
+                    'css',
+                    'select#ruleseverity_' . $i . ' option:selected'
+                )->getText();
             }
             ++$i;
             $rules[] = $rule;
@@ -248,11 +253,11 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         }
         foreach ($ruleArray as $array) {
             if (!$b) {
-                $this->context->assertFind('css',  '#matchingrules_add span')->click();
+                $this->context->assertFind('css', '#matchingrules_add span')->click();
             }
-            $this->context->assertFindField('rule['. $i . ']')->setValue($array['string']);
+            $this->context->assertFindField('rule[' . $i . ']')->setValue($array['string']);
             $this->context->assertFindField('regexp[' . $i . ']')->setValue($array['regexp']);
-            $this->context->selectInList('select#rulestatus_'  . $i, $array['status']);
+            $this->context->selectInList('select#rulestatus_' . $i, $array['status']);
             $this->context->selectInList('select#ruleseverity_' . $i, $array['severity']);
             $i++;
             $b = false;
@@ -271,7 +276,7 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         while (true) {
             $name = $this->context->getSession()->getPage()->findField('preexec_' . $i);
             if (is_null($name)) {
-                break ;
+                break;
             }
             $preexec[] = $name->getValue();
             ++$i;
@@ -287,7 +292,7 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         $currentPreexec = $this->getPreexec();
         $i = count($currentPreexec);
         foreach ($preexec as $name) {
-            $this->context->assertFind('css' , '#preexec_add span')->click();
+            $this->context->assertFind('css', '#preexec_add span')->click();
             $this->context->assertFindField('preexec_' . $i)->setValue($name);
             $i++;
         }

@@ -32,10 +32,10 @@ class CommentConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
      *  Navigate to the comment creation page and/or check that it
      *  matches this class.
      *
-     *  @param $context  Centreon context.
-     *  @param $host     Host name. If empty, current page will not be
+     * @param $context  Centreon context.
+     * @param $host     Host name. If empty, current page will not be
      *                   changed.
-     *  @param $service  Service description. If empty, current page
+     * @param $service  Service description. If empty, current page
      *                   will not be changed.
      */
     public function __construct($context, $host = '', $service = '')

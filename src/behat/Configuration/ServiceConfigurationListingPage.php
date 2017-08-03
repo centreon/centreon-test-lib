@@ -40,10 +40,10 @@ class ServiceConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Service list page.
      *
-     *  @param $context  Centreon context class.
-     *  @param $visit    True to navigate to page.
+     * @param $context  Centreon context class.
+     * @param $visit    True to navigate to page.
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = true)
     {
         // Visit.
         $this->context = $context;
@@ -63,7 +63,7 @@ class ServiceConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 
     protected function getId($element)
     {
-        $idComponent =$this->context->assertFindIn($element,'css','input[type="checkbox"]')->getAttribute('name');
+        $idComponent = $this->context->assertFindIn($element, 'css', 'input[type="checkbox"]')->getAttribute('name');
         $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
         return $id;
     }
@@ -93,14 +93,14 @@ class ServiceConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
                 $propertyType = $metadata[0];
                 $propertyLocator = isset($metadata[1]) ? $metadata[1] : '';
 
-                    switch ($propertyType) {
+                switch ($propertyType) {
                     case 'text':
                         $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
                         $entries[$currentHost][$currentService][$property] = $component->getText();
-                            break;
+                        break;
                     case 'attribute':
-                            if (is_null($propertyLocator) || empty($propertyLocator)) {
-                                $component = $element;
+                        if (is_null($propertyLocator) || empty($propertyLocator)) {
+                            $component = $element;
                         } else {
                             $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
                         }
@@ -120,9 +120,9 @@ class ServiceConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Get a service.
      *
-     *  @param $hostservice  Array with host and service.
+     * @param $hostservice  Array with host and service.
      *
-     *  @return Service properties.
+     * @return Service properties.
      */
     public function getEntry($hostservice)
     {
@@ -140,9 +140,9 @@ class ServiceConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Check if a service exist.
      *
-     *  @param $hostservice  Array with host and service.
+     * @param $hostservice  Array with host and service.
      *
-     *  @return True if service exist.
+     * @return True if service exist.
      */
     public function hasEntry($hostservice)
     {
@@ -158,7 +158,7 @@ class ServiceConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Set host search filter.
      *
-     *  @param $host  Host name.
+     * @param $host  Host name.
      */
     public function setHostFilter($host)
     {
@@ -168,7 +168,7 @@ class ServiceConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Set service search filter.
      *
-     *  @param $service  Service description.
+     * @param $service  Service description.
      */
     public function setServiceFilter($service)
     {

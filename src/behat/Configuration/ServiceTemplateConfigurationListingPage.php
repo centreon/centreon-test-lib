@@ -55,10 +55,10 @@ class ServiceTemplateConfigurationListingPage extends \Centreon\Test\Behat\Listi
     /**
      *  Service template list page.
      *
-     *  @param $context  Centreon context class.
-     *  @param $visit    True to navigate to page.
+     * @param $context  Centreon context class.
+     * @param $visit    True to navigate to page.
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = true)
     {
         // Navigate.
         $this->context = $context;
@@ -105,7 +105,7 @@ class ServiceTemplateConfigurationListingPage extends \Centreon\Test\Behat\Listi
      */
     protected function getId($element)
     {
-        $idComponent =$this->context->assertFindIn($element,'css','input[type="checkbox"]')->getAttribute('name');
+        $idComponent = $this->context->assertFindIn($element, 'css', 'input[type="checkbox"]')->getAttribute('name');
         $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
         return $id;
     }

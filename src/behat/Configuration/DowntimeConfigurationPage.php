@@ -47,14 +47,14 @@ class DowntimeConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
      *  Navigate to and/or check that we are on a service downtime
      *  configuration page.
      *
-     *  @param $context  Centreon context.
-     *  @param $visit    True to navigate to a blank service downtime
+     * @param $context  Centreon context.
+     * @param $visit    True to navigate to a blank service downtime
      *                   configuration page.
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = true)
     {
         // Visit page.
-        $this->context= $context;
+        $this->context = $context;
         if ($visit) {
             $this->context->visit('main.php?p=21001&o=a');
         }

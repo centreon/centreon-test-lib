@@ -55,10 +55,10 @@ class HostTemplateConfigurationListingPage extends \Centreon\Test\Behat\ListingP
     /**
      *  Host template list page.
      *
-     *  @param $context  Centreon context class.
-     *  @param $visit    True to navigate to page.
+     * @param $context  Centreon context class.
+     * @param $visit    True to navigate to page.
      */
-    public function __construct($context, $visit = TRUE)
+    public function __construct($context, $visit = true)
     {
         // Visit page.
         $this->context = $context;
@@ -125,7 +125,7 @@ class HostTemplateConfigurationListingPage extends \Centreon\Test\Behat\ListingP
      */
     public function getSearch()
     {
-        $search =  $this->context->assertFind('css', 'input[name="searchHT"]')->getValue();
+        $search = $this->context->assertFind('css', 'input[name="searchHT"]')->getValue();
         if (!isset($search)) {
             throw new \Exception('could not find host template search');
         }
@@ -140,7 +140,10 @@ class HostTemplateConfigurationListingPage extends \Centreon\Test\Behat\ListingP
         $this->context->setConfirmBox(true);
 
         $hostTemplates = $this->getEntries();
-        $this->context->assertFind('css', 'input[name="select['.$hostTemplates[$hostTemplateName]['id'].']"]')->click();
+        $this->context->assertFind(
+            'css',
+            'input[name="select[' . $hostTemplates[$hostTemplateName]['id'] . ']"]'
+        )->click();
         $this->context->assertFind('css', 'select[name="o1"]')->selectOption('Delete');
     }
 }
