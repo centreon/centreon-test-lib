@@ -63,7 +63,7 @@ class HostCategoryConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
     /**
      * @var string
      */
-    //protected $listingClass = '\Centreon\Test\Behat\Configuration\HostCategoryConfigurationListingPage';
+    protected $listingClass = '\Centreon\Test\Behat\Configuration\HostCategoryConfigurationListingPage';
 
     /**
      *  Navigate to and/or check that we are on a contact configuration
