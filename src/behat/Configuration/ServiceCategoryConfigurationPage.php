@@ -31,7 +31,7 @@ class ServiceCategoryConfigurationPage extends \Centreon\Test\Behat\Configuratio
             'input[name="sc_description"]'
         ),
         'template' => array(
-            'select',
+            'select2',
             'select#sc_svcTpl'
         ),
         'severity' => array(
