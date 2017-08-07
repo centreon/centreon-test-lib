@@ -42,9 +42,34 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'input[name="contact_email"]',
             self::TAB_CONFIGURATION
         ),
+        'pager' => array(
+            'input',
+            'input[name="contact_pager"]',
+            self::TAB_CONFIGURATION
+        ),
+        'contact_template' => array(
+            'select',
+            'select[name="contact_template_id"]',
+            self::TAB_CONFIGURATION
+        ),
+        'contact_groups' => array(
+            'select2',
+            'select[name="contact_cgNotif[]"]',
+            self::TAB_CONFIGURATION
+        ),
         'notifications_enabled' => array(
             'radio',
             'input[name="contact_enable_notifications[contact_enable_notifications]"]',
+            self::TAB_CONFIGURATION
+        ),
+        'host_notify_on_down' => array(
+            'checkbox',
+            'input[name="contact_hostNotifOpts[d]"]',
+            self::TAB_CONFIGURATION
+        ),
+        'host_notify_on_unreachable' => array(
+            'checkbox',
+            'input[name="contact_hostNotifOpts[u]"]',
             self::TAB_CONFIGURATION
         ),
         'host_notify_on_recovery' => array(
@@ -52,9 +77,19 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'input[name="contact_hostNotifOpts[r]"]',
             self::TAB_CONFIGURATION
         ),
-        'host_notify_on_down' => array(
+        'host_notify_on_flapping' => array(
             'checkbox',
-            'input[name="contact_hostNotifOpts[d]"]',
+            'input[name="contact_hostNotifOpts[f]"]',
+            self::TAB_CONFIGURATION
+        ),
+        'host_notify_on_downtime_scheduled' => array(
+            'checkbox',
+            'input[name="contact_hostNotifOpts[s]"]',
+            self::TAB_CONFIGURATION
+        ),
+        'host_notify_on_none' => array(
+            'checkbox',
+            'input[name="contact_hostNotifOpts[n]"]',
             self::TAB_CONFIGURATION
         ),
         'host_notification_period' => array(
@@ -67,14 +102,39 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'select#contact_hostNotifCmds',
             self::TAB_CONFIGURATION
         ),
-        'service_notify_on_recovery' => array(
+        'service_notify_on_warning' => array(
             'checkbox',
-            'input[name="contact_svNotifOpts[r]"]',
+            'input[name="contact_svNotifOpts[w]"]',
+            self::TAB_CONFIGURATION
+        ),
+        'service_notify_on_unknown' => array(
+            'checkbox',
+            'input[name="contact_svNotifOpts[u]"]',
             self::TAB_CONFIGURATION
         ),
         'service_notify_on_critical' => array(
             'checkbox',
             'input[name="contact_svNotifOpts[c]"]',
+            self::TAB_CONFIGURATION
+        ),
+        'service_notify_on_recovery' => array(
+            'checkbox',
+            'input[name="contact_svNotifOpts[r]"]',
+            self::TAB_CONFIGURATION
+        ),
+        'service_notify_on_flapping' => array(
+            'checkbox',
+            'input[name="contact_svNotifOpts[f]"]',
+            self::TAB_CONFIGURATION
+        ),
+        'service_notify_on_downtime_scheduled' => array(
+            'checkbox',
+            'input[name="contact_svNotifOpts[s]"]',
+            self::TAB_CONFIGURATION
+        ),
+        'service_notify_on_none' => array(
+            'checkbox',
+            'input[name="contact_svNotifOpts[n]"]',
             self::TAB_CONFIGURATION
         ),
         'service_notification_period' => array(
@@ -86,6 +146,12 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'select2',
             'select#contact_svNotifCmds',
             self::TAB_CONFIGURATION
+        ),
+        // Authentication tab
+        'access' => array(
+            'radio',
+            'input[name="contact_oreon[contact_oreon]"]',
+            self::TAB_AUTHENTICATION
         ),
         'password' => array(
             'input',
@@ -99,20 +165,9 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::TAB_AUTHENTICATION,
             false // Do not exist on ldap contact
         ),
-        'dn' => array(
-            'input',
-            'input[name="contact_ldap_dn"]',
-            self::TAB_AUTHENTICATION,
-            false // Do not exist when no ldap is configured
-        ),
-        'access' => array(
-            'radio',
-            'input[name="contact_oreon[contact_oreon]"]',
-            self::TAB_AUTHENTICATION
-        ),
-        'admin' => array(
-            'radio',
-            'input[name="contact_admin[contact_admin]"]',
+        'language' => array(
+            'select',
+            'select[name="contact_lang"]',
             self::TAB_AUTHENTICATION
         ),
         'location' => array(
@@ -120,9 +175,76 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'select#contact_location',
             self::TAB_AUTHENTICATION
         ),
-        'status' => array(
+        'autologin_key' => array(
+            'input',
+            'input#aKey',
+            self::TAB_AUTHENTICATION
+        ),
+        'authentication_source' => array(
+            'select',
+            'select[name="contact_auth_type"]',
+            self::TAB_AUTHENTICATION
+        ),
+        'dn' => array(
+            'input',
+            'input[name="contact_ldap_dn"]',
+            self::TAB_AUTHENTICATION,
+            false // Do not exist when no ldap is configured
+        ),
+        'admin' => array(
+            'radio',
+            'input[name="contact_admin[contact_admin]"]',
+            self::TAB_AUTHENTICATION
+        ),
+        'reach_API' => array(
+            'radio',
+            'input[name="reach_api[reach_api]"]',
+            self::TAB_AUTHENTICATION
+        ),
+        'acl_groups' => array(
+            'select2',
+            'select#contact_acl_groups',
+            self::TAB_AUTHENTICATION
+        ),
+        // Extended tab
+        'address1' => array(
+            'input',
+            'input[name="contact_address1"]',
+            self::TAB_EXTENDED
+        ),
+        'address2' => array(
+            'input',
+            'input[name="contact_address2"]',
+            self::TAB_EXTENDED
+        ),
+        'address3' => array(
+            'input',
+            'input[name="contact_address3"]',
+            self::TAB_EXTENDED
+        ),
+        'address4' => array(
+            'input',
+            'input[name="contact_address4"]',
+            self::TAB_EXTENDED
+        ),
+        'address5' => array(
+            'input',
+            'input[name="contact_address5"]',
+            self::TAB_EXTENDED
+        ),
+        'address6' => array(
+            'input',
+            'input[name="contact_address6"]',
+            self::TAB_EXTENDED
+        ),
+        'enabled' => array(
             'radio',
             'input[name="contact_activate[contact_activate]"]',
+            self::TAB_EXTENDED
+        ),
+        'comments' => array(
+            'input',
+            'textarea[name="contact_comment"]',
             self::TAB_EXTENDED
         )
     );
