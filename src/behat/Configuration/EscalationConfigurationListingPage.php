@@ -29,6 +29,9 @@ class EscalationConfigurationListingPage extends \Centreon\Test\Behat\ListingPag
         'escalation_line' => array(
             'text',
             'td:nth-child(3)'
+        ),
+        'id' => array(
+            'custom'
         )
     );
 
@@ -67,43 +70,13 @@ class EscalationConfigurationListingPage extends \Centreon\Test\Behat\ListingPag
     }
 
     /**
-     *  Get the list of escalations.
+     * Get id
      */
-    public function getEntries()
+    protected function getId($element)
     {
-        // Go to first page.
-        $paginationLinks = $this->context->getSession()->getPage()->findAll('css', '.ToolbarPagination a');
-        foreach ($paginationLinks as $pageLink) {
-            if ($pageLink->getText() == '1') {
-                $pageLink->click();
-                $this->waitForValidPage();
-            }
-        }
-
-        // Browse all pages to find all escalations.
-        $entries = array();
-        while (true) {
-            $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
-            foreach ($elements as $element) {
-                $entry = array();
-                $entry['name'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(2)')->getText();
-                $entry['escalation_line'] = $this->context->assertFindIn($element, 'css', 'td:nth-child(3)')->getText();
-                $entries[$entry['name']] = $entry;
-            }
-
-            // Go to next page or break.
-            $nextLink = $this->context->getSession()->getPage()->find(
-                'css',
-                '.ToolbarPagination a img[title="Next page"]'
-            );
-            if (is_null($nextLink)) {
-                break;
-            } else {
-                $nextLink->click();
-                $this->waitForValidPage();
-            }
-        }
-        return $entries;
+        $idComponent = $this->context->assertFindIn($element, 'css', 'input[type="checkbox"]')->getAttribute('name');
+        $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
+        return $id;
     }
 
     /**
