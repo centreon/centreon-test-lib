@@ -59,37 +59,37 @@ class EscalationConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         ),
         'host_notify_on_down' => array(
             'checkbox',
-            'input[name="escalation_options1[d]',
+            'input[name="escalation_options1[d]"]',
             self::TAB_INFORMATIONS
         ),
         'host_notify_on_unreachable' => array(
             'checkbox',
-            'input[name="escalation_options1[u]',
+            'input[name="escalation_options1[u]"]',
             self::TAB_INFORMATIONS
         ),
         'host_notify_on_recovery' => array(
             'checkbox',
-            'input[name="escalation_options1[r]',
+            'input[name="escalation_options1[r]"]',
             self::TAB_INFORMATIONS
         ),
         'service_notify_on_warning' => array(
             'checkbox',
-            'input[name="escalation_options2[w]',
+            'input[name="escalation_options2[w]"]',
             self::TAB_INFORMATIONS
         ),
         'service_notify_on_unknown' => array(
             'checkbox',
-            'input[name="escalation_options2[u]',
+            'input[name="escalation_options2[u]"]',
             self::TAB_INFORMATIONS
         ),
         'service_notify_on_critical' => array(
             'checkbox',
-            'input[name="escalation_options2[c]',
+            'input[name="escalation_options2[c]"]',
             self::TAB_INFORMATIONS
         ),
         'service_notify_on_recovery' => array(
             'checkbox',
-            'input[name="escalation_options2[r]',
+            'input[name="escalation_options2[r]"]',
             self::TAB_INFORMATIONS
         ),
         'contactgroups' => array(
@@ -99,13 +99,13 @@ class EscalationConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         ),
         'comment' => array(
             'input',
-            'input[name="esc_comment"]',
+            'textarea[name="esc_comment"]',
             self::TAB_INFORMATIONS
         ),
         // Resources tab.
         'host_inheritance_to_services' => array(
             'checkbox',
-            'input[name="host_inheritance_to_services',
+            'input[name="host_inheritance_to_services"]',
             self::TAB_IMPACTED_RESOURCES
         ),
         'hosts' => array(
@@ -120,7 +120,7 @@ class EscalationConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         ),
         'hostgroup_inheritance_to_services' => array(
             'checkbox',
-            'input[name="hostgroup_inheritance_to_services',
+            'input[name="hostgroup_inheritance_to_services"]',
             self::TAB_IMPACTED_RESOURCES
         ),
         'hostgroups' => array(
