@@ -379,12 +379,6 @@ class UtilsContext extends RawMinkContext
      */
     public function selectToSelectTwo($css_id, $what)
     {
-        if (is_array($what)) {
-            $array = $what;
-            $what = $array[1];
-        } else {
-            $array = explode(' ', $what);
-        }
         $inputField = $this->assertFind('css', $css_id);
         $choice = $inputField->getParent()->find('css', '.select2-selection');
         if (!$choice) {
@@ -395,7 +389,7 @@ class UtilsContext extends RawMinkContext
             'xpath',
             "//html/descendant-or-self::*[@class and contains(concat(' ', normalize-space(@class), ' '), ' select2-search__field ')]"
         );
-        $select2Input->postValue(['value' => [$array[0]]]);
+        $select2Input->postValue(['value' => [$what]]);
         $this->spin(
             function ($context) {
                 return count($context->getSession()->getPage()->findAll(
