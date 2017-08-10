@@ -389,6 +389,7 @@ class UtilsContext extends RawMinkContext
             'xpath',
             "//html/descendant-or-self::*[@class and contains(concat(' ', normalize-space(@class), ' '), ' select2-search__field ')]"
         );
+        $select2Input->clear();
         $select2Input->postValue(['value' => [$what]]);
         $this->spin(
             function ($context) {
