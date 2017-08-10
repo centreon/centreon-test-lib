@@ -103,9 +103,11 @@ class UtilsContext extends RawMinkContext
     /**
      * Waiting an action
      *
-     * @param closure  $closure    The function to execute for test the loading.
-     * @param string   $timeoutMsg The custom message on timeout.
-     * @param int      $wait       The timeout in seconds.
+     * @param closure $closure The function to execute for test the loading.
+     * @param string $timeoutMsg The custom message on timeout.
+     * @param int $wait The timeout in seconds.
+     * @return bool
+     * @throws \Exception
      */
     public function spin($closure, $timeoutMsg = 'Load timeout', $wait = 60)
     {
@@ -142,6 +144,7 @@ class UtilsContext extends RawMinkContext
      * @param string $pattern The pattern for find.
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
+     * @throws \Exception
      */
     public function assertFindIn($parent, $type, $pattern, $msg = '')
     {
@@ -174,6 +177,7 @@ class UtilsContext extends RawMinkContext
      * @param string $locator Button ID, value or alt.
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
+     * @throws \Exception
      */
     public function assertFindButtonIn($parent, $locator, $msg = '')
     {
@@ -204,9 +208,11 @@ class UtilsContext extends RawMinkContext
      * Find a form field on current page. If the field is not found, throw an exception.
      *
      * @param Behat\Mink\Element\NodeElement $parent Returned element will be a child of $parent.
-     * @param string $locate Input ID, name or label.
+     * @param $locator
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
+     * @throws \Exception
+     * @internal param string $locate Input ID, name or label.
      */
     public function assertFindFieldIn($parent, $locator, $msg = '')
     {
@@ -237,9 +243,11 @@ class UtilsContext extends RawMinkContext
      * Find a form link on current page. If the link is not found, throw an exception.
      *
      * @param Behat\Mink\Element\NodeElement $parent Returned element will be a child of $parent.
-     * @param string $locate Text of link.
+     * @param $locator
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
+     * @throws \Exception
+     * @internal param string $locate Text of link.
      */
     public function assertFindLinkIn($parent, $locator, $msg = '')
     {
@@ -257,8 +265,9 @@ class UtilsContext extends RawMinkContext
     /**
      *  Select an element in list.
      *
-     *  @param $css_id  The ID of the select.
-     *  @param $value   The requested value.
+     * @param $css_id  The ID of the select.
+     * @param $value   The requested value.
+     * @throws \Exception
      */
     public function selectInList($css_id, $value)
     {
@@ -379,30 +388,28 @@ class UtilsContext extends RawMinkContext
      */
     public function selectToSelectTwo($css_id, $what)
     {
-        $inputField = $this->assertFind('css', $css_id);
-        $choice = $inputField->getParent()->find('css', '.select2-selection');
-        if (!$choice) {
-            throw new \Exception('No select2 choice found');
-        }
-        $choice->press();
-        $select2Input = $this->getSession()->getDriver()->getWebDriverSession()->activeElement(
-            'xpath',
-            "//html/descendant-or-self::*[@class and contains(concat(' ', normalize-space(@class), ' '), ' select2-search__field ')]"
-        );
+        $selectDiv = $this->assertFind('css', $css_id)->getParent();
+
+        $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
+
+        // Set search
+        $select2Input = $this->getSession()->getDriver()->getWebDriverSession()->activeElement();
         $select2Input->clear();
         $select2Input->postValue(['value' => [$what]]);
+
+        $chosenResults = array();
         $this->spin(
-            function ($context) {
-                return count($context->getSession()->getPage()->findAll(
+            function ($context) use ($css_id, &$chosenResults) {
+                $chosenResults = $context->getSession()->getPage()->findAll(
                     'css',
                     'li.select2-results__option:not(.loading-results):not(.select2-results__message)'
-                )) != 0;
-            }
+                );
+                return count($chosenResults) != 0;
+            },
+            'Cannot find results in select2 ' . $css_id,
+            10
         );
-        $chosenResults = $this->getSession()->getPage()->findAll(
-            'css',
-            'li.select2-results__option:not(.loading-results):not(.select2-results__message)'
-        );
+
         foreach ($chosenResults as $result) {
             $html = $result->getHtml();
             if (preg_match('/>(.+)</', $html, $matches)) {
@@ -432,6 +439,7 @@ class UtilsContext extends RawMinkContext
      * @param string $pattern The pattern for find.
      * @param string $msg The exception message. If empty, use a default message.
      * @return empty
+     * @throws \Exception
      */
     public function checkRadioButton($labelText, $type, $pattern, $msg = '') {
         $page = $this->getSession()->getPage();
@@ -464,6 +472,7 @@ class UtilsContext extends RawMinkContext
      * @param string $pattern The pattern for find.
      * @param string $msg The exception message. If empty, use a default message.
      * @return empty
+     * @throws \Exception
      */
     public function checkRadioButtonByValue($value, $type, $pattern, $msg = '') {
         $page = $this->getSession()->getPage();
