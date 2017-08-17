@@ -421,8 +421,10 @@ class UtilsContext extends RawMinkContext
             $this->spin(
                 function ($context) use ($result, $what, $css_id) {
                     $html = $result->getHtml();
-                    if (preg_match('#>' . $what . '<#', $html, $matches)) {
-                        $result->click();
+                    if (preg_match('/>(.+)</', $html, $matches)) {
+                        if ($matches[1] == $what) {
+                            $result->click();
+                        }
                     }
                     return true;
                 },
