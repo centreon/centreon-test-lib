@@ -395,14 +395,14 @@ class UtilsContext extends RawMinkContext
         // Set search
         $select2Input = $this->getSession()->getDriver()->getWebDriverSession()->activeElement();
         $this->spin(
-            function ($context) use ($select2Input) {
+            function ($context) use ($select2Input, $what) {
                 $select2Input->clear();
+                $select2Input->postValue(['value' => [$what]]);
                 return true;
             },
             'Cannot clear select2 search of ' . $css_id,
             3
         );
-        $select2Input->postValue(['value' => [$what]]);
 
         $chosenResults = array();
         $this->spin(
@@ -418,20 +418,16 @@ class UtilsContext extends RawMinkContext
         );
 
         foreach ($chosenResults as $result) {
-            $html = $result->getHtml();
-            if (preg_match('/>(.+)</', $html, $matches)) {
-                if (isset($matches[1]) && $matches[1] == $what) {
-                    $this->spin(
-                        function ($context) use ($result) {
-                            $result->click();
-                            return true;
-                        },
-                        'Cannot select value in select2 ' . $css_id,
-                        3
-                    );
-                    break;
-                }
-            }
+            $this->spin(
+                function ($context) use ($result, $what, $css_id) {
+                    $html = $result->getHtml();
+                    if (preg_match('/>' . $what . '</', $html, $matches)) {
+                        $result->click();
+                    }
+                },
+                'Cannot select value ' . $what .  ' in select2 ' . $css_id,
+                3
+            );
         }
     }
 
