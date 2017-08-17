@@ -424,6 +424,7 @@ class UtilsContext extends RawMinkContext
                     if (preg_match('/>' . $what . '</', $html, $matches)) {
                         $result->click();
                     }
+                    return true;
                 },
                 'Cannot select value ' . $what .  ' in select2 ' . $css_id,
                 3
