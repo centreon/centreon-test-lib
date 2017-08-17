@@ -418,12 +418,14 @@ class UtilsContext extends RawMinkContext
         );
 
         foreach ($chosenResults as $result) {
+            $found = false;
             $this->spin(
-                function ($context) use ($result, $what, $css_id) {
+                function ($context) use ($result, $what, $css_id, &$found) {
                     $html = $result->getHtml();
                     if (preg_match('/>(.+)</', $html, $matches)) {
                         if ($matches[1] == $what) {
                             $result->click();
+                            $found = true;
                         }
                     }
                     return true;
@@ -431,6 +433,9 @@ class UtilsContext extends RawMinkContext
                 'Cannot select "' . $what .  '" in select2 "' . $css_id . '"',
                 3
             );
+            if ($found) {
+                break;
+            }
         }
     }
 
