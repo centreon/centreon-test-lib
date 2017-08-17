@@ -421,12 +421,12 @@ class UtilsContext extends RawMinkContext
             $this->spin(
                 function ($context) use ($result, $what, $css_id) {
                     $html = $result->getHtml();
-                    if (preg_match('/>' . $what . '</', $html, $matches)) {
+                    if (preg_match('#>' . $what . '<#', $html, $matches)) {
                         $result->click();
                     }
                     return true;
                 },
-                'Cannot select value ' . $what .  ' in select2 ' . $css_id,
+                'Cannot select "' . $what .  '" in select2 "' . $css_id . '"',
                 3
             );
         }
