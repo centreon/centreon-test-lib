@@ -419,12 +419,25 @@ class MonitoringServicesPage
         $this->ctx->assertFind('css','input#input_search')->setValue($servicename);
         if (!array_key_exists($propertyfield, $this->properties)) {
             throw new Exception($propertyfield . ' property does not exist, please verify the name');
-        }       
+        }
+
+
+        $myContext = $this->ctx;
         $locator = $this->properties[$propertyfield];
         $propertyLocator = $locator[0];
-        $table = $this->ctx->assertFind('css', 'table.ListTable');
+        $value = '';
+        $this->ctx->spin(
+            function($context) use ($myContext, $propertyLocator, &$value) {
+                $value = $myContext->assertFind('css', 'table.ListTable tr#trStatus ' . $propertyLocator)->getText();
+                if ($value != '') {
+                    return true;
+                }
+            },
+            'Cannot find property ' . $propertyfield . ' of ' . $host . ' / ' . $servicename,
+            5
+        );
 
-        return $this->ctx->assertFindIn($table, 'css', 'tr#trStatus '. $propertyLocator)->getText();   
+        return $value;
     }
     
 }
