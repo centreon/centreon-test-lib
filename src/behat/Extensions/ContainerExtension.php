@@ -53,6 +53,8 @@ class ContainerExtension implements ExtensionInterface
                 ->scalarNode('web')->defaultValue('mon-web-dev.yml')->end()
                 ->scalarNode('web_fresh')->defaultValue('mon-web-fresh-dev.yml')->end()
                 ->scalarNode('web_widgets')->defaultValue('mon-web-widgets-dev.yml')->end()
+                ->scalarNode('web_squid_simple')->defaultValue('mon-web-squid-simple-dev.yml')->end()
+                ->scalarNode('web_squid_basic_auth')->defaultValue('mon-web-squid-basic-auth-dev.yml')->end()
                 ->scalarNode('web_kb')->defaultValue('mon-web-kb-dev.yml')->end()
                 ->scalarNode('web_openldap')->defaultValue('mon-web-openldap-dev.yml')->end()
                 ->scalarNode('ppm_squid_simple')->defaultValue('mon-ppm-squid-simple-dev.yml')->end()
