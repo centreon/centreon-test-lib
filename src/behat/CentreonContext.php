@@ -201,6 +201,16 @@ class CentreonContext extends UtilsContext
     {
         $this->aCentreonServer();
         $this->iAmLoggedIn();
+        $this->setConfiguredProxy();
+    }
+    
+    /**
+    * @Given I am logged in a Centreon server with a configured proxy
+    */
+    public function iAmLoggedInACentreonServerWithAConfiguredProxy()
+    {
+        $this->launchCentreonWebContainer('web_squid_simple');
+        $this->iAmLoggedIn();
     }
 
     /**
@@ -339,6 +349,18 @@ class CentreonContext extends UtilsContext
                 'Centreon Web did not respond within a 120 seconds time frame (API authentication test).'
             );
         }
+    }
+    
+    /**
+     * Set a proxy URL and port
+     */
+    public function setConfiguredProxy()
+    {
+        $proxyConfig = new ParametersCentreonUiPage($this);
+        $proxyConfig->setProperties(array(
+            'proxy_url'=> 'squid',
+            'proxy_port'=> '3128'
+        ));  
     }
 
     /**
