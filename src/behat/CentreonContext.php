@@ -24,6 +24,7 @@ use Centreon\Test\Behat\Configuration\PollerConfigurationExportPage;
 use Centreon\Test\Behat\Configuration\HostConfigurationPage;
 use Centreon\Test\Behat\Configuration\ServiceConfigurationPage;
 use Centreon\Test\Behat\Monitoring\ServiceMonitoringDetailsPage;
+use Centreon\Test\Behat\Administration\ParametersCentreonUiPage;
 
 class CentreonContext extends UtilsContext
 {
@@ -202,6 +203,16 @@ class CentreonContext extends UtilsContext
         $this->aCentreonServer();
         $this->iAmLoggedIn();
     }
+    
+    /**
+    * @Given I am logged in a Centreon server with a configured proxy
+    */
+    public function iAmLoggedInACentreonServerWithAConfiguredProxy()
+    {
+        $this->launchCentreonWebContainer('web_squid_simple');
+        $this->iAmLoggedIn();
+        $this->setConfiguredProxy();
+    }
 
     /**
      * @Given I am logged in a Centreon server with a configured ldap
@@ -339,6 +350,19 @@ class CentreonContext extends UtilsContext
                 'Centreon Web did not respond within a 120 seconds time frame (API authentication test).'
             );
         }
+    }
+    
+    /**
+     * Set a proxy URL and port
+     */
+    public function setConfiguredProxy()
+    {
+        $proxyConfig = new ParametersCentreonUiPage($this);
+        $proxyConfig->setProperties(array(
+            'proxy_url'=> 'squid',
+            'proxy_port'=> '3128'
+        ));
+        $proxyConfig->save();
     }
 
     /**
