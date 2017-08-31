@@ -248,6 +248,9 @@ class ACLActionConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             $this->context->visit('main.php?p=50204&o=a');
         }
 
+        // Resize window to avoid scroll
+        $this->context->getSession()->resizeWindow(1600, 4000);
+
         // Check that page is valid for this class.
         $mythis = $this;
         $this->context->spin(
