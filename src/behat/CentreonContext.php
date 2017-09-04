@@ -371,6 +371,7 @@ class CentreonContext extends UtilsContext
                 array(
                     'chrome' => array(
                         'args' => array(
+                            '--window-size=1600,2000',
                             '--disable-sync',
                             '--single-process',
                             '--disable-remote-fonts',
