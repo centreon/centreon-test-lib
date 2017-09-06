@@ -389,22 +389,26 @@ class UtilsContext extends RawMinkContext
     public function selectToSelectTwo($css_id, $what)
     {
         $select2Input = null;
+
+        $selectDiv = $this->assertFind('css', $css_id)->getParent();
+        $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
+
         $this->spin(
-            function ($context) use (&$select2Input, $css_id) {
-                $selectDiv = $context->assertFind('css', $css_id)->getParent();
-                $context->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
-                $select2Input = $context->getSession()->getDriver()->getWebDriverSession()->activeElement();
+            function ($context) use (&$select2Input, $selectDiv) {
+                $this->assertFindIn($selectDiv, 'css', 'span.select2-container--open');
                 return true;
             },
             'Cannot set select2 ' . $css_id . ' active',
             3
         );
 
+        $select2Input = $this->assertFind('css', 'select2-search__field');
+
         // Set search
         $this->spin(
             function ($context) use ($select2Input, $what) {
                 $select2Input->clear();
-                $select2Input->postValue(['value' => [$what]]);
+                $select2Input->sendKeys($what);
                 return true;
             },
             'Cannot clear select2 search of ' . $css_id,
