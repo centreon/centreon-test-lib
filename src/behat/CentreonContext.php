@@ -24,7 +24,6 @@ use Centreon\Test\Behat\Configuration\PollerConfigurationExportPage;
 use Centreon\Test\Behat\Configuration\HostConfigurationPage;
 use Centreon\Test\Behat\Configuration\ServiceConfigurationPage;
 use Centreon\Test\Behat\Monitoring\ServiceMonitoringDetailsPage;
-use Centreon\Test\Behat\Administration\ParametersCentreonUiPage;
 
 class CentreonContext extends UtilsContext
 {
@@ -202,6 +201,7 @@ class CentreonContext extends UtilsContext
     {
         $this->aCentreonServer();
         $this->iAmLoggedIn();
+        $this->setConfiguredProxy();
     }
     
     /**
@@ -211,7 +211,6 @@ class CentreonContext extends UtilsContext
     {
         $this->launchCentreonWebContainer('web_squid_simple');
         $this->iAmLoggedIn();
-        $this->setConfiguredProxy();
     }
 
     /**
@@ -361,8 +360,7 @@ class CentreonContext extends UtilsContext
         $proxyConfig->setProperties(array(
             'proxy_url'=> 'squid',
             'proxy_port'=> '3128'
-        ));
-        $proxyConfig->save();
+        ));  
     }
 
     /**
