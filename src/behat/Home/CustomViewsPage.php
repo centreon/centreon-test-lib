@@ -158,8 +158,7 @@ class CustomViewsPage implements \Centreon\Test\Behat\Interfaces\Page
             function ($context) {
                 return !$this->context->assertFind('css', '#formAddView input[name="submit"]')->isVisible();
             },
-            'load view form is not submitted',
-            5
+            'load view form is not submitted'
         );
     }
 
@@ -207,8 +206,7 @@ class CustomViewsPage implements \Centreon\Test\Behat\Interfaces\Page
             function ($context) {
                 return !$this->context->assertFind('css', '#formEditView input[name="submit"]')->isVisible();
             },
-            'The edit form is not submitted.',
-            5
+            'The edit form is not submitted.'
         );
     }
 
@@ -316,12 +314,11 @@ class CustomViewsPage implements \Centreon\Test\Behat\Interfaces\Page
             function ($context) {
                 return !$this->context->assertFind('css', '#formShareView input[name="submit"]')->isVisible();
             },
-            'share view form is not submitted',
-            5
+            'share view form is not submitted'
         );
 
         // Wait a few seconds for asynchronous processing.
-        sleep(3);
+        sleep(10);
     }
 
     /**
