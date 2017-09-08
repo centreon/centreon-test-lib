@@ -112,15 +112,26 @@ class UtilsContext extends RawMinkContext
     public function spin($closure, $timeoutMsg = 'Load timeout', $wait = 60)
     {
         $limit = time() + $wait;
+        $lastException = null;
         while (time() <= $limit) {
             try {
                 if ($closure($this)) {
                     return true;
                 }
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+                $lastException = $e;
+            }
             sleep(1);
         }
-        throw new \Exception($timeoutMsg);
+        if (is_null($lastException)) {
+            throw new \Exception($timeoutMsg);
+        } else {
+            throw new \Exception(
+                $timeoutMsg . ': ' . $lastException->getMessage() . ' (code ' .
+                $lastException->getCode() . ', file ' . $lastException->getFile() .
+                ':' . $lastException->getLine() . ')'
+            );
+        }
     }
 
     /**
