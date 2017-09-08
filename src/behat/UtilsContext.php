@@ -405,7 +405,7 @@ class UtilsContext extends RawMinkContext
         $this->spin(
             function ($context) use ($select2Input, $what) {
                 $select2Input->clear();
-                $select2Input->sendKeys($what);
+                $select2Input->postValue(['value' => [$what]]);
                 return true;
             },
             'Cannot clear select2 search of ' . $css_id,
