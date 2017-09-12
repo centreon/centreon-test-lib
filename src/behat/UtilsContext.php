@@ -399,28 +399,21 @@ class UtilsContext extends RawMinkContext
      */
     public function selectToSelectTwo($css_id, $what)
     {
-        $select2Input = null;
+        // Open select2.
+        $selectDiv = $this->assertFind('css', $css_id)->getParent();
+        $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
         $this->spin(
-            function ($context) use (&$select2Input, $css_id) {
-                $selectDiv = $context->assertFind('css', $css_id)->getParent();
-                $context->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
-                $select2Input = $context->getSession()->getDriver()->getWebDriverSession()->activeElement();
-                return true;
+            function ($context) {
+                return $context->assertFind('css', '.select2-container--open .select2-search__field')->isVisible();
             },
-            'Cannot set select2 ' . $css_id . ' active',
-            3
+            'Cannot set select2 ' . $css_id . ' active'
         );
+        sleep(1);
+        $select2Input = $this->getSession()->getDriver()->getWebDriverSession()->activeElement();
 
-        // Set search
-        $this->spin(
-            function ($context) use ($select2Input, $what) {
-                $select2Input->clear();
-                $select2Input->postValue(['value' => [$what]]);
-                return true;
-            },
-            'Cannot clear select2 search of ' . $css_id,
-            3
-        );
+        // Set search.
+        $select2Input->clear();
+        $select2Input->postValue(['value' => [$what]]);
 
         $chosenResults = array();
         $this->spin(
