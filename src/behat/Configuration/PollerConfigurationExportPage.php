@@ -94,9 +94,9 @@ class PollerConfigurationExportPage extends \Centreon\Test\Behat\ConfigurationPa
                 $this->context->assertFind('css', '.select2-search__field')->click();
                 $this->context->assertFindButton('Select all')->click();
                 $this->context->assertFind('css', '.popin-wrapper .button_group_center .btc.bt_success')->click();
-                $this->spin(
+                $this->context->spin(
                     function ($context) {
-                        return !$this->context->assertFind('css', '.popin-wrapper')->isVisible();
+                        return !$this->context->assertFind('css', '.centreon-popin')->isVisible();
                     },
                     'Select all confirmation popin did not close properly.'
                 );
