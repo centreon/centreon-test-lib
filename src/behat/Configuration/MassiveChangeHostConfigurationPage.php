@@ -174,11 +174,6 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
             'input[name="host_notifOpts[n]"]',
             self::NOTIFICATION_TAB
         ),
-        'update_mode_hcg' => array(
-            'radio',
-            'input[name="mc_mod_hcg[mc_mod_hcg]"]',
-            self::NOTIFICATION_TAB
-        ),
         'update_mode_notif_interval' => array(
             'radio',
             'input[name="mc_mod_notifopt_notification_interval[mc_mod_notifopt_notification_interval]"]',
