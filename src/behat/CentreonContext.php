@@ -371,14 +371,17 @@ class CentreonContext extends UtilsContext
     public function setContainerWebDriver()
     {
         // Wait for WebDriver container.
-        $url = 'http://' . $this->container->getHost() . ':4444/wd/hub/status';
+        $url = 'http://' . $this->container->getHost() . ':4444/grid/api/hub';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $res = curl_exec($ch);
         $limit = time() + 60;
-        while ((time() < $limit) && (($res === false) || empty($res))) {
+        while ((time() < $limit) &&
+               (($res === false) ||
+               empty($res)) ||
+               (json_decode($res, true)['slotCounts']['free'] < 1)) {
             sleep(1);
             $res = curl_exec($ch);
         }
