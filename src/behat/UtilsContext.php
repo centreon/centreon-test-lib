@@ -391,14 +391,30 @@ class UtilsContext extends RawMinkContext
     }
 
     /**
+     * Empty select2 values
+     *
+     * @param $cssId the css locator
+     */
+    public function emptySelectTwo($cssId)
+    {
+        $object = $this->assertFind('css', $cssId);
+        $parent = $object->getParent();
+        $this->assertFindIn($parent, 'css', 'img.ico-14')->click();
+    }
+
+    /**
      * Select an element in a select two.
      *
      * @param $css_id
      * @param $what
      * @throws \Exception
      */
-    public function selectToSelectTwo($css_id, $what)
+    public function selectToSelectTwo($css_id, $what, $emptyFirst = false)
     {
+        if ($emptyFirst) {
+            $this->emptySelectTwo($css_id);
+        }
+
         // Open select2.
         $selectDiv = $this->assertFind('css', $css_id)->getParent();
         $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
