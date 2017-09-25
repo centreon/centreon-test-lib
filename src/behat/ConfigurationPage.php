@@ -148,8 +148,9 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     break;
                 case 'select2':
                     $value = is_array($value) ? $value : array($value);
+                    $this->context->emptySelectTwo($propertyLocator);
                     foreach ($value as $element) {
-                        $this->context->selectToSelectTwo($propertyLocator, $element, true);
+                        $this->context->selectToSelectTwo($propertyLocator, $element);
                     }
                     break;
                 default:
