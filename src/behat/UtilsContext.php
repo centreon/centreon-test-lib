@@ -409,12 +409,8 @@ class UtilsContext extends RawMinkContext
      * @param $what
      * @throws \Exception
      */
-    public function selectToSelectTwo($css_id, $what, $emptyFirst = false)
+    public function selectToSelectTwo($css_id, $what)
     {
-        if ($emptyFirst) {
-            $this->emptySelectTwo($css_id);
-        }
-
         // Open select2.
         $selectDiv = $this->assertFind('css', $css_id)->getParent();
         $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
