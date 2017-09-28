@@ -362,6 +362,22 @@ class HostGroupServiceConfigurationPage extends \Centreon\Test\Behat\Configurati
     }
 
     /**
+     * Set properties
+     *
+     * @param $properties
+     * @throws \Exception
+     */
+    public function setProperties($properties)
+    {
+        if (isset($properties['macros'])) {
+            $macros['macros'] = $properties['macros'];
+            unset($properties['macros']);
+            $properties = array_merge($macros, $properties);
+        }
+        parent::setProperties($properties);
+    }
+
+    /**
      *  Get macros.
      *
      * @return macros
