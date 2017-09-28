@@ -355,6 +355,22 @@ class ServiceTemplateConfigurationPage extends \Centreon\Test\Behat\Configuratio
     }
 
     /**
+     * Set properties
+     *
+     * @param $properties
+     * @throws \Exception
+     */
+    public function setProperties($properties)
+    {
+        if (isset($properties['macros'])) {
+            $macros['macros'] = $properties['macros'];
+            unset($properties['macros']);
+            $properties = array_merge($macros, $properties);
+        }
+        parent::setProperties($properties);
+    }
+
+    /**
      *  Get macros.
      *
      * @return macros
