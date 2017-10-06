@@ -203,6 +203,24 @@ class CentreonContext extends UtilsContext
         $this->aCentreonServer();
         $this->iAmLoggedIn();
     }
+
+    /**
+     * Log in a Centreon server and set timezone
+     *
+     * @Given /^I am logged in a Centreon server located at "(.+)"$/
+     */
+    public function iAmLoggedInACentreonServerLocatedAt($timezone)
+    {
+        $this->iAmLoggedInACentreonServer();
+        $this->container->execute(
+            "ln -snf /usr/share/zoneinfo/" . $timezone . " /etc/localtime",
+            'web'
+        );
+        $this->container->execute(
+            "echo " . $timezone . " > /etc/timezone",
+            'web'
+        );
+    }
     
     /**
     * @Given I am logged in a Centreon server with a configured proxy
