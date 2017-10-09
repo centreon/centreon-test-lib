@@ -217,7 +217,7 @@ class CentreonContext extends UtilsContext
             'web'
         );
         $this->container->execute(
-            "echo " . $timezone . " > /etc/timezone",
+            'bash -c "echo ' . $timezone . ' > /etc/timezone"',
             'web'
         );
     }
