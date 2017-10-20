@@ -221,7 +221,7 @@ class CentreonContext extends UtilsContext
             'web'
         );
     }
-    
+
     /**
     * @Given I am logged in a Centreon server with a configured proxy
     */
@@ -240,7 +240,7 @@ class CentreonContext extends UtilsContext
         $this->launchCentreonWebContainer('web_openldap');
         $this->iAmLoggedIn();
     }
-    
+
     /**
      * @Given I am logged in a Centreon server with configured metrics
      */
@@ -369,7 +369,7 @@ class CentreonContext extends UtilsContext
             );
         }
     }
-    
+
     /**
      * Set a proxy URL and port
      */
@@ -381,77 +381,6 @@ class CentreonContext extends UtilsContext
             'proxy_port'=> '3128'
         ));
         $proxyConfig->save();
-    }
-
-    /**
-     *  Properly set WebDriver driver.
-     */
-    public function setContainerWebDriver()
-    {
-        // Wait for WebDriver container.
-        $url = 'http://' . $this->container->getHost() . ':4444/grid/api/hub';
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $res = curl_exec($ch);
-        $limit = time() + 60;
-        while ((time() < $limit) &&
-               (($res === false) ||
-               empty($res)) ||
-               (json_decode($res, true)['slotCounts']['free'] < 1)) {
-            sleep(1);
-            $res = curl_exec($ch);
-        }
-        if (time() >= $limit) {
-            throw new \Exception(
-                'WebDriver did not respond within a 60 seconds time frame (url: ' . $url . ').'
-            );
-        }
-
-        try {
-            $url = 'http://' . $this->container->getHost() . ':4444/wd/hub';
-            $driver = new \Behat\Mink\Driver\Selenium2Driver(
-                'chrome',
-                array(
-                    'chrome' => array(
-                        'args' => array(
-                            '--window-size=1600,2000',
-                            '--disable-sync',
-                            '--single-process',
-                            '--disable-remote-fonts',
-                            '--disable-canvas-aa',
-                            '--disable-lcd-text',
-                            '--no-sandbox'
-                        ),
-                        /*
-                        'prefs' => array(
-                            'profile.default_content_setting_values.images' => 2
-                        )
-                        */
-                    ),
-                    'browserName' => 'chrome',
-                    'platform' => 'ANY',
-                    'browser' => 'chrome',
-                    'name' => 'Behat Test'
-                ),
-                $url
-            );
-            $driver->setTimeouts(array(
-                'page load' => 120000,
-                'script' => 120000
-            ));
-        } catch (\Exception $e) {
-            throw new \Exception("Cannot instantiate mink driver.\n" . $e->getMessage());
-        }
-
-        try {
-            $sessionName = $this->getMink()->getDefaultSessionName();
-            $session = new \Behat\Mink\Session($driver);
-            $this->getMink()->registerSession($sessionName, $session);
-        } catch (\Exception $e) {
-            throw new \Exception("Cannot register mink session.\n" . $e->getMessage());
-        }
     }
 
     /**
@@ -597,8 +526,8 @@ class CentreonContext extends UtilsContext
             false
         );
     }
-    
-    public function getServiceWithSeveralMetrics() 
+
+    public function getServiceWithSeveralMetrics()
     {
         // Create host.
         $hostConfig = new HostConfigurationPage($this);
@@ -655,12 +584,12 @@ class CentreonContext extends UtilsContext
             },
             'Cannot get performance data of MetricTestHostname / MetricTestService'
         );
-       
-        $this->checkForMetricAvaibility('MetricTestHostname', 'MetricTestService', 'test10');   
+
+        $this->checkForMetricAvaibility('MetricTestHostname', 'MetricTestService', 'test10');
     }
-    
+
     /**
-     * 
+     *
      * @param string $metricName
      * @param string $hostname
      * @param string $serviceDescription
@@ -669,7 +598,7 @@ class CentreonContext extends UtilsContext
     {
         $metricId = $this->getMetricId($hostname, $serviceDescription, $metricName);
         $rrdMetricFile = $this->getRrdPath() . $metricId . '.rrd';
-        
+
         $this->spin(
             function($context) use ($rrdMetricFile) {
                return $context->checkRrdFilesAreAvalaible($rrdMetricFile);
@@ -677,27 +606,27 @@ class CentreonContext extends UtilsContext
             'No Metrics available or check rrd files!'
         );
     }
-    
+
     /**
-     * 
+     *
      * @return string
      * @throws \Exception
      */
     private function getRrdPath()
     {
         $query = "SELECT RRDdatabase_path FROM config";
-        
+
         $stmt = $this->getStorageDatabase()->prepare($query);
-        $stmt->execute(); 
+        $stmt->execute();
         $res = $stmt->fetch();
         if ($res === false) {
             throw new \Exception('Cannot get RRD path in database.');
         }
         return $res['RRDdatabase_path'];
     }
-    
+
     /**
-     * 
+     *
      * @param string $rrdMetricFile
      * @return boolean
      */
@@ -705,16 +634,16 @@ class CentreonContext extends UtilsContext
     {
         $rrdFileExist = false;
         $output = $this->container->execute('ls ' . $rrdMetricFile .' 2>/dev/null', 'web', false);
-        
+
         if ($output['output'] === $rrdMetricFile) {
             $rrdFileExist = true;
         }
-        
+
         return $rrdFileExist;
     }
-    
+
     /**
-     * 
+     *
      * @param string $metricName
      * @param string $hostname
      * @param string $serviceDescription
@@ -730,17 +659,17 @@ class CentreonContext extends UtilsContext
             . "AND i.service_description = :servicedescription "
             . "AND m.metric_name = :metricname "
             . "AND m.index_id = i.id";
-        
+
         $stmt = $this->getStorageDatabase()->prepare($query);
         $stmt->bindParam(':hostname', $hostname, \PDO::PARAM_STR);
         $stmt->bindParam(':servicedescription', $serviceDescription, \PDO::PARAM_STR);
         $stmt->bindParam(':metricname', $metricName, \PDO::PARAM_STR);
-        $stmt->execute(); 
+        $stmt->execute();
         $res = $stmt->fetch();
          if ($res === false) {
             throw new \Exception('Cannot get metric id in database.');
         }
-        
+
         return $res['metric_id'];
     }
 }
