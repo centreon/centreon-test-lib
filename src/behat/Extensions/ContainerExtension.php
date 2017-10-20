@@ -71,6 +71,7 @@ class ContainerExtension implements ExtensionInterface
                 ->scalarNode('automation')->defaultValue('mon-automation-dev.yml')->end()
                 ->scalarNode('middleware')->defaultValue('mon-middleware-dev.yml')->end()
                 ->scalarNode('bam')->defaultValue('des-bam-dev.yml')->end()
+                ->scalarNode('hub')->defaultValue('hub-dev.yml')->end()
             ->end()
         ->end();
     }
