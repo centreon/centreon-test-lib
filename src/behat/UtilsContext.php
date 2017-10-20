@@ -534,4 +534,75 @@ class UtilsContext extends RawMinkContext
             throw new \Exception($msg);
         }
     }
+
+    /**
+     *  Properly set WebDriver driver.
+     */
+    public function setContainerWebDriver()
+    {
+        // Wait for WebDriver container.
+        $url = 'http://' . $this->container->getHost() . ':4444/grid/api/hub';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $res = curl_exec($ch);
+        $limit = time() + 60;
+        while ((time() < $limit) &&
+               (($res === false) ||
+               empty($res)) ||
+               (json_decode($res, true)['slotCounts']['free'] < 1)) {
+            sleep(1);
+            $res = curl_exec($ch);
+        }
+        if (time() >= $limit) {
+            throw new \Exception(
+                'WebDriver did not respond within a 60 seconds time frame (url: ' . $url . ').'
+            );
+        }
+
+        try {
+            $url = 'http://' . $this->container->getHost() . ':4444/wd/hub';
+            $driver = new \Behat\Mink\Driver\Selenium2Driver(
+                'chrome',
+                array(
+                    'chrome' => array(
+                        'args' => array(
+                            '--window-size=1600,2000',
+                            '--disable-sync',
+                            '--single-process',
+                            '--disable-remote-fonts',
+                            '--disable-canvas-aa',
+                            '--disable-lcd-text',
+                            '--no-sandbox'
+                        ),
+                        /*
+                        'prefs' => array(
+                            'profile.default_content_setting_values.images' => 2
+                        )
+                        */
+                    ),
+                    'browserName' => 'chrome',
+                    'platform' => 'ANY',
+                    'browser' => 'chrome',
+                    'name' => 'Behat Test'
+                ),
+                $url
+            );
+            $driver->setTimeouts(array(
+                'page load' => 120000,
+                'script' => 120000
+            ));
+        } catch (\Exception $e) {
+            throw new \Exception("Cannot instantiate mink driver.\n" . $e->getMessage());
+        }
+
+        try {
+            $sessionName = $this->getMink()->getDefaultSessionName();
+            $session = new \Behat\Mink\Session($driver);
+            $this->getMink()->registerSession($sessionName, $session);
+        } catch (\Exception $e) {
+            throw new \Exception("Cannot register mink session.\n" . $e->getMessage());
+        }
+    }
 }
