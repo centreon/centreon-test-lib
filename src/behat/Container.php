@@ -183,6 +183,21 @@ class Container
     {
         return shell_exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' port ' . $service . ' ' . $containerPort . ' | cut -d : -f 2 | tr -d "\n"');
     }
+    
+    /**
+     * 
+     * @param type $service
+     * @return boolean
+     */
+    public function serviceRunning($service)
+    {
+        try {
+            $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' exec ' . $service . ' echo \'alive\'');
+        } catch (\Exception $ex) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      *  Stop a service.
