@@ -32,7 +32,7 @@ class Container
     public function __construct($composeFile)
     {
         $this->composeFile = $composeFile;
-        $this->id = uniqid('', TRUE);
+        $this->id = uniqid('', TRUE) . random_int(1, 1000000);
 
         // The current Docker release has issues with concurrent access to the Docker
         // daemon. While this gets fixed, attempt to run container creation twice
