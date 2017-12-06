@@ -23,7 +23,7 @@ abstract class ListingPage implements \Centreon\Test\Behat\Interfaces\ListingPag
 
     protected $validField;
 
-    protected $lineSelector = '.list_one,.list_two';
+    protected $lineSelector = '.list_one,.list_two,.row_disabled';
 
     protected $properties = array();
 
