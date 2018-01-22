@@ -170,6 +170,9 @@ class CentreonContext extends UtilsContext
      */
     public function iAmLoggedIn()
     {
+        // Set Window Size
+        $this->getSession()->resizeWindow(1600, 4000);
+
         // Prepare credentials.
         $user = 'admin';
         $password = 'centreon';
