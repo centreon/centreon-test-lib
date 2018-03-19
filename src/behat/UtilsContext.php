@@ -94,7 +94,7 @@ class UtilsContext extends RawMinkContext
                 $scenario = $tmp->getTitle();
             }
 
-            $scenarioTitle = preg_replace('/\s+/', '_', $scenario);
+            $scenarioTitle = preg_replace('/(\s|\/)+/', '_', $scenario);
             $filename = date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-' . $scenarioTitle . '.png';
             $this->saveScreenshot($filename, $this->composeFiles['log_directory']);
         }
