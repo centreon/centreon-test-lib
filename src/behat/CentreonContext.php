@@ -53,7 +53,7 @@ class CentreonContext extends UtilsContext
     {
         // Failure logs.
         if (isset($this->container) && !$scope->getTestResult()->isPassed()) {
-            $scenarioTitle = preg_replace('/\s+/', '_', $scope->getScenario()->getTitle());
+            $scenarioTitle = preg_replace('/(\s|\/)+/', '_', $scope->getScenario()->getTitle());
             $filename = $this->composeFiles['log_directory'] . '/'
                 . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-' . $scenarioTitle . '.txt';
 
