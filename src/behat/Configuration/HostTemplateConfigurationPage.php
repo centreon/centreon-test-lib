@@ -414,12 +414,13 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
 
         $elements = $this->context->getSession()->getPage()->findAll(
             'css',
-            '[id^="tpSelect_"] option[selected="selected"]'
+            '[id^="tpSelect_"]'
         );
         foreach ($elements as $element) {
-            $templateName = $element->getText();
-            if ($templateName != '') {
-                $templates[] = $templateName;
+            $id = $element->getValue();
+            if (is_numeric($id)) {
+                $option = $this->context->assertFindIn($element, 'css', 'option[value="' . $id . '"]');
+                $templates[] = $option->getText();
             }
         }
 
