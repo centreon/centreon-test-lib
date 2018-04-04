@@ -81,7 +81,7 @@ class CustomViewsPage implements \Centreon\Test\Behat\Interfaces\Page
             'css',
             'button.editView'
         )->hasClass('ui-state-disabled');
-        return is_null($ariadisabled) || ($ariadisabled == 'false') || !$buttonDisabled;
+        return (is_null($ariadisabled) || ($ariadisabled == 'false')) && !$buttonDisabled;
     }
 
     /**
