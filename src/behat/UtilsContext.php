@@ -418,7 +418,8 @@ class UtilsContext extends RawMinkContext
             function ($context) {
                 return $context->assertFind('css', '.select2-container--open .select2-search__field')->isVisible();
             },
-            'Cannot set select2 ' . $css_id . ' active'
+            'Cannot set select2 ' . $css_id . ' active',
+            10
         );
         sleep(1);
         $select2Input = $this->getSession()->getDriver()->getWebDriverSession()->activeElement();
@@ -460,6 +461,18 @@ class UtilsContext extends RawMinkContext
                 break;
             }
         }
+
+        // Wait select2 search field is totally closed
+        $this->spin(
+            function ($context) {
+                return !$context->getSession()->getPage()->has(
+                    'css',
+                    '.select2-container--open .select2-search__field'
+                );
+            },
+            'select2 ' . $css_id . ' search field is not closed',
+            10
+        );
     }
 
     /**
