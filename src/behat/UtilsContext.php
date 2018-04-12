@@ -460,6 +460,20 @@ class UtilsContext extends RawMinkContext
                 break;
             }
         }
+
+        // Click parent element to close select2 search field
+        $selectDiv->click();
+        // Wait select2 search field is totally closed
+        $this->spin(
+            function ($context) {
+                return !$context->getSession()->getPage()->has(
+                    'css',
+                    '.select2-container--open .select2-search__field'
+                );
+            },
+            'select2 ' . $css_id . ' search field is not closed',
+            10
+        );
     }
 
     /**
