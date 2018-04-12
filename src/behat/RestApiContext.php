@@ -70,14 +70,14 @@ class RestApiContext extends CentreonContext
     }
 
     /**
-     * @When call REST API ([\w+_-]+) with data ([\w+_-]+) on ([\w+_-]+)
+     * @When call REST API ([\w+_-]+) with data ([\w+_-]+) on ([\w+:_-]+)
      */
     public function callRESTAPIWithData($collection, $env, $docker)
     {
         $this->logfile = tempnam('/tmp', $this->apiLogfilePrefix . $collection);
         $cmd = 'docker run -e POSTMAN_COLLECTION="' . $collection .
             '" -e POSTMAN_ENV="' . $env . '" -e CENTREON_URL="' . $this->container->getHost() . ':' .
-            $this->containter->getPort('80', 'web') . '" ' . $docker;
+            $this->containter->getPort('80', 'web') . '" ci.int.centreon.com:5000/' . $docker;
         exec($cmd, $output. $returnValue);
         file_put_contents($this->logfile, $output);
         $this->apiReturnValue = $returnValue;
