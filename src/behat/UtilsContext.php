@@ -462,7 +462,9 @@ class UtilsContext extends RawMinkContext
         }
 
         // Click parent element to close select2 search field if select2 is not auto closed
-        $this->assertFind('css', 'div#centreonMsg')->click();
+        if ($this->getSession()->getPage()->has('css','.select2-container--open .select2-search__field')) {
+            $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
+        }
         // Wait select2 search field is totally closed
         $this->spin(
             function ($context) {
