@@ -461,8 +461,8 @@ class UtilsContext extends RawMinkContext
             }
         }
 
-        // Click parent element to close select2 search field
-        $selectDiv->click();
+        // Click parent element to close select2 search field if select2 is not auto closed
+        $this->assertFind('css', 'div#centreonMsg')->click();
         // Wait select2 search field is totally closed
         $this->spin(
             function ($context) {
