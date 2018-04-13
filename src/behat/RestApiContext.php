@@ -18,6 +18,7 @@
 namespace Centreon\Test\Behat;
 
 use Centreon\Test\Behat\CentreonContext;
+use Centreon\Test\Behat\Administration\ImageListingPage;
 
 if (!defined('DOCKER_REGISTRY')) {
     define('DOCKER_REGISTRY', 'ci.int.centreon.com:5000');
