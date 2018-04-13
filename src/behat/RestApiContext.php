@@ -75,7 +75,7 @@ class RestApiContext extends CentreonContext
     }
 
     /**
-     * @When call REST API ([\w+_-]+) with data ([\w+_-]+) on ([\w+:_-]+)
+     * @When call REST API ([\w+_-]+) with data ([\w+_-]+) on ([\w+:_\.-]+)
      */
     public function callRESTAPIWithData($collection, $env, $docker)
     {
