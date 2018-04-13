@@ -17,7 +17,11 @@
 
 namespace Centreon\Test\Behat;
 
-use CentreonContext;
+use Centreon\Test\Behat\CentreonContext;
+
+if (!defined('DOCKER_REGISTRY')) {
+    define('DOCKER_REGISTRY', 'ci.int.centreon.com:5000');
+}
 
 class RestApiContext extends CentreonContext
 {
@@ -77,7 +81,7 @@ class RestApiContext extends CentreonContext
         $this->logfile = tempnam('/tmp', $this->apiLogfilePrefix . $collection);
         $cmd = 'docker run -e POSTMAN_COLLECTION="' . $collection .
             '" -e POSTMAN_ENV="' . $env . '" -e CENTREON_URL="' . $this->container->getHost() . ':' .
-            $this->containter->getPort('80', 'web') . '" ci.int.centreon.com:5000/' . $docker;
+            $this->containter->getPort('80', 'web') . '" ' . DOCKER_REGISTRY . '/' . $docker;
         exec($cmd, $output. $returnValue);
         file_put_contents($this->logfile, $output);
         $this->apiReturnValue = $returnValue;
