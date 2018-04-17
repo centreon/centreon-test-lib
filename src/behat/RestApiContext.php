@@ -80,9 +80,11 @@ class RestApiContext extends CentreonContext
     public function callRESTAPIWithData($collection, $env, $docker)
     {
         $this->logfile = tempnam('/tmp', $this->apiLogfilePrefix . $collection);
-        $cmd = 'docker run -e POSTMAN_COLLECTION="' . $collection .
-            '" -e POSTMAN_ENV="' . $env . '" -e CENTREON_URL="' . $this->container->getHost() . ':' .
-            $this->container->getPort('80', 'web') . '" ' . DOCKER_REGISTRY . '/' . $docker;
+        $cmd = 'docker run ' .
+            '--network ' . $this->defaultNetwork .
+            ' -e POSTMAN_COLLECTION="' . $collection .
+            '" -e POSTMAN_ENV="' . $env . '" -e CENTREON_URL="' . $this->container->getContainerId('web', false) .
+            '" ' . DOCKER_REGISTRY . '/' . $docker;
         exec($cmd, $output, $returnValue);
         file_put_contents($this->logfile, $output);
         $this->apiReturnValue = $returnValue;
