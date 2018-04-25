@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016-2017 Centreon
+ * Copyright 2016-2018 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,14 @@ use Centreon\Test\Behat\Administration\ParametersCentreonUiPage;
 
 class CentreonContext extends UtilsContext
 {
+    /**
+     * @var
+     */
     public $container;
+
+    /**
+     * @var \Centreon\Test\Behat\Configuration\PollerConfigurationExportPage
+     */
     protected $pollerConfigurationPage;
 
     /**
@@ -70,7 +77,11 @@ class CentreonContext extends UtilsContext
                 . "###############\n"
                 . "# Engine logs #\n"
                 . "###############\n\n";
-            $output = $this->container->execute('cat /var/log/centreon-engine/centengine.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute(
+                'cat /var/log/centreon-engine/centengine.log 2>/dev/null',
+                'web',
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -79,7 +90,11 @@ class CentreonContext extends UtilsContext
                 . "###############\n"
                 . "# Broker logs #\n"
                 . "###############\n\n";
-            $output = $this->container->execute('bash -c "cat /var/log/centreon-broker/*.log 2>/dev/null"', 'web', false);
+            $output = $this->container->execute(
+                'bash -c "cat /var/log/centreon-broker/*.log 2>/dev/null"',
+                'web',
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -186,8 +201,28 @@ class CentreonContext extends UtilsContext
         // Login.
         $page = new LoginPage($this);
         $page->login($user, $password);
+
+        // Handle feature flipping
+        $this->enableNewFeature();
     }
 
+    /**
+     * @param bool $confirm
+     */
+    public function enableNewFeature($confirm = true)
+    {
+        if ($this->getSession()->getPage()->has('css', '#btcActivateFf')) {
+            if ($confirm) {
+                $this->assertFind('css', '#btcActivateFf')->click();
+            } else {
+                $this->assertFind('css', 'btcDisableFf')->click();
+            }
+        }
+    }
+
+    /**
+     * @return LoginPage
+     */
     public function iAmLoggedOut()
     {
         // LoginPage constructor will automatically throw if we are
@@ -266,13 +301,14 @@ class CentreonContext extends UtilsContext
     }
 
     /**
-     *  Execute a command.
+     * Execute a command.
      *
-     * @param string $cmd Command to execute.
+     * @param string $command Command to execute.
      * @param string $service Docker service to which this
      *                                command should be addressed.
      * @param boolean $throwOnError True to throw an error if the
      *                                command fails to execute.
+     * @return mixed
      */
     public function execute($command, $service, $throwOnError = true)
     {
@@ -290,8 +326,8 @@ class CentreonContext extends UtilsContext
     public function getCentreonDatabase()
     {
         if (!isset($this->dbCentreon)) {
-            $dsn = 'mysql:dbname=centreon;host=' . $this->container->getHost() . ';port=' . $this->container->getPort(3306,
-                    'web');
+            $dsn = 'mysql:dbname=centreon;host=' . $this->container->getHost() . ';port=' .
+                $this->container->getPort(3306, 'web');
             $this->dbCentreon = new \PDO(
                 $dsn,
                 'root',
@@ -310,8 +346,8 @@ class CentreonContext extends UtilsContext
     public function getStorageDatabase()
     {
         if (!isset($this->dbStorage)) {
-            $dsn = 'mysql:dbname=centreon_storage;host=' . $this->container->getHost() . ';port=' . $this->container->getPort(3306,
-                    'web');
+            $dsn = 'mysql:dbname=centreon_storage;host=' . $this->container->getHost() . ';port=' .
+                $this->container->getPort(3306, 'web');
             $this->dbStorage = new \PDO(
                 $dsn,
                 'root',
@@ -422,10 +458,11 @@ class CentreonContext extends UtilsContext
     /**
      * Submit a passive result for a service (and wait)
      *
-     * @param string hostname
-     * @param checkResult
-     * @param string checkOutput
-     * @param string performanceData
+     * @param string $hostname
+     * @param string $serviceDescription
+     * @param $checkResult
+     * @param string $checkOutput
+     * @param string $performanceData
      */
     public function submitServiceResult(
         $hostname,
@@ -435,7 +472,10 @@ class CentreonContext extends UtilsContext
         $performanceData = ''
     ) {
         // Page in : Monitoring > Status Details > Services
-        $this->visit('/main.php?p=20201&o=svcpc&cmd=16&host_name=' . $hostname . '&service_description=' . $serviceDescription . '&is_meta=false');
+        $this->visit(
+            '/main.php?p=20201&o=svcpc&cmd=16&host_name=' . $hostname .
+            '&service_description=' . $serviceDescription . '&is_meta=false'
+        );
 
         // Configure the "Check result" dropdown field
         $this->getSession()->getPage()->selectFieldOption('return_code', $checkResult);
@@ -530,6 +570,9 @@ class CentreonContext extends UtilsContext
         );
     }
 
+    /**
+     *
+     */
     public function getServiceWithSeveralMetrics()
     {
         // Create host.
