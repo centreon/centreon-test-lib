@@ -185,25 +185,33 @@ class CentreonContext extends UtilsContext
      */
     public function iAmLoggedIn()
     {
-        // Set Window Size
-        $this->getSession()->resizeWindow(1600, 4000);
-
-        // Prepare credentials.
-        $user = 'admin';
-        $password = 'centreon';
-        if (isset($this->parameters['centreon_user'])) {
-            $user = $this->parameters['centreon_user'];
-        }
-        if (isset($this->parameters['centreon_password'])) {
-            $password = $this->parameters['centreon_password'];
-        }
-
-        // Login.
-        $page = new LoginPage($this);
-        $page->login($user, $password);
+        $this->logAnUser();
 
         // Handle feature flipping
-        $this->enableNewFeature();
+        $this->enableNewFeature(false);
+    }
+
+    /**
+     * Login to Centreon
+     *
+     * @Given I am logged in with new feature
+     */
+    public function iAmLoggedInWithNewFeature()
+    {
+        $this->logAnUser();
+
+        // Handle feature flipping
+        $this->enableNewFeature(true);
+    }
+
+    /**
+     * Login to Centreon
+     *
+     * @Given I am logged in waiting new feature validation
+     */
+    public function iAmLoggedInWaitingNewFeatureValidation()
+    {
+        $this->logAnUser();
     }
 
     /**
@@ -717,5 +725,28 @@ class CentreonContext extends UtilsContext
         }
 
         return $res['metric_id'];
+    }
+
+    /**
+     * Log an user to Centreon Web
+     */
+    protected function logAnUser()
+    {
+        // Set Window Size
+        $this->getSession()->resizeWindow(1600, 4000);
+
+        // Prepare credentials.
+        $user = 'admin';
+        $password = 'centreon';
+        if (isset($this->parameters['centreon_user'])) {
+            $user = $this->parameters['centreon_user'];
+        }
+        if (isset($this->parameters['centreon_password'])) {
+            $password = $this->parameters['centreon_password'];
+        }
+
+        // Login.
+        $page = new LoginPage($this);
+        $page->login($user, $password);
     }
 }
