@@ -92,7 +92,7 @@ class ServiceMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Pa
 
         // last_check
         $lastCheck = $this->context->assertFindIn($table, 'css', 'tbody tr:nth-child(9) td:nth-child(2)')->getText();
-        $lastCheck = \DateTime::createFromFormat('Y/m/d - H:i:s', $lastCheck);
+        $lastCheck = new \DateTime($lastCheck);
         $result['last_check'] = ($lastCheck === false) ? false : $lastCheck->getTimestamp();
 
         // in_downtime
