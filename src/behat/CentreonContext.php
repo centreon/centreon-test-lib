@@ -223,8 +223,15 @@ class CentreonContext extends UtilsContext
             if ($confirm) {
                 $this->assertFind('css', '#btcActivateFf')->click();
             } else {
-                $this->assertFind('css', 'btcDisableFf')->click();
+                $this->assertFind('css', '#btcDisableFf')->click();
             }
+            $this->spin(
+                function ($context) {
+                    return !$context->getSession()->getPage()->find('css', '#btcActivateFf')->isVisible();
+                },
+                'Feature flipping modal does not closes',
+                10
+            );
         }
     }
 
