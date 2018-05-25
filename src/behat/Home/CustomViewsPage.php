@@ -77,7 +77,11 @@ class CustomViewsPage implements \Centreon\Test\Behat\Interfaces\Page
             'css',
             'button.editView'
         )->getAttribute('aria-disabled');
-        return is_null($ariadisabled) || ($ariadisabled == 'false');
+        $buttonDisabled =  $this->context->assertFind(
+            'css',
+            'button.editView'
+        )->hasClass('ui-state-disabled');
+        return (is_null($ariadisabled) || ($ariadisabled == 'false')) && !$buttonDisabled;
     }
 
     /**

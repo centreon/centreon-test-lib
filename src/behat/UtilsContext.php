@@ -94,7 +94,7 @@ class UtilsContext extends RawMinkContext
                 $scenario = $tmp->getTitle();
             }
 
-            $scenarioTitle = preg_replace('/\s+/', '_', $scenario);
+            $scenarioTitle = preg_replace('/(\s|\/)+/', '_', $scenario);
             $filename = date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-' . $scenarioTitle . '.png';
             $this->saveScreenshot($filename, $this->composeFiles['log_directory']);
         }
@@ -460,6 +460,22 @@ class UtilsContext extends RawMinkContext
                 break;
             }
         }
+
+        // Click parent element to close select2 search field if select2 is not auto closed
+        if ($this->getSession()->getPage()->has('css','.select2-container--open .select2-search__field')) {
+            $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
+        }
+        // Wait select2 search field is totally closed
+        $this->spin(
+            function ($context) {
+                return !$context->getSession()->getPage()->has(
+                    'css',
+                    '.select2-container--open .select2-search__field'
+                );
+            },
+            'select2 ' . $css_id . ' search field is not closed',
+            10
+        );
     }
 
     /**

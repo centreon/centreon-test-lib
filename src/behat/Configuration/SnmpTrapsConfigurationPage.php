@@ -215,20 +215,23 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             $rule = array();
             $rule['string'] = $this->context->assertFindIn($line, 'css', 'input#rule_' . $i)->getValue();
             $rule['regexp'] = $this->context->assertFindIn($line, 'css', 'input#regexp_' . $i)->getValue();
-            if ($this->context->assertFindIn($line, 'css', 'select#rulestatus_' . $i)->getValue() != 0) {
+            $ruleStatusValue = $this->context->assertFindIn($line, 'css', 'select#rulestatus_' . $i)->getValue();
+            if ($ruleStatusValue != 0 && is_numeric($ruleStatusValue)) {
                 $rule['status'] = $this->context->assertFindIn(
                     $line,
                     'css',
-                    'select#rulestatus_' . $i . ' option:selected'
+                    'select#rulestatus_' . $i . ' option[value="' . $ruleStatusValue . '"]'
                 )->getText();
             } else {
                 $rule['status'] = 'OK';
             }
-            if ($this->context->assertFindIn($line, 'css', 'select#ruleseverity_' . $i)->getValue() != 0) {
+
+            $ruleSeverityValue = $this->context->assertFindIn($line, 'css', 'select#ruleseverity_' . $i)->getValue();
+            if ($ruleSeverityValue != 0 && is_numeric($ruleSeverityValue)) {
                 $rule['severity'] = $this->context->assertFindIn(
                     $line,
                     'css',
-                    'select#ruleseverity_' . $i . ' option:selected'
+                    'select#ruleseverity_' . $i . ' option[value="' . $ruleSeverityValue . '"]'
                 )->getText();
             }
             ++$i;
