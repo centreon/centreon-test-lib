@@ -27,23 +27,26 @@ namespace Centreon\Test\Mock;
 class CentreonDBResultSet
 {
     private $resultset = array();
+    private $params = null;
     private $pos = 0;
-    
+
     /**
      * Constructor
      *
      * @param array $resultset The resultset for a query
+     * @param array $params The parameters of query, if not set :
+     *   * the query has not parameters
+     *   * the result is generic for the query
      */
-    public function __construct($resultset)
+    public function __construct($resultset, $params = null)
     {
         $this->resultset = $resultset;
+        $this->params = $params;
+        if (!is_null($this->params)) {
+            ksort($this->params);
+        }
     }
 
-    public function getResultset()
-    {
-        return $this->resultset;
-    }
-    
     /**
      * Return a result
      *
@@ -85,13 +88,40 @@ class CentreonDBResultSet
     {
         $this->pos = 0;
     }
-    
+
     /**
-     * 
+     * Return the number of rows of the result set
+     *
      * @return int
      */
     public function numRows()
     {
         return count($this->resultset);
+    }
+
+    /**
+     * If the queries match
+     *
+     * @param array $params The parameters of current query
+     * @return int The level of match
+     *   * 0 - Not match
+     *   * 1 - Match by default (the result set params is null by the query has $params)
+     *   * 2 - Exact match
+     */
+    public function match($params = null)
+    {
+        if (is_null($params) && is_null($this->params)) {
+            return 2;
+        }
+        if (is_null($this->params)) {
+            return 1;
+        }
+        if (!is_null($params)) {
+            ksort($params);
+        }
+        if ($this->params === $params) {
+            return 2;
+        }
+        return 0;
     }
 }

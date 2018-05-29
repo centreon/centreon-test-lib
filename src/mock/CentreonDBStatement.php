@@ -27,34 +27,42 @@ namespace Centreon\Test\Mock;
 class CentreonDBStatement
 {
     private $query;
-    private $resultset;
-    private $pos = 0;
-    
+    private $resultsets;
+    protected $params = null;
+    protected $currentResultSet = null;
+
     /**
      * Constructor
      *
      * @param array $resultset The resultset for a query
      */
-    public function __construct($query, $resultset)
+    public function __construct($query, $resultsets)
     {
         $this->query = $query;
-        $this->resultset = $resultset;
+        $this->resultsets = $resultsets;
     }
 
     /*
      * Bind parameter
      */
-    public function bindParam()
+    public function bindParam($param, $value)
     {
-
+        $this->bindValue($param, $value);
     }
 
     /*
      * Bind value
      */
-    public function bindValue()
+    public function bindValue($param, $value)
     {
-
+        if (is_null($this->params)) {
+            $this->params = array();
+        }
+        if (is_int($param)) {
+            $this->params[$param - 1] = $value;
+        } else {
+            $this->params[$param] = $value;
+        }
     }
 
     /*
@@ -62,6 +70,22 @@ class CentreonDBStatement
      */
     public function execute()
     {
+        $matching = null;
+        foreach ($this->resultsets as $resultset) {
+            $result = $resultset->match($this->params);
+            if ($result === 2 && is_null($this->currentResultSet)) {
+                $this->currentResultSet = $resultset;
+            } else if ($result === 1 && is_null($matching)) {
+                $matching = $resultset;
+            }
+        }
+        if (is_null($this->currentResultSet)) {
+            $this->currentResultSet = $matching;
+        }
+        if (is_null($this->currentResultSet)) {
+            throw new \Exception('The query has not match');
+        }
+
         return true;
     }
 
@@ -80,10 +104,10 @@ class CentreonDBStatement
      */
     public function fetchRow()
     {
-        if (!isset($this->resultset[$this->pos])) {
-            return false;
+        if (!is_null($this->currentResultSet)) {
+            return $this->currentResultSet->fetchRow();
         }
-        return $this->resultset[$this->pos++];
+        return false;
     }
 
     /**
@@ -101,15 +125,25 @@ class CentreonDBStatement
      */
     public function resetResultSet()
     {
-        $this->pos = 0;
+        if (!is_null($this->currentResultSet)) {
+            $this->currentResultset->fetchRow();
+        }
     }
-    
+
     /**
-     * 
+     *
      * @return int
      */
     public function numRows()
     {
-        return count($this->resultset);
+        if (!is_null($this->currentResultSet)) {
+            return $this->currentResultSet->numRows();
+        }
+        return 0;
+    }
+
+    public function closeCursor()
+    {
+        return true;
     }
 }
