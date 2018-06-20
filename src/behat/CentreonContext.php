@@ -564,7 +564,7 @@ class CentreonContext extends UtilsContext
     public function reloadACL()
     {
         $this->container->execute(
-            'su -s /bin/sh apache -c "/usr/bin/php -q /usr/share/centreon/cron/centAcl.php"',
+            'su -s /bin/sh apache -c "/usr/bin/env php -q /usr/share/centreon/cron/centAcl.php"',
             'web',
             false
         );
