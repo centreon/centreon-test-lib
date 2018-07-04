@@ -19,30 +19,10 @@ namespace Centreon\Test\Behat\Administration;
 
 class KBParametersPage extends \Centreon\Test\Behat\ConfigurationPage
 {
-    protected $validField = 'input[name="kb_db_name"]';
+    protected $validField = 'input[name="kb_wiki_url"]';
 
     protected $properties = array(
         // Configuration tab.
-        'kb_db_name' => array(
-            'input',
-            'input[name="kb_db_name"]'
-        ),
-        'kb_db_user' => array(
-            'input',
-            'input[name="kb_db_user"]'
-        ),
-        'kb_db_password' => array(
-            'input',
-            'input[name="kb_db_password"]'
-        ),
-        'kb_db_host' => array(
-            'input',
-            'input[name="kb_db_host"]'
-        ),
-        'kb_db_prefix' => array(
-            'input',
-            'input[name="kb_db_prefix"]'
-        ),
         'kb_wiki_url' => array(
             'input',
             'input[name="kb_wiki_url"]'
