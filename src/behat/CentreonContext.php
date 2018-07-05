@@ -294,8 +294,8 @@ class CentreonContext extends UtilsContext
             'protocol_version' => '3',
             'template' => 'Posix',
             'search_user_base_dn' => 'dc=centreon,dc=com',
-            'search_group_base_dn' => 'dc=centreon,dc=com'
-            // 'user_filter' => '(&(uid=%s)(objectClass=posixAccount))'
+            'search_group_base_dn' => 'dc=centreon,dc=com',
+            'user_filter' => '(&(uid=%s)(objectClass=posixAccount))'
         ));
         $page->save();
     }
