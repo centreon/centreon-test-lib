@@ -291,6 +291,7 @@ class CentreonContext extends UtilsContext
             'servers_host_port' => '389',
             'bind_user' => 'cn=admin,dc=centreon,dc=com',
             'bind_password' => 'centreon',
+            'protocol_version' => '3',
             'template' => 'Posix',
             'search_user_base_dn' => 'dc=centreon,dc=com',
             'search_group_base_dn' => 'dc=centreon,dc=com'
