@@ -63,7 +63,7 @@ class LdapConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'input[name="bind_dn"]'
         ),
         'bind_password' => array(
-            'radio',
+            'input',
             'input[name="bind_pass"]'
         ),
         'protocol_version' => array(
