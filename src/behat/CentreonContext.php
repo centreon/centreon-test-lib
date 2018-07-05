@@ -19,6 +19,7 @@ namespace Centreon\Test\Behat;
 
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use WebDriver\WebDriver;
+use Centreon\Test\Behat\Administration\LdapConfigurationPage;
 use Centreon\Test\Behat\External\LoginPage;
 use Centreon\Test\Behat\Configuration\PollerConfigurationExportPage;
 use Centreon\Test\Behat\Configuration\HostConfigurationPage;
@@ -275,8 +276,27 @@ class CentreonContext extends UtilsContext
      */
     public function iAmLoggedInACentreonServerWithAConfiguredLdap()
     {
+        // Launch container.
         $this->launchCentreonWebContainer('web_openldap');
         $this->iAmLoggedIn();
+
+        // Configure LDAP parameters.
+        $page = new LdapConfigurationPage($this);
+        $page->setProperties(array(
+            'configuration_name' => 'OpenLDAP',
+            'description' => 'LDAP service provided by an OpenLDAP container.',
+            'enable_authentication' => '1',
+            'auto_import' => '1',
+            'servers_host_address' => 'openldap',
+            'servers_host_port' => '389',
+            'bind_user' => 'cn=admin,dc=centreon,dc=com',
+            'bind_password' => 'centreon',
+            'template' => 'Posix',
+            'search_user_base_dn' => 'dc=centreon,dc=com',
+            'search_group_base_dn' => 'dc=centreon,dc=com'
+            // 'user_filter' => '(&(uid=%s)(objectClass=posixAccount))'
+        ));
+        $page->save();
     }
 
     /**
