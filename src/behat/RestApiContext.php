@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016-2017 Centreon
+ * Copyright 2016-2018 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,9 @@ if (!defined('DOCKER_REGISTRY')) {
 
 class RestApiContext extends CentreonContext
 {
-    protected $defaultNetwork = 'webdriver_default';
+    protected $dockerImage = 'postman/newman_alpine33:latest';
+    protected $dockerNetwork = 'webdriver_default';
+    protected $postmanEnv = 'Test1';
     protected $apiReturnValue;
     protected $apiLogfilePrefix = 'rest_api_log_';
 
@@ -75,25 +77,28 @@ class RestApiContext extends CentreonContext
     }
 
     /**
-     * @When call REST API :collection with data :env on :docker
+     * @When the REST API :collection is called
      */
-    public function callRESTAPIWithData($collection, $env, $docker)
+    public function theRestApiIsCalled($collection)
     {
         $this->logfile = tempnam('/tmp', $this->apiLogfilePrefix . $collection);
-        $cmd = 'docker run ' .
-            '--network ' . $this->defaultNetwork .
-            ' -e POSTMAN_COLLECTION="' . $collection .
-            '" -e POSTMAN_ENV="' . $env . '" -e CENTREON_URL="' . $this->container->getContainerId('web', false) .
-            '" ' . DOCKER_REGISTRY . '/' . $docker;
+        $cmd = 'docker run' .
+            ' --network ' . $this->dockerNetwork .
+            ' -v "' . realpath('.') . '/features/api:/etc/newman"' .
+            ' ' . $this->dockerImage .
+            ' run "collections/' . $collection . '.postman_collection.json"' .
+            ' --reporter-cli-no-assertions' .
+            ' --environment="environment/' . $this->postmanEnv . '.postman_environment.json"' .
+            ' --global-var "url=' . $this->container->getContainerId('web', false) . '"';
         exec($cmd, $output, $returnValue);
-        file_put_contents($this->logfile, $output);
+        file_put_contents($this->logfile, implode("\n", $output));
         $this->apiReturnValue = $returnValue;
     }
 
     /**
-     * @Then they reply as per specifications
+     * @Then it replies as per specifications
      */
-    public function theyReplyAsPerSpecifications()
+    public function theyItRepliesAsPerSpecifications()
     {
         if (!($this->apiReturnValue == 0)) {
             copy(
