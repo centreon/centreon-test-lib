@@ -236,6 +236,8 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
         } catch (\Exception $e) {
             if ($mandatory) {
                 throw new \Exception($e);
+            } else {
+                $property = '';
             }
         }
 
