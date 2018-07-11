@@ -82,7 +82,7 @@ class RestApiContext extends CentreonContext
     public function theRestApiIsCalled($collection)
     {
         $this->logfile = tempnam('/tmp', $this->apiLogfilePrefix . $collection);
-        $cmd = 'docker run' .
+        $cmd = 'docker run --rm' .
             ' --network ' . $this->dockerNetwork .
             ' -v "' . realpath('.') . '/features/api:/etc/newman"' .
             ' ' . $this->dockerImage .
