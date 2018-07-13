@@ -74,7 +74,7 @@ class LoginPage implements \Centreon\Test\Behat\Interfaces\Page
             function ($context) {
                 return $context->getSession()->getPage()->has(
                     'css',
-                    'a[href="index.php?disconnect=1"]'
+                    'td[class="copyRight"]'
                 );
             }, 'Login failed.', 10
         );
