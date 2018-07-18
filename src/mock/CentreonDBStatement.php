@@ -142,8 +142,11 @@ class CentreonDBStatement
         return 0;
     }
 
+    /**
+     *
+     */
     public function closeCursor()
     {
-        return true;
+        return ;
     }
 }
