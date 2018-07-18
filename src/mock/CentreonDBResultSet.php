@@ -94,4 +94,12 @@ class CentreonDBResultSet
     {
         return count($this->resultset);
     }
+
+    /**
+     *
+     */
+    public function closeCursor()
+    {
+        return;
+    }
 }
