@@ -112,4 +112,12 @@ class CentreonDBStatement
     {
         return count($this->resultset);
     }
+
+    /**
+     *
+     */
+    public function closeCursor()
+    {
+        return ;
+    }
 }
