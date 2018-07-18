@@ -124,4 +124,12 @@ class CentreonDBResultSet
         }
         return 0;
     }
+
+    /**
+     *
+     */
+    public function closeCursor()
+    {
+        return;
+    }
 }
