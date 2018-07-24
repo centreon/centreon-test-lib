@@ -27,7 +27,7 @@ namespace Centreon\Test\Mock;
 class CentreonDB
 {
     private $queries = array();
-    
+
     /**
      * Stub for function query
      *
@@ -36,13 +36,9 @@ class CentreonDB
      */
     public function query($query)
     {
-        if (!isset($this->queries[$query])) {
-            throw new \Exception('Query is not set.' . "\nQuery : " . $query);
-        }
-        $this->queries[$query]->resetResultSet();
-        return $this->queries[$query];
+        return $this->execute($query, null);
     }
-    
+
     /**
      * Stub escape function
      *
@@ -53,7 +49,7 @@ class CentreonDB
     {
         return $string;
     }
-    
+
     /**
      * Stub quote function
      *
@@ -64,16 +60,22 @@ class CentreonDB
     {
         return "'" . $string . "'";
     }
-    
+
     /**
      * Add a resultset to the mock
      *
      * @param string $query The query to catch
      * @param array $result The resultset
+     * @param array $params The parameters of query, if not set :
+     *   * the query has not parameters
+     *   * the result is generic for the query
      */
-    public function addResultSet($query, $result)
+    public function addResultSet($query, $result, $params = null)
     {
-        $this->queries[$query] = new CentreonDBResultSet($result);
+        if (!isset($this->queries[$query])) {
+            $this->queries[$query] = array();
+        }
+        $this->queries[$query][] = new CentreonDBResultSet($result, $params);
     }
 
     /**
@@ -86,22 +88,39 @@ class CentreonDB
         if (!isset($this->queries[$query])) {
             throw new \Exception('Query is not set.' . "\nQuery : " . $query);
         }
-        return new CentreonDBStatement($query, $this->queries[$query]->getResultset());
+        return new CentreonDBStatement($query, $this->queries[$query]);
     }
 
     /**
-     * 
-     * @param mixed $query
-     * @param array $values
-     * @return mixed
+     * Execute a query with values
+     *
+     * @param string $query The query to execute
+     * @param array $values The list of values for the query
+     * @return CentreonDBResultSet The resultset
      */
-    public function execute($query = null, $values = null)
+    public function execute($query, $values = null)
     {
-        return $this->query($query);
+        if (!isset($this->queries[$query])) {
+            throw new \Exception('Query is not set.' . "\nQuery : " . $query);
+        }
+        /* Find good query */
+        $matching = null;
+        foreach ($this->queries[$query] as $resultSet) {
+            $result = $resultSet->match($values);
+            if ($result === 2) {
+                return $resultSet;
+            } else if  ($result === 1 && is_null($matching)) {
+                $matching = $resultSet;
+            }
+        }
+        if (is_null($matching)) {
+            throw new \Exception('Query is not set.' . "\nQuery : " . $query);
+        }
+        return $matching;
     }
 
     /**
-     * 
+     *
      * @param type $enable
      * @return type
      */
@@ -111,16 +130,16 @@ class CentreonDB
     }
 
     /**
-     * 
+     *
      * @return type
      */
     public function commit()
     {
         return;
     }
-    
+
     /**
-     * 
+     *
      * @return type
      */
     public function rollback()
