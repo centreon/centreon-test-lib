@@ -399,7 +399,7 @@ class UtilsContext extends RawMinkContext
     {
         $object = $this->assertFind('css', $cssId);
         $parent = $object->getParent();
-        $this->assertFindIn($parent, 'css', 'img.ico-14')->click();
+        $this->assertFindIn($parent, 'css', '.clearAllSelect2')->click();
     }
 
     /**
