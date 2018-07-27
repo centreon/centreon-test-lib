@@ -95,7 +95,7 @@ class ServiceMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Pa
         if ($lastCheck == 'N/A') {
             $result['last_check'] = false;
         } else {
-            $lastCheck = new \DateTime($lastCheck);
+            $lastCheck = new \DateTime("@" . $lastCheck);
             $result['last_check'] = ($lastCheck === false) ? false : $lastCheck->getTimestamp();
         }
 
