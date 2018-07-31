@@ -216,18 +216,22 @@ class CentreonContext extends UtilsContext
 
     /**
      * @param bool $confirm
+     * @throws \Exception
      */
     public function enableNewFeature($confirm = true)
     {
+
         if ($this->getSession()->getPage()->has('css', '#btcActivateFf')) {
             if ($confirm) {
                 $this->assertFind('css', '#btcActivateFf')->click();
             } else {
                 $this->assertFind('css', '#btcDisableFf')->click();
             }
+
+            $mythis = $this->getSession()->getPage();
             $this->spin(
-                function ($context) {
-                    return !$context->getSession()->getPage()->find('css', '#btcActivateFf')->isVisible();
+                function ($context) use ($mythis) {
+                    return !$mythis->has('css', '#btcActivateFf');
                 },
                 'Feature flipping modal does not closes',
                 10
