@@ -16,4 +16,4 @@
  */
 namespace Centreon\Test\Mock;
 
-class RestNotFoundException extends Exception {};
+class RestNotFoundException extends \Exception {};
