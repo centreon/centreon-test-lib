@@ -91,7 +91,7 @@ class ServiceMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Pa
         }
 
         // last_check
-        $lastCheck = (int)$this->context->assertFindIn($table, 'css', 'tbody tr:nth-child(9) td:nth-child(2)')->getText();
+        $lastCheck = $this->context->assertFindIn($table, 'css', 'tbody tr:nth-child(9) td:nth-child(2)')->getText();
         if ($lastCheck == 'N/A' || empty($lastCheck) || $lastCheck === false) {
             $result['last_check'] = false;
         } else {
