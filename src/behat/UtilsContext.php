@@ -486,6 +486,9 @@ class UtilsContext extends RawMinkContext
     public function visit($page)
     {
         $this->visitPath($page);
+        if ($this->getSession()->getPage()->has('css', "iframe#main-content")) {
+            $this->getSession()->getDriver()->switchToIFrame("main-content");
+        }
     }
 
     /**
