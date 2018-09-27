@@ -486,8 +486,20 @@ class UtilsContext extends RawMinkContext
     public function visit($page)
     {
         $this->visitPath($page);
-        if ($this->getSession()->getPage()->has('css', "iframe#main-content")) {
-            $this->getSession()->getDriver()->switchToIFrame("main-content");
+        try {
+            $this->spin(
+                function ($context) {
+                    if ($context->getSession()->getPage()->has('css', "iframe#main-content")) {
+                        $context->getSession()->getDriver()->switchToIFrame("main-content");
+                        return true;
+                    }
+                    return false;
+                },
+                'this error will no be displayed',
+                3
+            );
+        } catch (\Exception $e) {
+            // do not throw error cause it is possible than there is no iframe in the page
         }
     }
 
