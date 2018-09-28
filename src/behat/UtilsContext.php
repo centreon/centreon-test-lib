@@ -489,7 +489,9 @@ class UtilsContext extends RawMinkContext
         try {
             $this->spin(
                 function ($context) {
-                    if ($context->getSession()->getPage()->has('css', "iframe#main-content")) {
+                    if ($context->getSession()->getPage()->has('css', "div.wrapper") &&
+                        $context->getSession()->getPage()->has('css', "iframe#main-content")
+                    ) {
                         $context->getSession()->getDriver()->switchToIFrame("main-content");
                         return true;
                     }
