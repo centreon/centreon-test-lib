@@ -29,7 +29,7 @@ class LoginPage implements \Centreon\Test\Behat\Interfaces\Page
         // Visit page.
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('/');
+            $this->context->visit('/', false);
         }
 
         // Check that page is valid for this class.
