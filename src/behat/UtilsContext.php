@@ -499,8 +499,8 @@ class UtilsContext extends RawMinkContext
                             // we consider iframe hase been resized once its height is superior than 50px
                             if ($iframeHeight > 50) {
                                 $context->getSession()->getDriver()->switchToIFrame("main-content");
+                                return true;
                             }
-                            return true;
                         }
                         return false;
                     },
