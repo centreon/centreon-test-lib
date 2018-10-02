@@ -142,8 +142,8 @@ class ModuleListingPage extends \Centreon\Test\Behat\ListingPage
 
             // Install module.
             $this->context->spin(
-                function ($context) use ($mythis) {
-                    return $mythis->context->getSession()->getPage()->has('css', 'input[name="install"]');
+                function ($context) {
+                    return $context->getSession()->getPage()->has('css', 'input[name="install"]');
                 },
                 'Could not install module ' . $name . '.'
             );
@@ -151,10 +151,14 @@ class ModuleListingPage extends \Centreon\Test\Behat\ListingPage
             $validInstallImg = $this->context->assertFind('css', 'input[name="install"]');
             $validInstallImg->click();
 
-            // Back.
+            //wait the iframe
+            sleep(2);
+
             $this->context->spin(
-                function ($context) use ($mythis) {
-                    return $mythis->context->getSession()->getPage()->has('css', 'input[name="list"]');
+                function ($context) {
+                    $context->getSession()->getDriver()->switchToIFrame("main-content");
+                    return $context->getSession()->getPage()->has('css', 'input[name="list"]');
+
                 },
                 'Could not go back after install of module ' . $name . '.'
             );
