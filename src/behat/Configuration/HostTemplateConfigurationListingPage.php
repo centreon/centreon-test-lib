@@ -64,6 +64,8 @@ class HostTemplateConfigurationListingPage extends \Centreon\Test\Behat\ListingP
         $this->context = $context;
         if ($visit) {
             $this->context->visit('main.php?p=60103');
+        } else {
+            $this->context->switchToIframe();
         }
 
         // Check that page is valid for this class.
