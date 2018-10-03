@@ -486,30 +486,37 @@ class UtilsContext extends RawMinkContext
     public function visit($page, $iframeCheck = true)
     {
         $this->visitPath($page);
-
         if ($iframeCheck === true) {
-            try {
-                $this->spin(
-                    function ($context) {
-                        if ($context->getSession()->getPage()->has('css', "iframe#main-content")) {
-                            $iframeHeight = $context->getSession()->evaluateScript(
-                                "document.getElementById('main-content').clientHeight"
-                            );
+            $this->switchToIframe();
+        }
+    }
 
-                            // we consider iframe hase been resized once its height is superior than 50px
-                            if ($iframeHeight > 50) {
-                                $context->getSession()->getDriver()->switchToIFrame("main-content");
-                                return true;
-                            }
+    /**
+     *
+     */
+    public function switchToIframe()
+    {
+        try {
+            $this->spin(
+                function ($context) {
+                    if ($context->getSession()->getPage()->has('css', "iframe#main-content")) {
+                        $iframeHeight = $context->getSession()->evaluateScript(
+                            "document.getElementById('main-content').clientHeight"
+                        );
+
+                        // we consider iframe hase been resized once its height is superior than 50px
+                        if ($iframeHeight > 50) {
+                            $context->getSession()->getDriver()->switchToIFrame("main-content");
+                            return true;
                         }
-                        return false;
-                    },
-                    'this error will no be displayed',
-                    3
-                );
-            } catch (\Exception $e) {
-                // do not throw error cause it is possible than there is no iframe in the page
-            }
+                    }
+                    return false;
+                },
+                'this error will no be displayed',
+                3
+            );
+        } catch (\Exception $e) {
+            // do not throw error cause it is possible than there is no iframe in the page
         }
     }
 
