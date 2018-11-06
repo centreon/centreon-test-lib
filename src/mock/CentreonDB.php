@@ -24,28 +24,41 @@ namespace Centreon\Test\Mock;
  * @package centreon-license-manager
  * @subpackage test
  */
-class CentreonDB
+class CentreonDB extends \CentreonDB
 {
     private $queries = array();
+
+    /**
+     * Constructor
+     *
+     * @param string $db
+     * @param int $retry
+     * @param bool $silent
+     */
+    public function __construct($db = "centreon", $retry = 3, $silent = false)
+    {
+    }
 
     /**
      * Stub for function query
      *
      * @param string $query The query to execute
+     * @param array $parameters
      * @return CentreonDBResultSet The resultset
      */
-    public function query($query)
+    public function query($queryString = NULL, $parameters = NULL)
     {
-        return $this->execute($query, null);
+        return $this->execute($queryString, null);
     }
 
     /**
      * Stub escape function
      *
      * @param string $string The string to escape
+     * @param bool $htmlSpecialChars
      * @return string The string escaped
      */
-    public function escape($string)
+    public static function escape($str, $htmlSpecialChars = false)
     {
         return $string;
     }
@@ -54,9 +67,10 @@ class CentreonDB
      * Stub quote function
      *
      * @param string $string The string to escape
+     * @param string $paramtype
      * @return string The string escaped
      */
-    public function quote($string)
+    public function quote($string, $paramtype = NULL)
     {
         return "'" . $string . "'";
     }
@@ -80,15 +94,16 @@ class CentreonDB
 
     /**
      * @param $query
+     * @param array $options
      * @return CentreonDBStatement
      * @throws \Exception
      */
-    public function prepare($query)
+    public function prepare($statement, $options = NULL)
     {
-        if (!isset($this->queries[$query])) {
-            throw new \Exception('Query is not set.' . "\nQuery : " . $query);
+        if (!isset($this->queries[$statement])) {
+            throw new \Exception('Query is not set.' . "\nQuery : " . $statement);
         }
-        return new CentreonDBStatement($query, $this->queries[$query]);
+        return new CentreonDBStatement($statement, $this->queries[$statement]);
     }
 
     /**

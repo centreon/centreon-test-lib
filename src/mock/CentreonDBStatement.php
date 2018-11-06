@@ -121,6 +121,21 @@ class CentreonDBStatement
     }
 
     /**
+     * Return a result with all rows
+     *
+     * @return array
+     */
+    public function fetchAll()
+    {
+        $result = [];
+        while ($row = $this->fetch()) {
+            $result[] = $row;
+        }
+
+        return $result;
+    }
+
+    /**
      * Reset the position of resultset
      */
     public function resetResultSet()
