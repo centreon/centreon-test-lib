@@ -96,6 +96,14 @@ class CentreonDBResultSet
      */
     public function numRows()
     {
+        return $this->rowCount();
+    }
+
+    /*
+     * Count of updated lines
+     */
+    public function rowCount()
+    {
         return count($this->resultset);
     }
 
