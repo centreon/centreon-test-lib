@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016-2017 Centreon
+ * Copyright 2016-2018 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,11 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 
 class UtilsContext extends RawMinkContext
 {
+    /**
+     * @var string Used to compare with the current iFrame page
+     */
+    private static $lastUri;
+
     /**
      * @var array List of context parameters
      */
@@ -482,9 +487,27 @@ class UtilsContext extends RawMinkContext
      * Visit a page
      *
      * @param string $page The url page to visit
+     * @param boolean $iframeCheck If it's an iframe
      */
     public function visit($page, $iframeCheck = true)
     {
+        //checking if the page is an iFrame or not
+        if ($page && $page != "/") {
+            list($url, $parameters) = explode('?', $page);
+
+            //checking if the same iFrame wasn't previously loaded
+            // (ex : calling a second time the same form after saving it)
+            if (self::$lastUri == $parameters) {
+                //if so, then calling a new page to be sure that the iFrame is refreshed between two loads
+                $this->visitPath("/");
+            }
+            //then saving the called page to the static variable
+            self::$lastUri = $parameters;
+        } else {
+            //as page value is "/" (not an iFrame), $parameters is empty
+            self::$lastUri = "";
+        }
+
         $this->visitPath($page);
         if ($iframeCheck === true) {
             $this->switchToIframe();
@@ -492,7 +515,7 @@ class UtilsContext extends RawMinkContext
     }
 
     /**
-     *
+     * Used to wait until the chosen iFrame is launched
      */
     public function switchToIframe()
     {
@@ -500,23 +523,28 @@ class UtilsContext extends RawMinkContext
             $this->spin(
                 function ($context) {
                     if ($context->getSession()->getPage()->has('css', "iframe#main-content")) {
+                        // getting the current loaded iFrame URI
+                        $uri = $this->getSession()->getPage()->find('css', "iframe#main-content")->getAttribute('src');
+                        list($url, $parameters) = explode('?', $uri);
+
+                        //getting the iFrame current height
                         $iframeHeight = $context->getSession()->evaluateScript(
                             "document.getElementById('main-content').clientHeight"
                         );
-
-                        // we consider iframe hase been resized once its height is superior than 50px
-                        if ($iframeHeight > 50) {
+                        // we consider the iFrame was resized once its height is greater than 50px
+                        // we also check if the iFrame URI ($parameters) is the one asked for
+                        if (self::$lastUri == $parameters && $iframeHeight > 50) {
+                            //caution : switchToI*F*rame is the Mink method and need an argument
                             $context->getSession()->getDriver()->switchToIFrame("main-content");
                             return true;
                         }
                     }
                     return false;
                 },
-                'this error will no be displayed',
-                3
+                'this error will not be displayed'
             );
         } catch (\Exception $e) {
-            // do not throw error cause it is possible than there is no iframe in the page
+            // do not throw error cause it is possible that there is no iframe in the page
         }
     }
 
