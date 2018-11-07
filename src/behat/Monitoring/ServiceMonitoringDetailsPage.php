@@ -17,6 +17,8 @@
 
 namespace Centreon\Test\Behat\Monitoring;
 
+use Centreon\Test\Behat\CentreonContext;
+
 class ServiceMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Page
 {
     const STATE_OK = 'OK';
@@ -25,17 +27,50 @@ class ServiceMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Pa
     const STATE_UNKNOWN = 'UNKNOWN';
     const STATE_PENDING = 'PENDING';
 
+    /**
+     * @var CentreonContext Centreon context
+     */
     protected $context;
 
     /**
-     *  Navigate to a specific service monitoring details page and/or
-     *  check that it matches this class.
+     * @var array Array representing the table structure
+     */
+    protected $commentsProperties = array(
+        'hostname' => array(
+            'text',
+            'td:nth-child(1)'
+        ),
+        'service_description' => array(
+            'text',
+            'td:nth-child(2)'
+        ),
+        'entry_time' => array(
+            'text',
+            'td:nth-child(3)'
+        ),
+        'author' => array(
+            'text',
+            'td:nth-child(4)'
+        ),
+        'comment' => array(
+            'text',
+            'td:nth-child(5)'
+        ),
+        'persistent' => array(
+            'text',
+            'td:nth-child(6)'
+        )
+    );
+
+    /**
+     * Navigate to a specific service monitoring details page and/or
+     * check that it matches this class.
      *
-     *  @param $context  Centreon context.
-     *  @param $host     Host name. If empty, current page will not be
-     *                   changed.
-     *  @param $service  Service description. If empty, current page
-     *                   will not be changed.
+     * @param CentreonContext $context  Centreon context.
+     * @param string $host Host name. If empty, current page will not be changed.
+     * @param string $service Service description. If empty, current page
+     * will not be changed.
+     * @throws \Exception
      */
     public function __construct($context, $host = '', $service = '')
     {
@@ -56,9 +91,9 @@ class ServiceMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Pa
     }
 
     /**
-     *  Check that the current page is matching this class.
+     * Check that the current page is matching this class.
      *
-     *  @return True if the current page matches this class.
+     * @return boolean Return true if the current page matches this class.
      */
     public function isPageValid()
     {
@@ -67,9 +102,10 @@ class ServiceMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Pa
     }
 
     /**
-     *  Get properties printed on the service details page.
+     * Get properties printed on the service details page.
      *
-     *  @return An array with detailed properties.
+     * @return array An array with detailed properties.
+     * @throws \Exception
      */
     public function getProperties()
     {
@@ -79,7 +115,8 @@ class ServiceMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Pa
         // State
         $result['state'] = $this->context->assertFindIn(
             $table,
-            'css', 'tbody tr:nth-child(2) td:nth-child(2)'
+            'css',
+            'tbody tr:nth-child(2) td:nth-child(2)'
         )->getText();
 
         // Performance data
@@ -100,5 +137,32 @@ class ServiceMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Pa
         $result['in_downtime'] = ($inDowntime == 'Yes') ? true : false;
 
         return $result;
+    }
+
+    /**
+     * Retrieve all comments.
+     *
+     * @return array Array containing all comments
+     * @throws \Exception
+     */
+    public function getComments()
+    {
+        $comments = array();
+        $table = $this->context->assertFind('css', '#Tmainpage > table.ListTable:nth-of-type(3)');
+
+        $elements = $table->findAll(
+            'css',
+            '.list_one, .list_two'
+        );
+        foreach ($elements as $element) {
+            $newComment = array();
+            foreach ($this->commentsProperties as $property => $metadata) {
+                $propertyLocator = isset($metadata[1]) ? $metadata[1] : '';
+                $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
+                $newComment[$property] = $component->getText();
+            }
+            $comments[] = $newComment;
+        }
+        return $comments;
     }
 }
