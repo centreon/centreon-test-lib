@@ -24,7 +24,7 @@ namespace Centreon\Test\Traits;
  * @package centreon-license-manager
  * @subpackage test
  */
-class TestCaseExtensionTrait
+trait TestCaseExtensionTrait
 {
 
     /**
