@@ -110,9 +110,12 @@ class CentreonDBStatement extends \PDOStatement
             
             if ($this->fetchObjectName !== null && is_array($data)) {
                 $result = new $this->fetchObjectName;
+                $reflection = new \ReflectionClass($result);
                 
                 foreach ($data as $key => $val) {
-                    $result->{$key} = $val;
+                    $property = $reflection->getProperty($key);
+                    $property->setAccessible(true);
+                    $property->setValue($result, $val);
                 }
             } else {
                 $result = $data;
