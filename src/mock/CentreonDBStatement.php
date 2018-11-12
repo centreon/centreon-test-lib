@@ -24,12 +24,13 @@ namespace Centreon\Test\Mock;
  * @package centreon-license-manager
  * @subpackage test
  */
-class CentreonDBStatement
+class CentreonDBStatement extends \PDOStatement
 {
     private $query;
     private $resultsets;
     protected $params = null;
     protected $currentResultSet = null;
+    protected $fetchObjectName;
 
     /**
      * Constructor
@@ -45,30 +46,30 @@ class CentreonDBStatement
     /*
      * Bind parameter
      */
-    public function bindParam($param, $value)
+    public function bindParam($paramno, &$param, $type = NULL, $maxlen = NULL, $driverdata = NULL)
     {
-        $this->bindValue($param, $value);
+        $this->bindValue($paramno, $param);
     }
 
     /*
      * Bind value
      */
-    public function bindValue($param, $value)
+    public function bindValue($paramno, $param, $type = NULL)
     {
         if (is_null($this->params)) {
             $this->params = array();
         }
-        if (is_int($param)) {
-            $this->params[$param - 1] = $value;
+        if (is_int($paramno)) {
+            $this->params[$paramno - 1] = $param;
         } else {
-            $this->params[$param] = $value;
+            $this->params[$paramno] = $param;
         }
     }
 
     /*
      * Execute statement
      */
-    public function execute()
+    public function execute($bound_input_params = NULL)
     {
         $matching = null;
         foreach ($this->resultsets as $resultset) {
@@ -105,8 +106,21 @@ class CentreonDBStatement
     public function fetchRow()
     {
         if (!is_null($this->currentResultSet)) {
-            return $this->currentResultSet->fetchRow();
+            $data = $this->currentResultSet->fetchRow();
+            
+            if ($this->fetchObjectName !== null && is_array($data)) {
+                $result = new $this->fetchObjectName;
+                
+                foreach ($data as $key => $val) {
+                    $result->{$key} = $val;
+                }
+            } else {
+                $result = $data;
+            }
+
+            return $result;
         }
+
         return false;
     }
 
@@ -115,7 +129,7 @@ class CentreonDBStatement
      *
      * @return array
      */
-    public function fetch()
+    public function fetch($how = NULL, $orientation = NULL, $offset = NULL)
     {
         return $this->fetchRow();
     }
@@ -125,7 +139,7 @@ class CentreonDBStatement
      *
      * @return array
      */
-    public function fetchAll()
+    public function fetchAll($how = NULL, $class_name = NULL, $ctor_args = NULL)
     {
         $result = [];
         while ($row = $this->fetch()) {
@@ -163,5 +177,12 @@ class CentreonDBStatement
     public function closeCursor()
     {
         return ;
+    }
+
+    public function setFetchMode($mode, $params = NULL): bool
+    {
+        $this->fetchObjectName = $params;
+
+        return true;
     }
 }
