@@ -56,6 +56,6 @@ class CentreonDBManagerService extends BaseCentreonDBManagerService
 
     public function addResultSet($query, $result, $params = null)
     {
-        $this->manager->addResultSet($query, $result, $params);
+        return $this->manager->addResultSet($query, $result, $params);
     }
 }

@@ -31,6 +31,6 @@ class CentreonDBAdapter extends BaseCentreonDBAdapter
 
     public function addResultSet($query, $result, $params = null)
     {
-        $this->getCentreonDBInstance()->addResultSet($query, $result, $params);
+        return $this->getCentreonDBInstance()->addResultSet($query, $result, $params);
     }
 }
