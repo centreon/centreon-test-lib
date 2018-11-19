@@ -89,8 +89,6 @@ class PollerResourceConfigurationListingPage extends \Centreon\Test\Behat\Listin
             ->assertFindIn($element, 'css', 'td:nth-child(6)')
             ->getText();
 
-        return ($pollerResourceStatus === 'ENABLED')
-            ? true
-            : false;
+        return ($pollerResourceStatus === 'ENABLED');
     }
 }
