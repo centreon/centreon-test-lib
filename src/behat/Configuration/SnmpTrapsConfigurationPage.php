@@ -188,7 +188,7 @@ class SnmpTrapsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         // Visit page.
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('main.php?p=61701&o=a#');
+            $this->context->visit('main.php?p=61701&o=a');
         }
 
         // Check that page is valid for this class.

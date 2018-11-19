@@ -50,7 +50,7 @@ class SnmpTrapGroupConfigurationPage extends \Centreon\Test\Behat\ConfigurationP
         // Visit page.
         $this->context = $context;
         if ($visit) {
-            $this->context->visit('main.php?p=61705&o=a#');
+            $this->context->visit('main.php?p=61705&o=a');
         }
 
         // Check that page is valid for this class.
