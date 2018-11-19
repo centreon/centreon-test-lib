@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016-2017 Centreon
+ * Copyright 2016-2018 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,7 +105,7 @@ class UtilsContext extends RawMinkContext
     /**
      * Waiting an action
      *
-     * @param closure $closure The function to execute for test the loading.
+     * @param \Closure $closure The function to execute for test the loading.
      * @param string $timeoutMsg The custom message on timeout.
      * @param int $wait The timeout in seconds.
      * @return bool
@@ -173,7 +173,9 @@ class UtilsContext extends RawMinkContext
         $element = $parent->find($type, $pattern);
         if (is_null($element)) {
             if (empty($msg)) {
-                throw new \Exception("Element was not found (type '$type', pattern '" . print_r($pattern, true) . "').");
+                throw new \Exception(
+                    "Element was not found (type '$type', pattern '" . print_r($pattern, true) . "')."
+                );
             } else {
                 throw new \Exception($msg);
             }
@@ -255,7 +257,7 @@ class UtilsContext extends RawMinkContext
     /**
      * Find a link on current page. If the link is not found, throw an exception.
      *
-     * @param string $locate Text of link.
+     * @param string $locator Text of link.
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      * @throws \Exception
@@ -411,7 +413,7 @@ class UtilsContext extends RawMinkContext
     /**
      * Empty select2 values
      *
-     * @param $cssId the css locator
+     * @param string $cssId the css locator
      * @throws \Exception
      */
     public function emptySelectTwo($cssId)
@@ -544,11 +546,10 @@ class UtilsContext extends RawMinkContext
     /**
      * Check a radio button on current page, if the radio button is not found throw an exception
      *
-     * @param $value The value of the radio button to search.
+     * @param string $value The value of the radio button to search.
      * @param string $type The type for find.
      * @param string $pattern The pattern for find.
      * @param string $msg The exception message. If empty, use a default message.
-     * @return empty
      * @throws \Exception
      */
     public function checkRadioButtonByValue($value, $type, $pattern, $msg = '')
