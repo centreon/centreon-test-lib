@@ -25,7 +25,7 @@ class UtilsContext extends RawMinkContext
     /**
      * @var string Used to compare with the current iFrame page
      */
-    private static $lastUri;
+    protected static $lastUri;
 
     /**
      * @var array List of context parameters
