@@ -42,24 +42,21 @@ class UtilsContext extends RawMinkContext
      *
      * @param array $parameters The list of parameters given in behat.yml
      */
-    public function __construct($parameters = array())
-    {
+    public function __construct($parameters = array()) {
         $this->parameters = $parameters;
     }
 
     /**
      *  Set containers Compose files.
      */
-    public function setContainersComposeFiles($files)
-    {
+    public function setContainersComposeFiles($files) {
         $this->composeFiles = $files;
     }
 
     /**
      *  Get a container Compose file.
      */
-    public function getContainerComposeFile($name)
-    {
+    public function getContainerComposeFile($name) {
         if (empty($this->composeFiles[$name])) {
             throw new \Exception("Can't get container compose file of " . $name);
         }
@@ -69,8 +66,7 @@ class UtilsContext extends RawMinkContext
     /**
      *  Set the value returned by the confirmbox.
      */
-    public function setConfirmBox($bool)
-    {
+    public function setConfirmBox($bool) {
         if ($bool == true)
             $this->getSession()->getDriver()->executeScript('window.confirm = function(){return true;}');
         else
@@ -82,8 +78,7 @@ class UtilsContext extends RawMinkContext
      *
      * @AfterStep
      */
-    public function takeScreenshotOnError(AfterStepScope $scope)
-    {
+    public function takeScreenshotOnError(AfterStepScope $scope) {
         if (!$scope->getTestResult()->isPassed()) {
             $scenario = 'unknown';
 
@@ -114,8 +109,7 @@ class UtilsContext extends RawMinkContext
      * @return bool
      * @throws \Exception
      */
-    public function spin($closure, $timeoutMsg = 'Load timeout', $wait = 60)
-    {
+    public function spin($closure, $timeoutMsg = 'Load timeout', $wait = 60) {
         $limit = time() + $wait;
         $lastException = null;
         while (time() <= $limit) {
@@ -147,8 +141,7 @@ class UtilsContext extends RawMinkContext
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      */
-    public function assertFind($type, $pattern, $msg = '')
-    {
+    public function assertFind($type, $pattern, $msg = '') {
         return $this->assertFindIn($this->getSession()->getPage(), $type, $pattern, $msg);
     }
 
@@ -162,14 +155,16 @@ class UtilsContext extends RawMinkContext
      * @return Behat\Mink\Element\NodeElement The element.
      * @throws \Exception
      */
-    public function assertFindIn($parent, $type, $pattern, $msg = '')
-    {
+    public function assertFindIn($parent, $type, $pattern, $msg = '') {
         $element = $parent->find($type, $pattern);
         if (is_null($element)) {
-            if (empty($msg))
-                throw new \Exception("Element was not found (type '$type', pattern '" . print_r($pattern, TRUE) . "').");
-            else
+            if (empty($msg)) {
+                throw new \Exception(
+                    "Element was not found (type '$type', pattern '" . print_r($pattern, TRUE) . "')."
+                );
+            } else {
                 throw new \Exception($msg);
+            }
         }
         return $element;
     }
@@ -181,8 +176,7 @@ class UtilsContext extends RawMinkContext
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      */
-    public function assertFindButton($locator, $msg = '')
-    {
+    public function assertFindButton($locator, $msg = '') {
         return $this->assertFindButtonIn($this->getSession()->getPage(), $locator, $msg);
     }
 
@@ -195,16 +189,15 @@ class UtilsContext extends RawMinkContext
      * @return Behat\Mink\Element\NodeElement The element.
      * @throws \Exception
      */
-    public function assertFindButtonIn($parent, $locator, $msg = '')
-    {
+    public function assertFindButtonIn($parent, $locator, $msg = '') {
         $button = $parent->findButton($locator);
-        if (is_null($button))
-            {
-                if (empty($msg))
-                    throw new \Exception("Button '$locator' was not found.");
-                else
-                    throw new \Exception($msg);
+        if (is_null($button)) {
+            if (empty($msg)) {
+                throw new \Exception("Button '$locator' was not found.");
+            } else {
+                throw new \Exception($msg);
             }
+        }
         return $button;
     }
 
@@ -215,8 +208,7 @@ class UtilsContext extends RawMinkContext
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      */
-    public function assertFindField($locator, $msg = '')
-    {
+    public function assertFindField($locator, $msg = '') {
         return $this->assertFindFieldIn($this->getSession()->getPage(), $locator, $msg);
     }
 
@@ -230,16 +222,15 @@ class UtilsContext extends RawMinkContext
      * @throws \Exception
      * @internal param string $locate Input ID, name or label.
      */
-    public function assertFindFieldIn($parent, $locator, $msg = '')
-    {
+    public function assertFindFieldIn($parent, $locator, $msg = '') {
         $field = $parent->findField($locator);
-        if (is_null($field))
-            {
-                if (empty($msg))
-                    throw new \Exception("Field '$locator' was not found.");
-                else
-                    throw new \Exception($msg);
+        if (is_null($field)) {
+            if (empty($msg)) {
+                throw new \Exception("Field '$locator' was not found.");
+            } else {
+                throw new \Exception($msg);
             }
+        }
         return $field;
     }
 
@@ -250,8 +241,7 @@ class UtilsContext extends RawMinkContext
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      */
-    public function assertFindLink($locator, $msg = '')
-    {
+    public function assertFindLink($locator, $msg = '') {
         return $this->assertFindLinkIn($this->getSession()->getPage(), $locator, $msg);
     }
 
@@ -268,13 +258,13 @@ class UtilsContext extends RawMinkContext
     public function assertFindLinkIn($parent, $locator, $msg = '')
     {
         $link = $parent->findLink($locator);
-        if (is_null($link))
-            {
-                if (empty($msg))
-                    throw new \Exception("Link '$locator' was not found.");
-                else
-                    throw new \Exception($msg);
+        if (is_null($link)) {
+            if (empty($msg)) {
+                throw new \Exception("Link '$locator' was not found.");
+            } else {
+                throw new \Exception($msg);
             }
+        }
         return $link;
     }
 
@@ -285,8 +275,7 @@ class UtilsContext extends RawMinkContext
      * @param $value   The requested value.
      * @throws \Exception
      */
-    public function selectInList($css_id, $value)
-    {
+    public function selectInList($css_id, $value) {
         $found = FALSE;
         $elements = $this->getSession()->getPage()->findAll('css', $css_id . ' option');
         foreach ($elements as $element) {
@@ -297,9 +286,7 @@ class UtilsContext extends RawMinkContext
             }
         }
         if (!$found) {
-            throw new \Exception(
-                'Could not find value ' . $value
-                . ' in selection list ' . $css_id . '.');
+            throw new \Exception('Could not find value ' . $value . ' in selection list ' . $css_id . '.');
         }
     }
 
@@ -310,8 +297,7 @@ class UtilsContext extends RawMinkContext
      * @param array $values
      * @throws \Exception
      */
-    public function selectInAdvMultiSelect($css_id, $values = array())
-    {
+    public function selectInAdvMultiSelect($css_id, $values = array()) {
         if (!is_array($values)) {
             $values = array($values);
         }
@@ -342,9 +328,7 @@ class UtilsContext extends RawMinkContext
             }
 
             if (!$found) {
-                throw new \Exception(
-                    'Could not find value ' . $value
-                    . ' in selection list ' . $css_id . '.');
+                throw new \Exception('Could not find value ' . $value . ' in selection list ' . $css_id . '.');
             }
         }
     }
@@ -356,8 +340,7 @@ class UtilsContext extends RawMinkContext
      * @param array $values
      * @throws \Exception
      */
-    public function deleteInAdvMultiSelect($css_id, $values = array())
-    {
+    public function deleteInAdvMultiSelect($css_id, $values = array()) {
         if (!is_array($values)) {
             $values = array($values);
         }
@@ -388,9 +371,7 @@ class UtilsContext extends RawMinkContext
             }
 
             if (!$found) {
-                throw new \Exception(
-                    'Could not find value ' . $value
-                    . ' in selection list ' . $css_id . '.');
+                throw new \Exception('Could not find value ' . $value . ' in selection list ' . $css_id . '.');
             }
         }
     }
@@ -400,8 +381,7 @@ class UtilsContext extends RawMinkContext
      *
      * @param $cssId the css locator
      */
-    public function emptySelectTwo($cssId)
-    {
+    public function emptySelectTwo($cssId) {
         $object = $this->assertFind('css', $cssId);
         $parent = $object->getParent();
         $this->assertFindIn($parent, 'css', '.clearAllSelect2')->click();
@@ -414,8 +394,7 @@ class UtilsContext extends RawMinkContext
      * @param $what
      * @throws \Exception
      */
-    public function selectToSelectTwo($css_id, $what)
-    {
+    public function selectToSelectTwo($css_id, $what) {
         // Open select2.
         $selectDiv = $this->assertFind('css', $css_id)->getParent();
         $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
@@ -489,25 +468,30 @@ class UtilsContext extends RawMinkContext
      * @param string $page The url page to visit
      * @param boolean $iframeCheck If it's an iframe
      */
-    public function visit($page, $iframeCheck = true)
-    {
+    public function visit($page, $iframeCheck = true) {
         //checking if the page is an iFrame or not
         if ($page && $page != "/") {
             list($url, $parameters) = explode('?', $page);
+
 
             //checking if the same iFrame wasn't previously loaded
             // (ex : calling a second time the same form after saving it)
             if (self::$lastUri == $parameters) {
                 //if so, then calling a new page to be sure that the iFrame is refreshed between two loads
                 $this->visitPath("/");
+                //then saving the called page to the static variable
+
+            } elseif ($url == "index.php") {
+                $iframeCheck = false;
+                $parameters = $page;
             }
-            //then saving the called page to the static variable
+
             self::$lastUri = $parameters;
+
         } else {
             //as page value is "/" (not an iFrame), $parameters is empty
             self::$lastUri = "";
         }
-
         $this->visitPath($page);
         if ($iframeCheck === true) {
             $this->switchToIframe();
@@ -517,8 +501,7 @@ class UtilsContext extends RawMinkContext
     /**
      * Used to wait until the chosen iFrame is launched
      */
-    public function switchToIframe()
-    {
+    public function switchToIframe() {
         try {
             $this->spin(
                 function ($context) {
@@ -531,9 +514,11 @@ class UtilsContext extends RawMinkContext
                         $iframeHeight = $context->getSession()->evaluateScript(
                             "document.getElementById('main-content').clientHeight"
                         );
+
                         // we consider the iFrame was resized once its height is greater than 50px
-                        // we also check if the iFrame URI ($parameters) is the one asked for
-                        if (self::$lastUri == $parameters && $iframeHeight > 50) {
+                        // we also check if $lastUri is part of the iFrame URL ($parameters)
+                        if (strstr(self::$lastUri, $parameters) !== false && $iframeHeight > 50) {
+
                             //caution : switchToI*F*rame is the Mink method and need an argument
                             $context->getSession()->getDriver()->switchToIFrame("main-content");
                             return true;
@@ -601,7 +586,6 @@ class UtilsContext extends RawMinkContext
                 $button->click();
                 return;
             }
-
         }
 
         if (empty($msg)) {
@@ -625,9 +609,9 @@ class UtilsContext extends RawMinkContext
         $res = curl_exec($ch);
         $limit = time() + 60;
         while ((time() < $limit) &&
-               (($res === false) ||
-               empty($res)) ||
-               (json_decode($res, true)['slotCounts']['free'] < 1)) {
+            (($res === false) ||
+                empty($res)) ||
+            (json_decode($res, true)['slotCounts']['free'] < 1)) {
             sleep(1);
             $res = curl_exec($ch);
         }
