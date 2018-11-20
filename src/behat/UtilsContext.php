@@ -473,25 +473,23 @@ class UtilsContext extends RawMinkContext
         if ($page && $page != "/") {
             list($url, $parameters) = explode('?', $page);
 
-
             //checking if the same iFrame wasn't previously loaded
             // (ex : calling a second time the same form after saving it)
             if (self::$lastUri == $parameters) {
                 //if so, then calling a new page to be sure that the iFrame is refreshed between two loads
                 $this->visitPath("/");
                 //then saving the called page to the static variable
-
             } elseif ($url == "index.php") {
                 $iframeCheck = false;
                 $parameters = $page;
             }
-
             self::$lastUri = $parameters;
 
         } else {
             //as page value is "/" (not an iFrame), $parameters is empty
             self::$lastUri = "";
         }
+
         $this->visitPath($page);
         if ($iframeCheck === true) {
             $this->switchToIframe();
@@ -508,7 +506,14 @@ class UtilsContext extends RawMinkContext
                     if ($context->getSession()->getPage()->has('css', "iframe#main-content")) {
                         // getting the current loaded iFrame URI
                         $uri = $this->getSession()->getPage()->find('css', "iframe#main-content")->getAttribute('src');
-                        list($url, $parameters) = explode('?', $uri);
+
+                        //in the case of the autologin to the custom chosen page, there's no "?p=..." in the URL
+                        if (strstr($uri, "?") === false
+                            && strstr(self::$lastUri, "autologin=1&useralias=admin") !== false) {
+                            $parameters = "autologin";
+                        } else {
+                            list($url, $parameters) = explode('?', $uri);
+                        }
 
                         //getting the iFrame current height
                         $iframeHeight = $context->getSession()->evaluateScript(
@@ -518,7 +523,6 @@ class UtilsContext extends RawMinkContext
                         // we consider the iFrame was resized once its height is greater than 50px
                         // we also check if $lastUri is part of the iFrame URL ($parameters)
                         if (strstr(self::$lastUri, $parameters) !== false && $iframeHeight > 50) {
-
                             //caution : switchToI*F*rame is the Mink method and need an argument
                             $context->getSession()->getDriver()->switchToIFrame("main-content");
                             return true;
