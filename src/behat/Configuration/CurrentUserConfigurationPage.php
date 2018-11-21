@@ -40,6 +40,11 @@ class CurrentUserConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
             'input[name="contact_email"]',
             self::TAB_INFORMATION
         ),
+        'default' => array(
+            'select',
+            'select[name="default_page"]',
+            self::TAB_INFORMATION
+        ),
         'location' => array(
             'select2',
             'select#contact_location',
