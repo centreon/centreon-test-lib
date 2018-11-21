@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Centreon\Test\Behat;
 
 use Behat\MinkExtension\Context\RawMinkContext;
@@ -42,21 +43,24 @@ class UtilsContext extends RawMinkContext
      *
      * @param array $parameters The list of parameters given in behat.yml
      */
-    public function __construct($parameters = array()) {
+    public function __construct($parameters = array())
+    {
         $this->parameters = $parameters;
     }
 
     /**
      *  Set containers Compose files.
      */
-    public function setContainersComposeFiles($files) {
+    public function setContainersComposeFiles($files)
+    {
         $this->composeFiles = $files;
     }
 
     /**
      *  Get a container Compose file.
      */
-    public function getContainerComposeFile($name) {
+    public function getContainerComposeFile($name)
+    {
         if (empty($this->composeFiles[$name])) {
             throw new \Exception("Can't get container compose file of " . $name);
         }
@@ -66,11 +70,13 @@ class UtilsContext extends RawMinkContext
     /**
      *  Set the value returned by the confirmbox.
      */
-    public function setConfirmBox($bool) {
-        if ($bool == true)
+    public function setConfirmBox($bool)
+    {
+        if ($bool == true) {
             $this->getSession()->getDriver()->executeScript('window.confirm = function(){return true;}');
-        else
+        } else {
             $this->getSession()->getDriver()->executeScript('window.confirm = function(){return false;}');
+        }
     }
 
     /**
@@ -78,7 +84,8 @@ class UtilsContext extends RawMinkContext
      *
      * @AfterStep
      */
-    public function takeScreenshotOnError(AfterStepScope $scope) {
+    public function takeScreenshotOnError(AfterStepScope $scope)
+    {
         if (!$scope->getTestResult()->isPassed()) {
             $scenario = 'unknown';
 
@@ -109,7 +116,8 @@ class UtilsContext extends RawMinkContext
      * @return bool
      * @throws \Exception
      */
-    public function spin($closure, $timeoutMsg = 'Load timeout', $wait = 60) {
+    public function spin($closure, $timeoutMsg = 'Load timeout', $wait = 60)
+    {
         $limit = time() + $wait;
         $lastException = null;
         while (time() <= $limit) {
@@ -141,7 +149,8 @@ class UtilsContext extends RawMinkContext
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      */
-    public function assertFind($type, $pattern, $msg = '') {
+    public function assertFind($type, $pattern, $msg = '')
+    {
         return $this->assertFindIn($this->getSession()->getPage(), $type, $pattern, $msg);
     }
 
@@ -155,12 +164,13 @@ class UtilsContext extends RawMinkContext
      * @return Behat\Mink\Element\NodeElement The element.
      * @throws \Exception
      */
-    public function assertFindIn($parent, $type, $pattern, $msg = '') {
+    public function assertFindIn($parent, $type, $pattern, $msg = '')
+    {
         $element = $parent->find($type, $pattern);
         if (is_null($element)) {
             if (empty($msg)) {
                 throw new \Exception(
-                    "Element was not found (type '$type', pattern '" . print_r($pattern, TRUE) . "')."
+                    "Element was not found (type '$type', pattern '" . print_r($pattern, true) . "')."
                 );
             } else {
                 throw new \Exception($msg);
@@ -176,7 +186,8 @@ class UtilsContext extends RawMinkContext
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      */
-    public function assertFindButton($locator, $msg = '') {
+    public function assertFindButton($locator, $msg = '')
+    {
         return $this->assertFindButtonIn($this->getSession()->getPage(), $locator, $msg);
     }
 
@@ -189,7 +200,8 @@ class UtilsContext extends RawMinkContext
      * @return Behat\Mink\Element\NodeElement The element.
      * @throws \Exception
      */
-    public function assertFindButtonIn($parent, $locator, $msg = '') {
+    public function assertFindButtonIn($parent, $locator, $msg = '')
+    {
         $button = $parent->findButton($locator);
         if (is_null($button)) {
             if (empty($msg)) {
@@ -208,7 +220,8 @@ class UtilsContext extends RawMinkContext
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      */
-    public function assertFindField($locator, $msg = '') {
+    public function assertFindField($locator, $msg = '')
+    {
         return $this->assertFindFieldIn($this->getSession()->getPage(), $locator, $msg);
     }
 
@@ -222,7 +235,8 @@ class UtilsContext extends RawMinkContext
      * @throws \Exception
      * @internal param string $locate Input ID, name or label.
      */
-    public function assertFindFieldIn($parent, $locator, $msg = '') {
+    public function assertFindFieldIn($parent, $locator, $msg = '')
+    {
         $field = $parent->findField($locator);
         if (is_null($field)) {
             if (empty($msg)) {
@@ -241,7 +255,8 @@ class UtilsContext extends RawMinkContext
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
      */
-    public function assertFindLink($locator, $msg = '') {
+    public function assertFindLink($locator, $msg = '')
+    {
         return $this->assertFindLinkIn($this->getSession()->getPage(), $locator, $msg);
     }
 
@@ -275,14 +290,15 @@ class UtilsContext extends RawMinkContext
      * @param $value   The requested value.
      * @throws \Exception
      */
-    public function selectInList($css_id, $value) {
-        $found = FALSE;
+    public function selectInList($css_id, $value)
+    {
+        $found = false;
         $elements = $this->getSession()->getPage()->findAll('css', $css_id . ' option');
         foreach ($elements as $element) {
             if ($element->getText() == $value) {
                 $element->click();
-                $found = TRUE;
-                break ;
+                $found = true;
+                break;
             }
         }
         if (!$found) {
@@ -297,7 +313,8 @@ class UtilsContext extends RawMinkContext
      * @param array $values
      * @throws \Exception
      */
-    public function selectInAdvMultiSelect($css_id, $values = array()) {
+    public function selectInAdvMultiSelect($css_id, $values = array())
+    {
         if (!is_array($values)) {
             $values = array($values);
         }
@@ -340,7 +357,8 @@ class UtilsContext extends RawMinkContext
      * @param array $values
      * @throws \Exception
      */
-    public function deleteInAdvMultiSelect($css_id, $values = array()) {
+    public function deleteInAdvMultiSelect($css_id, $values = array())
+    {
         if (!is_array($values)) {
             $values = array($values);
         }
@@ -381,7 +399,8 @@ class UtilsContext extends RawMinkContext
      *
      * @param $cssId the css locator
      */
-    public function emptySelectTwo($cssId) {
+    public function emptySelectTwo($cssId)
+    {
         $object = $this->assertFind('css', $cssId);
         $parent = $object->getParent();
         $this->assertFindIn($parent, 'css', '.clearAllSelect2')->click();
@@ -394,7 +413,8 @@ class UtilsContext extends RawMinkContext
      * @param $what
      * @throws \Exception
      */
-    public function selectToSelectTwo($css_id, $what) {
+    public function selectToSelectTwo($css_id, $what)
+    {
         // Open select2.
         $selectDiv = $this->assertFind('css', $css_id)->getParent();
         $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
@@ -437,7 +457,7 @@ class UtilsContext extends RawMinkContext
                     }
                     return true;
                 },
-                'Cannot select "' . $what .  '" in select2 "' . $css_id . '"',
+                'Cannot select "' . $what . '" in select2 "' . $css_id . '"',
                 3
             );
             if ($found) {
@@ -446,7 +466,7 @@ class UtilsContext extends RawMinkContext
         }
 
         // Click parent element to close select2 search field if select2 is not auto closed
-        if ($this->getSession()->getPage()->has('css','.select2-container--open .select2-search__field')) {
+        if ($this->getSession()->getPage()->has('css', '.select2-container--open .select2-search__field')) {
             $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
         }
         // Wait select2 search field is totally closed
@@ -468,7 +488,8 @@ class UtilsContext extends RawMinkContext
      * @param string $page The url page to visit
      * @param boolean $iframeCheck If it's an iframe
      */
-    public function visit($page, $iframeCheck = true) {
+    public function visit($page, $iframeCheck = true)
+    {
         //checking if the page is an iFrame or not
         if ($page && $page != "/") {
             list($url, $parameters) = explode('?', $page);
@@ -499,21 +520,15 @@ class UtilsContext extends RawMinkContext
     /**
      * Used to wait until the chosen iFrame is launched
      */
-    public function switchToIframe() {
+    public function switchToIframe()
+    {
         try {
             $this->spin(
                 function ($context) {
                     if ($context->getSession()->getPage()->has('css', "iframe#main-content")) {
                         // getting the current loaded iFrame URI
                         $uri = $this->getSession()->getPage()->find('css', "iframe#main-content")->getAttribute('src');
-
-                        //in the case of the autologin to the custom chosen page, there's no "?p=..." in the URL
-                        if (strstr($uri, "?") === false
-                            && strstr(self::$lastUri, "autologin=1&useralias=admin") !== false) {
-                            $parameters = "autologin";
-                        } else {
-                            list($url, $parameters) = explode('?', $uri);
-                        }
+                        list($url, $parameters) = explode('?', $uri);
 
                         //getting the iFrame current height
                         $iframeHeight = $context->getSession()->evaluateScript(
@@ -547,7 +562,8 @@ class UtilsContext extends RawMinkContext
      * @return empty
      * @throws \Exception
      */
-    public function checkRadioButton($labelText, $type, $pattern, $msg = '') {
+    public function checkRadioButton($labelText, $type, $pattern, $msg = '')
+    {
         $page = $this->getSession()->getPage();
 
         $group = $page->find($type, $pattern);
@@ -555,7 +571,7 @@ class UtilsContext extends RawMinkContext
         foreach ($group->findAll('css', 'label') as $label) {
             exec("echo '" . $label->getText() . "' 1>&2");
             if ($labelText === $label->getText()) {
-                $radioButton = $page->find('css', '#'.$label->getAttribute('for'));
+                $radioButton = $page->find('css', '#' . $label->getAttribute('for'));
 
                 // Select the radio button
                 $radioButton->click();
@@ -580,7 +596,8 @@ class UtilsContext extends RawMinkContext
      * @return empty
      * @throws \Exception
      */
-    public function checkRadioButtonByValue($value, $type, $pattern, $msg = '') {
+    public function checkRadioButtonByValue($value, $type, $pattern, $msg = '')
+    {
         $page = $this->getSession()->getPage();
 
         $group = $page->findAll($type, $pattern);
