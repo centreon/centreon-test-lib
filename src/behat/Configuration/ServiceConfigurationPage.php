@@ -378,7 +378,7 @@ class ServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     }
 
     /**
-     *  Get macros.
+     *  Get macros
      *
      * @return macros
      */
@@ -387,6 +387,8 @@ class ServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         $macros = array();
 
         $inputs = $this->context->getSession()->getPage()->findAll('css', '[id^=macroInput]');
+        //[att*=str] :-  attribute value contains str – value can contain str anywhere either in middle or at end.
+
         foreach ($inputs as $input) {
             $elementId = $input->getAttribute('id');
             if (preg_match('/macroInput_(\d+)/', $elementId, $matches)) {
@@ -401,7 +403,7 @@ class ServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     }
 
     /**
-     *  Set macros.
+     *  Set macros
      *
      * @param $macros Macros.
      */
