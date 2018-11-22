@@ -170,7 +170,7 @@ class MonitoringHostsPage
             . '&notify=' . $doNotify
             . '&ackhostservice=' . ($doAckServicesAttached ? 'true' : 'false')
             . '&force_check=' . ($doForceCheck ? 'true' : 'false')
-            . '&author=admin&select[' . $hostname . ']=1');
+            . '&author=admin&select[' . $hostname . ']=1', false);
         $this->listHosts();
     }
 

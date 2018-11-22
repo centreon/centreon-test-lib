@@ -237,7 +237,7 @@ class MonitoringServicesPage
             . '&persistent=' . ($isPersistent ? 'true' : 'false')
             . '&notify=' . $doNotify
             . '&ackhostservice=0&force_check=' . ($doForceCheck ? 'true' : 'false')
-            . '&author=admin&select[' . $hostname . '%3B' . $service . ']=1');
+            . '&author=admin&select[' . $hostname . '%3B' . $service . ']=1', false);
         $this->listServices();
     }
 
