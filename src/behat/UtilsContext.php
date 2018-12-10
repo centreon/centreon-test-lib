@@ -19,6 +19,7 @@ namespace Centreon\Test\Behat;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Centreon\Test\Behat\Exception\ClosureException;
 
 class UtilsContext extends RawMinkContext
 {
@@ -66,10 +67,11 @@ class UtilsContext extends RawMinkContext
      */
     public function setConfirmBox($bool)
     {
-        if ($bool == true)
+        if ($bool == true) {
             $this->getSession()->getDriver()->executeScript('window.confirm = function(){return true;}');
-        else
+        } else {
             $this->getSession()->getDriver()->executeScript('window.confirm = function(){return false;}');
+        }
     }
 
     /**
@@ -111,13 +113,19 @@ class UtilsContext extends RawMinkContext
      */
     public function spin($closure, $timeoutMsg = 'Load timeout', $wait = 60)
     {
+        if (!is_callable($closure)) {
+            throw new \Exception('This closure is not callable');
+        }
         $limit = time() + $wait;
         $lastException = null;
         while (time() <= $limit) {
             try {
-                if ($closure($this)) {
+                if (call_user_func($closure, $this)) {
                     return true;
                 }
+            } catch (ClosureException $ce) {
+                $lastException = $ce;
+                break; // We breaking loop only for this exception type
             } catch (\Exception $e) {
                 $lastException = $e;
             }
@@ -127,9 +135,11 @@ class UtilsContext extends RawMinkContext
             throw new \Exception($timeoutMsg);
         } else {
             throw new \Exception(
-                $timeoutMsg . ': ' . $lastException->getMessage() . ' (code ' .
-                $lastException->getCode() . ', file ' . $lastException->getFile() .
-                ':' . $lastException->getLine() . ')'
+                $lastException->getMessage()
+                . ' ([' . get_class($lastException) . '] code '
+                . $lastException->getCode() . ', file '
+                . $lastException->getFile() . ':' . $lastException->getLine()
+                . ')'
             );
         }
     }
@@ -141,6 +151,7 @@ class UtilsContext extends RawMinkContext
      * @param string $pattern The pattern for find.
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
+     * @throws \Exception
      */
     public function assertFind($type, $pattern, $msg = '')
     {
@@ -161,10 +172,11 @@ class UtilsContext extends RawMinkContext
     {
         $element = $parent->find($type, $pattern);
         if (is_null($element)) {
-            if (empty($msg))
-                throw new \Exception("Element was not found (type '$type', pattern '" . print_r($pattern, TRUE) . "').");
-            else
+            if (empty($msg)) {
+                throw new \Exception("Element was not found (type '$type', pattern '" . print_r($pattern, true) . "').");
+            } else {
                 throw new \Exception($msg);
+            }
         }
         return $element;
     }
@@ -175,6 +187,7 @@ class UtilsContext extends RawMinkContext
      * @param string $locator Button ID, value or alt.
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
+     * @throws \Exception
      */
     public function assertFindButton($locator, $msg = '')
     {
@@ -193,13 +206,13 @@ class UtilsContext extends RawMinkContext
     public function assertFindButtonIn($parent, $locator, $msg = '')
     {
         $button = $parent->findButton($locator);
-        if (is_null($button))
-            {
-                if (empty($msg))
-                    throw new \Exception("Button '$locator' was not found.");
-                else
-                    throw new \Exception($msg);
+        if (is_null($button)) {
+            if (empty($msg)) {
+                throw new \Exception("Button '$locator' was not found.");
+            } else {
+                throw new \Exception($msg);
             }
+        }
         return $button;
     }
 
@@ -209,6 +222,7 @@ class UtilsContext extends RawMinkContext
      * @param string $locate Input ID, name or label.
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
+     * @throws \Exception
      */
     public function assertFindField($locator, $msg = '')
     {
@@ -228,13 +242,13 @@ class UtilsContext extends RawMinkContext
     public function assertFindFieldIn($parent, $locator, $msg = '')
     {
         $field = $parent->findField($locator);
-        if (is_null($field))
-            {
-                if (empty($msg))
-                    throw new \Exception("Field '$locator' was not found.");
-                else
-                    throw new \Exception($msg);
+        if (is_null($field)) {
+            if (empty($msg)) {
+                throw new \Exception("Field '$locator' was not found.");
+            } else {
+                throw new \Exception($msg);
             }
+        }
         return $field;
     }
 
@@ -244,6 +258,7 @@ class UtilsContext extends RawMinkContext
      * @param string $locate Text of link.
      * @param string $msg The exception message. If empty, use a default message.
      * @return Behat\Mink\Element\NodeElement The element.
+     * @throws \Exception
      */
     public function assertFindLink($locator, $msg = '')
     {
@@ -263,13 +278,13 @@ class UtilsContext extends RawMinkContext
     public function assertFindLinkIn($parent, $locator, $msg = '')
     {
         $link = $parent->findLink($locator);
-        if (is_null($link))
-            {
-                if (empty($msg))
-                    throw new \Exception("Link '$locator' was not found.");
-                else
-                    throw new \Exception($msg);
+        if (is_null($link)) {
+            if (empty($msg)) {
+                throw new \Exception("Link '$locator' was not found.");
+            } else {
+                throw new \Exception($msg);
             }
+        }
         return $link;
     }
 
@@ -282,19 +297,20 @@ class UtilsContext extends RawMinkContext
      */
     public function selectInList($css_id, $value)
     {
-        $found = FALSE;
+        $found = false;
         $elements = $this->getSession()->getPage()->findAll('css', $css_id . ' option');
         foreach ($elements as $element) {
             if ($element->getText() == $value) {
                 $element->click();
-                $found = TRUE;
+                $found = true;
                 break ;
             }
         }
         if (!$found) {
             throw new \Exception(
                 'Could not find value ' . $value
-                . ' in selection list ' . $css_id . '.');
+                . ' in selection list ' . $css_id . '.'
+            );
         }
     }
 
@@ -339,7 +355,8 @@ class UtilsContext extends RawMinkContext
             if (!$found) {
                 throw new \Exception(
                     'Could not find value ' . $value
-                    . ' in selection list ' . $css_id . '.');
+                    . ' in selection list ' . $css_id . '.'
+                );
             }
         }
     }
@@ -385,7 +402,8 @@ class UtilsContext extends RawMinkContext
             if (!$found) {
                 throw new \Exception(
                     'Could not find value ' . $value
-                    . ' in selection list ' . $css_id . '.');
+                    . ' in selection list ' . $css_id . '.'
+                );
             }
         }
     }
@@ -394,6 +412,7 @@ class UtilsContext extends RawMinkContext
      * Empty select2 values
      *
      * @param $cssId the css locator
+     * @throws \Exception
      */
     public function emptySelectTwo($cssId)
     {
@@ -462,7 +481,7 @@ class UtilsContext extends RawMinkContext
         }
 
         // Click parent element to close select2 search field if select2 is not auto closed
-        if ($this->getSession()->getPage()->has('css','.select2-container--open .select2-search__field')) {
+        if ($this->getSession()->getPage()->has('css', '.select2-container--open .select2-search__field')) {
             $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
         }
         // Wait select2 search field is totally closed
@@ -498,7 +517,8 @@ class UtilsContext extends RawMinkContext
      * @return empty
      * @throws \Exception
      */
-    public function checkRadioButton($labelText, $type, $pattern, $msg = '') {
+    public function checkRadioButton($labelText, $type, $pattern, $msg = '')
+    {
         $page = $this->getSession()->getPage();
 
         $group = $page->find($type, $pattern);
@@ -531,7 +551,8 @@ class UtilsContext extends RawMinkContext
      * @return empty
      * @throws \Exception
      */
-    public function checkRadioButtonByValue($value, $type, $pattern, $msg = '') {
+    public function checkRadioButtonByValue($value, $type, $pattern, $msg = '')
+    {
         $page = $this->getSession()->getPage();
 
         $group = $page->findAll($type, $pattern);
@@ -541,7 +562,6 @@ class UtilsContext extends RawMinkContext
                 $button->click();
                 return;
             }
-
         }
 
         if (empty($msg)) {

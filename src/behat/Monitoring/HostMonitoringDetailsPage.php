@@ -17,6 +17,8 @@
 
 namespace Centreon\Test\Behat\Monitoring;
 
+use Centreon\Test\Behat\CentreonContext;
+
 class HostMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Page
 {
     const SERVICE_STATUS_TAB = 1;
@@ -29,16 +31,44 @@ class HostMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Page
     const STATE_UNREACHABLE = 'UNREACHABLE';
     const STATE_PENDING = 'PENDING';
 
+    /**
+     * @var CentreonContext Centreon context
+     */
     protected $context;
-    protected $hostname;
 
     /**
-     *  Navigate to and/or check that we are on a host configuration
-     *  page.
+     * @var array Array representing the table structure
+     */
+    protected $commentsProperties = array(
+        'hostname' => array(
+            'text',
+            'td:nth-child(1)'
+        ),
+        'entry_time' => array(
+            'text',
+            'td:nth-child(2)'
+        ),
+        'author' => array(
+            'text',
+            'td:nth-child(3)'
+        ),
+        'comment' => array(
+            'text',
+            'td:nth-child(4)'
+        ),
+        'persistent' => array(
+            'text',
+            'td:nth-child(5)'
+        )
+    );
+
+    /**
+     * Navigate to and/or check that we are on a host configuration page.
      *
-     * @param $context  Centreon context.
-     * @param $hostname Host name.
-     * @param $visit    True to navigate to a blank host configuration page.
+     * @param CentreonContext $context Centreon context.
+     * @param string $hostname Host name.
+     * @param boolean $visit Set true to navigate to a blank host configuration page.
+     * @throws \Exception
      */
     public function __construct($context, $hostname, $visit = true)
     {
@@ -59,9 +89,9 @@ class HostMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Page
     }
 
     /**
-     *  Check that the current page is matching this class.
+     * Check that the current page is matching this class.
      *
-     * @return True if the current page matches this class.
+     * @return boolean Return true if the current page matches this class.
      */
     public function isPageValid()
     {
@@ -69,9 +99,9 @@ class HostMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Page
     }
 
     /**
-     *  Get properties printed on the host monitoring details page.
+     * Get properties printed on the host monitoring details page.
      *
-     *  @return An array with detailed properties.
+     * @return array An array with detailed properties.
      */
     public function getProperties()
     {
@@ -101,12 +131,39 @@ class HostMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Page
     }
 
     /**
-     *  Switch between tabs.
+     * Switch between tabs.
      *
-     * @param $tab  Tab ID / Tab name.
+     * @param int $tab Tab ID / Tab name.
      */
     public function switchTab($tab)
     {
         $this->context->assertFind('css', 'li#c' . $tab . ' a')->click();
+    }
+
+    /**
+     * Retrieve all comments.
+     *
+     * @return array Array containing all comments
+     * @throws \Exception
+     */
+    public function getComments()
+    {
+        $comments = array();
+        $table = $this->context->assertFind('css', 'div#tab4 > table.ListTable');
+
+        $elements = $table->findAll(
+            'css',
+            '.list_one, .list_two'
+        );
+        foreach ($elements as $element) {
+            $newComment = array();
+            foreach ($this->commentsProperties as $property => $metadata) {
+                $propertyLocator = isset($metadata[1]) ? $metadata[1] : '';
+                $component = $this->context->assertFindIn($element, 'css', $propertyLocator);
+                $newComment[$property] = $component->getText();
+            }
+            $comments[] = $newComment;
+        }
+        return $comments;
     }
 }
