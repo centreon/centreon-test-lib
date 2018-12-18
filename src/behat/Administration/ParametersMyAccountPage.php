@@ -25,7 +25,11 @@ class ParametersMyAccountPage extends \Centreon\Test\Behat\ConfigurationPage
         'name' => array(
             'input',
             'input[name="contact_name"]'
-        )
+        ),
+        'contact_lang' => array(
+            'select',
+            'select[name="contact_lang"]'
+        ),
     );
 
     /**
