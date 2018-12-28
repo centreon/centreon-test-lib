@@ -82,4 +82,23 @@ class MetricsConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
         $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
         return $id;
     }
+
+    /**
+     *  Set the virtual metrics filter.
+     *
+     * @param string $virtualMetricsName Virtual metrics filter.
+     */
+    public function setVirtualMetricsFilter($virtualMetricsName)
+    {
+        $filterField = $this->context->assertFind('named', array('id_or_name', 'searchVM'));
+        $filterField->setValue($virtualMetricsName);
+    }
+
+    /**
+     *  Search with the virtual metrics filter.
+     */
+    public function search()
+    {
+        $this->context->assertFindButton('Search', 'Button Search not found')->click();
+    }
 }
