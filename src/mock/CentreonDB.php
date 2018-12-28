@@ -90,6 +90,8 @@ class CentreonDB
             $this->queries[$query] = array();
         }
         $this->queries[$query][] = new CentreonDBResultSet($result, $params);
+        
+        return $this;
     }
 
     /**
