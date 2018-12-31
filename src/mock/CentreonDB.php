@@ -24,7 +24,7 @@ namespace Centreon\Test\Mock;
  * @package centreon-license-manager
  * @subpackage test
  */
-class CentreonDB
+class CentreonDB extends \CentreonDB
 {
     private $queries = array();
 
