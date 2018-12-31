@@ -58,7 +58,7 @@ class CentreonDB extends \CentreonDB
      * @param bool $htmlSpecialChars
      * @return string The string escaped
      */
-    public static function escape($str, $htmlSpecialChars = false)
+    public static function escape($string, $htmlSpecialChars = false)
     {
         return $string;
     }
