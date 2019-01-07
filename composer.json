@@ -5,7 +5,8 @@
     "type": "library",
     "keywords": ["testing", "centreon", "phpunit", "behat"],
     "require": {
-        "behat/behat": "^3.0"
+        "behat/behat": "^3.0",
+        "guzzlehttp/guzzle": "~6.0"
     },
     "suggest": {
         "behat/mink": "Browser controller/emulator abstraction for PHP",
