@@ -403,6 +403,14 @@ class CentreonContext extends UtilsContext
             'http://' . $this->container->getContainerId('web', false) . '/centreon'
         );
 
+        /**
+         * set api base url param
+         */
+        $this->setMinkParameter(
+            'api_base',
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon'
+        );
+
         // Real application test, create an API authentication token.
         $ch = curl_init(
             'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') .
