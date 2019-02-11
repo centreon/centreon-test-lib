@@ -60,8 +60,8 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
             self::CONFIGURATION_TAB
         ),
         'templates' => array(
-            'custom',
-            'Templates',
+            'select2',
+            'select[name="tpSelect[]"]',
             self::CONFIGURATION_TAB
         ),
         'service_linked_to_template' => array(
@@ -458,29 +458,6 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
     }
 
     /**
-     *  Get host templates.
-     *
-     * @return host templates
-     */
-    protected function getTemplates()
-    {
-        $templates = array();
-
-        $elements = $this->context->getSession()->getPage()->findAll(
-            'css',
-            '[id^="tpSelect_"] option[selected="selected"]'
-        );
-        foreach ($elements as $element) {
-            $templateName = $element->getText();
-            if ($templateName != '') {
-                $templates[] = $templateName;
-            }
-        }
-
-        return $templates;
-    }
-
-    /**
      *  Set macros.
      *
      * @param $macros Macros.
@@ -493,24 +470,6 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
             $this->context->assertFind('css', '#macro_add p')->click();
             $this->context->assertFindField('macroInput_' . $i)->setValue($name);
             $this->context->assertFindField('macroValue_' . $i)->setValue($value);
-            $i++;
-        }
-    }
-
-    /**
-     *  Set host templates.
-     *
-     * @param $templates  Parent templates.
-     */
-    protected function setTemplates($templates)
-    {
-        if (!is_array($templates)) {
-            $templates = array($templates);
-        }
-        $i = 0;
-        foreach ($templates as $tpl) {
-            $this->context->assertFind('css', '#template_add span')->click();
-            $this->context->selectInList('#tpSelect_' . $i, $tpl);
             $i++;
         }
     }
