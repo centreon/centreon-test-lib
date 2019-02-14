@@ -406,30 +406,6 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
     }
 
     /**
-     *  Get host templates.
-     *
-     * @return host templates
-     */
-    protected function getTemplates()
-    {
-        $templates = array();
-
-        $elements = $this->context->getSession()->getPage()->findAll(
-            'css',
-            '[id^="tpSelect_"]'
-        );
-        foreach ($elements as $element) {
-            $id = $element->getValue();
-            if (is_numeric($id)) {
-                $option = $this->context->assertFindIn($element, 'css', 'option[value="' . $id . '"]');
-                $templates[] = $option->getText();
-            }
-        }
-
-        return $templates;
-    }
-
-    /**
      *  Set macros.
      *
      * @param $macros Macros.
@@ -459,24 +435,6 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
                     '#macroValue_' . $macroId
                 )->setValue($finalMacros[$macroNames[$i]]);
             }
-            $i++;
-        }
-    }
-
-    /**
-     *  Set host templates.
-     *
-     * @param $templates  Parent templates.
-     */
-    protected function setTemplates($templates)
-    {
-        if (!is_array($templates)) {
-            $templates = array($templates);
-        }
-        $i = 0;
-        foreach ($templates as $tpl) {
-            $this->context->assertFind('css', '#template_add span')->click();
-            $this->context->selectInList('#tpSelect_' . $i, $tpl);
             $i++;
         }
     }

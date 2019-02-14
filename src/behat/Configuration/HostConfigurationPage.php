@@ -86,21 +86,4 @@ class HostConfigurationPage extends HostTemplateConfigurationPage
             'Current page does not match class ' . __CLASS__
         );
     }
-
-    /**
-     *  Set host templates.
-     *
-     * @param $templates  Parent templates.
-     */
-    protected function setTemplates($templates)
-    {
-        $this->context->emptySelectTwo("#tpSelect");
-        if (!is_array($templates)) {
-            $templates = array($templates);
-        }
-
-        foreach ($templates as $tpl) {
-            $this->context->selectToSelectTwo('#tpSelect', $tpl);
-        }
-    }
 }
