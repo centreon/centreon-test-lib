@@ -65,8 +65,8 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             self::CONFIGURATION_TAB
         ),
         'templates' => array(
-            'custom',
-            'Templates',
+            'select2',
+            'select[name="tpSelect[]"]',
             self::CONFIGURATION_TAB
         ),
         'check_command' => array(
