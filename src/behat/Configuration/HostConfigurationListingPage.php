@@ -146,20 +146,4 @@ class HostConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
         $this->context->assertFind('css', 'select[name="o1"]')->selectOption('Delete');
     }
 
-    /**
-     * Open add page
-     */
-    public function loadAddPage()
-    {
-        $this->context->visit('main.php?p=60101&o=a');
-    }
-
-    /**
-     * check for template select2
-     */
-    public function checkForTemplateSelect2()
-    {
-        $this->context->assertFind('css', '#parallelTemplate .select2-container')->click();
-        $this->context->assertFind('css', '#select2-tpSelect-results li');
-    }
 }
