@@ -17,7 +17,9 @@
 
 namespace Centreon\Test\Behat;
 
+use Behat\Gherkin\Node\TableNode;
 use GuzzleHttp\Client;
+use Behat\Gherkin\Node\PyStringNode;
 
 class CentreonAPIContext extends CentreonContext
 {
@@ -35,6 +37,21 @@ class CentreonAPIContext extends CentreonContext
      * @var string
      */
     protected $authToken;
+
+    /*
+     * @var string
+     */
+    protected $requestPayload;
+
+    /*
+     * @var string
+     */
+    protected $responsePayload;
+
+    /*
+     * @var array
+     */
+    protected $files;
 
     /**
      * Constructor
@@ -95,6 +112,54 @@ class CentreonAPIContext extends CentreonContext
     }
 
     /**
+     * @return mixed
+     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * @param mixed $files
+     */
+    public function setFiles($files): void
+    {
+        $this->files = $files;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequestPayload()
+    {
+        return $this->requestPayload;
+    }
+
+    /**
+     * @param mixed $requestPayload
+     */
+    public function setRequestPayload($requestPayload): void
+    {
+        $this->requestPayload = $requestPayload;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResponsePayload()
+    {
+        return $this->responsePayload;
+    }
+
+    /**
+     * @param mixed $responsePayload
+     */
+    public function setResponsePayload($responsePayload): void
+    {
+        $this->responsePayload = $responsePayload;
+    }
+
+    /**
      * Instantiate the http client for testing
      *
      * @Given I have a running instance of Centreon API
@@ -120,6 +185,45 @@ class CentreonAPIContext extends CentreonContext
     }
 
     /**
+     * @Given /^the response has a "([^"]*)" property$/
+     */
+    public function responseHasProperty($property)
+    {
+        $data = json_decode($this->getResponse()->getBody(true));
+        if (!empty($data)) {
+            if (!isset($data->$property)) {
+                throw new \Exception("Property '".$property."' is not found!\n");
+            }
+        } else {
+            throw new \Exception("Response not JSON\n" . $this->getResponse()->getBody(true));
+        }
+    }
+
+    /**
+     * @Given I use request payload
+     */
+    public function iUseRequestPayload(PyStringNode $requestPayload)
+    {
+        $this->setRequestPayload($requestPayload);
+    }
+
+    /**
+     * @Given I use attach files
+     */
+    public function iAttachFiles(TableNode $filesTable)
+    {
+
+        $files = [];
+        foreach ($filesTable->getHash() as $fileHash) {
+            $files[] = [
+                'name' => $fileHash['name'],
+                'path' => __DIR__ . '/../../../../../' . $fileHash['path']
+            ];
+        }
+        $this->setFiles($files);
+    }
+
+    /**
      * @When /^I make a GET request to "([^"]*)"$/
      */
     public function makeGetRequest($uri)
@@ -129,11 +233,39 @@ class CentreonAPIContext extends CentreonContext
     }
 
     /**
+     * @When /^I make a DELETE request to "([^"]*)"$/
+     */
+    public function makeDeleteRequest($uri)
+    {
+        $response = $this->getClient()->request('DELETE', $this->getMinkParameter('api_base') . $uri);
+        $this->setResponse($response);
+    }
+
+    /**
      * @When /^I make a POST request to "([^"]*)"$/
      */
     public function makePostRequest($uri)
     {
-        return true;
+        $jsonPayload = !empty($this->getRequestPayload()) ? ['json' => json_decode($this->getRequestPayload()->getRaw(),true)]: null;
+        $response = $this->getClient()->post($this->getMinkParameter('api_base') . $uri, $jsonPayload);
+        $this->setResponse($response);
+    }
+
+    /**
+     * @When /^I make a MULTIPART request to "([^"]*)"$/
+     * @throws \Exception
+     */
+    public function makeMultipartRequest($uri)
+    {
+        $files = $this->getFiles();
+        $this->validateFiles($files);
+        $payload = $this->getRequestPayload();
+        $multipart = $this->buildMultipartArray($files, $payload);
+        $response = $this->getClient()->request('POST', $this->getMinkParameter('api_base') . $uri, [
+            'multipart' => $multipart
+        ]);
+
+        $this->setResponse($response);
     }
 
     /**
@@ -148,20 +280,6 @@ class CentreonAPIContext extends CentreonContext
         }
     }
 
-    /**
-     * @Given /^the response has a "([^"]*)" property$/
-     */
-    public function responseHasProperty($property)
-    {
-        $data = json_decode($this->getResponse()->getBody(true));
-        if (!empty($data)) {
-            if (!isset($data->$property)) {
-                throw new Exception("Property '".$property."' is not found!\n");
-            }
-        } else {
-            throw new Exception("Response not JSON\n" . $this->getResponse()->getBody(true));
-        }
-    }
     /**
      * @throws \Exception
      */
@@ -179,5 +297,46 @@ class CentreonAPIContext extends CentreonContext
             throw new \Exception('Could not get authentication token from API.');
         }
         $this->setAuthToken($responseObj->authToken);
+    }
+
+    /**
+     * Validate files existing
+     * @throws \Exception
+     */
+    private function validateFiles(array $files)
+    {
+        if (!empty($files)) {
+            foreach ($files as $file) {
+                if (!file_exists($file['path']) || !fopen($file['path'], 'r')){
+                    throw new \Exception('One or more files not found or unreadable to attach to request.');
+                }
+            }
+        }
+    }
+
+    /**
+     * build multipart request
+     * @return array
+     */
+    private function buildMultipartArray(array $files, $payload = null): array
+    {
+        $output = [];
+        foreach ($files as $file) {
+            $output[] = [
+                'name' => $file['name'],
+                'contents' => fopen($file['path'], 'r')
+            ];
+        }
+
+        if (!empty($payload)) {
+            foreach (json_decode($payload->getRaw(),true) as $fk => $fv) {
+                $output[] = [
+                    'name' => $fk,
+                    'contents' => $fv
+                ];
+            }
+        }
+
+        return $output;
     }
 }
