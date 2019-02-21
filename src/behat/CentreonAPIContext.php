@@ -192,10 +192,10 @@ class CentreonAPIContext extends CentreonContext
         $data = json_decode($this->getResponse()->getBody(true));
         if (!empty($data)) {
             if (!isset($data->$property)) {
-                throw new Exception("Property '".$property."' is not found!\n");
+                throw new \Exception("Property '".$property."' is not found!\n");
             }
         } else {
-            throw new Exception("Response not JSON\n" . $this->getResponse()->getBody(true));
+            throw new \Exception("Response not JSON\n" . $this->getResponse()->getBody(true));
         }
     }
 
@@ -233,18 +233,27 @@ class CentreonAPIContext extends CentreonContext
     }
 
     /**
+     * @When /^I make a DELETE request to "([^"]*)"$/
+     */
+    public function makeDeleteRequest($uri)
+    {
+        $response = $this->getClient()->request('DELETE', $this->getMinkParameter('api_base') . $uri);
+        $this->setResponse($response);
+    }
+
+    /**
      * @When /^I make a POST request to "([^"]*)"$/
      */
     public function makePostRequest($uri)
     {
-        $response = $this->getClient()->post($this->getMinkParameter('api_base') . $uri, [
-            'json' => json_decode($this->getRequestPayload()->getRaw(),true)
-        ]);
+        $jsonPayload = !empty($this->getRequestPayload()) ? ['json' => json_decode($this->getRequestPayload()->getRaw(),true)]: null;
+        $response = $this->getClient()->post($this->getMinkParameter('api_base') . $uri, $jsonPayload);
         $this->setResponse($response);
     }
 
     /**
      * @When /^I make a MULTIPART request to "([^"]*)"$/
+     * @throws \Exception
      */
     public function makeMultipartRequest($uri)
     {
@@ -291,7 +300,7 @@ class CentreonAPIContext extends CentreonContext
     }
 
     /**
-     * validate files existing
+     * Validate files existing
      * @throws \Exception
      */
     private function validateFiles(array $files)
