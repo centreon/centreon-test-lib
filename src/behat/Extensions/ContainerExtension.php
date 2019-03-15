@@ -62,7 +62,7 @@ class ContainerExtension implements ExtensionInterface
                 ->scalarNode('ppm_squid_basic_auth')->defaultValue('mon-ppm-squid-basic-auth-dev.yml')->end()
                 ->scalarNode('lm_squid_simple')->defaultValue('mon-lm-squid-simple-dev.yml')->end()
                 ->scalarNode('lm_squid_basic_auth')->defaultValue('mon-lm-squid-basic-auth-dev.yml')->end()
-                ->scalarNode('web_influxdb')->defaultValue('mon-web-influxdb.yml')->end()
+                ->scalarNode('web_influxdb')->defaultValue('mon-web-influxdb-dev.yml')->end()
                 ->scalarNode('lm')->defaultValue('mon-lm-dev.yml')->end()
                 ->scalarNode('poller-display')->defaultValue('mon-poller-display-dev.yml')->end()
                 ->scalarNode('ppe')->defaultValue('mon-ppe-dev.yml')->end()
