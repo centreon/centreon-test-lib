@@ -81,6 +81,14 @@ class CentreonDB extends \CentreonDB
     }
 
     /**
+     * Reset result sets
+     */
+    public function resetResultSet()
+    {
+        $this->queries = [];
+    }
+
+    /**
      * Add a resultset to the mock
      *
      * @param string $query The query to catch
