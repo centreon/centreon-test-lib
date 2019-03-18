@@ -106,7 +106,7 @@ class ExtensionsPage
             $extensionDOM = $this->context->assertFind('css', '#' . $type . '-' . $name);
             $this->context->assertFindIn($extensionDOM, 'css', 'span.content-icon-add')->click();
 
-            // Install module.
+            // check if extension is properly installed
             $this->context->spin(
                 function ($context) use ($type, $name) {
                     return $this->getEntry($type, $name)['actions']['remove'];
@@ -133,7 +133,7 @@ class ExtensionsPage
             $extensionDOM = $this->context->assertFind('css', '#' . $type . '-' . $name);
             $this->context->assertFindIn($extensionDOM, 'css', 'span.content-icon-update')->click();
 
-            // Install module.
+            // check if extension is properly upgraded
             $this->context->spin(
                 function ($context) use ($type, $name) {
                     return !$this->getEntry($type, $name)['actions']['upgrade'];
@@ -170,7 +170,7 @@ class ExtensionsPage
                 3
             );
 
-            // Install module.
+            // check if extension is properly removed
             $this->context->spin(
                 function ($context) use ($type, $name) {
                     return $this->getEntry($type, $name)['actions']['install'];
