@@ -627,8 +627,8 @@ class UtilsContext extends RawMinkContext
                 $url
             );
             $driver->setTimeouts(array(
-                'page load' => 120000,
-                'script' => 120000
+                'page load' => 180000,
+                'script' => 180000
             ));
         } catch (\Exception $e) {
             throw new \Exception("Cannot instantiate mink driver.\n" . $e->getMessage());
