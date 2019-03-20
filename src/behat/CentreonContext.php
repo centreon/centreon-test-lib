@@ -58,6 +58,12 @@ class CentreonContext extends UtilsContext
      */
     public function unsetContainer(AfterScenarioScope $scope)
     {
+        // Stop WebDriver video recording.
+        if (isset($this->webdriverVideoRecorder)) {
+            proc_terminate($this->webdriverVideoRecorder);
+            proc_close($this->webdriverVideoRecorder);
+        }
+
         // Failure logs.
         if (isset($this->container) && !$scope->getTestResult()->isPassed()) {
             $scenarioTitle = preg_replace('/(\s|\/)+/', '_', $scope->getScenario()->getTitle());
@@ -151,6 +157,12 @@ class CentreonContext extends UtilsContext
             $output = $this->container->execute('cat /var/lib/mysql/queries.log 2>/dev/null', 'web', false);
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // WebDriver video.
+            $filename = $this->composeFiles['log_directory'] . '/'
+                . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-' . $scenarioTitle . '.flv';
+            copy($this->webdriverVideoFile, $filename);
+            unlink($this->webdriverVideoFile);
         }
 
         // Stop Mink.
@@ -394,6 +406,22 @@ class CentreonContext extends UtilsContext
         }
         $this->container = new Container($composeFile);
         $this->setContainerWebDriver();
+
+        // Record WebDriver screen.
+        $secretPath = __DIR__ . '/../../../../../secret';
+        file_put_contents($secretPath, 'secret');
+        $pipes = array();
+        $this->webdriverVideoFile = tempnam(sys_get_temp_dir(), 'webdrivervideo');
+        $this->webdriverVideoRecorder = proc_open(
+            'flvrec.py -P ' . $secretPath . ' -o ' . $this->webdriverVideoFile
+            . ' ' . $this->container->getHost() . ' ' . $this->container->getPort(5900, 'webdriver'),
+            array(
+                0 => array('file', '/dev/null', 'r'),
+                1 => array('file', '/dev/null', 'w'),
+                2 => array('file', '/dev/null', 'w')
+            ),
+            $pipes
+        );
 
         // Set session parameters.
         $this->setMinkParameter(
