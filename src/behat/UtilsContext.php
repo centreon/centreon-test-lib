@@ -622,7 +622,7 @@ class UtilsContext extends RawMinkContext
     public function setContainerWebDriver()
     {
         // Wait for WebDriver container.
-        $url = 'http://' . $this->container->getHost() . ':4444/grid/api/hub';
+        $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub/status';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
@@ -632,7 +632,7 @@ class UtilsContext extends RawMinkContext
         while ((time() < $limit) &&
             (($res === false) ||
                 empty($res)) ||
-            (json_decode($res, true)['slotCounts']['free'] < 1)) {
+            ((bool)json_decode($res, true)['value']['ready'] == false)) {
             sleep(1);
             $res = curl_exec($ch);
         }
@@ -643,26 +643,10 @@ class UtilsContext extends RawMinkContext
         }
 
         try {
-            $url = 'http://' . $this->container->getHost() . ':4444/wd/hub';
+            $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
             $driver = new \Behat\Mink\Driver\Selenium2Driver(
                 'chrome',
                 array(
-                    'chrome' => array(
-                        'args' => array(
-                            '--window-size=1600,2000',
-                            '--disable-sync',
-                            '--single-process',
-                            '--disable-remote-fonts',
-                            '--disable-canvas-aa',
-                            '--disable-lcd-text',
-                            '--no-sandbox'
-                        ),
-                        /*
-                        'prefs' => array(
-                            'profile.default_content_setting_values.images' => 2
-                        )
-                        */
-                    ),
                     'browserName' => 'chrome',
                     'platform' => 'ANY',
                     'browser' => 'chrome',
