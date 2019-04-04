@@ -491,7 +491,7 @@ class UtilsContext extends RawMinkContext
     public function visit($page, $iframeCheck = true)
     {
         //checking if the page is an iFrame or not
-        if ($page && $page != "/") {
+        if ($iframeCheck && $page && $page != "/") {
             list($url, $parameters) = explode('?', $page);
 
 
