@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Centreon
+ * Copyright 2019 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Centreon\Test\Mock;
 
 /**
@@ -21,11 +22,12 @@ namespace Centreon\Test\Mock;
  *
  * @author Centreon
  * @version 1.0.0
- * @package centreon-license-manager
+ * @package centreon-test-lib
  * @subpackage test
  */
 class CentreonDBStatement extends \PDOStatement
 {
+
     private $query;
     private $resultsets;
     protected $params = null;
@@ -43,7 +45,7 @@ class CentreonDBStatement extends \PDOStatement
         $this->resultsets = $resultsets;
     }
 
-    /*
+    /**
      * Bind parameter
      */
     public function bindParam($paramno, &$param, $type = NULL, $maxlen = NULL, $driverdata = NULL)
@@ -51,7 +53,7 @@ class CentreonDBStatement extends \PDOStatement
         $this->bindValue($paramno, $param);
     }
 
-    /*
+    /**
      * Bind value
      */
     public function bindValue($paramno, $param, $type = NULL)
@@ -66,12 +68,13 @@ class CentreonDBStatement extends \PDOStatement
         }
     }
 
-    /*
+    /**
      * Execute statement
      */
     public function execute($bound_input_params = NULL)
     {
         $matching = null;
+
         foreach ($this->resultsets as $resultset) {
             $result = $resultset->match($this->params);
             if ($result === 2 && is_null($this->currentResultSet)) {
@@ -80,22 +83,29 @@ class CentreonDBStatement extends \PDOStatement
                 $matching = $resultset;
             }
         }
+
         if (is_null($this->currentResultSet)) {
             $this->currentResultSet = $matching;
         }
+
         if (is_null($this->currentResultSet)) {
             throw new \Exception('The query has not match');
         }
 
+        // trigger callback
+        $this->currentResultSet->executeCallback($this->params);
+
         return true;
     }
 
-    /*
+    /**
      * Count of updated lines
+     *
+     * @return int
      */
     public function rowCount()
     {
-        return 1;
+        return $this->currentResultSet->rowCount();
     }
 
     /**
@@ -107,11 +117,11 @@ class CentreonDBStatement extends \PDOStatement
     {
         if (!is_null($this->currentResultSet)) {
             $data = $this->currentResultSet->fetchRow();
-            
+
             if ($this->fetchObjectName !== null && is_array($data)) {
                 $result = new $this->fetchObjectName;
                 $reflection = new \ReflectionClass($result);
-                
+
                 foreach ($data as $key => $val) {
                     $property = $reflection->getProperty($key);
                     $property->setAccessible(true);
@@ -163,6 +173,7 @@ class CentreonDBStatement extends \PDOStatement
     }
 
     /**
+     * Get count of rows
      *
      * @return int
      */
@@ -171,17 +182,25 @@ class CentreonDBStatement extends \PDOStatement
         if (!is_null($this->currentResultSet)) {
             return $this->currentResultSet->numRows();
         }
+
         return 0;
     }
 
     /**
-     *
+     * Close cursor
      */
     public function closeCursor()
     {
-        return ;
+        return;
     }
 
+    /**
+     * Set fetch mode
+     *
+     * @param mixed $mode
+     * @param mixed $params
+     * @return bool
+     */
     public function setFetchMode($mode, $params = NULL): bool
     {
         $this->fetchObjectName = $params;
