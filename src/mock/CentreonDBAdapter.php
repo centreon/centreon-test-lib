@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Centreon
+ * Copyright 2019 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Centreon\Test\Mock;
 
 use Centreon\Infrastructure\CentreonLegacyDB\CentreonDBAdapter as BaseCentreonDBAdapter;
+use Centreon\Infrastructure\CentreonLegacyDB\ServiceEntityRepository;
 
 /**
  * Mock class for dbconn
  *
  * @author Centreon
  * @version 1.0.0
- * @package centreon-license-manager
+ * @package centreon-test-lib
  * @subpackage test
  */
 class CentreonDBAdapter extends BaseCentreonDBAdapter
 {
 
-    public function addResultSet($query, $result, $params = null)
+    /**
+     * @var array
+     */
+    protected $mocks = [];
+
+    public function getRepository($repository): ServiceEntityRepository
     {
-        return $this->getCentreonDBInstance()->addResultSet($query, $result, $params);
+        if (array_key_exists($repository, $this->mocks)) {
+            return $this->mocks[$repository];
+        }
+
+        return parent::getRepository($repository);
+    }
+
+    public function resetResultSet(): CentreonDBAdapter
+    {
+        $this->getCentreonDBInstance()->resetResultSet();
+
+        return $this;
+    }
+
+    public function addResultSet($query, $result, $params = null, callable $callback = null): CentreonDBAdapter
+    {
+        $this->getCentreonDBInstance()->addResultSet($query, $result, $params, $callback);
+
+        return $this;
+    }
+
+    public function addRepositoryMock(string $className, object $repository): CentreonDBAdapter
+    {
+        $this->mocks[$className] = $repository;
+
+        return $this;
     }
 }
