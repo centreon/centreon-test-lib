@@ -647,6 +647,11 @@ class UtilsContext extends RawMinkContext
             $driver = new \Behat\Mink\Driver\Selenium2Driver(
                 'chrome',
                 array(
+                    'chrome' => array(
+                        'args' => array(
+                            '--disable-site-isolation-trials'
+                        )
+                    ),
                     'browserName' => 'chrome',
                     'platform' => 'ANY',
                     'browser' => 'chrome',
