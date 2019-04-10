@@ -17,6 +17,8 @@
 
 namespace Centreon\Test\Mock;
 
+use Centreon\Test\Mock\CentreonDB;
+
 /**
  * Mock class for resultset
  *
@@ -28,8 +30,25 @@ namespace Centreon\Test\Mock;
 class CentreonDBStatement extends \PDOStatement
 {
 
-    private $query;
-    private $resultsets;
+
+    /**
+     * @var string
+     */
+    protected $query;
+
+    /**
+     * @var array
+     */
+    protected $resultsets;
+
+    /**
+     * @var \Centreon\Test\Mock\CentreonDB
+     */
+    protected $db;
+
+    /**
+     * @var array
+     */
     protected $params = null;
     protected $currentResultSet = null;
     protected $fetchObjectName;
@@ -37,18 +56,21 @@ class CentreonDBStatement extends \PDOStatement
     /**
      * Constructor
      *
+     * @param string $query
      * @param array $resultset The resultset for a query
+     * @param CentreonDB $db
      */
-    public function __construct($query, $resultsets)
+    public function __construct($query, $resultsets, CentreonDB $db)
     {
         $this->query = $query;
         $this->resultsets = $resultsets;
+        $this->db = $db;
     }
 
     /**
      * Bind parameter
      */
-    public function bindParam($paramno, &$param, $type = NULL, $maxlen = NULL, $driverdata = NULL)
+    public function bindParam($paramno, &$param, $type = null, $maxlen = null, $driverdata = null)
     {
         $this->bindValue($paramno, $param);
     }
@@ -56,7 +78,7 @@ class CentreonDBStatement extends \PDOStatement
     /**
      * Bind value
      */
-    public function bindValue($paramno, $param, $type = NULL)
+    public function bindValue($paramno, $param, $type = null)
     {
         if (is_null($this->params)) {
             $this->params = array();
@@ -71,7 +93,7 @@ class CentreonDBStatement extends \PDOStatement
     /**
      * Execute statement
      */
-    public function execute($bound_input_params = NULL)
+    public function execute($bound_input_params = null)
     {
         $matching = null;
 
@@ -79,7 +101,7 @@ class CentreonDBStatement extends \PDOStatement
             $result = $resultset->match($this->params);
             if ($result === 2 && is_null($this->currentResultSet)) {
                 $this->currentResultSet = $resultset;
-            } else if ($result === 1 && is_null($matching)) {
+            } elseif ($result === 1 && is_null($matching)) {
                 $matching = $resultset;
             }
         }
@@ -94,6 +116,9 @@ class CentreonDBStatement extends \PDOStatement
 
         // trigger callback
         $this->currentResultSet->executeCallback($this->params);
+
+        // log queries if query will be execute in transaction
+        $this->db->transactionLogQuery($this->query, $this->params, $this->currentResultSet);
 
         return true;
     }
@@ -142,7 +167,7 @@ class CentreonDBStatement extends \PDOStatement
      *
      * @return array
      */
-    public function fetch($how = NULL, $orientation = NULL, $offset = NULL)
+    public function fetch($how = null, $orientation = null, $offset = null)
     {
         return $this->fetchRow();
     }
@@ -152,7 +177,7 @@ class CentreonDBStatement extends \PDOStatement
      *
      * @return array
      */
-    public function fetchAll($how = NULL, $class_name = NULL, $ctor_args = NULL)
+    public function fetchAll($how = null, $class_name = null, $ctor_args = null)
     {
         $result = [];
         while ($row = $this->fetch()) {
@@ -201,7 +226,7 @@ class CentreonDBStatement extends \PDOStatement
      * @param mixed $params
      * @return bool
      */
-    public function setFetchMode($mode, $params = NULL): bool
+    public function setFetchMode($mode, $params = null): bool
     {
         $this->fetchObjectName = $params;
 

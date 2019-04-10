@@ -27,7 +27,6 @@ namespace Centreon\Test\Mock;
  */
 class CentreonDBResultSet
 {
-
     protected $resultset = [];
     protected $params = null;
     protected $pos = 0;
