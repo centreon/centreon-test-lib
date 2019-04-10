@@ -33,7 +33,25 @@ if (!class_exists("\CentreonDB")) {
 class CentreonDB extends \CentreonDB
 {
 
-    private $queries = array();
+    /**
+     * @var array
+     */
+    protected $queries;
+
+    /**
+     * @var callable
+     */
+    protected $commitCallback;
+
+    /**
+     * @var array
+     */
+    protected $transactionQueries;
+
+    /**
+     * @var int
+     */
+    protected $lastInsertId;
 
     /**
      * Constructor
@@ -42,9 +60,9 @@ class CentreonDB extends \CentreonDB
      * @param int $retry
      * @param bool $silent
      */
-    public function __construct($db = "centreon", $retry = 3, $silent = false)
+    public function __construct($db = 'centreon', $retry = 3, $silent = false)
     {
-
+        $this->queries = [];
     }
 
     /**
@@ -54,7 +72,7 @@ class CentreonDB extends \CentreonDB
      * @param array $parameters
      * @return CentreonDBResultSet The resultset
      */
-    public function query($queryString = NULL, $parameters = NULL)
+    public function query($queryString = null, $parameters = null)
     {
         return $this->execute($queryString, null);
     }
@@ -78,7 +96,7 @@ class CentreonDB extends \CentreonDB
      * @param string $paramtype
      * @return string The string escaped
      */
-    public function quote($string, $paramtype = NULL)
+    public function quote($string, $paramtype = null)
     {
         return "'" . $string . "'";
     }
@@ -89,6 +107,7 @@ class CentreonDB extends \CentreonDB
     public function resetResultSet()
     {
         $this->queries = [];
+        $this->commitCallback = null;
     }
 
     /**
@@ -112,17 +131,30 @@ class CentreonDB extends \CentreonDB
     }
 
     /**
+     * Add a callback set to test exception in commit of transaction
+     *
+     * @param callable $callback execute a callback when a query is executed
+     */
+    public function setCommitCallback(callable $callback = null)
+    {
+        $this->commitCallback = $callback;
+
+        return $this;
+    }
+
+    /**
      * @param $query
      * @param array $options
      * @return CentreonDBStatement
      * @throws \Exception
      */
-    public function prepare($statement, $options = NULL)
+    public function prepare($statement, $options = null)
     {
         if (!isset($this->queries[$statement])) {
             throw new \Exception('Query is not set.' . "\nQuery : " . $statement);
         }
-        return new CentreonDBStatement($statement, $this->queries[$statement]);
+
+        return new CentreonDBStatement($statement, $this->queries[$statement], $this);
     }
 
     /**
@@ -158,6 +190,9 @@ class CentreonDB extends \CentreonDB
         // trigger callback
         $matching->executeCallback($values);
 
+        // log queries if query will be execute in transaction
+        $this->transactionLogQuery($query, $values, $matching);
+
         return $matching;
     }
 
@@ -172,20 +207,71 @@ class CentreonDB extends \CentreonDB
     }
 
     /**
-     *
-     * @return type
+     * @return bool
      */
-    public function commit()
+    public function beginTransaction(): bool
     {
-        return;
+        $this->transactionQueries = [];
+
+        return true;
     }
 
     /**
-     *
-     * @return type
+     * @return bool
+     * @throws \Exception
+     */
+    public function commit(): bool
+    {
+        if ($this->commitCallback !== null) {
+            // copy and reset the property transactionQueries
+            $queries = $this->transactionQueries;
+            $this->transactionQueries = null;
+
+            call_user_func($this->commitCallback, [$queries]);
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
      */
     public function rollback()
     {
-        return;
+        return true;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setLastInsertId(int $id = null)
+    {
+        $this->lastInsertId = $id;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function lastInsertId($seqname = null)
+    {
+        return $this->lastInsertId;
+    }
+
+    /**
+     * Log queries if query will be execute in transaction
+     *
+     * @param string $query
+     * @param array $values
+     * @param array $matching
+     */
+    public function transactionLogQuery(string $query, array $values = null, $matching)
+    {
+        if ($this->transactionQueries !== null) {
+            $this->transactionQueries[] = [
+                'query' => $query,
+                'params' => $values,
+                'result' => $matching,
+            ];
+        }
     }
 }

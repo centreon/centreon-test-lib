@@ -59,6 +59,20 @@ class CentreonDBAdapter extends BaseCentreonDBAdapter
         return $this;
     }
 
+    public function setCommitCallback(callable $callback = null): CentreonDBAdapter
+    {
+        $this->getCentreonDBInstance()->setCommitCallback($callback);
+
+        return $this;
+    }
+
+    public function setLastInsertId(int $id = null)
+    {
+        $this->getCentreonDBInstance()->setLastInsertId($id);
+
+        return $this;
+    }
+
     public function addRepositoryMock(string $className, object $repository): CentreonDBAdapter
     {
         $this->mocks[$className] = $repository;
