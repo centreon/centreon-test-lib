@@ -35,7 +35,7 @@ class CentreonDBManagerService extends BaseCentreonDBManagerService
 {
 
     /**
-     * @var \Centreon\Test\Mock\CentreonDBAdapter 
+     * @var \Centreon\Test\Mock\CentreonDBAdapter
      */
     protected $manager;
 
@@ -45,6 +45,11 @@ class CentreonDBManagerService extends BaseCentreonDBManagerService
     }
 
     public function getAdapter(string $alias): BaseCentreonDBAdapter
+    {
+        return $this->manager;
+    }
+
+    public function getDefaultAdapter(): BaseCentreonDBAdapter
     {
         return $this->manager;
     }
@@ -66,8 +71,20 @@ class CentreonDBManagerService extends BaseCentreonDBManagerService
         return $this->manager->addResultSet($query, $result, $params, $callback);
     }
 
+    public function setCommitCallback(callable $callback = null)
+    {
+        return $this->manager->setCommitCallback($callback);
+    }
+
     public function addRepositoryMock(string $className, object $repository)
     {
         return $this->manager->addRepositoryMock($className, $repository);
+    }
+
+    public function setLastInsertId(int $id = null)
+    {
+        $this->manager->setLastInsertId($id);
+
+        return $this;
     }
 }
