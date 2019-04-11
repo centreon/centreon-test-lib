@@ -47,6 +47,8 @@ class CentreonDBAdapter extends BaseCentreonDBAdapter
 
     public function resetResultSet(): CentreonDBAdapter
     {
+        $this->mocks = [];
+
         $this->getCentreonDBInstance()->resetResultSet();
 
         return $this;
