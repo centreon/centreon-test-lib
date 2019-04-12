@@ -32,23 +32,8 @@ class Container
     public function __construct($composeFile)
     {
         $this->composeFile = $composeFile;
-        $this->id = uniqid('', TRUE) . rand(1, 1000000);
-
-        // The current Docker release has issues with concurrent access to the Docker
-        // daemon. While this gets fixed, attempt to run container creation twice
-        // to ensure that it is not a transient failure.
-        $errors = 0;
-        do {
-            try {
-                $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' up -d');
-                $errors = 0;
-            } catch (\Exception $e) {
-                if (++$errors >= 2) {
-                    throw $e;
-                }
-                sleep(1);
-            }
-        } while ($errors != 0);
+        $this->id = uniqid('', true) . rand(1, 1000000);
+        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' up -d');
     }
 
     /**
