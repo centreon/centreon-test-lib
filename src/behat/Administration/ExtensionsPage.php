@@ -22,7 +22,7 @@ class ExtensionsPage
     const MODULE_TYPE = 'module';
     const WIDGET_TYPE = 'widget';
 
-    protected $validField = 'div[class^="content-wrapper"]';
+    protected $validField = 'div[class~="content-wrapper"]';
 
     /**
      *  Extensions page.
@@ -83,9 +83,9 @@ class ExtensionsPage
 
         // get available actions
         $entry['actions'] = [
-            'install' => $extension->has('css', 'span[class^="content-icon-add"]'),
-            'upgrade' => $extension->has('css', 'span[class^="content-icon-update"]'),
-            'remove' => $extension->has('css', 'span[class^="icon-action-delete"]'),
+            'install' => $extension->has('css', 'span[class~="content-icon-add"]'),
+            'upgrade' => $extension->has('css', 'span[class~="content-icon-update"]'),
+            'remove' => $extension->has('css', 'span[class~="icon-action-delete"]'),
         ];
 
         return $entry;
@@ -104,7 +104,7 @@ class ExtensionsPage
         $extension = $this->getEntry($type, $name);
         if ($extension['actions']['install']) {
             $extensionDOM = $this->context->assertFind('css', '#' . $type . '-' . $name);
-            $this->context->assertFindIn($extensionDOM, 'css', 'span[class^="content-icon-add"]')->click();
+            $this->context->assertFindIn($extensionDOM, 'css', 'span[class~="content-icon-add"]')->click();
 
             // check if extension is properly installed
             $this->context->spin(
@@ -131,7 +131,7 @@ class ExtensionsPage
         $extension = $this->getEntry($type, $name);
         if ($extension['actions']['upgrade']) {
             $extensionDOM = $this->context->assertFind('css', '#' . $type . '-' . $name);
-            $this->context->assertFindIn($extensionDOM, 'css', 'span[class^="content-icon-update"]')->click();
+            $this->context->assertFindIn($extensionDOM, 'css', 'span[class~="content-icon-update"]')->click();
 
             // check if extension is properly upgraded
             $this->context->spin(
@@ -158,14 +158,14 @@ class ExtensionsPage
         $extension = $this->getEntry($type, $name);
         if ($extension['actions']['remove']) {
             $extensionDOM = $this->context->assertFind('css', '#' . $type . '-' . $name);
-            $this->context->assertFindIn($extensionDOM, 'css', 'span[class^="icon-action-delete"]')->click();
+            $this->context->assertFindIn($extensionDOM, 'css', 'span[class~="icon-action-delete"]')->click();
 
             // confirm popin
             $this->context->spin(
                 function ($context) {
                     $this->context->assertFind(
                         'css',
-                        'div[class^="popup-footer"] button[class^="button-regular-red"]'
+                        'div[class~="popup-footer"] button[class~="button-regular-red"]'
                     )->click();
                     return true;
                 },
