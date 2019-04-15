@@ -491,7 +491,7 @@ class UtilsContext extends RawMinkContext
     public function visit($page, $iframeCheck = true)
     {
         //checking if the page is an iFrame or not
-        if ($page && $page != "/") {
+        if ($iframeCheck && $page && $page != "/") {
             list($url, $parameters) = explode('?', $page);
 
 
@@ -647,6 +647,11 @@ class UtilsContext extends RawMinkContext
             $driver = new \Behat\Mink\Driver\Selenium2Driver(
                 'chrome',
                 array(
+                    'chrome' => array(
+                        'args' => array(
+                            '--disable-site-isolation-trials'
+                        )
+                    ),
                     'browserName' => 'chrome',
                     'platform' => 'ANY',
                     'browser' => 'chrome',
