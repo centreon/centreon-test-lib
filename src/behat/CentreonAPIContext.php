@@ -267,6 +267,16 @@ class CentreonAPIContext extends CentreonContext
     }
 
     /**
+     * @When /^I make a PUT request to "([^"]*)"$/
+     */
+    public function makePutRequest($uri)
+    {
+        $jsonPayload = !empty($this->getRequestPayload()) ? ['json' => json_decode($this->getRequestPayload()->getRaw(),true)]: null;
+        $response = $this->getClient()->put($this->getMinkParameter('api_base') . $uri, $jsonPayload);
+        $this->setResponse($response);
+    }
+
+    /**
      * @When /^I make a MULTIPART request to "([^"]*)"$/
      * @throws \Exception
      */
