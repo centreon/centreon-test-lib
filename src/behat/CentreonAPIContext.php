@@ -294,6 +294,7 @@ class CentreonAPIContext extends CentreonContext
     /**
      * @When /^I make a MULTIPART request to "([^"]*)"$/
      * @throws \Exception
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function makeMultipartRequest($uri)
     {
