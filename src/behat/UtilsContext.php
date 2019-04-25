@@ -628,7 +628,7 @@ class UtilsContext extends RawMinkContext
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $res = curl_exec($ch);
-        $limit = time() + 60;
+        $limit = time() + 120;
         while ((time() < $limit) &&
             (($res === false) ||
                 empty($res)) ||
@@ -638,7 +638,7 @@ class UtilsContext extends RawMinkContext
         }
         if (time() >= $limit) {
             throw new \Exception(
-                'WebDriver did not respond within a 60 seconds time frame (url: ' . $url . ').'
+                'WebDriver did not respond within a 120 seconds time frame (url: ' . $url . ').'
             );
         }
 
