@@ -34,13 +34,13 @@ class MonitoringServicesPage
             'td:nth-child(8)'
         ),
         'last_check' => array(
-            'td:nth-child(9)'
-        ),
-        'tries' => array(
             'td:nth-child(10)'
         ),
-        'status_information' => array(
+        'tries' => array(
             'td:nth-child(11)'
+        ),
+        'status_information' => array(
+            'td:nth-child(12)'
         )
     );
     
