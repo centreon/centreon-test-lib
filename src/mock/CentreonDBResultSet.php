@@ -109,6 +109,14 @@ class CentreonDBResultSet
     }
 
     /**
+     * Get resultset stack
+     */
+    public function getResultSet(): array
+    {
+        return $this->resultset;
+    }
+
+    /**
      * Return the number of rows of the result set
      *
      * @return int
