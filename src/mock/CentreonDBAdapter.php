@@ -54,6 +54,11 @@ class CentreonDBAdapter extends BaseCentreonDBAdapter
         return $this;
     }
 
+    public function getMocks(): array
+    {
+        return $this->mocks;
+    }
+
     public function addResultSet($query, $result, $params = null, callable $callback = null): CentreonDBAdapter
     {
         $this->getCentreonDBInstance()->addResultSet($query, $result, $params, $callback);
