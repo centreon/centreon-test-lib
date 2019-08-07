@@ -19,7 +19,7 @@ namespace Centreon\Test\Behat\Monitoring;
 
 class CommentMonitoringListingPage extends \Centreon\Test\Behat\ListingPage
 {
-    protected $validField = 'input[name="search_host"]';
+    protected $validField = 'input[name="searchHost"]';
 
     protected $properties = array(
         'id' => array(
