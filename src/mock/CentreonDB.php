@@ -16,11 +16,6 @@
  */
 namespace Centreon\Test\Mock;
 
-// \CentreonDB is not autoloaded in module unit tests, so we need to mock it
-if (!class_exists("\CentreonDB")  && class_exists("\PHPUnit\Framework\MockObject\Generator")) {
-    (new \PHPUnit\Framework\MockObject\Generator)->getMock("\CentreonDB", array());
-}
-
 /**
  * Mock class for dbconn
  *
