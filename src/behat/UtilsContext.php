@@ -86,7 +86,14 @@ class UtilsContext extends RawMinkContext
      */
     public function takeScreenshotOnError(AfterStepScope $scope)
     {
-        if (!$scope->getTestResult()->isPassed()) {
+        $testResult = $scope->getTestResult();
+        if (!$testResult->isPassed()) {
+            if ($testResult->hasException()) {
+                echo $testResult->getException()->getMessage()
+                    . "\n"
+                    . $testResult->getException()->getTraceAsString();
+            }
+
             $scenario = 'unknown';
 
             $feature = $scope->getFeature();
