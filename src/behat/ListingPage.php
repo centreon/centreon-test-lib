@@ -134,10 +134,10 @@ abstract class ListingPage implements \Centreon\Test\Behat\Interfaces\ListingPag
 
         return null;
     }
-    
+
     /**
      * Click on the given object's checkbox and applies a choosen action
-     * 
+     *
      * @param type $object The object to pass that will return the id
      * @param type $action The action to choose: Duplicate, Enable, Disable...
      * @throws \Exception
@@ -145,7 +145,15 @@ abstract class ListingPage implements \Centreon\Test\Behat\Interfaces\ListingPag
     public function selectMoreAction($object, $action)
     {
         if (!empty($object) && !empty($action)) {
-            $this->context->assertFind('css', 'input[type="checkbox"][name="select[' . $object['id'] . ']"]')->check();
+            $checkbox = $this->context->assertFind(
+                'css',
+                'input[type="checkbox"][name="select[' . $object['id'] . ']"]'
+            );
+            try {
+                $checkbox->getParent()->click(); // material design checkbox
+            } catch (\Exception $e) {
+                $checkbox->check(); // native checkbox
+            }
             $this->context->setConfirmBox(true); 
             $this->context->selectInList('select[name="o1"]', $action);
         } else {
