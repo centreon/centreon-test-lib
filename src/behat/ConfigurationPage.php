@@ -19,10 +19,6 @@ namespace Centreon\Test\Behat;
 
 abstract class ConfigurationPage extends Page implements Interfaces\ConfigurationPage
 {
-    protected $context;
-
-    protected $validField;
-
     /*
     ** $properties should be an array of elements that can be retrieved (getProperties)
     ** and set (setProperties). This associative array associates a property name
@@ -57,16 +53,6 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
     ** methods to work properly, as navigator control can be tricky.
     */
     protected $properties = array();
-
-    /**
-     *  Check that the current page is valid for this class.
-     *
-     * @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', $this->validField);
-    }
 
     /**
      * Get properties

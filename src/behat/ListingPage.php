@@ -19,25 +19,11 @@ namespace Centreon\Test\Behat;
 
 abstract class ListingPage extends Page implements Interfaces\ListingPage
 {
-    protected $context;
-
-    protected $validField;
-
     protected $lineSelector = '.list_one,.list_two,.row_disabled';
 
     protected $properties = array();
 
     protected $objectClass;
-
-    /**
-     *  Check that the current page is valid for this class.
-     *
-     *  @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', $this->validField);
-    }
 
     /**
      *  Get the list of objects.
