@@ -127,10 +127,10 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     $this->context->selectInAdvMultiSelect('select[name="' . $propertyLocator . '-f[]"]', $value);
                     break;
                 case 'checkbox':
-                    if ($value) {
-                        $this->context->assertFind('css', $propertyLocator)->check();
-                    } else {
-                        $this->context->assertFind('css', $propertyLocator)->uncheck();
+                    $checkboxValue = $this->context->assertFind('css', $propertyLocator)->getValue();
+                    var_dump('checkbox value : ' . $checkboxValue);
+                    if (($value && !$checkboxValue) || (!$value && $checkboxValue)) {
+                        $this->context->assertFind('css', $propertyLocator . '+ label')->click();
                     }
                     break;
                 case 'custom':
@@ -141,6 +141,8 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     $this->context->assertFind('css', $propertyLocator)->setValue($value);
                     break;
                 case 'radio':
+                    $radioValue = $this->context->assertFind('css', $propertyLocator)->getValue();
+                    var_dump('radio value : ' . $radioValue);
                     $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
                     break;
                 case 'select':
