@@ -141,9 +141,17 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     $this->context->assertFind('css', $propertyLocator)->setValue($value);
                     break;
                 case 'radio':
-                    $radioValue = $this->context->assertFind('css', $propertyLocator)->getValue();
-                    var_dump('radio value : ' . $radioValue);
-                    $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
+                    try {
+                        $this->context->assertFind(
+                            'css',
+                            $propertyLocator . '[value="' . $value . '"] + label'
+                        )->click();
+                    } catch (\Exception $e) {
+                        $this->context->assertFind(
+                            'css',
+                            $propertyLocator . '[value="' . $value . '"]'
+                        )->click();
+                    }
                     break;
                 case 'select':
                     $this->context->selectInList($propertyLocator, $value);
