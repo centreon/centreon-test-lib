@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat;
 
-abstract class ListingPage implements \Centreon\Test\Behat\Interfaces\ListingPage
+abstract class ListingPage extends Page implements Interfaces\ListingPage
 {
     protected $context;
 

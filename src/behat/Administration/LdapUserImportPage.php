@@ -86,23 +86,10 @@ class LdapUserImportPage extends \Centreon\Test\Behat\ConfigurationPage
                 )->setValue($properties['filter']);
             }
             if (isset($properties['checked'])) {
-                $checkbox = $this->context->assertFind(
-                    'css',
-                    'input[name="ldapConf[' . $currentServers[$name]['id'] . ']"]'
-                );
-                $checkboxValue = $checkbox->getValue();
-                if ($properties['checked'] && !$checkboxValue) {
-                    try {
-                        $checkbox->getParent()->click();
-                    } catch (\Exception $e) {
-                        $checkbox->check();
-                    }
-                } elseif (!$properties['checked'] && $checkboxValue) {
-                    try {
-                        $checkbox->getParent()->click();
-                    } catch (\Exception $e) {
-                        $checkbox->uncheck();
-                    }
+                if ($properties['checked']) {
+                    $this->checkCheckbox('input[name="ldapConf[' . $currentServers[$name]['id'] . ']"]');
+                } else {
+                    $this->uncheckCheckbox('input[name="ldapConf[' . $currentServers[$name]['id'] . ']"]');
                 }
             }
         }
