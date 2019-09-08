@@ -127,10 +127,14 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     $this->context->selectInAdvMultiSelect('select[name="' . $propertyLocator . '-f[]"]', $value);
                     break;
                 case 'checkbox':
-                    $checkboxValue = $this->context->assertFind('css', $propertyLocator)->getValue();
-                    var_dump('checkbox value : ' . $checkboxValue);
+                    $checkbox = $this->context->assertFind('css', $propertyLocator);
+                    $checkboxValue = $checkbox->getValue();
                     if (($value && !$checkboxValue) || (!$value && $checkboxValue)) {
-                        $this->context->assertFind('css', $propertyLocator . '+ label')->click();
+                        try {
+                            $checkbox->getParent()->click(); // material design checkbox
+                        } catch (\Exception $e) {
+                            $checkbox->click(); // native checkbox
+                        }
                     }
                     break;
                 case 'custom':
@@ -141,16 +145,11 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     $this->context->assertFind('css', $propertyLocator)->setValue($value);
                     break;
                 case 'radio':
+                    $radio = $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]');
                     try {
-                        $this->context->assertFind(
-                            'css',
-                            $propertyLocator . '[value="' . $value . '"] + label'
-                        )->click();
+                        $radio->getParent()->click(); // material design radio
                     } catch (\Exception $e) {
-                        $this->context->assertFind(
-                            'css',
-                            $propertyLocator . '[value="' . $value . '"]'
-                        )->click();
+                        $radio->click(); // native radio
                     }
                     break;
                 case 'select':
