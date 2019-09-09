@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat\Monitoring;
 
-class MonitoringServicesPage
+class MonitoringServicesPage extends \Centreon\Test\Behat\Page
 {
     private $ctx;
     private $properties = array(

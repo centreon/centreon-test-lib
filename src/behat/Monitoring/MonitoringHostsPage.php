@@ -21,7 +21,7 @@ namespace Centreon\Test\Behat\Monitoring;
   *
   * The code of his class is based on class MonitoringServicesPage
   */
-class MonitoringHostsPage
+class MonitoringHostsPage extends \Centreon\Test\Behat\Page
 {
     private $ctx;
 

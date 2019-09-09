@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat\External;
 
-class LoginPage implements \Centreon\Test\Behat\Interfaces\Page
+class LoginPage extends \Centreon\Test\Behat\Page
 {
     protected $context;
 

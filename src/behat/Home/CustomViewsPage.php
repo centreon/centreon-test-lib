@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat\Home;
 
-class CustomViewsPage implements \Centreon\Test\Behat\Interfaces\Page
+class CustomViewsPage extends \Centreon\Test\Behat\Page
 {
     private $context;
 
