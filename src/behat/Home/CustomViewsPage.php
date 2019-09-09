@@ -19,7 +19,7 @@ namespace Centreon\Test\Behat\Home;
 
 class CustomViewsPage extends \Centreon\Test\Behat\Page
 {
-    private $context;
+    protected $context;
 
     /**
      *  Navigate to and/or check that we are on the custom views page.
