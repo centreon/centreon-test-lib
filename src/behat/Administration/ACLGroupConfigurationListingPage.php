@@ -45,7 +45,6 @@ class ACLGroupConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
             'text',
             'td:nth-child(6)'
         ),
-        
     );
 
     protected $objectClass = '\Centreon\Test\Behat\Administration\ACLGroupConfigurationPage';
@@ -73,7 +72,7 @@ class ACLGroupConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
             'Current page does not match class ' . __CLASS__
         );
     }
-    
+
     protected function getId($element)
     {
         $idComponent = $this->context->assertFindIn($element, 'css', 'input[type="checkbox"]')->getAttribute('name');
