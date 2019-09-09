@@ -74,4 +74,19 @@ abstract class Page
             $checkbox->uncheck();
         }
     }
+
+    /**
+     * Check radio button
+     *
+     * @param NodeElement $radio radio button to check
+     * @return void
+     */
+    public function checkRadio(NodeElement $radio)
+    {
+        if ($radio->getParent()->hasClass('md-radio')) {
+            $radio->getParent()->click(); // material design radio
+        } else {
+            $radio->click();
+        }
+    }
 }
