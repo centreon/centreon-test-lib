@@ -116,11 +116,13 @@ class BackupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
      */
     public function setFullBackupDays($days)
     {
-        for ($i = 0; $i < 7; ++$i) {
-            $this->context->assertFind('css', 'input[name="backup_database_full[' . $i . ']"]')->uncheck();
+        for ($i = 0; $i < 7; $i++) {
+            $checkbox = $this->context->assertFind('css', 'input[name="backup_database_full[' . $i . ']"]');
+            $this->uncheckCheckbox($checkbox);
         }
         foreach ($days as $day) {
-            $this->context->assertFind('css', 'input[name="backup_database_full[' . $day . ']"]')->check();
+            $checkbox = $this->context->assertFind('css', 'input[name="backup_database_full[' . $day . ']"]');
+            $this->checkCheckbox($checkbox);
         }
     }
 
@@ -131,11 +133,13 @@ class BackupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
      */
     public function setPartialBackupDays($days)
     {
-        for ($i = 0; $i < 7; ++$i) {
-            $this->context->assertFind('css', 'input[name="backup_database_partial[' . $i . ']"]')->uncheck();
+        for ($i = 0; $i < 7; $i++) {
+            $checkbox = $this->context->assertFind('css', 'input[name="backup_database_partial[' . $i . ']"]');
+            $this->uncheckCheckbox($checkbox);
         }
         foreach ($days as $day) {
-            $this->context->assertFind('css', 'input[name="backup_database_partial[' . $day . ']"]')->check();
+            $checkbox = $this->context->assertFind('css', 'input[name="backup_database_partial[' . $day . ']"]');
+            $this->checkCheckbox($checkbox);
         }
     }
 }

@@ -138,7 +138,8 @@ class MonitoringHostsPage
         $this->setPageLimitTo("100");
 
         // Check the line about the host (hostname) -> check all for check the only line
-        $this->ctx->assertFind('named', array('id_or_name', 'checkall'))->check();
+        $checkbox = $this->ctx->assertFind('named', array('id_or_name', 'checkall'));
+        $this->checkCheckbox($checkbox);
 
         // Select the action (by action label)
         $page->selectFieldOption('o1', $action_label);
@@ -274,10 +275,10 @@ class MonitoringHostsPage
 
         if ($isDurationFixed) {
             // Configure checkbox "Fixed"
-            $durationFixedCheckbox->check();
+            $this->checkCheckbox($durationFixedCheckbox);
         } else {
             // Need uncheck duration checkbox before change duration text field
-            $durationFixedCheckbox->uncheck();
+            $this->uncheckCheckbox($durationFixedCheckbox);
 
             // Configure text field "Duration"
             $this->ctx->assertFindIn($popinDowntime, 'named', array('id', 'duration'))->setValue($duration);
@@ -293,9 +294,9 @@ class MonitoringHostsPage
         $downtimesOnServicesAttachedCheckbox = $this->ctx->assertFindIn($popinDowntime, 'named', array('id', 'downtimehostservice'));
 
         if ($setDowntimesOnServicesAttached) {
-            $downtimesOnServicesAttachedCheckbox->check();
+            $this->checkCheckbox($downtimesOnServicesAttachedCheckbox);
         } else {
-            $downtimesOnServicesAttachedCheckbox->uncheck();
+            $this->uncheckCheckbox($downtimesOnServicesAttachedCheckbox);
         }
 
         // Submit pop-in form with submit button "Set downtime"

@@ -17,6 +17,8 @@
 
 namespace Centreon\Test\Behat;
 
+use Behat\Mink\Element\TraversableElement;
+
 abstract class Page
 {
     /**
@@ -46,12 +48,11 @@ abstract class Page
     /**
      * Check checkbox
      *
-     * @param string $selector css selector of the checkbox
+     * @param TraversableElement $checkbox checkbox to check
      * @return void
      */
-    public function checkCheckbox(string $selector)
+    public function checkCheckbox(TraversableElement $checkbox)
     {
-        $checkbox = $this->context->assertFind('css', $selector);
         if ($checkbox->getParent()->hasClass('md-checkbox') && !$checkbox->getValue()) {
             $checkbox->getParent()->click();
         } else {
@@ -62,12 +63,11 @@ abstract class Page
     /**
      * Uncheck checkbox
      *
-     * @param string $selector css selector of the checkbox
+     * @param TraversableElement $checkbox checkbox to uncheck
      * @return void
      */
-    public function uncheckCheckbox(string $selector)
+    public function uncheckCheckbox(TraversableElement $checkbox)
     {
-        $checkbox = $this->context->assertFind('css', $selector);
         if ($checkbox->getParent()->hasClass('md-checkbox') && $checkbox->getValue()) {
             $checkbox->getParent()->click();
         } else {

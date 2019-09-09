@@ -100,10 +100,11 @@ class CustomViewsPage implements \Centreon\Test\Behat\Interfaces\Page
         $this->context->assertFind('css', '#formAddView input[name="name"]')->setValue($name);
         $this->context->assertFind('css',
             '#formAddView input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
+        $checkbox = $this->context->assertFind('css', '#formAddView input[name="public"]');
         if ($public) {
-            $this->context->assertFind('css', '#formAddView input[name="public"]')->check();
+            $this->checkCheckbox($checkbox);
         } else {
-            $this->context->assertFind('css', '#formAddView input[name="public"]')->uncheck();
+            $this->uncheckCheckbox($checkbox);
         }
         $this->context->assertFind('css', '#formAddView input[name="submit"]')->click();
 
@@ -192,10 +193,11 @@ class CustomViewsPage implements \Centreon\Test\Behat\Interfaces\Page
 
         $this->context->assertFind('css',
             '#formEditView input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
+        $checkbox = '#formEditView input[name="public"]';
         if ($public) {
-            $this->context->assertFind('css', '#formEditView input[name="public"]')->check();
+            $this->checkCheckbox($checkbox);
         } else {
-            $this->context->assertFind('css', '#formEditView input[name="public"]')->uncheck();
+            $this->uncheckCheckbox($checkbox);
         }
 
         $this->context->spin(

@@ -101,7 +101,8 @@ class DowntimeConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      */
     public function displayDowntimeCycle()
     {
-        $this->context->assertFind('css', 'input[name="view_downtime_cycle"]')->check();
+        $checkbox = $this->context->assertFind('css', 'input[name="view_downtime_cycle"]');
+        $this->checkCheckbox($checkbox);
         $this->context->assertFindButton('SearchB')->click();
     }
 
@@ -120,9 +121,9 @@ class DowntimeConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
         }
         $checkbox = $this->context->assertFindIn($elements[$entry], 'css', 'input[type="checkbox"]');
         if ($select) {
-            $checkbox->check();
+            $this->checkCheckbox($checkbox);
         } else {
-            $checkbox->uncheck();
+            $this->uncheckCheckbox($checkbox);
         }
     }
 
