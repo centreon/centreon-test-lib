@@ -204,7 +204,7 @@ class CustomViewsPage extends \Centreon\Test\Behat\Page
         $this->checkRadio($radioColumn);
 
         // select if view is public or not
-        $checkbox = '#formEditView input[name="public"]';
+        $checkbox = $this->context->assertFind('css', '#formEditView input[name="public"]');
         if ($public) {
             $this->checkCheckbox($checkbox);
         } else {
