@@ -196,8 +196,14 @@ class CustomViewsPage extends \Centreon\Test\Behat\Page
         );
         $this->context->assertFind('css', '#formEditView input[name="name"]')->setValue($name);
 
-        $this->context->assertFind('css',
-            '#formEditView input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
+        // select columns count
+        $radioColumn = $this->context->assertFind(
+            'css',
+            '#formEditView input[name="layout[layout]"][value="column_' . $columns . '"]'
+        );
+        $this->checkRadio($radioColumn);
+
+        // select if view is public or not
         $checkbox = '#formEditView input[name="public"]';
         if ($public) {
             $this->checkCheckbox($checkbox);
