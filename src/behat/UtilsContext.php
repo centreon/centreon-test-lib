@@ -19,10 +19,12 @@ namespace Centreon\Test\Behat;
 
 use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Behat\Hook\Scope\AfterStepScope;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Behat\Tester\Exception\PendingException;
 
 class UtilsContext extends RawMinkContext
 {
+    const TIMEOUT_REACT = 3;
+
     /**
      * @var string Used to compare with the current iFrame page
      */
@@ -95,6 +97,30 @@ class UtilsContext extends RawMinkContext
             }
 
             $scenario = 'unknown';
+
+            if ($scope->getTestResult()->hasException()
+                && !$scope->getTestResult()->getException() instanceof PendingException) {
+                echo $scope->getTestResult()->getException()->getFile()
+                    . '('
+                    . $scope->getTestResult()->getException()->getLine()
+                    . ")\n\n"
+                    . $scope->getTestResult()->getException()->getTraceAsString()
+                    ;
+
+                // dump JS debugging data
+//                try {
+//                    $requests = [];
+//                    foreach ($this->getSession()->evaluateScript("performance.getEntries()") as $entry) {
+//                        if (!isset($entry['initiatorType']) || $entry['initiatorType'] !== 'xmlhttprequest') {
+//                            continue;
+//                        }
+//
+//                        $requests[] = $entry['name'];
+//                    }
+//                    echo "Browser requests: ";
+//                    print_r($requests);
+//                } catch (\Exception $e) {}
+            }
 
             $feature = $scope->getFeature();
             $step = $scope->getStep();
