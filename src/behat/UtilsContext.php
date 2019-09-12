@@ -101,20 +101,6 @@ class UtilsContext extends RawMinkContext
                     . ")\n\n"
                     . $scope->getTestResult()->getException()->getTraceAsString()
                     ;
-
-                // dump JS debugging data
-//                try {
-//                    $requests = [];
-//                    foreach ($this->getSession()->evaluateScript("performance.getEntries()") as $entry) {
-//                        if (!isset($entry['initiatorType']) || $entry['initiatorType'] !== 'xmlhttprequest') {
-//                            continue;
-//                        }
-//
-//                        $requests[] = $entry['name'];
-//                    }
-//                    echo "Browser requests: ";
-//                    print_r($requests);
-//                } catch (\Exception $e) {}
             }
 
             $feature = $scope->getFeature();
