@@ -20,6 +20,7 @@ namespace Centreon\Test\Behat;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Tester\Exception\PendingException;
+use Centreon\Test\Behat\Exception\SpinStopException;
 
 class UtilsContext extends RawMinkContext
 {
@@ -152,6 +153,9 @@ class UtilsContext extends RawMinkContext
                 if ($closure($this)) {
                     return true;
                 }
+            } catch (SpinStopException $e) {
+                // stop spining
+                throw $e;
             } catch (\Exception $e) {
                 $lastException = $e;
             }
