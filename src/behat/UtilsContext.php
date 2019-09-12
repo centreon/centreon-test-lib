@@ -19,10 +19,13 @@ namespace Centreon\Test\Behat;
 
 use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Behat\Hook\Scope\AfterStepScope;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Behat\Tester\Exception\PendingException;
+use Centreon\Test\Behat\Exception\SpinStopException;
 
 class UtilsContext extends RawMinkContext
 {
+    const TIMEOUT_REACT = 3;
+
     /**
      * @var string Used to compare with the current iFrame page
      */
@@ -86,8 +89,19 @@ class UtilsContext extends RawMinkContext
      */
     public function takeScreenshotOnError(AfterStepScope $scope)
     {
-        if (!$scope->getTestResult()->isPassed()) {
+        $testResult = $scope->getTestResult();
+        if (!$testResult->isPassed()) {
             $scenario = 'unknown';
+
+            if ($scope->getTestResult()->hasException()
+                && !$scope->getTestResult()->getException() instanceof PendingException) {
+                echo $scope->getTestResult()->getException()->getFile()
+                    . '('
+                    . $scope->getTestResult()->getException()->getLine()
+                    . ")\n\n"
+                    . $scope->getTestResult()->getException()->getTraceAsString()
+                    ;
+            }
 
             $feature = $scope->getFeature();
             $step = $scope->getStep();
@@ -125,6 +139,9 @@ class UtilsContext extends RawMinkContext
                 if ($closure($this)) {
                     return true;
                 }
+            } catch (SpinStopException $e) {
+                // stop spining
+                throw $e;
             } catch (\Exception $e) {
                 $lastException = $e;
             }
