@@ -132,6 +132,15 @@ class CentreonContext extends UtilsContext
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
+            // Centreon LDAP logs.
+            $logTitle = "\n\n"
+                . "######################\n"
+                . "# Centreon LDAP logs #\n"
+                . "######################\n\n";
+            $output = $this->container->execute('cat /var/log/centreon/ldap.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
             // MySQL process list.
             $logTitle = "\n\n"
                 . "######################\n"
