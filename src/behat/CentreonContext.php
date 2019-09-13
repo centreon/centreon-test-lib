@@ -207,6 +207,10 @@ class CentreonContext extends UtilsContext
      */
     public function iAmLoggedIn()
     {
+        // Mandatory with the new version of behat/mink
+        // A call on the 'visit' method must be perform to start a session.
+        $page = new LoginPage($this);
+        
         // Set Window Size
         $this->getSession()->resizeWindow(1600, 4000);
 
@@ -221,7 +225,6 @@ class CentreonContext extends UtilsContext
         }
 
         // Login.
-        $page = new LoginPage($this);
         $page->login($user, $password);
 
         // Handle feature flipping
