@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 Centreon
+ * Copyright 2019 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Centreon\Test\Mock;
 
 /**
@@ -21,14 +22,19 @@ namespace Centreon\Test\Mock;
  *
  * @author Centreon
  * @version 1.0.0
- * @package centreon-license-manager
+ * @package centreon-test-lib
  * @subpackage test
  */
 class CentreonDBResultSet
 {
-    private $resultset = array();
-    private $params = null;
-    private $pos = 0;
+    protected $resultset = [];
+    protected $params = null;
+    protected $pos = 0;
+
+    /**
+     * @var callable
+     */
+    protected $callback;
 
     /**
      * Constructor
@@ -37,13 +43,26 @@ class CentreonDBResultSet
      * @param array $params The parameters of query, if not set :
      *   * the query has not parameters
      *   * the result is generic for the query
+     * @param callable $callback execute a callback when a query is executed
      */
-    public function __construct($resultset, $params = null)
+    public function __construct($resultset, $params = null, callable $callback = null)
     {
         $this->resultset = $resultset;
         $this->params = $params;
-        if (!is_null($this->params)) {
+        $this->callback = $callback;
+
+        if ($this->params !== null) {
             ksort($this->params);
+        }
+    }
+
+    /**
+     * Execute the callback comes from the test case object
+     */
+    public function executeCallback($values = null)
+    {
+        if ($this->callback !== null) {
+            call_user_func($this->callback, $values);
         }
     }
 
@@ -90,6 +109,14 @@ class CentreonDBResultSet
     }
 
     /**
+     * Get resultset stack
+     */
+    public function getResultSet(): array
+    {
+        return $this->resultset;
+    }
+
+    /**
      * Return the number of rows of the result set
      *
      * @return int
@@ -99,8 +126,10 @@ class CentreonDBResultSet
         return $this->rowCount();
     }
 
-    /*
+    /**
      * Count of updated lines
+     *
+     * @return int
      */
     public function rowCount()
     {
@@ -118,24 +147,17 @@ class CentreonDBResultSet
      */
     public function match($params = null)
     {
-        if (is_null($params) && is_null($this->params)) {
-            return 2;
-        }
-        if (is_null($this->params)) {
-            return 1;
-        }
-        if (!is_null($params)) {
-            ksort($params);
-        }
         if ($this->params === $params) {
             return 2;
+        } elseif ($this->params === null) {
+            return 1;
+        } elseif ($params !== null) {
+            ksort($params);
         }
+
         return 0;
     }
 
-    /**
-     *
-     */
     public function closeCursor()
     {
         return;

@@ -200,6 +200,21 @@ class CentreonAPIContext extends CentreonContext
     }
 
     /**
+     * @Given /^the property "([^"]*)" has value$/
+     */
+    public function responseHasKeys($property, PyStringNode $propVal)
+    {
+        $data = json_decode($this->getResponse()->getBody(true), true);
+        if (!empty($data[$property])){
+            if ($data[$property] !== json_decode($propVal, true)){
+                throw new \Exception("Value of '".$property."' is not correct!\n");
+            }
+        } else {
+            throw new \Exception("Property '".$property."' is not found!\n");
+        }
+    }
+
+    /**
      * @Given I use request payload
      */
     public function iUseRequestPayload(PyStringNode $requestPayload)
@@ -252,8 +267,19 @@ class CentreonAPIContext extends CentreonContext
     }
 
     /**
+     * @When /^I make a PUT request to "([^"]*)"$/
+     */
+    public function makePutRequest($uri)
+    {
+        $jsonPayload = !empty($this->getRequestPayload()) ? ['json' => json_decode($this->getRequestPayload()->getRaw(),true)]: null;
+        $response = $this->getClient()->put($this->getMinkParameter('api_base') . $uri, $jsonPayload);
+        $this->setResponse($response);
+    }
+
+    /**
      * @When /^I make a MULTIPART request to "([^"]*)"$/
      * @throws \Exception
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function makeMultipartRequest($uri)
     {

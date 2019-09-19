@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016-2017 Centreon
+ * Copyright 2016-2019 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,42 @@
 
 namespace Centreon\Test\Behat\Configuration;
 
-class PollerConfigurationExportPage extends \Centreon\Test\Behat\ConfigurationPage
+use Centreon\Test\Behat\Exception\SpinStopException;
+use Centreon\Test\Behat\ConfigurationPage;
+
+class PollerConfigurationExportPage extends ConfigurationPage
 {
+
     const METHOD_RELOAD = 'Reload';
     const METHOD_RESTART = 'Restart';
 
     protected $validField = '#nrestart_mode';
-
-    protected $properties = array(
-        'pollers' => array('custom', 'Pollers'),
-        'generate_files' => array('checkbox', 'input[name="gen"]'),
-        'run_debug' => array('checkbox', 'input[name="debug"]'),
-        'move_files' => array('checkbox', 'input[name="move"]'),
-        'restart_engine' => array('checkbox', 'input[name="restart"]'),
-        'restart_method' => array('select', 'select[name="restart_mode"]')
-    );
+    protected $properties = [
+        'pollers' => [
+            'custom',
+            'Pollers',
+        ],
+        'generate_files' => [
+            'checkbox',
+            'input[name="gen"]',
+        ],
+        'run_debug' => [
+            'checkbox',
+            'input[name="debug"]',
+        ],
+        'move_files' => [
+            'checkbox',
+            'input[name="move"]',
+        ],
+        'restart_engine' => [
+            'checkbox',
+            'input[name="restart"]',
+        ],
+        'restart_method' => [
+            'select',
+            'select[name="restart_mode"]'
+        ],
+    ];
 
     /**
      *  Constructor.
@@ -49,10 +70,9 @@ class PollerConfigurationExportPage extends \Centreon\Test\Behat\ConfigurationPa
         }
 
         // Check that page is valid.
-        $mythis = $this;
         $this->context->spin(
-            function ($context) use ($mythis) {
-                return $mythis->isPageValid();
+            function () {
+                return $this->isPageValid();
             },
             'Current page does not match class ' . __CLASS__
         );
@@ -64,19 +84,22 @@ class PollerConfigurationExportPage extends \Centreon\Test\Behat\ConfigurationPa
     public function export()
     {
         $this->context->assertFind('css', '#exportBtn')->click();
-        $this->context->spin(
-            function ($context) {
-                return (
-                    $context->getSession()->getPage()->has(
-                        'named',
-                        array('id', 'progressPct')
-                    ) && $context->getSession()->getPage()->find(
-                        'named',
-                        array('id', 'progressPct')
-                    )->getText() == '100%'
+
+        // wait for result
+        $this->context->spin(function ($context) {
+            $page = $context->getSession()->getPage();
+
+            if ($page->find('xpath', '//*[@id="consoleContent"]//font[contains(@color, "red") and .="NOK"]')) {
+                throw new SpinStopException(
+                    "The export of pollers was unsuccessful:\n\n"
+                    . strip_tags(str_replace('<br>', "\n", $page->find('xpath', '//*[@id="debug_1"]')->getHtml()))
                 );
             }
-        );
+
+            $elementProgressBar = $page->find('named', ['id', 'progressPct']);
+
+            return ($elementProgressBar && $elementProgressBar->getText() == '100%');
+        });
     }
 
     /**
@@ -86,16 +109,15 @@ class PollerConfigurationExportPage extends \Centreon\Test\Behat\ConfigurationPa
      */
     public function setPollers($pollers)
     {
-        if (!is_array($pollers)) {
-            $pollers = array($pollers);
-        }
+        $pollers = !is_array($pollers) ? [$pollers] : $pollers;
+
         foreach ($pollers as $poller) {
             if ('all' == $poller) {
                 $this->context->assertFind('css', '.select2-search__field')->click();
                 $this->context->assertFindButton('Select all')->click();
                 $this->context->assertFind('css', '.popin-wrapper .button_group_center .btc.bt_success')->click();
                 $this->context->spin(
-                    function ($context) {
+                    function () {
                         return !$this->context->assertFind('css', '.centreon-popin')->isVisible();
                     },
                     'Select all confirmation popin did not close properly.'
