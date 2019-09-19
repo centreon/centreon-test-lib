@@ -91,9 +91,9 @@ class LdapUserImportPage extends \Centreon\Test\Behat\ConfigurationPage
                     'input[name="ldapConf[' . $currentServers[$name]['id'] . ']"]'
                 );
                 if ($properties['checked']) {
-                    $checkbox->check();
+                    $this->checkCheckbox($checkbox);
                 } else {
-                    $checkbox->uncheck();
+                    $this->uncheckCheckbox($checkbox);
                 }
             }
         }

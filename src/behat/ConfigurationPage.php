@@ -17,12 +17,8 @@
 
 namespace Centreon\Test\Behat;
 
-abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\ConfigurationPage
+abstract class ConfigurationPage extends Page implements Interfaces\ConfigurationPage
 {
-    protected $context;
-
-    protected $validField;
-
     /*
     ** $properties should be an array of elements that can be retrieved (getProperties)
     ** and set (setProperties). This associative array associates a property name
@@ -57,16 +53,6 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
     ** methods to work properly, as navigator control can be tricky.
     */
     protected $properties = array();
-
-    /**
-     *  Check that the current page is valid for this class.
-     *
-     * @return True if the current page matches this class.
-     */
-    public function isPageValid()
-    {
-        return $this->context->getSession()->getPage()->has('css', $this->validField);
-    }
 
     /**
      * Get properties
@@ -127,10 +113,14 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     $this->context->selectInAdvMultiSelect('select[name="' . $propertyLocator . '-f[]"]', $value);
                     break;
                 case 'checkbox':
-                    if ($value) {
-                        $this->context->assertFind('css', $propertyLocator)->check();
-                    } else {
-                        $this->context->assertFind('css', $propertyLocator)->uncheck();
+                    $checkbox = $this->context->assertFind('css', $propertyLocator);
+                    $checkboxValue = $checkbox->getValue();
+                    if (($value && !$checkboxValue) || (!$value && $checkboxValue)) {
+                        try {
+                            $checkbox->getParent()->click(); // material design checkbox
+                        } catch (\Exception $e) {
+                            $checkbox->click(); // native checkbox
+                        }
                     }
                     break;
                 case 'custom':
@@ -141,7 +131,12 @@ abstract class ConfigurationPage implements \Centreon\Test\Behat\Interfaces\Conf
                     $this->context->assertFind('css', $propertyLocator)->setValue($value);
                     break;
                 case 'radio':
-                    $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]')->click();
+                    $radio = $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]');
+                    try {
+                        $radio->getParent()->click(); // material design radio
+                    } catch (\Exception $e) {
+                        $radio->click(); // native radio
+                    }
                     break;
                 case 'select':
                     $this->context->selectInList($propertyLocator, $value);

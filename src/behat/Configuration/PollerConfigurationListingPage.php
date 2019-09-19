@@ -25,7 +25,15 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
 
     protected $validField = 'input[name="searchP"]';
 
-    protected $properties = array();
+    protected $properties = [
+        'name' => [
+            'text',
+            'td:nth-child(2)'
+        ],
+        'id' => [
+            'custom'
+        ],
+    ];
 
     protected $objectClass = '\Centreon\Test\Behat\Configuration\PollerConfigurationPage';
 
@@ -72,19 +80,18 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Select or unselect a poller.
      *
-     * @param $poller  Poller name.
+     * @param $pollerName  Poller name.
      * @param $select  True to check, false to uncheck.
      */
-    public function selectEntry($poller, $select = true)
+    public function selectEntry($pollerName, $select = true)
     {
-        $element = $this->context->assertFind(
-            'xpath',
-            "//a[text()='" . $poller . "']/../../td/input"
-        );
+        $poller = $this->getEntry($pollerName);
+        $checkbox = $this->context->assertFind('css', 'input[type="checkbox"][name="select[' . $poller['id'] . ']"]');
+
         if ($select) {
-            $element->check();
+            $this->checkCheckbox($checkbox);
         } else {
-            $element->uncheck();
+            $this->uncheckCheckbox($checkbox);
         }
     }
 
@@ -110,5 +117,17 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     public function moreActions($action)
     {
         $this->context->assertFind('css', 'select[name="o1"]')->setValue($action);
+    }
+
+    /**
+     * Get poller id
+     *
+     * @param \Behat\Mink\Element\NodeElement $element
+     */
+    protected function getId($element)
+    {
+        $idComponent = $this->context->assertFindIn($element, 'css', 'input[type="checkbox"]')->getAttribute('name');
+        $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
+        return $id;
     }
 }

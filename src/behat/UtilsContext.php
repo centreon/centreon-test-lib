@@ -164,7 +164,7 @@ class UtilsContext extends RawMinkContext
      * @param string $type The type for find.
      * @param string $pattern The pattern for find.
      * @param string $msg The exception message. If empty, use a default message.
-     * @return Behat\Mink\Element\NodeElement The element.
+     * @return \Behat\Mink\Element\NodeElement The element.
      */
     public function assertFind($type, $pattern, $msg = '')
     {
@@ -174,11 +174,11 @@ class UtilsContext extends RawMinkContext
     /**
      * Find an element in a parent element, if the element is not found throw an exception
      *
-     * @param Behat\Mink\Element\NodeElement $parent Returned element will be a child of $parent.
+     * @param \Behat\Mink\Element\NodeElement $parent Returned element will be a child of $parent.
      * @param string $type The type for find.
      * @param string $pattern The pattern for find.
      * @param string $msg The exception message. If empty, use a default message.
-     * @return Behat\Mink\Element\NodeElement The element.
+     * @return \Behat\Mink\Element\NodeElement The element.
      * @throws \Exception
      */
     public function assertFindIn($parent, $type, $pattern, $msg = '')
@@ -201,7 +201,7 @@ class UtilsContext extends RawMinkContext
      *
      * @param string $locator Button ID, value or alt.
      * @param string $msg The exception message. If empty, use a default message.
-     * @return Behat\Mink\Element\NodeElement The element.
+     * @return \Behat\Mink\Element\NodeElement The element.
      */
     public function assertFindButton($locator, $msg = '')
     {
@@ -211,10 +211,10 @@ class UtilsContext extends RawMinkContext
     /**
      * Find a button in a prent element. If the button is not found, throw an exception.
      *
-     * @param Behat\Mink\Element\NodeElement $parent Returned element will be a child of $parent.
+     * @param \Behat\Mink\Element\NodeElement $parent Returned element will be a child of $parent.
      * @param string $locator Button ID, value or alt.
      * @param string $msg The exception message. If empty, use a default message.
-     * @return Behat\Mink\Element\NodeElement The element.
+     * @return \Behat\Mink\Element\NodeElement The element.
      * @throws \Exception
      */
     public function assertFindButtonIn($parent, $locator, $msg = '')
@@ -235,7 +235,7 @@ class UtilsContext extends RawMinkContext
      *
      * @param string $locate Input ID, name or label.
      * @param string $msg The exception message. If empty, use a default message.
-     * @return Behat\Mink\Element\NodeElement The element.
+     * @return \Behat\Mink\Element\NodeElement The element.
      */
     public function assertFindField($locator, $msg = '')
     {
@@ -245,10 +245,10 @@ class UtilsContext extends RawMinkContext
     /**
      * Find a form field on current page. If the field is not found, throw an exception.
      *
-     * @param Behat\Mink\Element\NodeElement $parent Returned element will be a child of $parent.
+     * @param \Behat\Mink\Element\NodeElement $parent Returned element will be a child of $parent.
      * @param $locator
      * @param string $msg The exception message. If empty, use a default message.
-     * @return Behat\Mink\Element\NodeElement The element.
+     * @return \Behat\Mink\Element\NodeElement The element.
      * @throws \Exception
      * @internal param string $locate Input ID, name or label.
      */
@@ -270,7 +270,7 @@ class UtilsContext extends RawMinkContext
      *
      * @param string $locate Text of link.
      * @param string $msg The exception message. If empty, use a default message.
-     * @return Behat\Mink\Element\NodeElement The element.
+     * @return \Behat\Mink\Element\NodeElement The element.
      */
     public function assertFindLink($locator, $msg = '')
     {
@@ -280,10 +280,10 @@ class UtilsContext extends RawMinkContext
     /**
      * Find a form link on current page. If the link is not found, throw an exception.
      *
-     * @param Behat\Mink\Element\NodeElement $parent Returned element will be a child of $parent.
+     * @param \Behat\Mink\Element\NodeElement $parent Returned element will be a child of $parent.
      * @param $locator
      * @param string $msg The exception message. If empty, use a default message.
-     * @return Behat\Mink\Element\NodeElement The element.
+     * @return \Behat\Mink\Element\NodeElement The element.
      * @throws \Exception
      * @internal param string $locate Text of link.
      */

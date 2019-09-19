@@ -46,7 +46,7 @@ class ACLGroupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             self::GROUP_TAB
         ),
         'status' => array(
-            'input',
+            'radio',
             'input[name="acl_group_activate[acl_group_activate]"]',
             self::GROUP_TAB
         ),

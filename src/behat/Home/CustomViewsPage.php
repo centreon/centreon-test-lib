@@ -17,10 +17,8 @@
 
 namespace Centreon\Test\Behat\Home;
 
-class CustomViewsPage implements \Centreon\Test\Behat\Interfaces\Page
+class CustomViewsPage extends \Centreon\Test\Behat\Page
 {
-    private $context;
-
     /**
      *  Navigate to and/or check that we are on the custom views page.
      */
@@ -98,12 +96,16 @@ class CustomViewsPage implements \Centreon\Test\Behat\Interfaces\Page
 
         $this->context->assertFind('css', 'button.addView')->click();
         $this->context->assertFind('css', '#formAddView input[name="name"]')->setValue($name);
-        $this->context->assertFind('css',
-            '#formAddView input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
+        $columnsRadio = $this->context->assertFind(
+            'css',
+            '#formAddView input[name="layout[layout]"][value="column_' . $columns . '"]'
+        );
+        $this->checkRadio($columnsRadio);
+        $checkbox = $this->context->assertFind('css', '#formAddView input[name="public"]');
         if ($public) {
-            $this->context->assertFind('css', '#formAddView input[name="public"]')->check();
+            $this->checkCheckbox($checkbox);
         } else {
-            $this->context->assertFind('css', '#formAddView input[name="public"]')->uncheck();
+            $this->uncheckCheckbox($checkbox);
         }
         $this->context->assertFind('css', '#formAddView input[name="submit"]')->click();
 
@@ -144,7 +146,11 @@ class CustomViewsPage implements \Centreon\Test\Behat\Interfaces\Page
                 );
             }
         );
-        $this->context->assertFind('css', '#formAddView input[name="create_load[create_load]"][value="load"]')->click();
+        $loadRadio = $this->context->assertFind(
+            'css',
+            '#formAddView input[name="create_load[create_load]"][value="load"]'
+        );
+        $this->checkRadio($loadRadio);
 
         // Set requested view.
 
@@ -190,12 +196,19 @@ class CustomViewsPage implements \Centreon\Test\Behat\Interfaces\Page
         );
         $this->context->assertFind('css', '#formEditView input[name="name"]')->setValue($name);
 
-        $this->context->assertFind('css',
-            '#formEditView input[name="layout[layout]"][value="column_' . $columns . '"]')->click();
+        // select columns count
+        $radioColumn = $this->context->assertFind(
+            'css',
+            '#formEditView input[name="layout[layout]"][value="column_' . $columns . '"]'
+        );
+        $this->checkRadio($radioColumn);
+
+        // select if view is public or not
+        $checkbox = $this->context->assertFind('css', '#formEditView input[name="public"]');
         if ($public) {
-            $this->context->assertFind('css', '#formEditView input[name="public"]')->check();
+            $this->checkCheckbox($checkbox);
         } else {
-            $this->context->assertFind('css', '#formEditView input[name="public"]')->uncheck();
+            $this->uncheckCheckbox($checkbox);
         }
 
         $this->context->spin(

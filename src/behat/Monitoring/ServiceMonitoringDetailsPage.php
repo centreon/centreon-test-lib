@@ -17,7 +17,7 @@
 
 namespace Centreon\Test\Behat\Monitoring;
 
-class ServiceMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Page
+class ServiceMonitoringDetailsPage extends \Centreon\Test\Behat\Page
 {
     const STATE_OK = 'OK';
     const STATE_WARNING = 'WARNING';
