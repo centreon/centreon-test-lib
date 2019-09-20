@@ -147,11 +147,6 @@ class ContactConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'select#contact_svNotifCmds',
             self::TAB_CONFIGURATION
         ),
-        'bam_notification_command' => array(
-            'select2',
-            'select#contact_bamNotifCommand',
-            self::TAB_CONFIGURATION
-        ),
         // Authentication tab
         'access' => array(
             'radio',
