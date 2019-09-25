@@ -113,10 +113,14 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
                     $this->context->selectInAdvMultiSelect('select[name="' . $propertyLocator . '-f[]"]', $value);
                     break;
                 case 'checkbox':
-                    if ($value) {
-                        $this->context->assertFind('css', $propertyLocator)->check();
-                    } else {
-                        $this->context->assertFind('css', $propertyLocator)->uncheck();
+                    $checkbox = $this->context->assertFind('css', $propertyLocator);
+                    $checkboxValue = $checkbox->getValue();
+                    if (($value && !$checkboxValue) || (!$value && $checkboxValue)) {
+                        try {
+                            $checkbox->getParent()->click(); // material design checkbox
+                        } catch (\Exception $e) {
+                            $checkbox->click(); // native checkbox
+                        }
                     }
                     break;
                 case 'custom':
