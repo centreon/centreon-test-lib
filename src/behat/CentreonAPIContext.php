@@ -265,7 +265,7 @@ class CentreonAPIContext extends CentreonContext
     public function makePostRequest($uri)
     {
         $jsonPayload = !empty($this->getRequestPayload())
-            ? ['json' => json_decode($this->getRequestPayload()->getRaw(),true)]
+            ? ['json' => json_decode($this->getRequestPayload()->getRaw(), true)]
             : null;
         $response = $this->getClient()->post($this->getMinkParameter('api_base') . $uri, $jsonPayload);
         $this->setResponse($response);
@@ -277,7 +277,7 @@ class CentreonAPIContext extends CentreonContext
     public function makePutRequest($uri)
     {
         $jsonPayload = !empty($this->getRequestPayload())
-            ? ['json' => json_decode($this->getRequestPayload()->getRaw(),true)]
+            ? ['json' => json_decode($this->getRequestPayload()->getRaw(), true)]
             : null;
         $response = $this->getClient()->put($this->getMinkParameter('api_base') . $uri, $jsonPayload);
         $this->setResponse($response);
