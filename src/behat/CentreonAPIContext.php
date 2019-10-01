@@ -168,8 +168,7 @@ class CentreonAPIContext extends CentreonContext
     public function iHaveRunningAPI()
     {
         $base_url = $this->getMinkParameter('api_base');
-        if (is_null($base_url))
-        {
+        if (is_null($base_url)) {
             throw new \Exception('Unable to find a running container with Centreon Web');
         }
 
@@ -205,10 +204,13 @@ class CentreonAPIContext extends CentreonContext
     public function responseHasKeys($property, PyStringNode $propVal)
     {
         $data = json_decode($this->getResponse()->getBody(true), true);
-        if (!empty($data[$property])){
+        if (!empty($data[$property])) {
             if ($data[$property] !== json_decode($propVal, true)) {
-                throw new \Exception("Value of '".$property."' is not correct!\nExpecte to be: "
-                    . json_encode($data[$property]) . "\n");
+                throw new \Exception(
+                    "Value of '{$property}' is not correct!\nExpecte to be: "
+                    . json_encode($data[$property])
+                    . "\n"
+                );
             }
         } else {
             throw new \Exception("Property '".$property."' is not found!\n");
@@ -262,7 +264,9 @@ class CentreonAPIContext extends CentreonContext
      */
     public function makePostRequest($uri)
     {
-        $jsonPayload = !empty($this->getRequestPayload()) ? ['json' => json_decode($this->getRequestPayload()->getRaw(),true)]: null;
+        $jsonPayload = !empty($this->getRequestPayload())
+            ? ['json' => json_decode($this->getRequestPayload()->getRaw(),true)]
+            : null;
         $response = $this->getClient()->post($this->getMinkParameter('api_base') . $uri, $jsonPayload);
         $this->setResponse($response);
     }
@@ -272,7 +276,9 @@ class CentreonAPIContext extends CentreonContext
      */
     public function makePutRequest($uri)
     {
-        $jsonPayload = !empty($this->getRequestPayload()) ? ['json' => json_decode($this->getRequestPayload()->getRaw(),true)]: null;
+        $jsonPayload = !empty($this->getRequestPayload())
+            ? ['json' => json_decode($this->getRequestPayload()->getRaw(),true)]
+            : null;
         $response = $this->getClient()->put($this->getMinkParameter('api_base') . $uri, $jsonPayload);
         $this->setResponse($response);
     }
@@ -320,7 +326,7 @@ class CentreonAPIContext extends CentreonContext
             ]
         ]);
         $responseObj = json_decode($response->getBody());
-        if (empty($responseObj->authToken)){
+        if (empty($responseObj->authToken)) {
             throw new \Exception('Could not get authentication token from API.');
         }
         $this->setAuthToken($responseObj->authToken);
@@ -334,7 +340,7 @@ class CentreonAPIContext extends CentreonContext
     {
         if (!empty($files)) {
             foreach ($files as $file) {
-                if (!file_exists($file['path']) || !fopen($file['path'], 'r')){
+                if (!file_exists($file['path']) || !fopen($file['path'], 'r')) {
                     throw new \Exception('One or more files not found or unreadable to attach to request.');
                 }
             }
@@ -351,12 +357,12 @@ class CentreonAPIContext extends CentreonContext
         foreach ($files as $file) {
             $output[] = [
                 'name' => $file['name'],
-                'contents' => fopen($file['path'], 'r')
+                'contents' => fopen($file['path'], 'r'),
             ];
         }
 
         if (!empty($payload)) {
-            foreach (json_decode($payload->getRaw(),true) as $fk => $fv) {
+            foreach (json_decode($payload->getRaw(), true) as $fk => $fv) {
                 $output[] = [
                     'name' => $fk,
                     'contents' => $fv
