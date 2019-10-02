@@ -207,7 +207,7 @@ class CentreonAPIContext extends CentreonContext
         if (!empty($data[$property])) {
             if ($data[$property] !== json_decode($propVal, true)) {
                 throw new \Exception(
-                    "Value of '{$property}' is not correct!\nExpecte to be: "
+                    "Value of '{$property}' is not correct!\nExpected to be: "
                     . json_encode($data[$property])
                     . "\n"
                 );
