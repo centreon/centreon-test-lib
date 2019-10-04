@@ -132,6 +132,7 @@ class HostTemplateConfigurationListingPage extends \Centreon\Test\Behat\ListingP
     {
         $checkbox = $this->context->assertFind('css', 'input[name="displayLocked"]');
         $displayLocked ? $this->checkCheckbox($checkbox) : $this->uncheckCheckbox($checkbox);
+        $this->context->assertFind('css', 'tbody tr td input.btc.bt_success')->click();
     }
 
     /**
