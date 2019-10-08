@@ -204,16 +204,43 @@ class CentreonAPIContext extends CentreonContext
     public function responseHasKeys($property, PyStringNode $propVal)
     {
         $data = json_decode($this->getResponse()->getBody(true), true);
-        if (!empty($data[$property])) {
-            if ($data[$property] !== json_decode($propVal, true)) {
-                throw new \Exception(
-                    "Value of '{$property}' is not correct!\nExpected to be: "
-                    . json_encode($data[$property])
-                    . "\n"
-                );
-            }
-        } else {
-            throw new \Exception("Property '".$property."' is not found!\n");
+        if (!isset($data[$property])) {
+            throw new \Exception(
+                "Property '".$property."' is not found in the list ("
+                . join(', ', array_keys($data))
+                . ")\n"
+            );
+        }
+
+        if ($data[$property] !== json_decode($propVal, true)) {
+            throw new \Exception(
+                "Value of '{$property}' is not correct!\nExpected to be: "
+                . json_encode($data[$property])
+                . "\n"
+            );
+        }
+    }
+
+    /**
+     * @Given /^the property "([^"]*)" has value matched to the pattern$/
+     */
+    public function responseHasKeysByWildcard($property, PyStringNode $propVal)
+    {
+        $data = json_decode($this->getResponse()->getBody(true), true);
+        if (!isset($data[$property])) {
+            throw new \Exception(
+                "Property '".$property."' is not found in the list ("
+                . join(', ', array_keys($data))
+                . ")\n"
+            );
+        }
+
+        if (fnmatch($propVal, json_encode($data[$property]))) {
+            throw new \Exception(
+                "Value of '{$property}' is not correct!\nExpected to be: "
+                . json_encode($data[$property])
+                . "\n"
+            );
         }
     }
 
