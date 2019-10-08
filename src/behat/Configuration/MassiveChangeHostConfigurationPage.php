@@ -125,11 +125,6 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
             'select[name="host_cs[]"]',
             self::NOTIFICATION_TAB
         ),
-        'contact_group_additive_inheritance' => array(
-            'radio',
-            'input[name="mc_cg_additive_inheritance[mc_cg_additive_inheritance]"]',
-            self::NOTIFICATION_TAB
-        ),
         'contact_groups' => array(
             'select2',
             'select[name="host_cgs[]"]',
