@@ -214,9 +214,9 @@ class CentreonAPIContext extends CentreonContext
 
         if ($data[$property] !== json_decode($propVal, true)) {
             throw new \Exception(
-                "Value of '{$property}' is not correct!\nExpected to be: "
-                . json_encode($data[$property])
-                . "\n"
+                "Value of '{$property}' is not correct!\n" .
+                "Expected to be: " . json_encode($data[$property]) . "\n" .
+                "Received: " . $propVal . "\n"
             );
         }
     }
@@ -237,9 +237,9 @@ class CentreonAPIContext extends CentreonContext
 
         if (fnmatch($propVal, json_encode($data[$property]))) {
             throw new \Exception(
-                "Value of '{$property}' is not correct!\nExpected to be: "
-                . json_encode($data[$property])
-                . "\n"
+                "Value of '{$property}' is not correct!\n" .
+                "Expected to be: " . json_encode($data[$property]) . "\n" .
+                "Received: " . $propVal . "\n"
             );
         }
     }
