@@ -245,6 +245,22 @@ class CentreonAPIContext extends CentreonContext
     }
 
     /**
+     * @Given /^the response matched to the pattern$/
+     */
+    public function responseByWildcard(PyStringNode $propVal)
+    {
+        $data = json_decode($this->getResponse()->getBody(true), true);
+
+        if (fnmatch($propVal, json_encode($data))) {
+            throw new \Exception(
+                "Response is not correct!\n" .
+                "Expected to be: " . json_encode($data) . "\n" .
+                "Received: " . $propVal . "\n"
+            );
+        }
+    }
+
+    /**
      * @Given I use request payload
      */
     public function iUseRequestPayload(PyStringNode $requestPayload)
