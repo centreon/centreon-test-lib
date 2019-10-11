@@ -109,4 +109,17 @@ class ServiceTemplateConfigurationListingPage extends \Centreon\Test\Behat\Listi
         $id = preg_match('/select\[(\d+)\]/', $idComponent, $matches) ? $matches[1] : null;
         return $id;
     }
+
+    /**
+     * Check/uncheck "locked elements" filter and run search
+     *
+     * @param boolean $displayLocked state to apply on the checkbox
+     * @return void
+     */
+    public function setLockedElementsFilter(bool $displayLocked): void
+    {
+        $checkbox = $this->context->assertFind('css', 'input[name="displayLocked"]');
+        $displayLocked ? $this->checkCheckbox($checkbox) : $this->uncheckCheckbox($checkbox);
+        $this->context->assertFind('css', 'tbody tr td input.btc.bt_success')->click();
+    }
 }
