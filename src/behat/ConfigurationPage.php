@@ -133,6 +133,11 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
                 case 'radio':
                     $radio = $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]');
                     try {
+                        // if the parent is td tag then doesn't throw exception
+                        if (!in_array($radio->getParent()->getTagName(), ['div', 'span'])) {
+                            throw new \Exception('Parent of the radio button is not div');
+                        }
+
                         $radio->getParent()->click(); // material design radio
                     } catch (\Exception $e) {
                         $radio->click(); // native radio
