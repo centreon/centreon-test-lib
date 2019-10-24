@@ -117,6 +117,11 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
                     $checkboxValue = $checkbox->getValue();
                     if (($value && !$checkboxValue) || (!$value && $checkboxValue)) {
                         try {
+                            // if the parent is td tag then doesn't throw exception
+                            if (!in_array($checkbox->getParent()->getTagName(), ['div', 'span'])) {
+                                throw new \Exception('Parent of the checkbox is not div');
+                            }
+
                             $checkbox->getParent()->click(); // material design checkbox
                         } catch (\Exception $e) {
                             $checkbox->click(); // native checkbox
