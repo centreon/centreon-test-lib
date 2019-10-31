@@ -273,7 +273,11 @@ class CentreonAPIContext extends CentreonContext
      */
     public function makeGetRequest($uri)
     {
-        $response = $this->getClient()->request('GET', $this->getMinkParameter('api_base') . $uri);
+        $jsonPayload = !empty($this->getRequestPayload())
+            ? ['json' => json_decode($this->getRequestPayload()->getRaw(), true)]
+            : null;
+
+        $response = $this->getClient()->request('GET', $this->getMinkParameter('api_base') . $uri, $jsonPayload);
         $this->setResponse($response);
     }
 
@@ -282,7 +286,11 @@ class CentreonAPIContext extends CentreonContext
      */
     public function makeDeleteRequest($uri)
     {
-        $response = $this->getClient()->request('DELETE', $this->getMinkParameter('api_base') . $uri);
+        $jsonPayload = !empty($this->getRequestPayload())
+            ? ['json' => json_decode($this->getRequestPayload()->getRaw(), true)]
+            : null;
+
+        $response = $this->getClient()->request('DELETE', $this->getMinkParameter('api_base') . $uri, $jsonPayload);
         $this->setResponse($response);
     }
 
@@ -294,6 +302,7 @@ class CentreonAPIContext extends CentreonContext
         $jsonPayload = !empty($this->getRequestPayload())
             ? ['json' => json_decode($this->getRequestPayload()->getRaw(), true)]
             : null;
+
         $response = $this->getClient()->post($this->getMinkParameter('api_base') . $uri, $jsonPayload);
         $this->setResponse($response);
     }
@@ -306,6 +315,7 @@ class CentreonAPIContext extends CentreonContext
         $jsonPayload = !empty($this->getRequestPayload())
             ? ['json' => json_decode($this->getRequestPayload()->getRaw(), true)]
             : null;
+
         $response = $this->getClient()->put($this->getMinkParameter('api_base') . $uri, $jsonPayload);
         $this->setResponse($response);
     }
