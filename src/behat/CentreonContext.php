@@ -26,6 +26,8 @@ use Centreon\Test\Behat\Configuration\HostConfigurationPage;
 use Centreon\Test\Behat\Configuration\ServiceConfigurationPage;
 use Centreon\Test\Behat\Monitoring\ServiceMonitoringDetailsPage;
 use Centreon\Test\Behat\Administration\ParametersCentreonUiPage;
+use Behat\Gherkin\Node\TableNode;
+use Behat\Gherkin\Node\PyStringNode;
 
 class CentreonContext extends UtilsContext
 {
@@ -786,5 +788,82 @@ class CentreonContext extends UtilsContext
         }
 
         return $res['metric_id'];
+    }
+
+    /**
+     * @When I generate configuration files without export
+     */
+    public function exportConfigurationFiles()
+    {
+        $page = new PollerConfigurationExportPage($this);
+        $page->setProperties([
+            'pollers' => 'all',
+            'generate_files' => true,
+            'run_debug' => true,
+        ]);
+        $page->export();
+    }
+
+    /**
+     * @Then use the page object :pageObject and set the properties below
+     */
+    public function usePageObjectAndSetProperties(string $pageObject, TableNode $table)
+    {
+        if (!class_exists($pageObject)) {
+            throw new \Exception("Page object didn't exists {$pageObject}");
+        }
+
+        $data = [];
+        foreach ($table as $row) {
+            $data[] = str_replace(
+                ['\\t', '\\n', '\\r'],
+                ["\t", "\n", "\r"],
+                $row
+            );
+        }
+
+        foreach ($data as $properties) {
+            try {
+                $page = new $pageObject($this);
+                $page->setProperties($properties);
+                $page->save();
+            } catch (\Exception $e) {
+                throw new \Exception('Failure when trying to save page object "'
+                    . $pageObject.'" with the properties '
+                    . json_encode($properties), $e->getCode(), $e);
+            }
+        }
+    }
+
+    /**
+     * @When execute in console of service :service
+     */
+    public function executeInConsole(string $service, PyStringNode $command)
+    {
+        $this->output = $this->execute($command->getRaw(), $service);
+    }
+
+    /**
+     * @Then the expected result have to be
+     */
+    public function theExpectedResultHaveToBe(PyStringNode $result)
+    {
+        $output = $this->output['output'] ?? '';
+
+        if ($result->getRaw() !== $output) {
+            throw new \Exception("The result doesn't match: {$output}");
+        }
+    }
+
+    /**
+     * @Then the expected result matched to the pattern
+     */
+    public function theExpectedResultMatchedToThePattern(PyStringNode $result)
+    {
+        $output = $this->output['output'] ?? '';
+
+        if (!fnmatch($result->getRaw(), $output)) {
+            throw new \Exception("The result doesn't match: {$output}");
+        }
     }
 }
