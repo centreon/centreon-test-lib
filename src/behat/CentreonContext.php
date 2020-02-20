@@ -210,7 +210,6 @@ class CentreonContext extends UtilsContext
         // Mandatory with the new version of behat/mink
         // A call on the 'visit' method must be perform to start a session.
         $page = new LoginPage($this);
-        
         // Set Window Size
         $this->getSession()->resizeWindow(1600, 4000);
 
@@ -440,7 +439,7 @@ class CentreonContext extends UtilsContext
         // Set session parameters.
         $this->setMinkParameter(
             'base_url',
-            'http://' . $this->container->getContainerId('web', false) . '/centreon'
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon'
         );
 
         /**

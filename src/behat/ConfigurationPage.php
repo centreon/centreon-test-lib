@@ -116,11 +116,7 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
                     $checkbox = $this->context->assertFind('css', $propertyLocator);
                     $checkboxValue = $checkbox->getValue();
                     if (($value && !$checkboxValue) || (!$value && $checkboxValue)) {
-                        try {
-                            $checkbox->getParent()->click(); // material design checkbox
-                        } catch (\Exception $e) {
-                            $checkbox->click(); // native checkbox
-                        }
+                        $checkbox->click();
                     }
                     break;
                 case 'custom':

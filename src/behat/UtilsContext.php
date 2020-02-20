@@ -21,6 +21,7 @@ use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Tester\Exception\PendingException;
 use Centreon\Test\Behat\Exception\SpinStopException;
+use DMore\ChromeDriver\ChromeDriver;
 
 class UtilsContext extends RawMinkContext
 {
@@ -432,9 +433,12 @@ class UtilsContext extends RawMinkContext
      */
     public function selectToSelectTwo($css_id, $what)
     {
+        $this->getSession()->evaluateScript("document.getElementById('select2-host_location-container').click()");
         // Open select2.
-        $selectDiv = $this->assertFind('css', $css_id)->getParent();
-        $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
+        //$selectDiv = $this->assertFind('css', $css_id)->getParent();
+        //$this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->press();
+        sleep(1);
+        throw new \Exception('toto');
         $this->spin(
             function ($context) {
                 return $context->assertFind('css', '.select2-container--open .select2-search__field')->isVisible();
@@ -442,7 +446,9 @@ class UtilsContext extends RawMinkContext
             'Cannot set select2 ' . $css_id . ' active'
         );
         sleep(1);
+        var_dump($selectDiv->getOuterHtml());
         $select2Input = $this->getSession()->getDriver()->getWebDriverSession()->activeElement();
+        var_dump($select2Input->getOuterHtml());
 
         // Set search.
         $select2Input->clear();
@@ -661,6 +667,7 @@ class UtilsContext extends RawMinkContext
 
         try {
             $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
+/*
             $driver = new \Behat\Mink\Driver\Selenium2Driver(
                 'chrome',
                 array(
@@ -676,10 +683,14 @@ class UtilsContext extends RawMinkContext
                 ),
                 $url
             );
+            */
+            $driver = new ChromeDriver('http://localhost:9222', null, 'http://www.google.com', ['domWaitTimeout' => 180000]);
+            /*
             $driver->setTimeouts(array(
                 'page load' => 180000,
                 'script' => 180000
             ));
+            */
         } catch (\Exception $e) {
             throw new \Exception("Cannot instantiate mink driver.\n" . $e->getMessage());
         }
