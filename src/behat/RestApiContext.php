@@ -26,7 +26,7 @@ if (!defined('DOCKER_REGISTRY')) {
 
 class RestApiContext extends CentreonContext
 {
-    protected $dockerImage = 'postman/newman_alpine33:latest';
+    protected $dockerImage = 'registry.centreon.com/postman/newman_alpine33:latest';
     protected $dockerNetwork = 'webdriver_default';
     protected $postmanEnv = 'Test1';
     protected $apiReturnValue;
