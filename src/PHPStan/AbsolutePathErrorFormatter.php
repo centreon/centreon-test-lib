@@ -19,15 +19,16 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 		$output->writeLineFormatted('');
 
 		foreach ($this->groupByFile($analysisResult) as $filePath => $errors) {
+			$filePath = $this->parseFilePath($filePath);
 			$output->writeRaw(sprintf(
 				'<file name="%s">',
-				$this->escape($filePath)
+				$filePath
 			));
 			$output->writeLineFormatted('');
 
 			foreach ($errors as $error) {
 				$output->writeRaw(sprintf(
-					'  <error line="%d" column="1" severity="error" message="%s" />',
+					'  <error line="%d" column="1" severity="error" message="%s" source="PHPStan" />',
 					$this->escape((string) $error->getLine()),
 					$this->escape((string) $error->getMessage())
 				));
@@ -44,7 +45,7 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 			$output->writeLineFormatted('');
 
 			foreach ($notFileSpecificErrors as $error) {
-				$output->writeRaw(sprintf('  <error severity="error" message="%s" />', $this->escape($error)));
+				$output->writeRaw(sprintf('  <error severity="error" message="%s" source="PHPStan" />', $this->escape($error)));
 				$output->writeLineFormatted('');
 			}
 
@@ -58,7 +59,7 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 
 			foreach ($analysisResult->getWarnings() as $warning) {
 				$output->writeRaw(
-					sprintf('  <error severity="warning" message="%s" />', $this->escape($warning))
+					sprintf('  <error severity="warning" message="%s" source="PHPStan" />', $this->escape($warning))
 				);
 				$output->writeLineFormatted('');
 			}
@@ -101,5 +102,19 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 		}
 
 		return $files;
+	}
+
+	/**
+	 * Remove useless information like trait context
+	 *
+	 * @param string $filePath Absolute file path
+	 * @return string File path with removed useless information
+	 */
+	private function parseFilePath(string $filePath): string
+	{
+		if (preg_match('/(.+)\s+\(in context/', $filePath, $matches)) {
+			$filePath = $matches[1];
+		}
+		return $this->escape($filePath);
 	}
 }
