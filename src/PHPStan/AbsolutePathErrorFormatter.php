@@ -18,16 +18,16 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 		$output->writeRaw('<checkstyle>');
 		$output->writeLineFormatted('');
 
-		foreach ($this->groupByFile($analysisResult) as $relativeFilePath => $errors) {
+		foreach ($this->groupByFile($analysisResult) as $filePath => $errors) {
 			$output->writeRaw(sprintf(
 				'<file name="%s">',
-				$this->escape($relativeFilePath)
+				$this->escape($filePath)
 			));
 			$output->writeLineFormatted('');
 
 			foreach ($errors as $error) {
 				$output->writeRaw(sprintf(
-					'  <error line="%d" column="1" severity="error" message="PHPSTAN: %s" />',
+					'  <error line="%d" column="1" severity="error" message="%s" />',
 					$this->escape((string) $error->getLine()),
 					$this->escape((string) $error->getMessage())
 				));
@@ -44,7 +44,7 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 			$output->writeLineFormatted('');
 
 			foreach ($notFileSpecificErrors as $error) {
-				$output->writeRaw(sprintf('  <error severity="error" message="PHPSTAN: %s" />', $this->escape($error)));
+				$output->writeRaw(sprintf('  <error severity="error" message="%s" />', $this->escape($error)));
 				$output->writeLineFormatted('');
 			}
 
@@ -58,7 +58,7 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 
 			foreach ($analysisResult->getWarnings() as $warning) {
 				$output->writeRaw(
-					sprintf('  <error severity="warning" message="PHPSTAN: %s" />', $this->escape($warning))
+					sprintf('  <error severity="warning" message="%s" />', $this->escape($warning))
 				);
 				$output->writeLineFormatted('');
 			}
@@ -88,7 +88,7 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 	 * Group errors by file
 	 *
 	 * @param AnalysisResult $analysisResult
-	 * @return array<string, array> Array that have as key the relative path of file
+	 * @return array<string, array> Array that have as key the absolute path of file
 	 *                              and as value an array with occured errors.
 	 */
 	private function groupByFile(AnalysisResult $analysisResult): array
