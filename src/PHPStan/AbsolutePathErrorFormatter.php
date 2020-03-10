@@ -28,7 +28,7 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 
 			foreach ($errors as $error) {
 				$output->writeRaw(sprintf(
-					'  <error line="%d" column="21" severity="error" message="%s" source="PHPStan" />',
+					'  <error line="%d" column="1" severity="error" message="%s" source="PHPStan" />',
 					$this->escape((string) $error->getLine()),
 					$this->escape((string) $error->getMessage())
 				));
@@ -45,7 +45,9 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 			$output->writeLineFormatted('');
 
 			foreach ($notFileSpecificErrors as $error) {
-				$output->writeRaw(sprintf('  <error severity="error" message="%s" source="Squiz.WhiteSpace.SuperfluousWhitespace.EndLine" />', $this->escape($error)));
+				$output->writeRaw(
+					sprintf('  <error severity="error" message="%s" source="PHPStan" />', $this->escape($error))
+				);
 				$output->writeLineFormatted('');
 			}
 
@@ -59,7 +61,7 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 
 			foreach ($analysisResult->getWarnings() as $warning) {
 				$output->writeRaw(
-					sprintf('  <error severity="warning" message="%s" source="Squiz.WhiteSpace.SuperfluousWhitespace.EndLine" />', $this->escape($warning))
+					sprintf('  <error severity="warning" message="%s" source="PHPStan" />', $this->escape($warning))
 				);
 				$output->writeLineFormatted('');
 			}
