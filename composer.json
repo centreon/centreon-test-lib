@@ -6,7 +6,8 @@
     "keywords": ["testing", "centreon", "phpunit", "behat"],
     "require": {
         "behat/behat": "^3.0",
-        "guzzlehttp/guzzle": "~6.0"
+        "guzzlehttp/guzzle": "~6.0",
+        "phpstan/phpstan": "^0.12.14"
     },
     "suggest": {
         "behat/mink": "Browser controller/emulator abstraction for PHP",
@@ -23,7 +24,8 @@
         "psr-4": {
             "Centreon\\Test\\Behat\\": "src/behat",
             "Centreon\\Test\\Mock\\": "src/mock",
-            "Centreon\\Test\\Traits\\": "src/traits"
+            "Centreon\\Test\\Traits\\": "src/traits",
+            "Centreon\\PHPStan\\": "src/PHPStan"
         }
     }
 }
