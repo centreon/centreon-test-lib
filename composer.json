@@ -23,7 +23,8 @@
         "psr-4": {
             "Centreon\\Test\\Behat\\": "src/behat",
             "Centreon\\Test\\Mock\\": "src/mock",
-            "Centreon\\Test\\Traits\\": "src/traits"
+            "Centreon\\Test\\Traits\\": "src/traits",
+            "Centreon\\PHPStan\\": "src/PHPStan"
         }
     }
 }
