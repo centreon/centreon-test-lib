@@ -2,9 +2,9 @@
 
 namespace Centreon\PHPStan;
 
-use PHPStan\Command\ErrorFormatter;
-use PHPStan\Command\AnalysisResult;
-use PHPStan\Command\Output;
+use \PHPStan\Command\ErrorFormatter\ErrorFormatter;
+use \PHPStan\Command\AnalysisResult;
+use \PHPStan\Command\Output;
 
 class AbsolutePathErrorFormatter implements ErrorFormatter
 {
@@ -27,7 +27,7 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 
 			foreach ($errors as $error) {
 				$output->writeRaw(sprintf(
-					'  <error line="%d" column="1" severity="error" message="%s" />',
+					'  <error line="%d" column="1" severity="error" message="PHPSTAN: %s" />',
 					$this->escape((string) $error->getLine()),
 					$this->escape((string) $error->getMessage())
 				));
@@ -44,7 +44,7 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 			$output->writeLineFormatted('');
 
 			foreach ($notFileSpecificErrors as $error) {
-				$output->writeRaw(sprintf('  <error severity="error" message="%s" />', $this->escape($error)));
+				$output->writeRaw(sprintf('  <error severity="error" message="PHPSTAN: %s" />', $this->escape($error)));
 				$output->writeLineFormatted('');
 			}
 
@@ -57,7 +57,9 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 			$output->writeLineFormatted('');
 
 			foreach ($analysisResult->getWarnings() as $warning) {
-				$output->writeRaw(sprintf('  <error severity="warning" message="%s" />', $this->escape($warning)));
+				$output->writeRaw(
+					sprintf('  <error severity="warning" message="PHPSTAN: %s" />', $this->escape($warning))
+				);
 				$output->writeLineFormatted('');
 			}
 
@@ -94,16 +96,9 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 		$files = [];
 
 		/** @var \PHPStan\Analyser\Error $fileSpecificError */
-		/*
 		foreach ($analysisResult->getFileSpecificErrors() as $fileSpecificError) {
-			$relativeFilePath = $this->relativePathHelper->getRelativePath(
-				$fileSpecificError->getFile()
-			);
-
-			$files[$relativeFilePath][] = $fileSpecificError;
+			$files[$fileSpecificError->getFile()][] = $fileSpecificError;
 		}
-		*/
-		throw new \Exception('toto');
 
 		return $files;
 	}
