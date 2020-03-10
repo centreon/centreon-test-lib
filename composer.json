@@ -26,5 +26,8 @@
             "Centreon\\Test\\Traits\\": "src/traits",
             "Centreon\\PHPStan\\": "src/PHPStan"
         }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.12.14"
     }
 }
