@@ -28,7 +28,7 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 
 			foreach ($errors as $error) {
 				$output->writeRaw(sprintf(
-					'  <error line="%d" column="1" severity="error" message="%s" source="PHPStan" />',
+					'  <error line="%d" column="21" severity="error" message="%s" source="PHPStan" />',
 					$this->escape((string) $error->getLine()),
 					$this->escape((string) $error->getMessage())
 				));
