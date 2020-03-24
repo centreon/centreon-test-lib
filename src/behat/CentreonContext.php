@@ -110,9 +110,9 @@ class CentreonContext extends UtilsContext
             // Centreon Broker logs.
             $logTitle = "\n\n"
                 . "#################\n"
-                . "# Centcore logs #\n"
+                . "# Gorgone logs #\n"
                 . "#################\n\n";
-            $output = $this->container->execute('cat /var/log/centreon/centcore.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute('cat /var/log/centreon-gorgone/gorgoned.log 2>/dev/null', 'web', false);
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
