@@ -36,23 +36,23 @@ class ACLMenuConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         ),
         'menu_home' => array(
             'checkbox',
-            'input[type="checkbox"][id="i0"]'
+            'input[type="checkbox"][id="i7"]'
         ),
         'menu_monitoring' => array(
             'checkbox',
-            'input[type="checkbox"][id="i1"]'
+            'input[type="checkbox"][id="i8"]'
         ),
         'menu_reporting' => array(
             'checkbox',
-            'input[type="checkbox"][id="i2"]'
+            'input[type="checkbox"][id="i9"]'
         ),
         'menu_configuration' => array(
             'checkbox',
-            'input[type="checkbox"][id="i3"]'
+            'input[type="checkbox"][id="i10"]'
         ),
         'menu_administration' => array(
             'checkbox',
-            'input[type="checkbox"][id="i4"]'
+            'input[type="checkbox"][id="i11"]'
         ),
         'comments' => array(
             'input',
