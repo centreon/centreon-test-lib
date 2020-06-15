@@ -19,7 +19,7 @@
  *
  */
 
-namespace Centreon\Test\Behat\Api\Context\Json;
+namespace Centreon\Test\Behat\Api\Json;
 
 use JsonSchema\SchemaStorage;
 use JsonSchema\Validator;

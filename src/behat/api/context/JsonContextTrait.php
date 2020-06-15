@@ -25,9 +25,9 @@ use Symfony\Component\HttpClient\Response\CurlResponse;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Webmozart\Assert\Assert;
-use Centreon\Test\Behat\Api\Context\Json\Json;
-use Centreon\Test\Behat\Api\Context\Json\JsonSchema;
-use Centreon\Test\Behat\Api\Context\Json\JsonInspector;
+use Centreon\Test\Behat\Api\Json\Json;
+use Centreon\Test\Behat\Api\Json\JsonSchema;
+use Centreon\Test\Behat\Api\Json\JsonInspector;
 
 Trait JsonContextTrait
 {
