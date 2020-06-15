@@ -205,11 +205,11 @@ class ApiContext implements Context
     }
 
     /**
-     * launch Centreon Web container
+     * launch Centreon container
      *
-     * @Given a running instance of Centreon API
+     * @param string $name name of the service container
      */
-    public function aRunningInstanceOfCentreonApi(string $name = 'web')
+    public function launchCentreonWebContainer(string $name = 'web')
     {
         $composeFile = $this->getContainerComposeFile($name);
         if (empty($composeFile)) {
@@ -225,25 +225,25 @@ class ApiContext implements Context
 
         $this->spin(
             function() {
-                $response = $this->iSendARequestToWithBody(
-                    'POST',
-                    $this->getBaseUri() . '/latest/login',
-                    '{
-                        "security": {
-                            "credentials": {
-                                "login": "admin",
-                                "password": "centreon"
-                            }
-                        }
-                    }'
-                );
-                if ($response->getStatusCode() === 200) {
+                $response = $this->iSendARequestTo('GET', $this->getBaseUri() . '/latest/');
+                if ($response->getStatusCode() === 500) {
+                    // it means symfony router is up and do not handle this route
                     return true;
                 }
             },
             'timeout',
             15
         );
+    }
+
+    /**
+     * launch Centreon Web container
+     *
+     * @Given a running instance of Centreon Web API
+     */
+    public function aRunningInstanceOfCentreonApi()
+    {
+        $this->launchCentreonWebContainer('web');
     }
 
     /**
@@ -257,28 +257,26 @@ class ApiContext implements Context
         $response = $this->iSendARequestToWithBody(
             'POST',
             $this->getBaseUri() . '/latest/login',
-            '{
-                "security": {
-                    "credentials": {
-                        "login": "admin",
-                        "password": "centreon"
-                    }
-                }
-            }'
+            json_encode([
+                'security' => [
+                    'credentials' => [
+                        'login' => 'admin',
+                        'password' => 'centreon',
+                    ],
+                ],
+            ])
         );
 
         $response = json_decode($response->getContent(), true);
-        $this->setToken(
-            $response['security']['token']
-        );
+        $this->setToken($response['security']['token']);
     }
 
     /**
      * Validate response following json format file
      *
-     * @Then the response should use :type centreon JSON format
+     * @Then the response should use :type JSON format
      */
-    public function theResponseShouldUseCentreonJsonFormat(string $type)
+    public function theResponseShouldUseJsonFormat(string $type)
     {
         $this->theResponseCodeShouldBe(200);
         $this->theResponseShouldBeFormattedLikeJsonFormat("monitoring/service/" . $type . ".json");

@@ -93,7 +93,7 @@ Trait JsonContextTrait
 
         $actual = $this->getInspector()->evaluate($json, $node);
 
-        Assert::neq(
+        Assert::eq(
             $text,
             $actual,
             sprintf("The node value is '%s'", json_encode($actual))
@@ -459,17 +459,30 @@ Trait JsonContextTrait
      */
     public function theResponseShouldBeFormattedLikeJsonFormat(string $path)
     {
+        $possiblePaths = [
+            getcwd() . '/' . $path,
+            __DIR__ . '/../fixtures/validation/' . $path,
+        ];
+
+        $fullPath = null;
+        foreach ($possiblePaths as $possiblePath) {
+            if (file_exists($possiblePath)) {
+                $fullPath = $possiblePath;
+            }
+        }
+
+        if ($fullPath === null) {
+            throw new \Exception('cannot find validation file "' . $path . '"');
+        }
+
         $this->theResponseShouldBeInJson();
 
-        $fullPath = __DIR__ . '/../fixtures/validation/' . $path;
         $content = json_decode($this->getHttpResponse()->getContent());
-        if (file_exists($fullPath)) {
-            $validator = new \JsonSchema\Validator();
-            $validator->validate(
-                $content,
-                ['$ref' => 'file://' . $fullPath],
-                \JsonSchema\Constraints\Constraint::CHECK_MODE_EXCEPTIONS
-            );
-        }
+        $validator = new \JsonSchema\Validator();
+        $validator->validate(
+            $content,
+            ['$ref' => 'file://' . $fullPath],
+            \JsonSchema\Constraints\Constraint::CHECK_MODE_EXCEPTIONS
+        );
     }
 }
