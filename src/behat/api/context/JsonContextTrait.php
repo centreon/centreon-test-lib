@@ -236,13 +236,13 @@ Trait JsonContextTrait
      *
      * @Then the JSON node :node should have :count element(s)
      */
-    public function theJsonNodeShouldHaveElements($node, $count)
+    public function theJsonNodeShouldHaveElements($node, int $count)
     {
         $json = $this->getJson();
 
         $actual = $this->getInspector()->evaluate($json, $node);
 
-        $this->assertSame($count, sizeof((array) $actual));
+        Assert::same($count, sizeof((array) $actual));
     }
 
     /**
@@ -388,7 +388,7 @@ Trait JsonContextTrait
             throw new \Exception('The expected JSON is not a valid');
         }
 
-        $this->assertSame(
+        Assert::same(
             (string) $expected,
             (string) $actual,
             "The json is equal to:\n". $actual->encode()
