@@ -26,8 +26,8 @@ use Symfony\Component\HttpClient\CurlHttpClient;
 use Symfony\Component\HttpClient\Response\CurlResponse;
 use Symfony\Component\HttpClient\HttpClient;
 use Centreon\Test\Behat\Container;
-use Centreon\Test\Behat\Api\Contexts\JsonContextTrait;
-use Centreon\Test\Behat\Api\Contexts\RestContextTrait;
+use Centreon\Test\Behat\Api\Context\JsonContextTrait;
+use Centreon\Test\Behat\Api\Context\RestContextTrait;
 
 /**
  * This context class contains the main definitions of the steps used by contexts to validate API
