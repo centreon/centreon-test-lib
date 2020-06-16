@@ -26,6 +26,9 @@ use JsonSchema\Validator;
 
 class JsonSchema extends Json
 {
+    /**
+     * @var string|null
+     */
     private $uri;
 
     public function __construct($content, $uri = null)
@@ -35,6 +38,12 @@ class JsonSchema extends Json
         parent::__construct($content);
     }
 
+    /**
+     * Resolve json ref
+     *
+     * @param SchemaStorage $resolver
+     * @return JsonSchema
+     */
     public function resolve(SchemaStorage $resolver)
     {
         if (!$this->hasUri()) {
@@ -46,6 +55,13 @@ class JsonSchema extends Json
         return $this;
     }
 
+    /**
+     * Validate json schema
+     *
+     * @param Json $json
+     * @param Validator $validator
+     * @return boolean
+     */
     public function validate(Json $json, Validator $validator)
     {
         $validator->validate($json->getContent(), $this->getContent());
@@ -61,6 +77,11 @@ class JsonSchema extends Json
         return true;
     }
 
+    /**
+     * Check if uri is defined
+     *
+     * @return boolean
+     */
     private function hasUri()
     {
         return null !== $this->uri;

@@ -36,6 +36,13 @@ class JsonInspector
         $this->accessor = new PropertyAccessor(false, true);
     }
 
+    /**
+     * Evaluate json
+     *
+     * @param Json $json
+     * @param string $expression
+     * @return string
+     */
     public function evaluate(Json $json, $expression)
     {
         $expression = str_replace('->', '.', $expression);
@@ -47,6 +54,13 @@ class JsonInspector
         }
     }
 
+    /**
+     * Validate json
+     *
+     * @param Json $json
+     * @param JsonSchema $schema
+     * @return boolean
+     */
     public function validate(Json $json, JsonSchema $schema)
     {
         $validator = new Validator();

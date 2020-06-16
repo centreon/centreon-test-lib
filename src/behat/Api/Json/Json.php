@@ -25,6 +25,9 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class Json
 {
+    /**
+     * @var array
+     */
     protected $content;
 
     public function __construct($content)
@@ -32,11 +35,23 @@ class Json
         $this->content = $this->decode((string) $content);
     }
 
+    /**
+     * content getter
+     *
+     * @return array
+     */
     public function getContent()
     {
         return $this->content;
     }
 
+    /**
+     * read json and get value corresponding to the accessor
+     *
+     * @param array|string $expression
+     * @param PropertyAccessor $accessor
+     * @return array|string
+     */
     public function read($expression, PropertyAccessor $accessor)
     {
         if (is_array($this->content)) {
@@ -53,6 +68,12 @@ class Json
         return $accessor->getValue($this->content, $expression);
     }
 
+    /**
+     * Encode json
+     *
+     * @param boolean $pretty
+     * @return string
+     */
     public function encode($pretty = true)
     {
         $flags = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
@@ -64,11 +85,22 @@ class Json
         return json_encode($this->content, $flags);
     }
 
+    /**
+     * Convert to string
+     *
+     * @return string
+     */
     public function __toString()
     {
         return $this->encode(false);
     }
 
+    /**
+     * Decode json
+     *
+     * @param string $content
+     * @return array|string
+     */
     private function decode($content)
     {
         $result = json_decode($content);

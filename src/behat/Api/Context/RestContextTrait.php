@@ -29,6 +29,12 @@ use Symfony\Component\HttpClient\Response\CurlResponse;
 
 Trait RestContextTrait
 {
+    /**
+     * Parse URI path
+     *
+     * @param string $path
+     * @return string
+     */
     public function locatePath($path)
     {
         return 0 !== strpos($path, 'http')

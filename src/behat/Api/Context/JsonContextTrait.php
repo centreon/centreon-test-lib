@@ -438,11 +438,23 @@ Trait JsonContextTrait
         }, 'JSON Schema matches but it should not');
     }
 
+    /**
+     * Get response content as json
+     *
+     * @return Json
+     */
     protected function getJson()
     {
         return new Json($this->getHttpResponse()->getContent());
     }
 
+    /**
+     * Check if given parameter is a file
+     *
+     * @param string $filename
+     * @return void
+     * @throws \RuntimeException
+     */
     private function checkSchemaFile($filename)
     {
         if (false === is_file($filename)) {
