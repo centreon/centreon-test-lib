@@ -159,37 +159,11 @@ class ApiContext implements Context
     }
 
     /**
-     * Waiting an action
-     *
-     * @param closure $closure The function to execute for test the loading.
-     * @param string $timeoutMsg The custom message on timeout.
-     * @param int $wait The timeout in seconds.
-     * @return bool
-     * @throws \Exception
+     *  Set containers Compose files.
      */
-    public function spin($closure, $timeoutMsg = 'Load timeout', $wait = 60)
+    public function setContainersComposeFiles($files)
     {
-        $limit = time() + $wait;
-        $lastException = null;
-        while (time() <= $limit) {
-            try {
-                if ($closure($this)) {
-                    return true;
-                }
-            } catch (\Exception $e) {
-                $lastException = $e;
-            }
-            sleep(1);
-        }
-        if (is_null($lastException)) {
-            throw new \Exception($timeoutMsg);
-        } else {
-            throw new \Exception(
-                $timeoutMsg . ': ' . $lastException->getMessage() . ' (code ' .
-                $lastException->getCode() . ', file ' . $lastException->getFile() .
-                ':' . $lastException->getLine() . ')'
-            );
-        }
+        $this->composeFiles = $files;
     }
 
     /**
@@ -197,7 +171,6 @@ class ApiContext implements Context
      */
     public function getContainerComposeFile($name)
     {
-        $this->composeFiles[$name] = 'mon-' . $name . '-dev.yml';
         if (empty($this->composeFiles[$name])) {
             throw new \Exception("Can't get container compose file of " . $name);
         }
@@ -234,6 +207,40 @@ class ApiContext implements Context
             'timeout',
             15
         );
+    }
+
+    /**
+     * Waiting an action
+     *
+     * @param closure $closure The function to execute for test the loading.
+     * @param string $timeoutMsg The custom message on timeout.
+     * @param int $wait The timeout in seconds.
+     * @return bool
+     * @throws \Exception
+     */
+    public function spin($closure, $timeoutMsg = 'Load timeout', $wait = 60)
+    {
+        $limit = time() + $wait;
+        $lastException = null;
+        while (time() <= $limit) {
+            try {
+                if ($closure($this)) {
+                    return true;
+                }
+            } catch (\Exception $e) {
+                $lastException = $e;
+            }
+            sleep(1);
+        }
+        if (is_null($lastException)) {
+            throw new \Exception($timeoutMsg);
+        } else {
+            throw new \Exception(
+                $timeoutMsg . ': ' . $lastException->getMessage() . ' (code ' .
+                $lastException->getCode() . ', file ' . $lastException->getFile() .
+                ':' . $lastException->getLine() . ')'
+            );
+        }
     }
 
     /**
