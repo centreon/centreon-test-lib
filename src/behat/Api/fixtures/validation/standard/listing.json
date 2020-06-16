@@ -1,0 +1,36 @@
+{
+    "type": "object",
+    "required": [ "result", "meta" ],
+    "properties": {
+        "result": {
+            "type": "array",
+            "items": {
+                "type": "object"
+            }
+        },
+        "meta": {
+            "type": "object",
+            "required": [ "page", "limit", "total", "search", "sort_by" ],
+            "properties": {
+                "page": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "limit": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "total": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "search": {
+                    "type": "object"
+                },
+                "sort_by": {
+                    "type": "object"
+                }
+            }
+        }
+    }
+}
