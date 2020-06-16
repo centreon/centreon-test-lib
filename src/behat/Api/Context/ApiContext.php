@@ -22,6 +22,7 @@
 namespace Centreon\Test\Behat\Api\Context;
 
 use Behat\Behat\Context\Context;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Symfony\Component\HttpClient\CurlHttpClient;
 use Symfony\Component\HttpClient\Response\CurlResponse;
 use Symfony\Component\HttpClient\HttpClient;
@@ -35,6 +36,11 @@ use Centreon\Test\Behat\Api\Context\RestContextTrait;
 class ApiContext implements Context
 {
     use JsonContextTrait, RestContextTrait;
+
+    /**
+     * @var Container
+     */
+    public $container;
 
     /**
      * @var CurlHttpClient
@@ -175,6 +181,124 @@ class ApiContext implements Context
             throw new \Exception("Can't get container compose file of " . $name);
         }
         return $this->composeFiles[$name];
+    }
+
+    /**
+     *  Unset container.
+     *
+     *  This will effectively stop and remove the container attached to
+     *  this context if one was launched.
+     *
+     * @AfterScenario
+     */
+    public function unsetContainer(AfterScenarioScope $scope)
+    {
+        // Failure logs.
+        if (isset($this->container) && !$scope->getTestResult()->isPassed()) {
+            $scenarioTitle = preg_replace('/(\s|\/)+/', '_', $scope->getScenario()->getTitle());
+            $filename = $this->composeFiles['log_directory'] . '/'
+                . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-' . $scenarioTitle . '.txt';
+
+            // Container logs.
+            $logTitle = "\n"
+                . "##################\n"
+                . "# Container logs #\n"
+                . "##################\n\n";
+            file_put_contents($filename, $logTitle);
+            file_put_contents($filename, $this->container->getLogs(), FILE_APPEND);
+
+            // Centreon Engine logs.
+            $logTitle = "\n\n"
+                . "###############\n"
+                . "# Engine logs #\n"
+                . "###############\n\n";
+            $output = $this->container->execute(
+                'cat /var/log/centreon-engine/centengine.log 2>/dev/null',
+                'web',
+                false
+            );
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // Centreon Broker logs.
+            $logTitle = "\n\n"
+                . "###############\n"
+                . "# Broker logs #\n"
+                . "###############\n\n";
+            $output = $this->container->execute(
+                'bash -c "cat /var/log/centreon-broker/*.log 2>/dev/null"',
+                'web',
+                false
+            );
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // Centreon Broker logs.
+            $logTitle = "\n\n"
+                . "#################\n"
+                . "# Gorgone logs #\n"
+                . "#################\n\n";
+            $output = $this->container->execute('cat /var/log/centreon-gorgone/gorgoned.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // Centreon SQL errors.
+            $logTitle = "\n\n"
+                . "#######################\n"
+                . "# Centreon sql errors #\n"
+                . "#######################\n\n";
+            $output = $this->container->execute('cat /var/log/centreon/sql-error.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // MySQL errors.
+            $logTitle = "\n\n"
+                . "################\n"
+                . "# Mysql errors #\n"
+                . "################\n\n";
+            $output = $this->container->execute('bash -c "cat /var/lib/mysql/*.err 2>/dev/null"', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // Centreon LDAP logs.
+            $logTitle = "\n\n"
+                . "######################\n"
+                . "# Centreon LDAP logs #\n"
+                . "######################\n\n";
+            $output = $this->container->execute('cat /var/log/centreon/ldap.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // MySQL process list.
+            $logTitle = "\n\n"
+                . "######################\n"
+                . "# Mysql process list #\n"
+                . "######################\n\n";
+            $output = $this->container->execute('mysql -e "SHOW FULL PROCESSLIST" 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // MySQL slow queries.
+            $logTitle = "\n\n"
+                . "######################\n"
+                . "# Mysql slow queries #\n"
+                . "######################\n\n";
+            $output = $this->container->execute('cat /var/lib/mysql/slow_queries.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // MySQL queries.
+            $logTitle = "\n\n"
+                . "#################\n"
+                . "# Mysql queries #\n"
+                . "#################\n\n";
+            $output = $this->container->execute('cat /var/lib/mysql/queries.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+        }
+
+        // Destroy container.
+        unset($this->container);
     }
 
     /**
