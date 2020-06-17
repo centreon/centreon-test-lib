@@ -92,7 +92,7 @@ Trait RestContextTrait
      *
      * @Given I send a :method request to :url
      */
-    public function iSendARequestTo($method, $url, $body = null, $files = [])
+    public function iSendARequestTo($method, $url, $body = null)
     {
         if ($body !== null) {
             if (is_string($body)) {
@@ -111,8 +111,7 @@ Trait RestContextTrait
                 [
                     'headers' => $this->getHttpHeaders(),
                     'body' => $body !== null ? $body->getRaw() : null
-                ],
-                $files
+                ]
             )
         );
 
@@ -126,7 +125,6 @@ Trait RestContextTrait
      */
     public function iSendARequestToWithParameters($method, $url, TableNode $data)
     {
-        $files = [];
         $parameters = [];
 
         foreach ($data->getHash() as $row) {
@@ -140,8 +138,7 @@ Trait RestContextTrait
         return $this->getHttpClient()->request(
             $method,
             $this->locatePath($url),
-            $parameters,
-            $files
+            $parameters
         );
     }
 
@@ -186,9 +183,15 @@ Trait RestContextTrait
      *
      * @Then the header :name should be equal to :value
      */
-    public function theHeaderShouldBeEqualTo($name, $value)
+    public function theHeaderShouldBeEqualTo(string $name, string $value)
     {
-        $actual = $this->getHttpResponse()->getHeaders()[$name];
+        $this->theHeaderShouldExist($name);
+
+        /**
+         * @var string
+         */
+        $actual = $this->getHttpResponse()->getHeaders()['name'];
+
         Assert::eq(
             strtolower($value),
             strtolower($actual),
@@ -202,7 +205,13 @@ Trait RestContextTrait
     * @Then the header :name should not be equal to :value
     */
     public function theHeaderShouldNotBeEqualTo($name, $value) {
-        $actual = $this->getHttpResponse()->getHeaders()[$name];
+        $this->theHeaderShouldExist($name);
+
+        /**
+         * @var string
+         */
+        $actual = $this->getHttpResponse()->getHeaders()['name'];
+
         Assert::notEq(
             strtolower($value),
             strtolower($actual),
@@ -217,7 +226,13 @@ Trait RestContextTrait
      */
     public function theHeaderShouldContain($name, $value)
     {
-        $actual = $this->getHttpResponse()->getHeaders()[$name];
+        $this->theHeaderShouldExist($name);
+
+        /**
+         * @var string
+         */
+        $actual = $this->getHttpResponse()->getHeaders()['name'];
+
         Assert::contains(
             $value,
             $actual,
@@ -230,7 +245,7 @@ Trait RestContextTrait
      *
      * @Then the header :name should not contain :value
      */
-    public function theHeaderShouldNotContain($name, $value)
+    public function theHeaderShouldNotContain(string $name, string $value)
     {
         Assert::notContains(
             $value,
@@ -240,29 +255,50 @@ Trait RestContextTrait
     }
 
     /**
-     * Checks, whether the header not exist
+     * Checks, whether the header not exists
      *
      * @Then the header :name should not exist
      */
-    public function theHeaderShouldNotExist($name)
+    public function theHeaderShouldNotExist(string $name)
     {
-        Assert::false(
-            $this->theHeaderShouldExist($name),
-            "The header '$name' exists"
+        $headers = $this->getHttpResponse()->getHeaders();
+
+        Assert::keyNotExists(
+            $headers,
+            $name,
+            "Header '$name' exists."
         );
     }
 
-    protected function theHeaderShouldExist($name)
+    /**
+     * Checks, whether the header exists
+     *
+     * @Then the header :name should exist
+     */
+    public function theHeaderShouldExist(string $name)
     {
+        $headers = $this->getHttpResponse()->getHeaders();
+
+        Assert::keyExists(
+            $headers,
+            $name,
+            "Header '$name' does not exist."
+        );
+
         return isset($this->$this->getHttpResponse()->getHeaders()[$name]);
     }
 
     /**
      * @Then the header :name should match :regex
      */
-    public function theHeaderShouldMatch($name, $regex)
+    public function theHeaderShouldMatch(string $name, string $regex)
     {
-        $actual = $this->getHttpResponse()->getHeaders()[$name];
+        $this->theHeaderShouldExist($name);
+
+        /**
+         * @var string
+         */
+        $actual = $this->getHttpResponse()->getHeaders()['name'];
 
         Assert::eq(
             1,
@@ -320,20 +356,6 @@ Trait RestContextTrait
         }
 
         $this->theHeaderShouldContain('Content-Type', "charset=$encoding");
-    }
-
-    /**
-     * @Then print last response headers
-     */
-    public function printLastResponseHeaders()
-    {
-        $text = '';
-        $headers = $this->getHttpResponse()->getHeaders();
-
-        foreach ($headers as $name => $value) {
-            $text .= $name . ': '. $value . "\n";
-        }
-        echo $text;
     }
 
     /**

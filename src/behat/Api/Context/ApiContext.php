@@ -120,7 +120,8 @@ class ApiContext implements Context
     }
 
     /**
-     * @param array $httpHeader
+     * @param string $name
+     * @param string $value
      * @return void
      */
     protected function addHttpHeader(string $name, string $value)
@@ -351,13 +352,13 @@ class ApiContext implements Context
     /**
      * Waiting an action
      *
-     * @param closure $closure The function to execute for test the loading.
+     * @param \Closure $closure The function to execute for test the loading.
      * @param string $timeoutMsg The custom message on timeout.
      * @param int $wait The timeout in seconds.
      * @return bool
      * @throws \Exception
      */
-    public function spin($closure, $timeoutMsg = 'Load timeout', $wait = 60)
+    public function spin(\Closure $closure, string $timeoutMsg = 'Load timeout', int $wait = 60)
     {
         $limit = time() + $wait;
         $lastException = null;
