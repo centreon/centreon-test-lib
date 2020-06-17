@@ -438,23 +438,11 @@ Trait JsonContextTrait
         }, 'JSON Schema matches but it should not');
     }
 
-    /**
-     * Get response content as json
-     *
-     * @return Json
-     */
     protected function getJson()
     {
         return new Json($this->getHttpResponse()->getContent());
     }
 
-    /**
-     * Check if given parameter is a file
-     *
-     * @param string $filename
-     * @return void
-     * @throws \RuntimeException
-     */
     private function checkSchemaFile($filename)
     {
         if (false === is_file($filename)) {
@@ -466,6 +454,16 @@ Trait JsonContextTrait
 
     /**
      * Validate response following json format file
+     *
+     * @Given the response use ":type" standard JSON format
+     */
+    public function theResponseUseStandardJsonFormat(string $type)
+    {
+        $this->theResponseShouldBeFormattedLikeJsonFormat('standard/' . $type . '.json');
+    }
+
+    /**
+     * Validate response following standard json format file
      *
      * @Given the response should be formatted like JSON format ":path"
      */
