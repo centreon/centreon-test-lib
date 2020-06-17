@@ -76,8 +76,11 @@ Trait JsonContextTrait
      */
     public function theResponseShouldNotBeInJson()
     {
-        $this->not(
-            [$this, 'theResponseShouldBeInJson'],
+        Assert::throws(
+            function () {
+                return $this->theResponseShouldBeInJson();
+            },
+            'Exception',
             'The response is in JSON'
         );
     }
@@ -154,9 +157,10 @@ Trait JsonContextTrait
      */
     public function theJsonNodeShouldNotBeNull($node)
     {
-        $this->not(function () use ($node) {
-            return $this->theJsonNodeShouldBeNull($node);
-        }, sprintf('The node %s should not be null', $node));
+        Assert::false(
+            $this->theJsonNodeShouldBeNull($node),
+            sprintf('The node %s should not be null', $node)
+        );
     }
 
     /**
@@ -321,9 +325,10 @@ Trait JsonContextTrait
      */
     public function theJsonNodeShouldNotExist($name)
     {
-        $this->not(function () use ($name) {
-            return $this->theJsonNodeShouldExist($name);
-        }, "The node '$name' exists.");
+        Assert::false(
+            $this->theJsonNodeShouldExist($name),
+            "The node '$name' exists."
+        );
     }
 
     /**
@@ -342,9 +347,10 @@ Trait JsonContextTrait
      */
     public function theJsonShouldBeInvalidAccordingToThisSchema(PyStringNode $schema)
     {
-        $this->not(function () use ($schema) {
-            return $this->theJsonShouldBeValidAccordingToThisSchema($schema);
-        }, 'Expected to receive invalid json, got valid one');
+        Assert::false(
+            $this->theJsonShouldBeValidAccordingToThisSchema($schema),
+            'Expected to receive invalid json, got valid one'
+        );
     }
 
     /**
@@ -370,9 +376,10 @@ Trait JsonContextTrait
     {
         $this->checkSchemaFile($filename);
 
-        $this->not(function () use ($filename) {
-            return $this->theJsonShouldBeValidAccordingToTheSchema($filename);
-        }, "The schema was valid");
+        Assert::false(
+            $this->theJsonShouldBeValidAccordingToTheSchema($filename),
+            'The schema was valid'
+        );
     }
 
     /**
@@ -433,9 +440,10 @@ Trait JsonContextTrait
      */
     public function theJsonShouldNotBeValidAccordingToTheSwaggerSchema($dumpPath, $schemaName)
     {
-        $this->not(function () use ($dumpPath, $schemaName) {
-            return $this->theJsonShouldBeValidAccordingToTheSwaggerSchema($dumpPath, $schemaName);
-        }, 'JSON Schema matches but it should not');
+        Assert::false(
+            $this->theJsonShouldBeValidAccordingToTheSwaggerSchema($dumpPath, $schemaName),
+            'JSON Schema matches but it should not'
+        );
     }
 
     protected function getJson()

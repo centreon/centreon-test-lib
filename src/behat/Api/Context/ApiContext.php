@@ -43,6 +43,12 @@ class ApiContext implements Context
     public $container;
 
     /**
+     * @var array List of container Compose files.
+     */
+    protected $composeFiles;
+
+
+    /**
      * @var CurlHttpClient
      */
     protected $httpClient;
@@ -111,6 +117,15 @@ class ApiContext implements Context
     protected function setHttpHeaders(array $httpHeaders)
     {
         $this->httpHeaders = $httpHeaders;
+    }
+
+    /**
+     * @param array $httpHeader
+     * @return void
+     */
+    protected function addHttpHeader(string $name, string $value)
+    {
+        $this->httpHeaders[$name] = $value;
     }
 
     /**

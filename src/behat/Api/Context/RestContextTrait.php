@@ -65,6 +65,12 @@ Trait RestContextTrait
     abstract protected function setHttpHeaders(array $httpHeaders);
 
     /**
+     * @param array $httpHeader
+     * @return void
+     */
+    abstract protected function addHttpHeader(string $name, string $value);
+
+    /**
      * @return CurlResponse
      */
     abstract protected function getHttpResponse();
@@ -128,12 +134,7 @@ Trait RestContextTrait
                 throw new \Exception("You must provide a 'key' and 'value' column in your table node.");
             }
 
-            if (is_string($row['value']) && substr($row['value'], 0, 1) == '@') {
-                $files[$row['key']] = rtrim($this->getMinkParameter('files_path'), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.substr($row['value'],1);
-            }
-            else {
-                $parameters[$row['key']] = $row['value'];
-            }
+            $parameters[$row['key']] = $row['value'];
         }
 
         return $this->getHttpClient()->request(
@@ -245,10 +246,8 @@ Trait RestContextTrait
      */
     public function theHeaderShouldNotExist($name)
     {
-        Assert::not(
-            function () use($name) {
-                $this->theHeaderShouldExist($name);
-            },
+        Assert::false(
+            $this->theHeaderShouldExist($name),
             "The header '$name' exists"
         );
     }
@@ -277,10 +276,8 @@ Trait RestContextTrait
      */
     public function theHeaderShouldNotMatch($name, $regex)
     {
-        Assert::not(
-            function () use ($name, $regex) {
-                $this->theHeaderShouldMatch($name, $regex);
-            },
+        Assert::false(
+            $this->theHeaderShouldMatch($name, $regex),
             "The header '$name' should not match '$regex'"
         );
     }
@@ -309,7 +306,7 @@ Trait RestContextTrait
      */
     public function iAddHeaderEqualTo($name, $value)
     {
-        $this->request->setHttpHeader($name, $value);
+        $this->addHttpHeader($name, $value);
     }
 
     /**
@@ -317,7 +314,7 @@ Trait RestContextTrait
      */
     public function theResponseShouldBeEncodedIn($encoding)
     {
-        $content = $this->getHttpReponse()->getContent();
+        $content = $this->getHttpResponse()->getContent();
         if (!mb_check_encoding($content, $encoding)) {
             throw new \Exception("The response is not encoded in $encoding");
         }
@@ -337,32 +334,6 @@ Trait RestContextTrait
             $text .= $name . ': '. $value . "\n";
         }
         echo $text;
-    }
-
-
-    /**
-     * @Then print the corresponding curl command
-     */
-    public function printTheCorrespondingCurlCommand()
-    {
-        $method = $this->request->getMethod();
-        $url = $this->request->getUri();
-
-        $headers = '';
-        foreach ($this->request->getServer() as $name => $value) {
-            if (substr($name, 0, 5) !== 'HTTP_' && $name !== 'HTTPS') {
-                $headers .= " -H '$name: $value'";
-            }
-        }
-
-        $data = '';
-        $params = $this->request->getParameters();
-        if (!empty($params)) {
-            $query = http_build_query($params);
-            $data = " --data '$query'" ;
-        }
-
-        echo "curl -X $method$data$headers '$url'";
     }
 
     /**
