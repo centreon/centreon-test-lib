@@ -445,4 +445,22 @@ class ApiContext implements Context
         $this->theResponseCodeShouldBe(200);
         $this->theResponseShouldBeFormattedLikeJsonFormat("monitoring/service/" . $type . ".json");
     }
+
+    /**
+     * Wait host to be monitored
+     *
+     * @Given I wait until host :host is monitored
+     */
+    public function iWaitUntilHostIsMonitored(string $host)
+    {
+        $this->spin(
+            function() use ($host) {
+                $this->iSendARequestTo('GET', '/beta/monitoring/hosts?search={"host.name":"' . $host . '"}');
+                $this->theJsonNodeShouldHaveElements('result', 1);
+                return true;
+            },
+            'the host ' . $host . ' seems not monitored',
+            10
+        );
+    }
 }
