@@ -172,11 +172,10 @@ Trait JsonContextTrait
 
         $actual = $this->getInspector()->evaluate($json, $node);
 
-        if (true !== $actual) {
-            throw new \Exception(
-                sprintf('The node value is `%s`', json_encode($actual))
-            );
-        }
+        Assert::true(
+            $actual,
+            sprintf('The node value is `%s`', json_encode($actual))
+        );
     }
 
     /**
@@ -190,11 +189,10 @@ Trait JsonContextTrait
 
         $actual = $this->getInspector()->evaluate($json, $node);
 
-        if (false !== $actual) {
-            throw new \Exception(
-                sprintf('The node value is `%s`', json_encode($actual))
-            );
-        }
+        Assert::false(
+            $actual,
+            sprintf('The node value is `%s`', json_encode($actual))
+        );
     }
 
     /**
@@ -206,13 +204,13 @@ Trait JsonContextTrait
     {
         $json = $this->getJson();
 
-        $actual = $this->getInspector()->evaluate($json, $node);
+        $actual = trim($this->getInspector()->evaluate($json, $node), '"');
 
-        if ($actual !== $text) {
-            throw new \Exception(
-                sprintf('The node value is `%s`', json_encode($actual))
-            );
-        }
+        Assert::same(
+            $actual,
+            $text,
+            sprintf('The node value is `%s`', json_encode($actual))
+        );
     }
 
     /**
@@ -244,7 +242,7 @@ Trait JsonContextTrait
 
         $actual = $this->getInspector()->evaluate($json, $node);
 
-        Assert::same($count, sizeof((array) $actual));
+        Assert::count(json_decode($actual, true), $count);
     }
 
     /**
@@ -284,7 +282,7 @@ Trait JsonContextTrait
 
         $actual = $this->getInspector()->evaluate($json, $node);
 
-        Assert::notContains($text, (string) $actual);
+        Assert::notContains((string) $actual, $text);
     }
 
     /**

@@ -35,7 +35,7 @@ use Centreon\Test\Behat\Api\Context\RestContextTrait;
  */
 class ApiContext implements Context
 {
-    use JsonContextTrait, RestContextTrait;
+    use JsonContextTrait, RestContextTrait, CentreonClapiContextTrait;
 
     /**
      * @var Container
@@ -77,6 +77,23 @@ class ApiContext implements Context
     {
         $this->setHttpClient(HttpClient::create());
         $this->setHttpHeaders(['Content-Type' => 'application/json']);
+    }
+
+    /**
+     * @return Container
+     */
+    protected function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * @param Container $container
+     * @return void
+     */
+    protected function setContainer(Container $container)
+    {
+        $this->container = $container;
     }
 
     /**
