@@ -21,7 +21,7 @@
 
 namespace Centreon\Test\Behat\Api\Context;
 
-use Symfony\Component\HttpClient\Response\CurlResponse;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Webmozart\Assert\Assert;
@@ -32,29 +32,27 @@ use Centreon\Test\Behat\Api\Json\JsonInspector;
 Trait JsonContextTrait
 {
     /**
-     * @var JsonSchema
+     * @var JsonInspector
      */
     protected $inspector;
 
     /**
-     * @return CurlResponse
+     * @return ResponseInterface
      */
     abstract protected function getHttpResponse();
 
     /**
-     * @param CurlResponse $httpResponse
+     * @param ResponseInterface $httpResponse
      * @return void
      */
-    abstract protected function setHttpResponse(CurlResponse $httpResponse);
+    abstract protected function setHttpResponse(ResponseInterface $httpResponse);
 
     /**
      * @return JsonInspector
      */
     private function getInspector()
     {
-        if (is_null($this->inspector)) {
-            $this->inspector = new JsonInspector();
-        }
+        $this->inspector = new JsonInspector();
 
         return $this->inspector;
     }
@@ -228,11 +226,11 @@ Trait JsonContextTrait
 
         $actual = $this->getInspector()->evaluate($json, $node);
 
-        if ($actual !== (float) $number && $actual !== (int) $number) {
-            throw new \Exception(
-                sprintf('The node value is `%s`', json_encode($actual))
-            );
-        }
+        Assert::same(
+            $actual,
+            $number,
+            sprintf('The node value is `%s`', json_encode($actual))
+        );
     }
 
     /**

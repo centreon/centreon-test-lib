@@ -64,10 +64,11 @@ class JsonSchema extends Json
      */
     public function validate(Json $json, Validator $validator)
     {
-        $validator->validate($json->getContent(), $this->getContent());
+        $jsonContent = $json->getContent();
+        $validator->validate($jsonContent, $this->getContent());
 
         if (!$validator->isValid()) {
-            $msg = "JSON does not validate. Violations:".PHP_EOL;
+            $msg = "JSON does not validate. Violations:" . PHP_EOL;
             foreach ($validator->getErrors() as $error) {
                 $msg .= sprintf("  - [%s] %s".PHP_EOL, $error['property'], $error['message']);
             }

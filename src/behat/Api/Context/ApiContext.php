@@ -23,8 +23,8 @@ namespace Centreon\Test\Behat\Api\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
-use Symfony\Component\HttpClient\CurlHttpClient;
-use Symfony\Component\HttpClient\Response\CurlResponse;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 use Symfony\Component\HttpClient\HttpClient;
 use Centreon\Test\Behat\Container;
 use Centreon\Test\Behat\Api\Context\JsonContextTrait;
@@ -49,7 +49,7 @@ class ApiContext implements Context
 
 
     /**
-     * @var CurlHttpClient
+     * @var HttpClientInterface
      */
     protected $httpClient;
 
@@ -69,7 +69,7 @@ class ApiContext implements Context
     protected $token;
 
     /**
-     * @var CurlResponse
+     * @var ResponseInterface
      */
     protected $httpResponse;
 
@@ -80,7 +80,7 @@ class ApiContext implements Context
     }
 
     /**
-     * @return CurlHttpClient
+     * @return HttpClientInterface
      */
     protected function getHttpClient()
     {
@@ -88,10 +88,10 @@ class ApiContext implements Context
     }
 
     /**
-     * @param CurlHttpClient $httpClient
+     * @param HttpClientInterface $httpClient
      * @return void
      */
-    protected function setHttpClient(CurlHttpClient $httpClient)
+    protected function setHttpClient(HttpClientInterface $httpClient)
     {
         $this->httpClient = $httpClient;
     }
@@ -164,7 +164,7 @@ class ApiContext implements Context
     }
 
     /**
-     * @return CurlResponse
+     * @return ResponseInterface
      */
     protected function getHttpResponse()
     {
@@ -172,10 +172,10 @@ class ApiContext implements Context
     }
 
     /**
-     * @param CurlResponse $httpResponse
+     * @param ResponseInterface $httpResponse
      * @return void
      */
-    protected function setHttpResponse(CurlResponse $httpResponse)
+    protected function setHttpResponse(ResponseInterface $httpResponse)
     {
         $this->httpResponse = $httpResponse;
     }

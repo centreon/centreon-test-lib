@@ -26,7 +26,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 class Json
 {
     /**
-     * @var array
+     * @var \stdClass|array|null
      */
     protected $content;
 
@@ -38,7 +38,7 @@ class Json
     /**
      * content getter
      *
-     * @return array
+     * @return \stdClass|array|null
      */
     public function getContent()
     {

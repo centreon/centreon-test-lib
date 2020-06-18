@@ -25,7 +25,7 @@ use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Webmozart\Assert\Assert;
 use Symfony\Component\HttpClient\CurlHttpClient;
-use Symfony\Component\HttpClient\Response\CurlResponse;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 Trait RestContextTrait
 {
@@ -71,15 +71,15 @@ Trait RestContextTrait
     abstract protected function addHttpHeader(string $name, string $value);
 
     /**
-     * @return CurlResponse
+     * @return ResponseInterface
      */
     abstract protected function getHttpResponse();
 
     /**
-     * @param CurlResponse $httpResponse
+     * @param ResponseInterface $httpResponse
      * @return void
      */
-    abstract protected function setHttpResponse(CurlResponse $httpResponse);
+    abstract protected function setHttpResponse(ResponseInterface $httpResponse);
 
     /**
      * @return string
@@ -88,7 +88,7 @@ Trait RestContextTrait
 
     /**
      * Sends a HTTP request
-     * @return CurlResponse
+     * @return ResponseInterface
      *
      * @Given I send a :method request to :url
      */
@@ -175,7 +175,7 @@ Trait RestContextTrait
     {
         $actual = $this->getHttpResponse()->getContent();
         $message = "The response of the current page is not empty, it is: $actual";
-        Assert::true(null === $actual || "" === $actual, $message);
+        Assert::isEmpty($actual, $message);
     }
 
     /**
@@ -190,7 +190,7 @@ Trait RestContextTrait
         /**
          * @var string
          */
-        $actual = $this->getHttpResponse()->getHeaders()['name'];
+        $actual = $this->getHttpResponse()->getHeaders()[$name];
 
         Assert::eq(
             strtolower($value),
@@ -210,7 +210,7 @@ Trait RestContextTrait
         /**
          * @var string
          */
-        $actual = $this->getHttpResponse()->getHeaders()['name'];
+        $actual = $this->getHttpResponse()->getHeaders()[$name];
 
         Assert::notEq(
             strtolower($value),
@@ -231,7 +231,7 @@ Trait RestContextTrait
         /**
          * @var string
          */
-        $actual = $this->getHttpResponse()->getHeaders()['name'];
+        $actual = $this->getHttpResponse()->getHeaders()[$name];
 
         Assert::contains(
             $value,
@@ -247,9 +247,16 @@ Trait RestContextTrait
      */
     public function theHeaderShouldNotContain(string $name, string $value)
     {
+        $this->theHeaderShouldExist($name);
+
+        /**
+         * @var string
+         */
+        $actual = $this->getHttpResponse()->getHeaders()[$name];
+
         Assert::notContains(
             $value,
-            $this->getHttpResponse()->getHeaders()[$name],
+            $actual,
             "The header '$name' contains '$value'"
         );
     }
@@ -298,7 +305,7 @@ Trait RestContextTrait
         /**
          * @var string
          */
-        $actual = $this->getHttpResponse()->getHeaders()['name'];
+        $actual = $this->getHttpResponse()->getHeaders()[$name];
 
         Assert::eq(
             1,
