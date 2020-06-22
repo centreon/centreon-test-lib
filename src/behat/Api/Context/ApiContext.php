@@ -463,4 +463,22 @@ class ApiContext implements Context
             10
         );
     }
+
+    /**
+     * Wait service to be monitored
+     *
+     * @Given I wait until service :service is monitored
+     */
+    public function iWaitUntilServiceIsMonitored(string $resource)
+    {
+        $this->spin(
+            function() use ($resource) {
+                $this->iSendARequestTo('GET', '/beta/monitoring/services?search={"service.description":"' . $resource . '"}');
+                $this->theJsonNodeShouldHaveElements('result', 1);
+                return true;
+            },
+            'the resource ' . $resource . ' seems not monitored',
+            10
+        );
+    }
 }
