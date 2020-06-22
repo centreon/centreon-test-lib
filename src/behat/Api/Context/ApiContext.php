@@ -453,13 +453,41 @@ class ApiContext implements Context
      */
     public function iWaitUntilHostIsMonitored(string $host)
     {
+
+        $hostId = null;
         $this->spin(
-            function() use ($host) {
-                $this->iSendARequestTo('GET', '/beta/monitoring/hosts?search={"host.name":"' . $host . '"}');
+            function() use ($host,$hostId) {
+                $response = $this->iSendARequestTo('GET', '/beta/monitoring/hosts?search={"host.name":"' . $host . '"}');
+                
                 $this->theJsonNodeShouldHaveElements('result', 1);
+                $response = json_decode($response,true);
+                $hostId = $response["result"][0]['id'];
+
                 return true;
             },
             'the host ' . $host . ' seems not monitored',
+            10
+        );
+
+        return $hostId;
+    }
+
+    /**
+     * Wait service to be monitored
+     *
+     * @Given I wait until service :service from host :host is monitored
+     */
+    public function iWaitUntilServiceIsMonitored(string $service, string $host)
+    {
+        $hostId = $this->iWaitUntilHostIsMonitored($host);
+        
+        $this->spin(
+            function() use ($hostId,$service) {
+                $this->iSendARequestTo('GET', '/beta/monitoring/hosts/' . $hostId . '/services?search={"service.description":"' . $service . '"}');
+                $this->theJsonNodeShouldHaveElements('result', 1);
+                return true;
+            },
+            'the host ' . $service . ' seems not monitored',
             10
         );
     }
