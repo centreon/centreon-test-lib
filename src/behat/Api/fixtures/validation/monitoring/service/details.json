@@ -1,0 +1,117 @@
+{
+    "type": "object",
+    "required": [
+        "id", "description", "display_name", "state", "check_attempt", "icon_image", "icon_image_alt", "last_check", "last_state_change", "max_check_attempts", "output", "state_type", "criticality", "check_command", "check_interval", "check_period", "check_type", "check_type", "command_line", "execution_time", "is_acknowledged", "is_active_check", "is_checked", "last_hard_state_change", "last_notification", "last_time_critical", "last_time_ok", "last_time_unknown", "last_time_warning", "last_update", "latency", "next_check", "performance_data", "scheduled_downtime_depth", "downtimes", "acknowledgement"
+    ],
+    "properties": {
+        "id": {
+            "type": "number"
+        },
+        "description": {
+            "type": "string"
+        },
+        "display_name": {
+            "type": "string"
+        },
+        "state": {
+            "type": "number"
+        },
+        "check_attempt": {
+            "type": "string"
+        },
+        "icon_image": {
+            "type": ["null", "string"]
+        },
+        "icon_image_alt": {
+            "type": ["null", "string"]
+        },
+        "last_check": {
+            "type": ["null", "string"]
+        },
+        "last_state_change": {
+            "type": ["null", "string"]
+        },
+        "max_check_attempts": {
+            "type": "number"
+        },
+        "output": {
+            "type": "string"
+        },
+        "state_type": {
+            "type": "number"
+        },
+        "criticality": {
+            "type": ["null", "number"]
+        },
+        "check_command": {
+            "type": "string"
+        },
+        "check_interval": {
+            "type": "number"
+        },
+        "check_period": {
+            "type": "string"
+        },
+        "check_type": {
+            "type": "number"
+        },
+        "command_line": {
+            "type": ["null", "string"]
+        },
+        "execution_time": {
+            "type": ["null", "number"]
+        },
+        "is_acknowledged": {
+            "type": "boolean"
+        },
+        "is_active_check": {
+            "type": "boolean"
+        },
+        "is_checked": {
+            "type": "boolean"
+        },
+        "last_hard_state_change": {
+            "type": ["null", "string"]
+        },
+        "last_notification": {
+            "type": ["null", "string"]
+        },
+        "last_time_critical": {
+            "type": ["null", "string"]
+        },
+        "last_time_ok": {
+            "type": ["null", "string"]
+        },
+        "last_time_unknown": {
+            "type": ["null", "string"]
+        },
+        "last_time_warning": {
+            "type": ["null", "string"]
+        },
+        "last_update": {
+            "type": ["null", "string"]
+        },
+        "latency": {
+            "type": "number"
+        },
+        "next_check": {
+            "type": ["null","string"]
+        },
+        "performance_data": {
+            "type": "string"
+        },
+        "scheduled_downtime_depth": {
+            "type": "number"
+        },
+        "downtimes":
+        {
+            "type": ["null", "array"],
+            "items": {
+                "type": "object"
+            }
+        },
+        "acknowledgement": {
+            "type": ["null", "object"]             
+        }
+    }                
+}
