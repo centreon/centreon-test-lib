@@ -453,14 +453,13 @@ class ApiContext implements Context
      */
     public function iWaitUntilHostIsMonitored(string $host)
     {
-
         $hostId = null;
         $this->spin(
-            function() use ($host,$hostId) {
+            function() use ($host, &$hostId) {
                 $response = $this->iSendARequestTo('GET', '/beta/monitoring/hosts?search={"host.name":"' . $host . '"}');
                 
                 $this->theJsonNodeShouldHaveElements('result', 1);
-                $response = json_decode($response,true);
+                $response = json_decode($response->getContent(), true);
                 $hostId = $response["result"][0]['id'];
 
                 return true;
@@ -480,15 +479,21 @@ class ApiContext implements Context
     public function iWaitUntilServiceIsMonitored(string $service, string $host)
     {
         $hostId = $this->iWaitUntilHostIsMonitored($host);
-        
+        $serviceId= null;
         $this->spin(
-            function() use ($hostId,$service) {
-                $this->iSendARequestTo('GET', '/beta/monitoring/hosts/' . $hostId . '/services?search={"service.description":"' . $service . '"}');
+            function() use ($hostId, $service, &$serviceId) {
+                $response = $this->iSendARequestTo('GET', '/beta/monitoring/hosts/' . $hostId . '/services?search={"service.description":"' . $service . '"}');                
                 $this->theJsonNodeShouldHaveElements('result', 1);
+                $response = json_decode($response->getContent(), true);
+                
+                $serviceId = $response['result'][0]['id'];
+
                 return true;
             },
             'the host ' . $service . ' seems not monitored',
             10
         );
+        return [$hostId, $serviceId];
     }
 }
+
