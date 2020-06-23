@@ -456,8 +456,10 @@ class ApiContext implements Context
         $hostId = null;
         $this->spin(
             function() use ($host, &$hostId) {
-                $response = $this->iSendARequestTo('GET', '/beta/monitoring/hosts?search={"host.name":"' . $host . '"}');
-                
+                $response = $this->iSendARequestTo(
+                    'GET',
+                    '/beta/monitoring/hosts?search={"host.name":"' . $host . '"}'
+                );
                 $this->theJsonNodeShouldHaveElements('result', 1);
                 $response = json_decode($response->getContent(), true);
                 $hostId = $response["result"][0]['id'];
@@ -478,22 +480,28 @@ class ApiContext implements Context
      */
     public function iWaitUntilServiceIsMonitored(string $service, string $host)
     {
-        $hostId = $this->iWaitUntilHostIsMonitored($host);
-        $serviceId= null;
+        $hostId = null;
+        $serviceId = null;
+
         $this->spin(
-            function() use ($hostId, $service, &$serviceId) {
-                $response = $this->iSendARequestTo('GET', '/beta/monitoring/hosts/' . $hostId . '/services?search={"service.description":"' . $service . '"}');                
+            function() use ($host, $service, &$hostId, &$serviceId) {
+                $response = $this->iSendARequestTo(
+                    'GET',
+                    '/beta/monitoring/services?search='
+                        . '{"host.name":"' . $host . '","service.description":"' . $service . '"}'
+                );
                 $this->theJsonNodeShouldHaveElements('result', 1);
                 $response = json_decode($response->getContent(), true);
-                
+
+                $hostId = $response['result'][0]['host']['id'];
                 $serviceId = $response['result'][0]['id'];
 
                 return true;
             },
-            'the host ' . $service . ' seems not monitored',
+            'the service ' . $host . ' - ' . $service . ' seems not monitored',
             10
         );
+
         return [$hostId, $serviceId];
     }
 }
-
