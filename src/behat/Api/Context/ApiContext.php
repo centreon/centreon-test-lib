@@ -488,7 +488,7 @@ class ApiContext implements Context
                 $response = $this->iSendARequestTo(
                     'GET',
                     '/beta/monitoring/services?search='
-                        . '{"host.name":' . $host . '","service.description":"' . $service . '"}'
+                        . '{"host.name":"' . $host . '","service.description":"' . $service . '"}'
                 );
                 $this->theJsonNodeShouldHaveElements('result', 1);
                 $response = json_decode($response->getContent(), true);
@@ -505,4 +505,3 @@ class ApiContext implements Context
         return [$hostId, $serviceId];
     }
 }
-
