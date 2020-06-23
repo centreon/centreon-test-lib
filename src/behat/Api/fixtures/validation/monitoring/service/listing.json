@@ -31,16 +31,16 @@
                         "type": "number"
                     },
                     "icon_image": {
-                        "type": ["null","string"]
+                        "type": ["null", "string"]
                     },
                     "icon_image_alt": {
-                        "type": ["null","string"]
+                        "type": ["null", "string"]
                     },
                     "last_check": {
-                        "type": ["null","string"]
+                        "type": ["null", "string"]
                     },
                     "last_state_change": {
-                        "type": ["null","string"]
+                        "type": ["null", "string"]
                     },
                     "max_check_attempts": {
                         "type": "number"
@@ -52,7 +52,7 @@
                         "type": "number"
                     },
                     "criticality": {
-                        "type": ["null","number"]
+                        "type": ["null", "number"]
                     },
                     "host": {
                         "type": "object"
