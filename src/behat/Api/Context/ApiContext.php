@@ -504,4 +504,97 @@ class ApiContext implements Context
 
         return [$hostId, $serviceId];
     }
+
+    /**
+     * Send a downtime to a service
+     *
+     * @When I send a downtime on my service :service from host :host
+     */
+    public function iSendDonwtimeOnServiceFromHost(string $service, string $host)
+    {
+        [$hostId, $serviceId] = $this->iWaitUntilServiceIsMonitored($service, $host);
+
+        $objDateTime = new \DateTime('NOW');
+        $start = $objDateTime->format(\DateTime::ISO8601);
+        $objDateTime->add(new \DateInterval('PT1H'));
+        $end = $objDateTime->format(\DateTime::ISO8601);
+
+        $data = json_encode(
+            array(
+                "start_time" => $start,
+                "end_time" => $end,
+                "is_fixed" => true,
+                "duration" => 3600,
+                "author_id" => 1,
+                "comment" => "Downtime set by API",
+            )
+        );
+        $this->iSendARequestTo(
+            'POST',
+            '/beta/monitoring/hosts/' . $hostId . '/services/' . $serviceId . '/downtimes',
+            $data
+        );
+    }
+
+    /**
+     * List downtime for a service
+     *
+     * @When I list downtime of my service :servcie from host :host
+     */
+    public function iListDonwtimeOfServiceFromHost(string $service, string $host)
+    {
+        [$hostId, $serviceId] = $this->iWaitUntilServiceIsMonitored($service, $host);
+
+        $response = $this->iSendARequestTo(
+            'GET',
+            '/beta/monitoring/hosts/' . $hostId . '/services/' . $serviceId . '/downtimes'
+        );
+        $this->container->execute("php /usr/share/centreon/cron/downtimeManager.php", 'web');
+        $this->spin(
+            function () {
+                $this->theJsonNodeShouldHaveElements('result', 1);
+                return true;
+            },
+            'the host ' . $service . ' seems not monitored',
+            10
+        );
+        $response = json_decode($response->getContent(), true);
+        return $response['result'][0]['id'];
+    }
+
+    /**
+     * Cancel downtime for a service
+     *
+     * @When I cancel downtime of my service :service from host :host
+     */
+    public function iCancelDonwtimeOfServiceFromHost(string $service, string $host)
+    {
+        $downtimeId = $this->iListDonwtimeOfServiceFromHost($service, $host);
+
+        $response = $this->iSendARequestTo(
+            'DELETE',
+            '/beta/monitoring/downtimes/' . $downtimeId
+        );
+    }
+
+    /**
+     * check if a downtime for a service is canceled
+     *
+     * @When the downtime of my service :service from host :host is cancel
+     */
+    public function theDonwtimeOfServiceFromHostIsCancel(string $service, string $host)
+    {
+        [$hostId, $serviceId] = $this->iWaitUntilServiceIsMonitored($service, $host);
+
+        $response = $this->iSendARequestTo(
+            'GET',
+            '/beta/monitoring/hosts/' . $hostId . '/services/' . $serviceId . '/downtimes'
+        );
+        $this->theJsonNodeShouldHaveElements('result', 1);
+        $response = json_decode($response->getContent(), true);
+
+        if (!$response['result'][0]['is_cancelled']) {
+            throw new \Exception('the service ' . $service . ' is not cancel');
+        }
+    }
 }

@@ -1,0 +1,66 @@
+{
+    "type": "object",
+    "properties": {
+        "result": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id", "author_id", "author_name", "host_id", "comment", "duration", "entry_time", "start_time",
+                    "end_time", "deletion_time", "actual_start_time", "actual_end_time", "is_started",
+                    "is_cancelled", "is_fixed", "service_id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number"
+                    },
+                    "author_id": {
+                        "type": "number"
+                    },
+                    "author_name": {
+                        "type": "string"
+                    },
+                    "host_id": {
+                        "type": "number"
+                    },
+                    "comment": {
+                        "type": "string"
+                    },
+                    "duration": {
+                        "type": "number"
+                    },
+                    "entry_time": {
+                        "type": "string"
+                    },
+                    "start_time": {
+                        "type": "string"
+                    },
+                    "end_time": {
+                        "type": "string"
+                    },
+                    "deletion_time": {
+                        "type": ["null", "string"]
+                    },
+                    "actual_start_time": {
+                        "type": ["null", "string"]
+                    },
+                    "actual_end_time": {
+                        "type": ["null", "string"]
+                    },
+                    "is_started": {
+                        "type": "boolean"
+                    },
+                    "is_cancelled": {
+                        "type": "boolean"
+                    },
+                    "is_fixed": {
+                        "type": "boolean"
+                    },
+                    "service_id": {
+                        "type": "number"
+                    }
+                }
+            }
+        }
+    }
+}
