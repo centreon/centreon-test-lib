@@ -1,115 +1,157 @@
 {
-    "type": "object",
-    "properties": {
-        "result": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "required": [
-                    "id", "alias", "display_name", "name", "state", "poller_id", "acknowledged", "address_ip", "check_attempt", "checked", "execution_time", "icon_image", "icon_image_alt"
-                    , "last_check", "last_hard_state_change", "last_state_change", "last_time_down", "last_time_unreachable", "last_time_up", "last_update", "max_check_attempts", "output"
-                    , "passive_checks", "state_type", "timezone", "scheduled_downtime_depth", "criticality"
-                ],
-                "properties": {
-                    "id": {
-                        "type": "number"
-                    },
-                    "type": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "icon": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "url": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "parent": {
-                        "type": "object",
-                        "properties": {
-                            //TODO
-                        }
-                    },
-                    "status": {
-                        "type": "object",
-                        "properties": {
-                            //TODO
-                        }
-                    },
-                    "inDowntime": {
-                        "type": "bool"
-                    },
-                    "acknowledged": {
-                        "type": "bool"
-                    },
-                    "downtimeEndpoint": {
-                        "type": "string"
-                    },
-                    "detailsEndpoint": {
-                        "type": "string"
-                    },
-                    "acknowledgementEndpoint": {
-                        "type": "string"
-                    },
-
-
-                    "icon_image": {
-                        "type": ["null", "string"]
-                    },
-                    "icon_image_alt": {
-                        "type": ["null", "string"]
-                    },
-                    "last_check": {
-                        "type": ["null", "string"]
-                    },
-                    "last_hard_state_change": {
-                        "type": ["null", "string"]
-                    },
-                    "last_state_change": {
-                        "type": ["null", "string"]
-                    },
-                    "last_time_down": {
-                        "type": ["null", "string"]
-                    },
-                    "last_time_unreachable": {
-                        "type": ["null", "string"]
-                    },
-                    "last_time_up": {
-                        "type": ["null", "string"]
-                    },
-                    "last_update": {
-                        "type": ["null", "string"]
-                    },
-                    "max_check_attempts": {
-                        "type": "number"
-                    },
-                    "output": {
-                        "type": "string"
-                    },
-                    "passive_checks": {
-                        "type": "boolean"
-                    },
-                    "state_type": {
-                        "type": "number"
-                    },
-                    "timezone": {
-                        "type": "string"
-                    },
-                    "scheduled_downtime_depth": {
-                        "type": "number"
-                    },
-                    "criticality": {
-                        "type": ["null", "number"]
-                    }
-                }
+  "type": "object",
+  "properties": {
+    "result": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+            "id", "type", "name", "icon", "parent", "status", "in_downtime", "downtime_endpoint", "acknowledged",
+            "acknowledgement_endpoint", "details_endpoint", "severity", "impacted_resources_count", "action_url",
+            "chart_url", "status_graph_endpoint", "performance_graph_endpoint", "duration", "last_status_change",
+            "tries", "information", "short_type"
+        ],
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon": {
+            "type": ["null", "object"],
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
             }
+          },
+          "parent": {
+            "type": ["null", "object"],
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              },
+              "icon": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  }
+                }
+              },
+              "status": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "number"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "severity_code": {
+                    "type": "number"
+                  }
+                }
+              },
+              "details_endpoint": {
+                "type": "string"
+              }
+            }
+          },
+          "status": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              },
+              "severity_code": {
+                "type": "number"
+              }
+            }
+          },
+          "in_downtime": {
+            "type": "boolean"
+          },
+          "downtime_endpoint": {
+            "type": "string"
+          },
+          "acknowledged": {
+            "type": "boolean"
+          },
+          "acknowledgement_endpoint": {
+            "type": "string"
+          },
+          "details_endpoint": {
+            "type": "string"
+          },
+          "severity": {
+            "type": ["null", "object"],
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "level": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            }
+          },
+          "impacted_resources_count": {
+            "type": "number"
+          },
+          "action_url": {
+            "type": ["null", "string"]
+          },
+          "chart_url": {
+            "type": ["null", "string"]
+          },
+          "status_graph_endpoint": {
+            "type": "string"
+          },
+          "performance_graph_endpoint": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "string"
+          },
+          "last_status_change": {
+            "type": "string"
+          },
+          "tries": {
+            "type": "string"
+          },
+          "information": {
+            "type": "string"
+          },
+          "short_type": {
+            "type": "string"
+          }
         }
+      }
     }
+  }
 }
