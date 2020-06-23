@@ -95,7 +95,7 @@
             "type": "number"
         },
         "next_check": {
-            "type": ["null","string"]
+            "type": ["null", "string"]
         },
         "performance_data": {
             "type": "string"
