@@ -166,7 +166,13 @@ class Container
      */
     public function getPort($containerPort, $service)
     {
-        return shell_exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' port ' . $service . ' ' . $containerPort . ' | cut -d : -f 2 | tr -d "\n"');
+        $response = shell_exec(
+            'docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' port ' . $service . ' ' . $containerPort
+        );
+        if (preg_match('/.+:(\d+)/', $response, $matches)) {
+            return $matches[1];
+        }
+        throw new \Exception('Cannot get corresponding port of ' . $containerPort . ' on service ' . $service);
     }
 
     /**

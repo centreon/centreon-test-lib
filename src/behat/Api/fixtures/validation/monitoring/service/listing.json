@@ -1,0 +1,81 @@
+{
+    "type": "object",
+    "properties": {
+        "result": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id", "description", "display_name", "state", "check_attempt", "icon_image", "icon_image_alt", "last_check", "last_state_change", "max_check_attempts", "output", "state_type", "criticality", "host"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "number"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "display_name": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "number"
+                    },
+                    "check_attempt": {
+                        "type": "string"
+                    },
+                    "is_acknowledged": {
+                        "type": "boolean"
+                    },
+                    "scheduled_downtime_depth": {
+                        "type": "number"
+                    },
+                    "icon_image": {
+                        "type": ["null", "string"]
+                    },
+                    "icon_image_alt": {
+                        "type": ["null", "string"]
+                    },
+                    "last_check": {
+                        "type": ["null", "string"]
+                    },
+                    "last_state_change": {
+                        "type": ["null", "string"]
+                    },
+                    "max_check_attempts": {
+                        "type": "number"
+                    },
+                    "output": {
+                        "type": "string"
+                    },
+                    "state_type": {
+                        "type": "number"
+                    },
+                    "criticality": {
+                        "type": ["null", "number"]
+                    },
+                    "host": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "number"
+                            },
+                            "alias": {
+                                "type": "string"
+                            },
+                            "display_name": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "state": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
