@@ -45,7 +45,7 @@
                 "type": "string"
               },
               "icon": {
-                "type": "object",
+                "type": ["null", "object"],
                 "properties": {
                   "name": {
                     "type": "string"
@@ -70,7 +70,7 @@
                 }
               },
               "details_endpoint": {
-                "type": "string"
+                "type": ["null", "string"]
               }
             }
           },
@@ -101,7 +101,7 @@
             "type": "string"
           },
           "details_endpoint": {
-            "type": "string"
+            "type": ["null", "string"]
           },
           "severity": {
             "type": ["null", "object"],
@@ -130,16 +130,16 @@
             "type": ["null", "string"]
           },
           "status_graph_endpoint": {
-            "type": "string"
+            "type": ["null", "string"]
           },
           "performance_graph_endpoint": {
-            "type": "string"
+            "type": ["null", "string"]
           },
           "duration": {
-            "type": "string"
+            "type": ["null", "string"]
           },
           "last_status_change": {
-            "type": "string"
+            "type": ["null", "string"]
           },
           "tries": {
             "type": "string"
