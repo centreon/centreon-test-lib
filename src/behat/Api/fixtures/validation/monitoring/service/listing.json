@@ -55,7 +55,24 @@
                         "type": ["null", "number"]
                     },
                     "host": {
-                        "type": "object"
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "number"
+                            },
+                            "alias": {
+                                "type": "string"
+                            },
+                            "display_name": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "state": {
+                                "type": "number"
+                            }
+                        }
                     }
                 }
             }

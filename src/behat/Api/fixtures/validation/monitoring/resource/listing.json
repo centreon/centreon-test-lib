@@ -1,0 +1,157 @@
+{
+  "type": "object",
+  "properties": {
+    "result": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+            "id", "type", "name", "icon", "parent", "status", "in_downtime", "downtime_endpoint", "acknowledged",
+            "acknowledgement_endpoint", "details_endpoint", "severity", "impacted_resources_count", "action_url",
+            "chart_url", "status_graph_endpoint", "performance_graph_endpoint", "duration", "last_status_change",
+            "tries", "information", "short_type"
+        ],
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon": {
+            "type": ["null", "object"],
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            }
+          },
+          "parent": {
+            "type": ["null", "object"],
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              },
+              "icon": {
+                "type": ["null", "object"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  }
+                }
+              },
+              "status": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "number"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "severity_code": {
+                    "type": "number"
+                  }
+                }
+              },
+              "details_endpoint": {
+                "type": ["null", "string"]
+              }
+            }
+          },
+          "status": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              },
+              "severity_code": {
+                "type": "number"
+              }
+            }
+          },
+          "in_downtime": {
+            "type": "boolean"
+          },
+          "downtime_endpoint": {
+            "type": "string"
+          },
+          "acknowledged": {
+            "type": "boolean"
+          },
+          "acknowledgement_endpoint": {
+            "type": "string"
+          },
+          "details_endpoint": {
+            "type": ["null", "string"]
+          },
+          "severity": {
+            "type": ["null", "object"],
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "level": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            }
+          },
+          "impacted_resources_count": {
+            "type": "number"
+          },
+          "action_url": {
+            "type": ["null", "string"]
+          },
+          "chart_url": {
+            "type": ["null", "string"]
+          },
+          "status_graph_endpoint": {
+            "type": ["null", "string"]
+          },
+          "performance_graph_endpoint": {
+            "type": ["null", "string"]
+          },
+          "duration": {
+            "type": ["null", "string"]
+          },
+          "last_status_change": {
+            "type": ["null", "string"]
+          },
+          "tries": {
+            "type": "string"
+          },
+          "information": {
+            "type": "string"
+          },
+          "short_type": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

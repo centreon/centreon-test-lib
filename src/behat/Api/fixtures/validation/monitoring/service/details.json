@@ -107,11 +107,61 @@
         {
             "type": ["null", "array"],
             "items": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type" : "number"
+                    },
+                    "author_id": {
+                        "type" : "number"
+                    },
+                    "author_name": {
+                        "type" : "string"
+                    },
+                    "host_id": {
+                        "type" : "number"
+                    },
+                    "comment": {
+                        "type" : "string"
+                    },
+                    "duration": {
+                        "type" : "number"
+                    },
+                    "entry_time": {
+                        "type" : "string"
+                    },
+                    "start_time": {
+                        "type" : "string"
+                    },
+                    "end_time": {
+                        "type" : "string"
+                    },
+                    "deletion_time": {
+                        "type" : ["null", "string"]
+                    },
+                    "actual_start_time": {
+                        "type" : "string"
+                    },
+                    "actual_end_time": {
+                        "type" : ["null", "string"]
+                    },
+                    "is_started": {
+                        "type" : "boolean"
+                    },
+                    "is_cancelled": {
+                        "type" : "boolean"
+                    },
+                    "is_fixed": {
+                        "type" : "boolean"
+                    },
+                    "service_id": {
+                        "type" : "number"
+                    }
+                }
             }
         },
         "acknowledgement": {
-            "type": ["null", "object"]             
+            "type": ["null", "object"]
         }
-    }                
+    }
 }
