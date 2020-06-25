@@ -594,7 +594,7 @@ class ApiContext implements Context
         $response = json_decode($response->getContent(), true);
 
         if (!$response['result'][0]['is_cancelled']) {
-            throw new \Exception('the service ' . $service . ' is not cancel');
+            throw new \Exception('the downtime of service ' . $service . ' from host ' . $host . ' is not canceled');
         }
     }
 }
