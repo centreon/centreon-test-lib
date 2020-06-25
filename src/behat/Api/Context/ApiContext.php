@@ -567,7 +567,7 @@ class ApiContext implements Context
      *
      * @When I cancel downtime of my service :service from host :host
      */
-    public function iCancelDonwtimeOfServiceFromHost(string $service, string $host)
+    public function iCancelDowntimeOfServiceFromHost(string $service, string $host)
     {
         $downtimeId = $this->iListDonwtimeOfServiceFromHost($service, $host);
 
