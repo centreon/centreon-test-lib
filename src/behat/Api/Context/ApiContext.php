@@ -510,7 +510,7 @@ class ApiContext implements Context
      *
      * @When I send a downtime on my service :service from host :host
      */
-    public function iSendDonwtimeOnServiceFromHost(string $service, string $host)
+    public function iSendDowntimeOnServiceFromHost(string $service, string $host)
     {
         [$hostId, $serviceId] = $this->iWaitUntilServiceIsMonitored($service, $host);
 
