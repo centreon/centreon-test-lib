@@ -569,7 +569,7 @@ class ApiContext implements Context
      */
     public function iCancelDowntimeOfServiceFromHost(string $service, string $host)
     {
-        $downtimeId = $this->iListDonwtimeOfServiceFromHost($service, $host);
+        $downtimeId = $this->iListDowntimeOfServiceFromHost($service, $host);
 
         $response = $this->iSendARequestTo(
             'DELETE',
