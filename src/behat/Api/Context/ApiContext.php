@@ -555,7 +555,7 @@ class ApiContext implements Context
                 $this->theJsonNodeShouldHaveElements('result', 1);
                 return true;
             },
-            'the host ' . $service . ' seems not monitored',
+            'the service ' . $service . ' from host ' . $host . ' seems not monitored',
             10
         );
         $response = json_decode($response->getContent(), true);
