@@ -474,7 +474,7 @@ Trait JsonContextTrait
     public function theResponseShouldBeFormattedLikeJsonFormat(string $path)
     {
         $possiblePaths = [
-            getcwd() . '/' . $path,
+            getcwd() . '/tests/api/fixtures/validation/' . $path,
             __DIR__ . '/../fixtures/validation/' . $path,
         ];
 
@@ -486,7 +486,9 @@ Trait JsonContextTrait
         }
 
         if ($fullPath === null) {
-            throw new \Exception('cannot find validation file "' . $path . '"');
+            throw new \Exception(
+                'cannot find validation file "' . $path . '" in ' . implode(' | ', $possiblePaths)
+            );
         }
 
         $this->theResponseShouldBeInJson();
