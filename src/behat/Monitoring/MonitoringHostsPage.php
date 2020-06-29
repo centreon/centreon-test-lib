@@ -157,21 +157,46 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
       * @param bool isPersistent
       * @param bool doAckServicesAttached Check the checkbox "Acknowledge services attached to hosts"
       * @param bool doForceCheck Check the checkbox "Force active checks"
+      * @param string url
       */
-    public function addAcknowledgementOnHost($hostname, $comment, $isSticky, $doNotify, $isPersistent, $doAckServicesAttached, $doForceCheck)
-    {
+    public function addAcknowledgementOnHost(
+        $hostname,
+        $comment,
+        $isSticky,
+        $doNotify,
+        $isPersistent,
+        $doAckServicesAttached,
+        $doForceCheck,
+        $url
+    ) {
         // The code below cannot work right now in the context of the
         // hosts monitoring page as PhantomJS does not support XSLT.
         // As a workaround will we use direct Ajax call to add the
         // acknowledgement.
-        $this->ctx->visit(
-            'include/monitoring/external_cmd/cmdPopup.php?cmd=72&comment='
-            . $comment . '&sticky=' . ($isSticky ? 'true' : 'false')
-            . '&persistent=' . ($isPersistent ? 'true' : 'false')
-            . '&notify=' . $doNotify
-            . '&ackhostservice=' . ($doAckServicesAttached ? 'true' : 'false')
-            . '&force_check=' . ($doForceCheck ? 'true' : 'false')
-            . '&author=admin&select[' . $hostname . ']=1', false);
+
+        $sessionId = $this->ctx->getSession()->getDriver()->getCookie('PHPSESSID');
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID='.$sessionId);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt(
+            $ch,
+            CURLOPT_POSTFIELDS,
+            array(
+                'cmd' => 72,
+                'comment' => $comment,
+                'sticky' => ($isSticky ? 'true' : 'false'),
+                'persistent' => ($isPersistent ? 'true' : 'false'),
+                'notify' => $doNotify,
+                'ackhostservice' => ($doAckServicesAttached ? 'true' : 'false'),
+                'force_check' => ($doForceCheck ? 'true' : 'false'),
+                'author' => 'admin',
+                'resources' =>  json_encode([$hostname])
+            ));
+        curl_exec($ch);
         $this->listHosts();
     }
 
