@@ -350,7 +350,7 @@ class ApiContext implements Context
         }
         $this->container = new Container($composeFile);
         $this->setBaseUri(
-            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $name) . '/centreon/api'
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon/api'
         );
 
         $this->spin(
