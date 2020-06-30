@@ -244,7 +244,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
         $sessionId = $this->ctx->getSession()->getDriver()->getCookie('PHPSESSID');
 
         $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID='.$sessionId);
+        curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID=' . $sessionId);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
