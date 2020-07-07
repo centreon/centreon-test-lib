@@ -17,6 +17,8 @@
 
 namespace Centreon\Test\Behat\Monitoring;
 
+use _HumbugBox6bd9fd3b32b0\Nette\Neon\Exception;
+
 /**
   *
   * The code of his class is based on class MonitoringServicesPage
@@ -158,6 +160,7 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
       * @param bool doAckServicesAttached Check the checkbox "Acknowledge services attached to hosts"
       * @param bool doForceCheck Check the checkbox "Force active checks"
       * @param string url
+      * @throws \Exception on failing cUrl request
       */
     public function addAcknowledgementOnHost(
         $hostname,
@@ -176,27 +179,35 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
 
         $sessionId = $this->ctx->getSession()->getDriver()->getCookie('PHPSESSID');
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID=' . $sessionId);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt(
-            $ch,
-            CURLOPT_POSTFIELDS,
-            array(
-                'cmd' => 72,
-                'comment' => $comment,
-                'sticky' => ($isSticky ? 'true' : 'false'),
-                'persistent' => ($isPersistent ? 'true' : 'false'),
-                'notify' => $doNotify,
-                'ackhostservice' => ($doAckServicesAttached ? 'true' : 'false'),
-                'force_check' => ($doForceCheck ? 'true' : 'false'),
-                'author' => 'admin',
-                'resources' =>  json_encode([$hostname])
-            ));
-        curl_exec($ch);
+        try {
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID=' . $sessionId);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt(
+                $ch,
+                CURLOPT_POSTFIELDS,
+                array(
+                    'cmd' => 72,
+                    'comment' => $comment,
+                    'sticky' => ($isSticky ? 'true' : 'false'),
+                    'persistent' => ($isPersistent ? 'true' : 'false'),
+                    'notify' => $doNotify,
+                    'ackhostservice' => ($doAckServicesAttached ? 'true' : 'false'),
+                    'force_check' => ($doForceCheck ? 'true' : 'false'),
+                    'author' => 'admin',
+                    'resources' => json_encode([$hostname])
+                ));
+            if (!curl_exec($ch)) {
+                throw new \Exception('Failed cUrl request on host acknowledgement : ' . curl_error($ch));
+            }
+        } catch (\Exception $e) {
+            throw $e;
+        } finally {
+            curl_close($ch);
+        }
         $this->listHosts();
     }
 

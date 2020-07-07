@@ -226,6 +226,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
       * @param bool isPersistent
       * @param bool doForceCheck
       * @param string url
+      * @throws \Exception on failing cUrl request
       */
     public function addAcknowledgementOnService(
         $hostname,
@@ -243,27 +244,35 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
         // acknowledgement.
         $sessionId = $this->ctx->getSession()->getDriver()->getCookie('PHPSESSID');
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID=' . $sessionId);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt(
-            $ch,
-            CURLOPT_POSTFIELDS,
+        try {
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID=' . $sessionId);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt(
+                $ch,
+                CURLOPT_POSTFIELDS,
                 array(
-                'cmd' => 70,
-                'comment' => $comment,
-                'sticky' => ($isSticky ? 'true' : 'false'),
-                'persistent' => ($isPersistent ? 'true' : 'false'),
-                'notify' => $doNotify,
-                'ackhostservice' => 0,
-                'force_check' => ($doForceCheck ? 'true' : 'false'),
-                'author' => 'admin',
-                'resources' =>  json_encode([$hostname . '%3B' . $service])
-        ));
-        curl_exec($ch);
+                    'cmd' => 70,
+                    'comment' => $comment,
+                    'sticky' => ($isSticky ? 'true' : 'false'),
+                    'persistent' => ($isPersistent ? 'true' : 'false'),
+                    'notify' => $doNotify,
+                    'ackhostservice' => 0,
+                    'force_check' => ($doForceCheck ? 'true' : 'false'),
+                    'author' => 'admin',
+                    'resources' => json_encode([$hostname . '%3B' . $service])
+                ));
+            if (!curl_exec($ch)) {
+                throw new \Exception('Failed cUrl request on service acknowledgement : ' . curl_error($ch));
+            }
+        } catch (\Exception $e) {
+            throw $e;
+        } finally {
+            curl_close($ch);
+        }
         $this->listServices();
     }
 
