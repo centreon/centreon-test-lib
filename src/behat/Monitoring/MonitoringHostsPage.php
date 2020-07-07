@@ -17,8 +17,6 @@
 
 namespace Centreon\Test\Behat\Monitoring;
 
-use _HumbugBox6bd9fd3b32b0\Nette\Neon\Exception;
-
 /**
   *
   * The code of his class is based on class MonitoringServicesPage
