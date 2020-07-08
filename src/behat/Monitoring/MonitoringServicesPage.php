@@ -269,6 +269,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
             )
         );
 
+
         $this->listServices();
     }
 

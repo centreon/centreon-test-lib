@@ -199,7 +199,8 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
                 'resources' => json_encode([$hostname])
             )
         );
-
+        curl_exec($ch);
+        curl_close($ch);
         $this->listHosts();
     }
 
