@@ -268,8 +268,8 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
                 'resources' => json_encode([$hostname . '%3B' . $service])
             )
         );
-
-
+        curl_exec($ch);
+        curl_close($ch);
         $this->listServices();
     }
 
