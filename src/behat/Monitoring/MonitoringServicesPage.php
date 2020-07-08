@@ -43,12 +43,12 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
             'td:nth-child(12)'
         )
     );
-    
+
     public function __construct($context)
     {
         $this->ctx = $context;
     }
-    
+
     /**
      * Set Service Status Filter to All
      */
@@ -57,12 +57,14 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
         $this->listServices();
         $this->ctx->selectInList('select#statusService', 'All');
     }
+
     /**
-      * Set the filter hostname
-      *
-      * @param string hostname Hostame to select.
-      */
-    public function setFilterbyHostname($hostname) {
+     * Set the filter hostname
+     *
+     * @param string hostname Hostame to select.
+     */
+    public function setFilterbyHostname($hostname)
+    {
         $this->ctx->assertFind('named', array('id', 'host_search'))->setValue(trim($hostname));
     }
 
@@ -71,15 +73,16 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
      *
      * @param string servicename Service to select.
      */
-    public function setFilterbyService($servicename) {
+    public function setFilterbyService($servicename)
+    {
         $this->ctx->assertFind('named', array('id', 'input_search'))->setValue(trim($servicename));
     }
 
     /**
-      * Put max service display in services list to $limit
-      *
-      * @param string limit The value of limit in page limit dropdown
-      */
+     * Put max service display in services list to $limit
+     *
+     * @param string limit The value of limit in page limit dropdown
+     */
     public function setPageLimitTo($limit)
     {
         $page = $this->ctx->getSession()->getPage();
@@ -89,12 +92,12 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
     }
 
     /**
-      * Wait service list page
-      */
+     * Wait service list page
+     */
     public function waitForServiceListPage()
     {
         $this->ctx->spin(
-            function($context) {
+            function ($context) {
                 return $context->getSession()->getPage()->has('named', array('id_or_name', 'host_search'));
             }
         );
@@ -109,12 +112,12 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
     }
 
     /**
-      * Check if the service is acknowledged or not
-      *
-      * @param string hostname Hostname to check.
-      * @param string servicename Service to check.
-      * @return bool
-      */
+     * Check if the service is acknowledged or not
+     *
+     * @param string hostname Hostname to check.
+     * @param string servicename Service to check.
+     * @return bool
+     */
     public function isServiceAcknowledged($hostname, $servicename)
     {
         // As we cannot use the page because of incompatibilites between
@@ -128,19 +131,19 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
         $stmt = $this->ctx->getStorageDatabase()->prepare($query);
         $stmt->execute(array(':hostname' => $hostname, ':description' => $servicename));
         $res = $stmt->fetch();
-        if ($res === FALSE) {
+        if ($res === false) {
             throw new \Exception('Cannot find service ' . $servicename . ' of host ' . $hostname . ' in database.');
         }
         return $res['acknowledged'];
     }
 
     /**
-      * Check if the service is in downtime or not
-      *
-      * @param string hostname Hostname to check.
-      * @param string servicename Service to check.
-      * @return bool
-      */
+     * Check if the service is in downtime or not
+     *
+     * @param string hostname Hostname to check.
+     * @param string servicename Service to check.
+     * @return bool
+     */
     public function isServiceInDowntime($hostname, $servicename)
     {
         // Prepare (filter by hostname and service name)
@@ -159,12 +162,12 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
     }
 
     /**
-      * Generic function for running an action on a hostname or on a service
-      *
-      * @param string hostname Hostname to select.
-      * @param string servicename Service to select.
-      * @param string action_label Label of action to select. Action by default is do no action.
-      */
+     * Generic function for running an action on a hostname or on a service
+     *
+     * @param string hostname Hostname to select.
+     * @param string servicename Service to select.
+     * @param string action_label Label of action to select. Action by default is do no action.
+     */
     public function doActionOn($hostname, $servicename, $action_label = 'More actions...')
     {
         // Go to : Monitoring > Status Details > Services
@@ -194,11 +197,11 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
     }
 
     /**
-      * Schedule immediate check on a service
-      *
-      * @param string hostname Hostname to select.
-      * @param string service Service to select.
-      */
+     * Schedule immediate check on a service
+     *
+     * @param string hostname Hostname to select.
+     * @param string service Service to select.
+     */
     public function scheduleImmediateCheckOnService($hostname, $service)
     {
         $this->doActionOn($hostname, $service, 'Schedule immediate check');
@@ -216,18 +219,18 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
     }
 
     /**
-      * Acknowledge a service
-      *
-      * @param string hostname hostname to select.
-      * @param string service Service to select.
-      * @param string comment Comment about the acknowledge to add.
-      * @param bool isSticky
-      * @param bool doNotify
-      * @param bool isPersistent
-      * @param bool doForceCheck
-      * @param string url
-      * @throws \Exception on failing cUrl request
-      */
+     * Acknowledge a service
+     *
+     * @param string hostname hostname to select.
+     * @param string service Service to select.
+     * @param string comment Comment about the acknowledge to add.
+     * @param bool isSticky
+     * @param bool doNotify
+     * @param bool isPersistent
+     * @param bool doForceCheck
+     * @param string url
+     * @throws \Exception on failing cUrl request
+     */
     public function addAcknowledgementOnService(
         $hostname,
         $service,
@@ -244,116 +247,119 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
         // acknowledgement.
         $sessionId = $this->ctx->getSession()->getDriver()->getCookie('PHPSESSID');
 
-        try {
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID=' . $sessionId);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt(
-                $ch,
-                CURLOPT_POSTFIELDS,
-                array(
-                    'cmd' => 70,
-                    'comment' => $comment,
-                    'sticky' => ($isSticky ? 'true' : 'false'),
-                    'persistent' => ($isPersistent ? 'true' : 'false'),
-                    'notify' => $doNotify,
-                    'ackhostservice' => 0,
-                    'force_check' => ($doForceCheck ? 'true' : 'false'),
-                    'author' => 'admin',
-                    'resources' => json_encode([$hostname . '%3B' . $service])
-                ));
-            if (!curl_exec($ch)) {
-                throw new \Exception('Failed cUrl request on service acknowledgement : ' . curl_error($ch));
-            }
-        } catch (\Exception $e) {
-            throw $e;
-        } finally {
-            curl_close($ch);
-        }
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID=' . $sessionId);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt(
+            $ch,
+            CURLOPT_POSTFIELDS,
+            array(
+                'cmd' => 70,
+                'comment' => $comment,
+                'sticky' => ($isSticky ? 'true' : 'false'),
+                'persistent' => ($isPersistent ? 'true' : 'false'),
+                'notify' => $doNotify,
+                'ackhostservice' => 0,
+                'force_check' => ($doForceCheck ? 'true' : 'false'),
+                'author' => 'admin',
+                'resources' => json_encode([$hostname . '%3B' . $service])
+            )
+        );
+
         $this->listServices();
     }
 
     /**
-      * Disacknowledge on a service
-      *
-      * @param string hostname Hostname to select.
-      * @param string service Service to select.
-      */
+     * Disacknowledge on a service
+     *
+     * @param string hostname Hostname to select.
+     * @param string service Service to select.
+     */
     public function disacknowledgeOnService($hostname, $service)
     {
         $this->doActionOn($hostname, $service, 'Services : Disacknowledge');
     }
 
     /**
-      * Enable notification on a service
-      *
-      * @param string hostname Hostname to select.
-      * @param string service Service to select.
-      */
+     * Enable notification on a service
+     *
+     * @param string hostname Hostname to select.
+     * @param string service Service to select.
+     */
     public function enableNotificationOnService($hostname, $service)
     {
         $this->doActionOn($hostname, $service, 'Services : Enable Notification');
     }
 
     /**
-      * Disable notification on a service
-      *
-      * @param string hostname Hostname to select.
-      * @param string service Service to select.
-      */
+     * Disable notification on a service
+     *
+     * @param string hostname Hostname to select.
+     * @param string service Service to select.
+     */
     public function disableNotificationOnService($hostname, $service)
     {
         $this->doActionOn($hostname, $service, 'Services : Disable Notification');
     }
 
     /**
-      * Enable check on a service
-      *
-      * @param string hostname Hostname to select.
-      * @param string service Service to select.
-      */
+     * Enable check on a service
+     *
+     * @param string hostname Hostname to select.
+     * @param string service Service to select.
+     */
     public function enableCheckOnService($hostname, $service)
     {
         $this->doActionOn($hostname, $service, 'Services : Enable Check');
     }
 
     /**
-      * Disable check on a service
-      *
-      * @param string hostname Hostname to select.
-      * @param string service Service to select.
-      */
+     * Disable check on a service
+     *
+     * @param string hostname Hostname to select.
+     * @param string service Service to select.
+     */
     public function disableCheckOnService($hostname, $service)
     {
         $this->doActionOn($hostname, $service, 'Services : Disable Check');
     }
 
     /**
-      * Downtime a service
-      *
-      * @param string hostname Host name to select
-      * @param string servicename Service name to select
-      * @param bool isDurationFixed The duration is fixed or not.
-      * @param string startTimeDate
-      * @param string startTimeTime
-      * @param string endTimeDate
-      * @param string end_time_time
-      * @param string duration Desired duration.
-      * @param string duration_scale Unit of the duration.
-      * @param string comment Comment to associate on the downtime
-      */
-    public function addDowntimeOnService($hostname, $servicename, $isDurationFixed, $startTimeDate, $startTimeTime, $endTimeDate, $end_time_time, $duration, $duration_scale, $comment)
-    {
+     * Downtime a service
+     *
+     * @param string hostname Host name to select
+     * @param string servicename Service name to select
+     * @param bool isDurationFixed The duration is fixed or not.
+     * @param string startTimeDate
+     * @param string startTimeTime
+     * @param string endTimeDate
+     * @param string end_time_time
+     * @param string duration Desired duration.
+     * @param string duration_scale Unit of the duration.
+     * @param string comment Comment to associate on the downtime
+     */
+    public function addDowntimeOnService(
+        $hostname,
+        $servicename,
+        $isDurationFixed,
+        $startTimeDate,
+        $startTimeTime,
+        $endTimeDate,
+        $end_time_time,
+        $duration,
+        $duration_scale,
+        $comment
+    ) {
 
         // Prepare the downtime of the service (of the hostname)
         $this->doActionOn($hostname, $servicename, 'Services : Set Downtime');
 
         // When I have a pop-in "Set downtimes"
         $this->ctx->spin(
-            function($context) {
+            function ($context) {
                 return $context->getSession()->getPage()->has('named', array('id', 'popupDowntime'));
             }
         );
@@ -405,11 +411,11 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
     }
 
     /**
-      * Get the status of a service
-      *
-      * @param string hostName Host name to select
-     *  @param string serviceDescription Service description to select
-      */
+     * Get the status of a service
+     *
+     * @param string hostName Host name to select
+     * @param string serviceDescription Service description to select
+     */
     public function getStatus($hostName, $serviceDescription)
     {
         // We cannot direct web-interface search right now (XSLT is not
@@ -419,28 +425,28 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
         $stmt = $this->ctx->getStorageDatabase()->prepare($query);
         $stmt->execute(array(':hostname' => $hostName, ':description' => $serviceDescription));
         $res = $stmt->fetch();
-        if ($res === FALSE) {
+        if ($res === false) {
             throw new \Exception('Cannot get status of service ' . $serviceDescription . ' of host ' . $hostName);
         }
         switch ($res['state']) {
-        case 0:
-            $status = 'OK';
-            break ;
-        case 1:
-            $status = 'WARNING';
-            break ;
-        case 2:
-            $status = 'CRITICAL';
-            break ;
-        default:
-            $status = 'UNKNOWN';
+            case 0:
+                $status = 'OK';
+                break;
+            case 1:
+                $status = 'WARNING';
+                break;
+            case 2:
+                $status = 'CRITICAL';
+                break;
+            default:
+                $status = 'UNKNOWN';
         }
         return $status;
     }
-    
+
     /**
      * Get the Value of a field from a given host and service.
-     * 
+     *
      * @param string $host
      * @param string $servicename
      * @param string $propertyfield , The value of the field to retrieve
@@ -448,10 +454,10 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
      * @throws Exception
      */
     public function getPropertyFromAHostAndService($host, $servicename, $propertyfield)
-    {   
+    {
         $this->setFilterByAllService();
-        $this->ctx->assertFind('css','input#host_search')->setValue($host);
-        $this->ctx->assertFind('css','input#input_search')->setValue($servicename);
+        $this->ctx->assertFind('css', 'input#host_search')->setValue($host);
+        $this->ctx->assertFind('css', 'input#input_search')->setValue($servicename);
         if (!array_key_exists($propertyfield, $this->properties)) {
             throw new Exception($propertyfield . ' property does not exist, please verify the name');
         }
@@ -462,7 +468,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
         $propertyLocator = $locator[0];
         $value = '';
         $this->ctx->spin(
-            function($context) use ($myContext, $propertyLocator, &$value) {
+            function ($context) use ($myContext, $propertyLocator, &$value) {
                 $value = $myContext->assertFind('css', 'table.ListTable tr#trStatus ' . $propertyLocator)->getText();
                 if ($value != '') {
                     return true;
@@ -474,5 +480,5 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
 
         return $value;
     }
-    
+
 }

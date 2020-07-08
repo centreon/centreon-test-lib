@@ -18,9 +18,9 @@
 namespace Centreon\Test\Behat\Monitoring;
 
 /**
-  *
-  * The code of his class is based on class MonitoringServicesPage
-  */
+ *
+ * The code of his class is based on class MonitoringServicesPage
+ */
 class MonitoringHostsPage extends \Centreon\Test\Behat\Page
 {
     private $ctx;
@@ -31,19 +31,20 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
     }
 
     /**
-      * Set the filter hostname
-      *
-      * @param string hostname Hostame to select.
-      */
-    public function setFilterbyHostname($hostname) {
+     * Set the filter hostname
+     *
+     * @param string hostname Hostame to select.
+     */
+    public function setFilterbyHostname($hostname)
+    {
         $this->ctx->assertFind('named', array('id', 'host_search'))->setValue(trim($hostname));
     }
 
     /**
-      * Put max host display in hosts list to $limit
-      *
-      * @param string limit The value of limit in page limit dropdown
-      */
+     * Put max host display in hosts list to $limit
+     *
+     * @param string limit The value of limit in page limit dropdown
+     */
     public function setPageLimitTo($limit)
     {
         $page = $this->ctx->getSession()->getPage();
@@ -53,12 +54,12 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
     }
 
     /**
-      * Wait host(s) list page
-      */
+     * Wait host(s) list page
+     */
     public function waitForHostListPage()
     {
         $this->ctx->spin(
-            function($context) {
+            function ($context) {
                 return $context->getSession()->getPage()->has('named', array('id_or_name', 'host_search'));
             }
         );
@@ -73,11 +74,11 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
     }
 
     /**
-      * Check if the host is acknowledged or not
-      *
-      * @param string hostname Hostname to check.
-      * @return bool
-      */
+     * Check if the host is acknowledged or not
+     *
+     * @param string hostname Hostname to check.
+     * @return bool
+     */
     public function isHostAcknowledged($hostname)
     {
         // As we cannot use the page because of incompatibilites between
@@ -87,18 +88,18 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
         $stmt = $this->ctx->getStorageDatabase()->prepare($query);
         $stmt->execute(array(':name' => $hostname));
         $res = $stmt->fetch();
-        if ($res === FALSE) {
+        if ($res === false) {
             throw new \Exception('Cannot find host ' . $hostname . ' in database.');
         }
         return $res['acknowledged'];
     }
 
     /**
-      * Check if the host is in downtime or not
-      *
-      * @param string hostname Hostname to check.
-      * @return bool
-      */
+     * Check if the host is in downtime or not
+     *
+     * @param string hostname Hostname to check.
+     * @return bool
+     */
     public function isHostInDowntime($hostname)
     {
         // Prepare (filter by hostname)
@@ -117,11 +118,11 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
     }
 
     /**
-      * Generic function for running an action on a host
-      *
-      * @param string hostname Hostname to select.
-      * @param string action_label Label of action to select. Action by default is do no action.
-      */
+     * Generic function for running an action on a host
+     *
+     * @param string hostname Hostname to select.
+     * @param string action_label Label of action to select. Action by default is do no action.
+     */
     public function doActionOn($hostname, $action_label = 'More actions...')
     {
         // Go to : Monitoring > Status Details > Hosts
@@ -148,18 +149,18 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
     }
 
     /**
-      * Acknowledge a host
-      *
-      * @param string hostname hostname to select.
-      * @param string comment Comment about the acknowledge to add.
-      * @param bool isSticky
-      * @param bool doNotify
-      * @param bool isPersistent
-      * @param bool doAckServicesAttached Check the checkbox "Acknowledge services attached to hosts"
-      * @param bool doForceCheck Check the checkbox "Force active checks"
-      * @param string url
-      * @throws \Exception on failing cUrl request
-      */
+     * Acknowledge a host
+     *
+     * @param string hostname hostname to select.
+     * @param string comment Comment about the acknowledge to add.
+     * @param bool isSticky
+     * @param bool doNotify
+     * @param bool isPersistent
+     * @param bool doAckServicesAttached Check the checkbox "Acknowledge services attached to hosts"
+     * @param bool doForceCheck Check the checkbox "Force active checks"
+     * @param string url
+     * @throws \Exception on failing cUrl request
+     */
     public function addAcknowledgementOnHost(
         $hostname,
         $comment,
@@ -177,111 +178,114 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
 
         $sessionId = $this->ctx->getSession()->getDriver()->getCookie('PHPSESSID');
 
-        try {
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID=' . $sessionId);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt(
-                $ch,
-                CURLOPT_POSTFIELDS,
-                array(
-                    'cmd' => 72,
-                    'comment' => $comment,
-                    'sticky' => ($isSticky ? 'true' : 'false'),
-                    'persistent' => ($isPersistent ? 'true' : 'false'),
-                    'notify' => $doNotify,
-                    'ackhostservice' => ($doAckServicesAttached ? 'true' : 'false'),
-                    'force_check' => ($doForceCheck ? 'true' : 'false'),
-                    'author' => 'admin',
-                    'resources' => json_encode([$hostname])
-                ));
-            if (!curl_exec($ch)) {
-                throw new \Exception('Failed cUrl request on host acknowledgement : ' . curl_error($ch));
-            }
-        } catch (\Exception $e) {
-            throw $e;
-        } finally {
-            curl_close($ch);
-        }
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID=' . $sessionId);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt(
+            $ch,
+            CURLOPT_POSTFIELDS,
+            array(
+                'cmd' => 72,
+                'comment' => $comment,
+                'sticky' => ($isSticky ? 'true' : 'false'),
+                'persistent' => ($isPersistent ? 'true' : 'false'),
+                'notify' => $doNotify,
+                'ackhostservice' => ($doAckServicesAttached ? 'true' : 'false'),
+                'force_check' => ($doForceCheck ? 'true' : 'false'),
+                'author' => 'admin',
+                'resources' => json_encode([$hostname])
+            )
+        );
+
         $this->listHosts();
     }
 
     /**
-      * Disacknowledge on a host
-      *
-      * @param string hostname Hostname to select.
-      */
+     * Disacknowledge on a host
+     *
+     * @param string hostname Hostname to select.
+     */
     public function disacknowledgeOnHost($hostname)
     {
         $this->doActionOn($hostname, 'Hosts : Disacknowledge');
     }
 
     /**
-      * Enable notification on a host
-      *
-      * @param string hostname Hostname to select.
-      */
+     * Enable notification on a host
+     *
+     * @param string hostname Hostname to select.
+     */
     public function enableNotificationOnHost($hostname)
     {
         $this->doActionOn($hostname, 'Hosts : Enable Notification');
     }
 
     /**
-      * Disable notification on a host
-      *
-      * @param string hostname Hostname to select.
-      */
+     * Disable notification on a host
+     *
+     * @param string hostname Hostname to select.
+     */
     public function disableNotificationOnHost($hostname)
     {
         $this->doActionOn($hostname, 'Hosts : Disable Notification');
     }
 
     /**
-      * Enable check on a host
-      *
-      * @param string hostname Hostname to select.
-      */
+     * Enable check on a host
+     *
+     * @param string hostname Hostname to select.
+     */
     public function enableCheckOnHost($hostname)
     {
         $this->doActionOn($hostname, 'Hosts : Enable Check');
     }
 
     /**
-      * Disable check on a host
-      *
-      * @param string hostname Hostname to select.
-      */
+     * Disable check on a host
+     *
+     * @param string hostname Hostname to select.
+     */
     public function disableCheckOnHost($hostname)
     {
         $this->doActionOn($hostname, 'Hosts : Disable Check');
     }
 
     /**
-      * Downtime a host
-      *
-      * @param string hostname Host name to select
-      * @param bool isDurationFixed The duration is fixed or not.
-      * @param string startTimeDate
-      * @param string startTimeTime
-      * @param string endTimeDate
-      * @param string end_time_time
-      * @param string duration Desired duration.
-      * @param string duration_scale Unit of the duration.
-      * @param string comment Comment to associate on the downtime
-      * @param bool setDowntimesOnServicesAttached
-      */
-    public function addDowntimeOnHost($hostname, $isDurationFixed, $startTimeDate, $startTimeTime, $endTimeDate, $end_time_time, $duration, $duration_scale, $comment, $setDowntimesOnServicesAttached)
-    {
+     * Downtime a host
+     *
+     * @param string hostname Host name to select
+     * @param bool isDurationFixed The duration is fixed or not.
+     * @param string startTimeDate
+     * @param string startTimeTime
+     * @param string endTimeDate
+     * @param string end_time_time
+     * @param string duration Desired duration.
+     * @param string duration_scale Unit of the duration.
+     * @param string comment Comment to associate on the downtime
+     * @param bool setDowntimesOnServicesAttached
+     */
+    public function addDowntimeOnHost(
+        $hostname,
+        $isDurationFixed,
+        $startTimeDate,
+        $startTimeTime,
+        $endTimeDate,
+        $end_time_time,
+        $duration,
+        $duration_scale,
+        $comment,
+        $setDowntimesOnServicesAttached
+    ) {
 
         // Prepare the downtime of the host
         $this->doActionOn($hostname, 'Hosts : Set Downtime');
 
         // When I have a pop-in "Set downtimes"
         $this->ctx->spin(
-            function($context) {
+            function ($context) {
                 return $context->getSession()->getPage()->has('named', array('id', 'popupDowntime'));
             }
         );
@@ -325,7 +329,8 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
         $this->ctx->assertFindIn($popinDowntime, 'named', array('id_or_name', 'comment'))->setValue($comment);
 
         // Configure "Set downtimes on services attached to hosts"
-        $downtimesOnServicesAttachedCheckbox = $this->ctx->assertFindIn($popinDowntime, 'named', array('id', 'downtimehostservice'));
+        $downtimesOnServicesAttachedCheckbox = $this->ctx->assertFindIn($popinDowntime, 'named',
+            array('id', 'downtimehostservice'));
 
         if ($setDowntimesOnServicesAttached) {
             $this->checkCheckbox($downtimesOnServicesAttachedCheckbox);
@@ -342,10 +347,10 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
     }
 
     /**
-      * Get the status of a host
-      *
-      * @param string hostName Host name to select
-      */
+     * Get the status of a host
+     *
+     * @param string hostName Host name to select
+     */
     public function getStatus($hostName)
     {
         // We cannot direct web-interface search right now (XSLT is not
@@ -355,21 +360,21 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
         $stmt = $this->ctx->getStorageDatabase()->prepare($query);
         $stmt->execute(array(':name' => $hostName));
         $res = $stmt->fetch();
-        if ($res === FALSE) {
+        if ($res === false) {
             throw new \Exception('Cannot get status of host ' . $hostName);
         }
         switch ($res['state']) {
-        case 0:
-            $status = 'UP';
-            break ;
-        case 1:
-            $status = 'DOWN';
-            break ;
-        case 2:
-            $status = 'UNREACHABLE';
-            break ;
-        default:
-            $status = 'UNKNOWN';
+            case 0:
+                $status = 'UP';
+                break;
+            case 1:
+                $status = 'DOWN';
+                break;
+            case 2:
+                $status = 'UNREACHABLE';
+                break;
+            default:
+                $status = 'UNKNOWN';
         }
         return $status;
     }
