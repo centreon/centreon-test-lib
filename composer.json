@@ -11,7 +11,9 @@
         "symfony/http-client": "4.4.*",
         "webmozart/assert": "^1.9",
         "justinrainbow/json-schema": "^5.2",
-        "symfony/property-access": "4.4.*"
+        "symfony/property-access": "4.4.*",
+        "league/openapi-psr7-validator": "^0.9.0",
+        "nyholm/psr7": "^1.3"
     },
     "suggest": {
         "behat/mink": "Browser controller/emulator abstraction for PHP",

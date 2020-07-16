@@ -24,7 +24,7 @@ namespace Centreon\Test\Behat\Api\Context;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpClient\HttpClient;
 use Centreon\Test\Behat\Container;
 use Centreon\Test\Behat\Api\Context\JsonContextTrait;
@@ -36,6 +36,8 @@ use Centreon\Test\Behat\Api\Context\RestContextTrait;
 class ApiContext implements Context
 {
     use JsonContextTrait, RestContextTrait, CentreonClapiContextTrait;
+
+    public const ROOT_PATH = '/centreon/api';
 
     /**
      * @var Container
@@ -350,7 +352,7 @@ class ApiContext implements Context
         }
         $this->container = new Container($composeFile);
         $this->setBaseUri(
-            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon/api'
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . self::ROOT_PATH
         );
 
         $this->spin(
@@ -431,7 +433,7 @@ class ApiContext implements Context
             ])
         );
 
-        $response = json_decode($response->getContent(), true);
+        $response = json_decode($response->getBody()->__toString(), true);
         $this->setToken($response['security']['token']);
     }
 
@@ -461,7 +463,7 @@ class ApiContext implements Context
                     '/beta/monitoring/hosts?search={"host.name":"' . $host . '"}'
                 );
                 $this->theJsonNodeShouldHaveElements('result', 1);
-                $response = json_decode($response->getContent(), true);
+                $response = json_decode($response->getBody()->__toString(), true);
                 $hostId = $response["result"][0]['id'];
 
                 return true;
@@ -491,7 +493,7 @@ class ApiContext implements Context
                         . '{"host.name":"' . $host . '","service.description":"' . $service . '"}'
                 );
                 $this->theJsonNodeShouldHaveElements('result', 1);
-                $response = json_decode($response->getContent(), true);
+                $response = json_decode($response->getBody()->__toString(), true);
 
                 $hostId = $response['result'][0]['host']['id'];
                 $serviceId = $response['result'][0]['id'];
