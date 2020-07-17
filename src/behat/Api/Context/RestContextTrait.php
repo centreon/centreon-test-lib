@@ -30,8 +30,10 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use League\OpenAPIValidation\PSR7\ValidatorBuilder;
 use League\OpenAPIValidation\PSR7\SchemaFactory\YamlFileFactory;
-use \Nyholm\Psr7\Stream;
-use \Nyholm\Psr7\Uri;
+use League\OpenAPIValidation\PSR7\Exception\ValidationFailed;
+use League\OpenAPIValidation\Schema\Exception\SchemaMismatch;
+use Nyholm\Psr7\Stream;
+use Nyholm\Psr7\Uri;
 
 Trait RestContextTrait
 {
@@ -179,7 +181,21 @@ Trait RestContextTrait
             $responseValidator = $this->apiValidator->getResponseValidator();
 
             $operation = $requestValidator->validate($request);
-            $responseValidator->validate($operation, $response);
+            try {
+                $responseValidator->validate($operation, $response);
+            } catch (ValidationFailed $e) {
+                if (is_subclass_of($e->getPrevious(), '\League\OpenAPIValidation\Schema\Exception\SchemaMismatch')) {
+                    /**
+                     * @var SchemaMismatch $schemaMismatchException
+                     */
+                    $schemaMismatchException = $e->getPrevious();
+                    $exceptionMessage = $e->getMessage() . "\n"
+                        . 'Failed properties : '
+                        . implode(',', $schemaMismatchException->dataBreadCrumb()->buildChain());
+                    throw new ValidationFailed($exceptionMessage, $e->getCode(), $e);
+                }
+                throw $e;
+            }
         }
     }
 
