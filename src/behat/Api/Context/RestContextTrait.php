@@ -29,6 +29,7 @@ use Symfony\Component\HttpClient\Psr18Client;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use League\OpenAPIValidation\PSR7\ValidatorBuilder;
+use League\OpenAPIValidation\PSR7\SchemaFactory\YamlFileFactory;
 use \Nyholm\Psr7\Stream;
 use \Nyholm\Psr7\Uri;
 
@@ -103,8 +104,16 @@ Trait RestContextTrait
      */
     public function theCentreonApiDocumentation()
     {
+        $schema = (new YamlFileFactory(__DIR__ . '/../../../../../../../doc/API/centreon-api-v2.yaml'))
+            ->createSchema();
+
+        // update server url because openapi validator does not manage properly base uri variables
+        $schema
+            ->__get('servers')[0]
+            ->__set('url', '/centreon/api/{version}');
+
         $this->apiValidator = (new ValidatorBuilder())
-            ->fromYamlFile(__DIR__ . '/../../../../../../../doc/API/centreon-api-v2.yaml');
+            ->fromSchema($schema);
     }
 
     /**
