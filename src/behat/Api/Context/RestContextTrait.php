@@ -165,6 +165,13 @@ Trait RestContextTrait
         return $this->getHttpResponse();
     }
 
+    /**
+     * Validate request and response according api documentation
+     *
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @return void
+     */
     public function validateRequestAndResponse(RequestInterface $request, ResponseInterface $response): void
     {
         if (isset($this->apiValidator)) {
