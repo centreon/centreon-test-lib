@@ -21,7 +21,7 @@
 
 namespace Centreon\Test\Behat\Api\Context;
 
-use Symfony\Contracts\HttpClient\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Webmozart\Assert\Assert;
@@ -444,7 +444,7 @@ Trait JsonContextTrait
 
     protected function getJson()
     {
-        return new Json($this->getHttpResponse()->getContent());
+        return new Json($this->getHttpResponse()->getBody()->__toString());
     }
 
     private function checkSchemaFile($filename)
@@ -493,7 +493,7 @@ Trait JsonContextTrait
 
         $this->theResponseShouldBeInJson();
 
-        $content = json_decode($this->getHttpResponse()->getContent());
+        $content = json_decode($this->getHttpResponse()->getBody()->__toString());
         $validator = new \JsonSchema\Validator();
         $validator->validate(
             $content,

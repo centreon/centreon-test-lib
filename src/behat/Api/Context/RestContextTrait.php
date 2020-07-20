@@ -25,22 +25,22 @@ use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Webmozart\Assert\Assert;
 use Symfony\Component\HttpClient\CurlHttpClient;
-use Symfony\Contracts\HttpClient\ResponseInterface;
+use Symfony\Component\HttpClient\Psr18Client;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use League\OpenAPIValidation\PSR7\ValidatorBuilder;
+use League\OpenAPIValidation\PSR7\SchemaFactory\YamlFileFactory;
+use League\OpenAPIValidation\PSR7\Exception\ValidationFailed;
+use League\OpenAPIValidation\Schema\Exception\SchemaMismatch;
+use Nyholm\Psr7\Stream;
+use Nyholm\Psr7\Uri;
 
 Trait RestContextTrait
 {
     /**
-     * Parse URI path
-     *
-     * @param string $path
-     * @return string
+     * @var ValidatorBuilder
      */
-    public function locatePath($path)
-    {
-        return 0 !== strpos($path, 'http')
-            ? rtrim($this->getBaseUri(), '/') . '/' . ltrim($path, '/')
-            : $path;
-    }
+    private $apiValidator;
 
     /**
      * @return CurlHttpClient
@@ -87,6 +87,38 @@ Trait RestContextTrait
     abstract protected function getBaseUri();
 
     /**
+     * Parse URI path
+     *
+     * @param string $path
+     * @return string
+     */
+    public function locatePath($path)
+    {
+        return 0 !== strpos($path, 'http')
+            ? rtrim($this->getBaseUri(), '/') . '/' . ltrim($path, '/')
+            : $path;
+    }
+
+    /**
+     * Initialize validator according to centreon web api documentation
+     *
+     * @Given the endpoints are described in Centreon Web API documentation
+     */
+    public function theCentreonApiDocumentation()
+    {
+        $schema = (new YamlFileFactory(__DIR__ . '/../../../../../../../doc/API/centreon-api-v2.yaml'))
+            ->createSchema();
+
+        // update server url because openapi validator does not manage properly base uri variables
+        $schema
+            ->__get('servers')[0]
+            ->__set('url', '/centreon/api/{version}');
+
+        $this->apiValidator = (new ValidatorBuilder())
+            ->fromSchema($schema);
+    }
+
+    /**
      * Sends a HTTP request
      * @return ResponseInterface
      *
@@ -95,27 +127,76 @@ Trait RestContextTrait
     public function iSendARequestTo($method, $url, $body = null)
     {
         if ($body !== null) {
-            if (is_string($body)) {
-                $body = new PyStringNode([$body], 1);
+            if ($body instanceof PyStringNode) {
+                $body = $body->getRaw();
             } elseif (is_array($body)) {
-                $body = new PyStringNode($body, 1);
-            } elseif (!($body instanceof PyStringNode)) {
-                throw new \Exception('body format not supported');
+                $body = implode('', $body);
             }
         }
 
-        $this->setHttpResponse(
-            $this->getHttpClient()->request(
-                $method,
-                $this->locatePath($url),
-                [
-                    'headers' => $this->getHttpHeaders(),
-                    'body' => $body !== null ? $body->getRaw() : null
-                ]
-            )
-        );
+        $client = new Psr18Client($this->getHttpClient());
+
+        if (preg_match('#^(?:' . $this->getBaseUri() . ')?(/[\w\d\.]+)(/.+)$#', $url, $matches)) {
+            $validate = true;
+            $url = ApiContext::ROOT_PATH . $matches[1] . $matches[2];
+            $uri = new Uri($this->getBaseUri() . $matches[1] . $matches[2]);
+        } else {
+            $validate = false;
+            $url = $this->locatePath($url);
+            $uri = new Uri($url);
+        }
+
+        $request = $client->createRequest($method, $url);
+        foreach ($this->getHttpHeaders() as $header => $value) {
+            $request = $request->withHeader($header, $value);
+        }
+        if ($body !== null) {
+            $request = $request->withBody(Stream::create($body));
+        }
+
+        $request = $request->withUri($uri);
+
+        $response = $client->sendRequest($request);
+
+        if ($validate === true) {
+            $this->validateRequestAndResponse($request, $response);
+        }
+
+        $this->setHttpResponse($response);
 
         return $this->getHttpResponse();
+    }
+
+    /**
+     * Validate request and response according api documentation
+     *
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @return void
+     */
+    public function validateRequestAndResponse(RequestInterface $request, ResponseInterface $response): void
+    {
+        if (isset($this->apiValidator)) {
+            $requestValidator = $this->apiValidator->getRequestValidator();
+            $responseValidator = $this->apiValidator->getResponseValidator();
+
+            $operation = $requestValidator->validate($request);
+            try {
+                $responseValidator->validate($operation, $response);
+            } catch (ValidationFailed $e) {
+                if (is_subclass_of($e->getPrevious(), '\League\OpenAPIValidation\Schema\Exception\SchemaMismatch')) {
+                    /**
+                     * @var SchemaMismatch $schemaMismatchException
+                     */
+                    $schemaMismatchException = $e->getPrevious();
+                    $exceptionMessage = $e->getMessage() . "\n"
+                        . 'Failed properties : '
+                        . implode(',', $schemaMismatchException->dataBreadCrumb()->buildChain());
+                    throw new ValidationFailed($exceptionMessage, $e->getCode(), $e);
+                }
+                throw $e;
+            }
+        }
     }
 
     /**
@@ -161,7 +242,7 @@ Trait RestContextTrait
     public function theResponseShouldBeEqualTo(PyStringNode $expected)
     {
         $expected = str_replace('\\"', '"', $expected);
-        $actual   = $this->getHttpResponse()->getContent();
+        $actual   = $this->getHttpResponse()->getBody()->__toString();
         $message = "Actual response is '$actual', but expected '$expected'";
         Assert::eq($expected, $actual, $message);
     }
@@ -173,7 +254,7 @@ Trait RestContextTrait
      */
     public function theResponseShouldBeEmpty()
     {
-        $actual = $this->getHttpResponse()->getContent();
+        $actual = $this->getHttpResponse()->getBody()->__toString();
         $message = "The response of the current page is not empty, it is: $actual";
         Assert::isEmpty($actual, $message);
     }
@@ -190,7 +271,7 @@ Trait RestContextTrait
         /**
          * @var string
          */
-        $actual = $this->getHttpResponse()->getHeaders()[$name];
+        $actual = $this->getHttpResponse()->getHeader($name);
 
         Assert::eq(
             strtolower($value),
@@ -210,7 +291,7 @@ Trait RestContextTrait
         /**
          * @var string
          */
-        $actual = $this->getHttpResponse()->getHeaders()[$name];
+        $actual = $this->getHttpResponse()->getHeader($name);
 
         Assert::notEq(
             strtolower($value),
@@ -231,7 +312,7 @@ Trait RestContextTrait
         /**
          * @var string
          */
-        $actual = $this->getHttpResponse()->getHeaders()[$name];
+        $actual = $this->getHttpResponse()->getHeader($name);
 
         Assert::contains(
             $value,
@@ -252,7 +333,7 @@ Trait RestContextTrait
         /**
          * @var string
          */
-        $actual = $this->getHttpResponse()->getHeaders()[$name];
+        $actual = $this->getHttpResponse()->getHeader($name);
 
         Assert::notContains(
             $value,
@@ -269,7 +350,6 @@ Trait RestContextTrait
     public function theHeaderShouldNotExist(string $name)
     {
         $headers = $this->getHttpResponse()->getHeaders();
-
         Assert::keyNotExists(
             $headers,
             $name,
@@ -291,8 +371,6 @@ Trait RestContextTrait
             $name,
             "Header '$name' does not exist."
         );
-
-        return isset($this->$this->getHttpResponse()->getHeaders()[$name]);
     }
 
     /**
@@ -305,7 +383,7 @@ Trait RestContextTrait
         /**
          * @var string
          */
-        $actual = $this->getHttpResponse()->getHeaders()[$name];
+        $actual = $this->getHttpResponse()->getHeader($name);
 
         Assert::eq(
             1,
@@ -332,8 +410,8 @@ Trait RestContextTrait
      */
     public function theResponseShouldExpireInTheFuture()
     {
-        $date = new \DateTime($this->getHttpResponse()->getHeaders()['Date'][0]);
-        $expires = new \DateTime($this->getHttpResponse()->getHeaders()['Expires'][0]);
+        $date = new \DateTime($this->getHttpResponse()->getHeader('Date')[0]);
+        $expires = new \DateTime($this->getHttpResponse()->getHeader('Expires')[0]);
 
         Assert::same(
             1,
@@ -357,7 +435,7 @@ Trait RestContextTrait
      */
     public function theResponseShouldBeEncodedIn($encoding)
     {
-        $content = $this->getHttpResponse()->getContent();
+        $content = $this->getHttpResponse()->getBody()->__toString();
         if (!mb_check_encoding($content, $encoding)) {
             throw new \Exception("The response is not encoded in $encoding");
         }
