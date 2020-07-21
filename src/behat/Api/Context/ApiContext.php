@@ -49,7 +49,6 @@ class ApiContext implements Context
      */
     protected $composeFiles;
 
-
     /**
      * @var HttpClientInterface
      */
@@ -505,5 +504,35 @@ class ApiContext implements Context
         );
 
         return [$hostId, $serviceId];
+    }
+
+    /**
+     * Wait hostgroup to be monitored
+     *
+     * @param string $hostgroup the hostgroup name to search
+     * @return int|null the hostgroup id if found
+     *
+     * @Given I wait until hostgroup :hostgroup is monitored
+     */
+    public function iWaitUntilHostGroupIsMonitored(string $hostgroup): ?int
+    {
+        $hostgroupId = null;
+        $this->spin(
+            function() use ($hostgroup, &$hostgroupId) {
+                $response = $this->iSendARequestTo(
+                    'GET',
+                    '/beta/monitoring/hostgroups?search={"name":"' . $hostgroup . '"}'
+                );
+                $this->theJsonNodeShouldHaveElements('result', 1);
+                $response = json_decode($response->getBody()->__toString(), true);
+                $hostgroupId = $response["result"][0]['id'];
+
+                return true;
+            },
+            'the hostgroup ' . $hostgroup . ' seems not monitored',
+            10
+        );
+
+        return $hostgroupId;
     }
 }
