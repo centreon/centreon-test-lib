@@ -24,7 +24,7 @@ namespace Centreon\Test\Behat\Api\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Webmozart\Assert\Assert;
-use Symfony\Component\HttpClient\CurlHttpClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\HttpClient\Psr18Client;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -43,15 +43,15 @@ Trait RestContextTrait
     private $apiValidator;
 
     /**
-     * @return CurlHttpClient
+     * @return HttpClientInterface
      */
     abstract protected function getHttpClient();
 
     /**
-     * @param CurlHttpClient $httpClient
+     * @param HttpClientInterface $httpClient
      * @return void
      */
-    abstract protected function setHttpClient(CurlHttpClient $httpClient);
+    abstract protected function setHttpClient(HttpClientInterface $httpClient);
 
     /**
      * @return array
