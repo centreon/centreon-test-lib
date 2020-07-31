@@ -199,6 +199,34 @@ class ApiContext implements Context
     }
 
     /**
+     * Store custom variables
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return void
+     */
+    protected function addCustomVariable(string $name, $value)
+    {
+        $this->customVariables[$name] = $value;
+    }
+
+    /**
+     * Get custom variable by name
+     *
+     * @param string $name
+     * @return mixed
+     * @throws \Exception
+     */
+    protected function getCustomVariable(string $name)
+    {
+        if (!isset($this->customVariables[$name])) {
+            throw new \Exception('Variable "' . $name . '" is not stored');
+        }
+
+        return $this->customVariables[$name];
+    }
+
+    /**
      *  Set containers Compose files.
      */
     public function setContainersComposeFiles($files)
