@@ -48,6 +48,13 @@ Trait JsonContextTrait
     abstract protected function setHttpResponse(ResponseInterface $httpResponse);
 
     /**
+     * @param string $name
+     * @param mixed $value
+     * @return void
+     */
+    abstract protected function addCustomVariable(string $name, $value);
+
+    /**
      * @return JsonInspector
      */
     private function getInspector()
@@ -500,5 +507,21 @@ Trait JsonContextTrait
             ['$ref' => 'file://' . $fullPath],
             \JsonSchema\Constraints\Constraint::CHECK_MODE_EXCEPTIONS
         );
+    }
+
+    /**
+     * Store custom variables
+     *
+     * @Given I store response values in:
+     */
+    public function iStoreResponseValuesIn(TableNode $table)
+    {
+        $json = $this->getJson();
+
+        foreach ($table as $row) {
+            $value = $this->getInspector()->evaluate($json, $row['path']);
+
+            $this->addCustomVariable($row['name'], $value);
+        }
     }
 }

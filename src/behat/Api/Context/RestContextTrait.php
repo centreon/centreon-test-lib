@@ -87,6 +87,13 @@ Trait RestContextTrait
     abstract protected function getBaseUri();
 
     /**
+     * @param string $name
+     * @return mixed
+     * @throws \Exception
+     */
+    abstract protected function getCustomVariable(string $name);
+
+    /**
      * Parse URI path
      *
      * @param string $path
@@ -106,7 +113,7 @@ Trait RestContextTrait
      */
     public function theCentreonApiDocumentation()
     {
-        $schema = (new YamlFileFactory(__DIR__ . '/../../../../../../../doc/API/centreon-api-v2.yaml'))
+        $schema = (new YamlFileFactory(getcwd() . '/doc/API/centreon-api-v2.yaml'))
             ->createSchema();
 
         // update server url because openapi validator does not manage properly base uri variables
@@ -126,12 +133,15 @@ Trait RestContextTrait
      */
     public function iSendARequestTo($method, $url, $body = null)
     {
+        $url = $this->replaceCustomVariables($url);
+
         if ($body !== null) {
             if ($body instanceof PyStringNode) {
                 $body = $body->getRaw();
             } elseif (is_array($body)) {
                 $body = implode('', $body);
             }
+            $body = $this->replaceCustomVariables($body);
         }
 
         $client = new Psr18Client($this->getHttpClient());
@@ -208,6 +218,8 @@ Trait RestContextTrait
     {
         $parameters = [];
 
+        $url = $this->replaceCustomVariables($url);
+
         foreach ($data->getHash() as $row) {
             if (!isset($row['key']) || !isset($row['value'])) {
                 throw new \Exception("You must provide a 'key' and 'value' column in your table node.");
@@ -221,6 +233,23 @@ Trait RestContextTrait
             $this->locatePath($url),
             $parameters
         );
+    }
+
+    /**
+     * Replace custom variables
+     *
+     * @param string $value
+     * @return string
+     */
+    private function replaceCustomVariables(string $value): string
+    {
+        if (preg_match_all('/<([\w\d]+)>/', $value, $matches)) {
+            foreach ($matches[1] as $match) {
+                $value = str_replace('<' . $match . '>', $this->getCustomVariable($match), $value);
+            }
+        }
+
+        return $value;
     }
 
     /**
