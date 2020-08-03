@@ -253,7 +253,7 @@ Trait JsonContextTrait
     }
 
     /**
-     * Checks, that given JSON node has N element(s)
+     * Checks, that given JSON node has at least N element(s)
      *
      * @Then the JSON node :node should have at least :count element(s)
      */
