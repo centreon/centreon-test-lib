@@ -496,7 +496,7 @@ class ApiContext implements Context
                 return true;
             },
             'the host ' . $host . ' seems not monitored',
-            10
+            15
         );
 
         return $hostId;
@@ -528,7 +528,7 @@ class ApiContext implements Context
                 return true;
             },
             'the service ' . $host . ' - ' . $service . ' seems not monitored',
-            10
+            15
         );
 
         return [$hostId, $serviceId];
@@ -558,9 +558,40 @@ class ApiContext implements Context
                 return true;
             },
             'the hostgroup ' . $hostgroup . ' seems not monitored',
-            10
+            15
         );
 
         return $hostgroupId;
+    }
+
+    /**
+     * Wait to get some results from a listing endpoint
+     *
+     * @param int $count expected count of results
+     * @param string $url the listing endpoint
+     * @return int the count of results
+     *
+     * @Given I wait to get :count result(s) from :url
+     */
+    public function iWaitToGetSomeResultsFrom(int $count, string $url): int
+    {
+        $resultCount = 0;
+
+        $url = $this->replaceCustomVariables($url);
+
+        $this->spin(
+            function() use ($count, $url, &$resultCount) {
+                $response = $this->iSendARequestTo('GET', $url);
+                $response = json_decode($response->getBody()->__toString(), true);
+                $resultCount = count($response["result"]);
+                $this->theJsonNodeShouldHaveAtLeastElements('result', $count);
+
+                return true;
+            },
+            'the count of result(s) is : ' . $resultCount,
+            15
+        );
+
+        return $resultCount;
     }
 }
