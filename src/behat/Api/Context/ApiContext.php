@@ -27,15 +27,13 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpClient\HttpClient;
 use Centreon\Test\Behat\Container;
-use Centreon\Test\Behat\Api\Context\JsonContextTrait;
-use Centreon\Test\Behat\Api\Context\RestContextTrait;
 
 /**
  * This context class contains the main definitions of the steps used by contexts to validate API
  */
 class ApiContext implements Context
 {
-    use JsonContextTrait, RestContextTrait, CentreonClapiContextTrait;
+    use JsonContextTrait, RestContextTrait, CentreonClapiContextTrait, FileSystemContextTrait;
 
     public const ROOT_PATH = '/centreon/api';
 
@@ -478,9 +476,9 @@ class ApiContext implements Context
     /**
      * Wait host to be monitored
      *
-     * @Given I wait until host :host is monitored
+     * @then /^I wait until host "(\S+)" is monitored(?: \(tries: \d+\))?$/
      */
-    public function iWaitUntilHostIsMonitored(string $host)
+    public function iWaitUntilHostIsMonitored(string $host, int $tries = 15)
     {
         $hostId = null;
         $this->spin(
@@ -496,7 +494,7 @@ class ApiContext implements Context
                 return true;
             },
             'the host ' . $host . ' seems not monitored',
-            15
+            $tries
         );
 
         return $hostId;
@@ -505,9 +503,9 @@ class ApiContext implements Context
     /**
      * Wait service to be monitored
      *
-     * @Given I wait until service :service from host :host is monitored
+     * @Given /^I wait until service "(\S+)" from host "(\S+)" is monitored(?: \(tries: \d+\))?$/
      */
-    public function iWaitUntilServiceIsMonitored(string $service, string $host)
+    public function iWaitUntilServiceIsMonitored(string $service, string $host, int $tries = 15)
     {
         $hostId = null;
         $serviceId = null;
@@ -528,7 +526,7 @@ class ApiContext implements Context
                 return true;
             },
             'the service ' . $host . ' - ' . $service . ' seems not monitored',
-            15
+            $tries
         );
 
         return [$hostId, $serviceId];
@@ -538,11 +536,12 @@ class ApiContext implements Context
      * Wait hostgroup to be monitored
      *
      * @param string $hostgroup the hostgroup name to search
+     * @param int $tries Count of tries
      * @return int|null the hostgroup id if found
      *
-     * @Given I wait until hostgroup :hostgroup is monitored
+     * @Given /^I wait until hostgroup "(\S+)" is monitored(?: \(tries: \d+\))?$/
      */
-    public function iWaitUntilHostGroupIsMonitored(string $hostgroup): ?int
+    public function iWaitUntilHostGroupIsMonitored(string $hostgroup, int $tries = 15): ?int
     {
         $hostgroupId = null;
         $this->spin(
@@ -558,7 +557,7 @@ class ApiContext implements Context
                 return true;
             },
             'the hostgroup ' . $hostgroup . ' seems not monitored',
-            15
+            $tries
         );
 
         return $hostgroupId;
@@ -569,11 +568,12 @@ class ApiContext implements Context
      *
      * @param int $count expected count of results
      * @param string $url the listing endpoint
+     * @param int $tries Count of tries
      * @return int the count of results
      *
-     * @Given I wait to get :count result(s) from :url
+     * @Given /^I wait to get (\d+) result(s) from (\S+)(?: \(tries: \d+\))?$/
      */
-    public function iWaitToGetSomeResultsFrom(int $count, string $url): int
+    public function iWaitToGetSomeResultsFrom(int $count, string $url, int $tries = 15): int
     {
         $resultCount = 0;
 
@@ -589,7 +589,7 @@ class ApiContext implements Context
                 return true;
             },
             'the count of result(s) is : ' . $resultCount,
-            15
+            $tries
         );
 
         return $resultCount;
