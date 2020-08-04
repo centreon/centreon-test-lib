@@ -253,6 +253,20 @@ Trait JsonContextTrait
     }
 
     /**
+     * Checks, that given JSON node has at least N element(s)
+     *
+     * @Then the JSON node :node should have at least :count element(s)
+     */
+    public function theJsonNodeShouldHaveAtLeastElements($node, int $count)
+    {
+        $json = $this->getJson();
+
+        $actual = $this->getInspector()->evaluate($json, $node);
+
+        Assert::greaterThanEq(json_decode($actual, true), $count);
+    }
+
+    /**
      * Checks, that given JSON node contains given value
      *
      * @Then the JSON node :node should contain :text
