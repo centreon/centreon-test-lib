@@ -263,7 +263,7 @@ Trait JsonContextTrait
 
         $actual = $this->getInspector()->evaluate($json, $node);
 
-        Assert::greaterThanEq(json_decode($actual, true), $count);
+        Assert::greaterThanEq(count(json_decode($actual, true)), $count);
     }
 
     /**
