@@ -476,7 +476,7 @@ class ApiContext implements Context
     /**
      * Wait host to be monitored
      *
-     * @then /^I wait until host "(\S+)" is monitored(?: \(tries: \d+\))?$/
+     * @Given /^I wait until host "(\S+)" is monitored(?: \(tries: \d+\))?$/
      */
     public function iWaitUntilHostIsMonitored(string $host, int $tries = 15)
     {
