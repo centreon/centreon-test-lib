@@ -571,7 +571,7 @@ class ApiContext implements Context
      * @param int $tries Count of tries
      * @return int the count of results
      *
-     * @Given /^I wait to get (\d+) result(s) from (\S+)(?: \(tries: \d+\))?$/
+     * @Given /^I wait to get (\d+) results? from "(\S+)"(?: \(tries: \d+\))?$/
      */
     public function iWaitToGetSomeResultsFrom(int $count, string $url, int $tries = 15): int
     {
