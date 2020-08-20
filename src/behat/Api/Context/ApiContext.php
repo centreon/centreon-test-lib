@@ -594,4 +594,15 @@ class ApiContext implements Context
 
         return $resultCount;
     }
+
+    /**
+     * Sleep to be able to connect to the instantiated container while test is running
+     *
+     * @Then Sleep :time secs to Debug
+     * @param int $time
+     */
+    public function iNeedASleepToDebug(int $time = 9999)
+    {
+        sleep($time);
+    }
 }
