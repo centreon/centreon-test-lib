@@ -598,7 +598,7 @@ class ApiContext implements Context
     /**
      * Sleep to be able to connect to the instantiated container while test is running
      *
-     * @Then Sleep :time secs to Debug
+     * @Then I wait for :time seconds
      * @param int $time
      */
     public function iNeedASleepToDebug(int $time = 9999)
