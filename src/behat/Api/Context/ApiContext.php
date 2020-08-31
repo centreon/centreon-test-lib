@@ -601,7 +601,7 @@ class ApiContext implements Context
      * @Then I wait for :time seconds
      * @param int $time
      */
-    public function iWaitForNSeconds(int $time = 9999)
+    public function iWaitForNSeconds(int $time)
     {
         sleep($time);
     }
