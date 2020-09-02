@@ -72,9 +72,9 @@ class LoginPage implements \Centreon\Test\Behat\Interfaces\Page
         // Wait for connection.
         $this->context->spin(
             function ($context) {
-                if ($this->context->assertFind('css', 'input[name="submitLogin"]')) {
-                    var_dump('submit button is still found. Clicking again')
-                    $this->context->assertFind('css', 'input[name="submitLogin"]')->click();
+                if ($context->getSession()->getPage()->has('css', 'input[name="submitLogin"]')) {
+                    var_dump('submit button is still found. Clicking again');
+                    $context->assertFind('css', 'input[name="submitLogin"]')->click();
                 }
                 return $context->getSession()->getPage()->has(
                     'css',
