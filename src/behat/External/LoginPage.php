@@ -79,7 +79,7 @@ class LoginPage implements \Centreon\Test\Behat\Interfaces\Page
                     'css',
                     'td[class="copyRight"]'
                 );
-            }, 'Login failed., 10
+            }, 'Login failed.', 10
         );
     }
 }
