@@ -197,7 +197,15 @@ class CentreonContext extends UtilsContext
      */
     public function iAmLoggedIn()
     {
-        $this->logAnUser();
+
+        $this->spin(
+            function ($context) {
+                $context->logAnUser();
+                return true;
+            },
+            'Retry to login',
+            3
+        );
 
         // Handle feature flipping
         $this->enableNewFeature(false);
