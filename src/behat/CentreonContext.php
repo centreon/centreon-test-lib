@@ -785,7 +785,14 @@ class CentreonContext extends UtilsContext
         }
 
         // Login.
-        $page = new LoginPage($this);
-        $page->login($user, $password);
+        $this->spin(
+            function ($context) use ($user, $password) {
+                $page = new LoginPage($context);
+                $page->login($user, $password);
+                return true;
+            },
+            'cannot login',
+            3
+        );
     }
 }
