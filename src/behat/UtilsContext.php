@@ -458,7 +458,7 @@ class UtilsContext extends RawMinkContext
                 return count($chosenResults) != 0;
             },
             'Cannot find results in select2 ' . $css_id,
-            10
+            30
         );
 
         foreach ($chosenResults as $result) {
@@ -475,7 +475,7 @@ class UtilsContext extends RawMinkContext
                     return true;
                 },
                 'Cannot select "' . $what . '" in select2 "' . $css_id . '"',
-                3
+                10
             );
             if ($found) {
                 break;
@@ -495,7 +495,7 @@ class UtilsContext extends RawMinkContext
                 );
             },
             'select2 ' . $css_id . ' search field is not closed',
-            10
+            30
         );
     }
 
