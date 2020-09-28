@@ -426,20 +426,20 @@ class UtilsContext extends RawMinkContext
     /**
      * Select an element in a select two.
      *
-     * @param $css_id
+     * @param $cssId
      * @param $what
      * @throws \Exception
      */
-    public function selectToSelectTwo($css_id, $what)
+    public function selectToSelectTwo($cssId, $what)
     {
         // Open select2.
-        $selectDiv = $this->assertFind('css', $css_id)->getParent();
+        $selectDiv = $this->assertFind('css', $cssId)->getParent();
         $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
         $this->spin(
             function ($context) {
                 return $context->assertFind('css', '.select2-container--open .select2-search__field')->isVisible();
             },
-            'Cannot set select2 ' . $css_id . ' active'
+            'Cannot set select2 ' . $cssId . ' active'
         );
         sleep(1);
         $select2Input = $this->getSession()->getDriver()->getWebDriverSession()->activeElement();
@@ -448,23 +448,27 @@ class UtilsContext extends RawMinkContext
         $select2Input->clear();
         $select2Input->postValue(['value' => [$what]]);
 
-        $chosenResults = array();
+        $chosenResults = [];
         $this->spin(
-            function ($context) use ($css_id, &$chosenResults) {
-                $chosenResults = $context->getSession()->getPage()->findAll(
+            function ($context) use (&$chosenResults) {
+                $select2Span = $context->assertFind('css', 'span.select2-results');
+                $chosenResults = $select2Span->findAll(
                     'css',
                     'li.select2-results__option:not(.loading-results):not(.select2-results__message)'
                 );
-                return count($chosenResults) != 0;
+                if (count($chosenResults) === 0) {
+                    throw new \Exception($select2Span->getHtml());
+                }
+                return true;
             },
-            'Cannot find results in select2 ' . $css_id,
+            'Cannot find results in select2 ' . $cssId,
             30
         );
 
         foreach ($chosenResults as $result) {
             $found = false;
             $this->spin(
-                function ($context) use ($result, $what, $css_id, &$found) {
+                function ($context) use ($result, $what, &$found) {
                     $html = $result->getHtml();
                     if (preg_match('/>(.+)</', $html, $matches)) {
                         if ($matches[1] == $what) {
@@ -474,7 +478,7 @@ class UtilsContext extends RawMinkContext
                     }
                     return true;
                 },
-                'Cannot select "' . $what . '" in select2 "' . $css_id . '"',
+                'Cannot select "' . $what . '" in select2 "' . $cssId . '"',
                 10
             );
             if ($found) {
@@ -494,7 +498,7 @@ class UtilsContext extends RawMinkContext
                     '.select2-container--open .select2-search__field'
                 );
             },
-            'select2 ' . $css_id . ' search field is not closed',
+            'select2 ' . $cssId . ' search field is not closed',
             30
         );
     }
