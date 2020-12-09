@@ -124,7 +124,27 @@ Trait RestContextTrait
         $this->apiValidator = (new ValidatorBuilder())
             ->fromSchema($schema);
     }
-
+    
+    /**
+     * Initialize validator according to specific centreon web api documentation
+     *
+     * @Given the endpoints are described in Centreon Web API documentation version :version
+     */
+    public function theCentreonApiDocumentationVersion($version)
+    {
+        $path = '/doc/API/centreon-api-v' . $version . '.yaml';
+        $schema = (new YamlFileFactory(getcwd() . $path))
+            ->createSchema();
+        
+        // update server url because openapi validator does not manage properly base uri variables
+        $schema
+            ->__get('servers')[0]
+            ->__set('url', '/centreon/api/{version}');
+        
+        $this->apiValidator = (new ValidatorBuilder())
+            ->fromSchema($schema);
+    }
+    
     /**
      * Sends a HTTP request
      * @return ResponseInterface
