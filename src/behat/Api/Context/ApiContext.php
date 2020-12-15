@@ -476,7 +476,7 @@ class ApiContext implements Context
     /**
      * Wait host to be monitored
      *
-     * @Given /^I wait until host "(\S+)" is monitored(?: \(tries: \d+\))?$/
+     * @Given /^I wait until host "(\S+)" is monitored(?: \(tries: (\d+)\))?$/
      */
     public function iWaitUntilHostIsMonitored(string $host, int $tries = 15)
     {
@@ -503,7 +503,7 @@ class ApiContext implements Context
     /**
      * Wait service to be monitored
      *
-     * @Given /^I wait until service "(\S+)" from host "(\S+)" is monitored(?: \(tries: \d+\))?$/
+     * @Given /^I wait until service "(\S+)" from host "(\S+)" is monitored(?: \(tries: (\d+)\))?$/
      */
     public function iWaitUntilServiceIsMonitored(string $service, string $host, int $tries = 15)
     {
@@ -539,7 +539,7 @@ class ApiContext implements Context
      * @param int $tries Count of tries
      * @return int|null the hostgroup id if found
      *
-     * @Given /^I wait until hostgroup "(\S+)" is monitored(?: \(tries: \d+\))?$/
+     * @Given /^I wait until hostgroup "(\S+)" is monitored(?: \(tries: (\d+)\))?$/
      */
     public function iWaitUntilHostGroupIsMonitored(string $hostgroup, int $tries = 15): ?int
     {
@@ -571,7 +571,7 @@ class ApiContext implements Context
      * @param int $tries Count of tries
      * @return int the count of results
      *
-     * @Given /^I wait to get (\d+) results? from "(\S+)"(?: \(tries: \d+\))?$/
+     * @Given /^I wait to get (\d+) results? from "(\S+)"(?: \(tries: (\d+)\))?$/
      */
     public function iWaitToGetSomeResultsFrom(int $count, string $url, int $tries = 15): int
     {

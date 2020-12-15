@@ -105,7 +105,7 @@ Trait RestContextTrait
             ? rtrim($this->getBaseUri(), '/') . '/' . ltrim($path, '/')
             : $path;
     }
-
+    
     /**
      * Initialize validator according to centreon web api documentation
      *
