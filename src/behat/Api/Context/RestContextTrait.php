@@ -105,15 +105,14 @@ Trait RestContextTrait
             ? rtrim($this->getBaseUri(), '/') . '/' . ltrim($path, '/')
             : $path;
     }
-
     /**
      * Initialize validator according to centreon web api documentation
      *
-     * @Given the endpoints are described in Centreon Web API documentation
+     * @Given /^the endpoints are described in Centreon Web API documentation(?: \(version: (\S+)\))?$/
      */
-    public function theCentreonApiDocumentation()
+    public function theCentreonApiDocumentation(string $version = '2')
     {
-        $schema = (new YamlFileFactory(getcwd() . '/doc/API/centreon-api-v2.yaml'))
+        $schema = (new YamlFileFactory(getcwd() . '/doc/API/centreon-api-v' . $version . '.yaml'))
             ->createSchema();
 
         // update server url because openapi validator does not manage properly base uri variables
