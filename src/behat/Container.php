@@ -33,6 +33,7 @@ class Container
     {
         $this->composeFile = $composeFile;
         $this->id = uniqid('', true) . rand(1, 1000000);
+        $this->exec('docker-compose -f ' . $this->composeFile . ' pull');
         $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' up -d');
     }
 
