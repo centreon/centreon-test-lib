@@ -105,13 +105,12 @@ Trait RestContextTrait
             ? rtrim($this->getBaseUri(), '/') . '/' . ltrim($path, '/')
             : $path;
     }
-
     /**
      * Initialize validator according to centreon web api documentation
      *
      * @Given /^the endpoints are described in Centreon Web API documentation(?: \(version: (\S+)\))?$/
      */
-    public function theCentreonApiDocumentation(string $version = '2')
+    public function theCentreonApiDocumentation(string $version = null)
     {
         $docDirectory = getcwd() . '/doc/API';
 
@@ -362,11 +361,11 @@ Trait RestContextTrait
         /**
          * @var string
          */
-        $actual = $this->getHttpResponse()->getHeader($name);
+        $actual = $this->getHttpResponse()->getHeader($name)[0];
 
         Assert::contains(
-            $value,
             $actual,
+            $value,
             "The header '$name' should contain value '$value', but actual value is '$actual'"
         );
     }
@@ -383,11 +382,11 @@ Trait RestContextTrait
         /**
          * @var string
          */
-        $actual = $this->getHttpResponse()->getHeader($name);
+        $actual = $this->getHttpResponse()->getHeader($name)[0];
 
         Assert::notContains(
-            $value,
             $actual,
+            $value,
             "The header '$name' contains '$value'"
         );
     }
@@ -419,7 +418,8 @@ Trait RestContextTrait
         Assert::keyExists(
             $headers,
             $name,
-            "Header '$name' does not exist."
+            "Header '$name' does not exist.\n"
+            . 'Headers: ' . json_encode($this->getHttpResponse()->getHeaders())
         );
     }
 
@@ -433,7 +433,7 @@ Trait RestContextTrait
         /**
          * @var string
          */
-        $actual = $this->getHttpResponse()->getHeader($name);
+        $actual = $this->getHttpResponse()->getHeader($name)[0];
 
         Assert::eq(
             1,

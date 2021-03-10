@@ -68,6 +68,11 @@ class ApiContext implements Context
     protected $token;
 
     /**
+     * @var string
+     */
+    protected $phpSessionId;
+
+    /**
      * @var ResponseInterface
      */
     protected $httpResponse;
@@ -121,6 +126,10 @@ class ApiContext implements Context
 
         if (isset($this->token)) {
             $httpHeaders['X-AUTH-TOKEN'] = $this->token;
+        }
+
+        if (isset($this->phpSessionId)) {
+            $httpHeaders['Cookie'] = 'PHPSESSID=' . $this->phpSessionId;
         }
 
         return $httpHeaders;
@@ -177,6 +186,23 @@ class ApiContext implements Context
     protected function setToken(string $token)
     {
         $this->token = $token;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPhpSessionId()
+    {
+        return $this->phpSessionId;
+    }
+
+    /**
+     * @param string $phpSessionId
+     * @return void
+     */
+    protected function setPhpSessionId(string $phpSessionId)
+    {
+        $this->phpSessionId = $phpSessionId;
     }
 
     /**
@@ -460,6 +486,32 @@ class ApiContext implements Context
 
         $response = json_decode($response->getBody()->__toString(), true);
         $this->setToken($response['security']['token']);
+    }
+
+    /**
+     * Log in API
+     *
+     * @Given I am logged in with local provider
+     */
+    public function iAmLoggedInWithLocalProvider()
+    {
+        $baseUriWithoutApi = str_replace('/api', '', $this->getBaseUri());
+        $this->setHttpHeaders(['Content-Type' => 'application/json']);
+        $this->iSendARequestToWithBody(
+            'POST',
+            $baseUriWithoutApi . '/authentication/providers/local',
+            json_encode([
+                'login' => 'admin',
+                'password' => 'centreon',
+            ])
+        );
+
+
+        if (preg_match('/PHPSESSID=(\S+)/', $this->getHttpResponse()->getHeader('set-cookie')[0], $matches)) {
+            $this->setPhpSessionId($matches[1]);
+        } else {
+            throw new \Exception('Php session id not found in cookies');
+        }
     }
 
     /**
