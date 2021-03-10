@@ -105,6 +105,7 @@ Trait RestContextTrait
             ? rtrim($this->getBaseUri(), '/') . '/' . ltrim($path, '/')
             : $path;
     }
+
     /**
      * Initialize validator according to centreon web api documentation
      *
@@ -112,8 +113,29 @@ Trait RestContextTrait
      */
     public function theCentreonApiDocumentation(string $version = '2')
     {
-        $schema = (new YamlFileFactory(getcwd() . '/doc/API/centreon-api-v' . $version . '.yaml'))
-            ->createSchema();
+        $docDirectory = getcwd() . '/doc/API';
+
+        if ($version === null) {  // get latest documentation version
+            $version = '2';
+
+            $files = scandir($docDirectory);
+            foreach ($files as $file) {
+                if (preg_match('/centreon-api-v(.+)\.yaml/', $file, $matches)) {
+                    if (version_compare($matches[1], $version) >= 0) {
+                        $version = $matches[1];
+                    }
+                }
+            }
+        }
+
+        $docFilePath = $docDirectory . '/centreon-api-v' . $version . '.yaml';
+
+        if (!file_exists($docFilePath)) {
+            throw new \InvalidArgumentException('API documentation not found');
+        }
+
+        $schema = (new YamlFileFactory($docFilePath))
+                ->createSchema();
 
         // update server url because openapi validator does not manage properly base uri variables
         $schema
@@ -477,7 +499,9 @@ Trait RestContextTrait
     public function theResponseCodeShouldBe(int $expectedCode)
     {
         $actualCode = $this->getHttpResponse()->getStatusCode();
-        $message = "Actual response is '$actualCode', but expected '$expectedCode'";
+        $message = "Actual response is '$actualCode', but expected '$expectedCode'\n"
+            . "Content is :\n"
+            . $this->getHttpResponse()->getBody()->__toString();
         Assert::eq($expectedCode, $actualCode, $message);
     }
 }

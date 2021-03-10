@@ -99,7 +99,7 @@ Trait JsonContextTrait
     {
         $json = $this->getJson();
 
-        $actual = $this->getInspector()->evaluate($json, $node);
+        $actual = $this->evaluateJsonPath($json, $node);
 
         Assert::eq(
             $text,
@@ -129,7 +129,7 @@ Trait JsonContextTrait
     {
         $json = $this->getJson();
 
-        $actual = $this->getInspector()->evaluate($json, $node);
+        $actual = $this->evaluateJsonPath($json, $node);
 
         Assert::regex(
             $actual,
@@ -147,7 +147,7 @@ Trait JsonContextTrait
     {
         $json = $this->getJson();
 
-        $actual = $this->getInspector()->evaluate($json, $node);
+        $actual = $this->evaluateJsonPath($json, $node);
 
         Assert::notNull(
             $actual,
@@ -177,7 +177,7 @@ Trait JsonContextTrait
     {
         $json = $this->getJson();
 
-        $actual = $this->getInspector()->evaluate($json, $node);
+        $actual = $this->evaluateJsonPath($json, $node);
 
         Assert::true(
             $actual,
@@ -194,7 +194,7 @@ Trait JsonContextTrait
     {
         $json = $this->getJson();
 
-        $actual = $this->getInspector()->evaluate($json, $node);
+        $actual = $this->evaluateJsonPath($json, $node);
 
         Assert::false(
             $actual,
@@ -211,7 +211,7 @@ Trait JsonContextTrait
     {
         $json = $this->getJson();
 
-        $actual = trim($this->getInspector()->evaluate($json, $node), '"');
+        $actual = trim($this->evaluateJsonPath($json, $node), '"');
 
         Assert::same(
             $actual,
@@ -229,7 +229,7 @@ Trait JsonContextTrait
     {
         $json = $this->getJson();
 
-        $actual = $this->getInspector()->evaluate($json, $node);
+        $actual = $this->evaluateJsonPath($json, $node);
 
         Assert::same(
             $actual,
@@ -247,7 +247,7 @@ Trait JsonContextTrait
     {
         $json = $this->getJson();
 
-        $actual = $this->getInspector()->evaluate($json, $node);
+        $actual = $this->evaluateJsonPath($json, $node);
 
         Assert::count(json_decode($actual, true), $count);
     }
@@ -261,7 +261,7 @@ Trait JsonContextTrait
     {
         $json = $this->getJson();
 
-        $actual = $this->getInspector()->evaluate($json, $node);
+        $actual = $this->evaluateJsonPath($json, $node);
 
         Assert::greaterThanEq(count(json_decode($actual, true)), $count);
     }
@@ -275,7 +275,7 @@ Trait JsonContextTrait
     {
         $json = $this->getJson();
 
-        $actual = $this->getInspector()->evaluate($json, $node);
+        $actual = $this->evaluateJsonPath($json, $node);
 
         Assert::contains((string) $actual, $text);
     }
@@ -301,7 +301,7 @@ Trait JsonContextTrait
     {
         $json = $this->getJson();
 
-        $actual = $this->getInspector()->evaluate($json, $node);
+        $actual = $this->evaluateJsonPath($json, $node);
 
         Assert::notContains((string) $actual, $text);
     }
@@ -327,11 +327,8 @@ Trait JsonContextTrait
     {
         $json = $this->getJson();
 
-        try {
-            $node = $this->getInspector()->evaluate($json, $name);
-        } catch (\Exception $e) {
-            throw new \Exception("The node '$name' does not exist.");
-        }
+        $node = $this->evaluateJsonPath($json, $name);
+
         return $node;
     }
 
@@ -533,9 +530,34 @@ Trait JsonContextTrait
         $json = $this->getJson();
 
         foreach ($table as $row) {
-            $value = $this->getInspector()->evaluate($json, $row['path']);
+            $value = $this->evaluateJsonPath($json, $row['path']);
 
             $this->addCustomVariable($row['name'], $value);
         }
+    }
+
+    /**
+     * Evaluate json
+     *
+     * @param Json $json
+     * @param string $expression
+     * @return string
+     * @throws \Exception
+     */
+    private function evaluateJsonPath(Json $json, $expression)
+    {
+        try {
+            $actual = $this->getInspector()->evaluate($json, $expression);
+        } catch (\Exception $e) {
+            throw new \Exception(
+                $e->getMessage() . "\n"
+                    . "Content is :\n"
+                    . $this->getHttpResponse()->getBody()->__toString(),
+                0,
+                $e
+            );
+        }
+
+        return $actual;
     }
 }
