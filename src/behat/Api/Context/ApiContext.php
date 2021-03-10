@@ -489,7 +489,7 @@ class ApiContext implements Context
     }
 
     /**
-     * Log in API
+     * Internal login
      *
      * @Given I am logged in with local provider
      */
