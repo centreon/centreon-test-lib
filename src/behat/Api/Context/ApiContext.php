@@ -408,10 +408,18 @@ class ApiContext implements Context
 
         $this->spin(
             function() {
-                $response = $this->iSendARequestTo('GET', $this->getBaseUri() . '/latest/');
+                $requestUri = $this->getBaseUri() . '/latest/';
+                $response = $this->iSendARequestTo('GET', $requestUri);
                 if ($response->getStatusCode() === 500) {
                     // it means symfony router is up and do not handle this route
                     return true;
+                } else {
+                    throw new \Exception(
+                        'Centreon web container seems not started. '
+                        . 'Cannot request "' . $requestUri . '" '
+                        . '(http code : ' . $response->getStatusCode() . ', '
+                        . 'content: "' . $response->getBody()->__toString() . '")'
+                    );
                 }
             },
             'timeout',
