@@ -456,7 +456,7 @@ class ApiContext implements Context
             throw new \Exception(
                 $timeoutMsg . ': ' . $lastException->getMessage() . ' (code ' .
                 $lastException->getCode() . ', file ' . $lastException->getFile() .
-                ':' . $lastException->getLine() . ')'
+                ':' . $lastException->getLine() . ', trace : ' . $lastException->getTraceAsString() . ')'
             );
         }
     }
