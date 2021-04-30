@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2016-2017 Centreon
+ * Copyright 2016-2021 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,7 +129,7 @@ class Container
      */
     public function getLogs($service = '')
     {
-        $cmd = 'docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' logs --no-color';
+        $cmd = 'docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' logs -t --no-color';
         if (!empty($service)) {
             $cmd .= ' ' . $service;
         }
