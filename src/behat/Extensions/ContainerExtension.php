@@ -48,7 +48,7 @@ class ContainerExtension implements ExtensionInterface
         $builder
             ->addDefaultsIfNotSet()
             ->children()
-                ->scalarNode('log_directory')->defaultValue('/tmp')->end()
+                ->scalarNode('log_directory')->defaultValue(sys_get_temp_dir())->end()
                 ->scalarNode('web')->defaultValue('mon-web-dev.yml')->end()
                 ->scalarNode('web_fresh')->defaultValue('mon-web-fresh-dev.yml')->end()
                 ->scalarNode('web_widgets')->defaultValue('mon-web-widgets-dev.yml')->end()
@@ -89,5 +89,3 @@ class ContainerExtension implements ExtensionInterface
     {
     }
 }
-
-?>

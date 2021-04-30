@@ -24,6 +24,9 @@ class Container
 {
     private $composeFile;
     private $id;
+    private $host = null;
+    private $containerIds = [];
+    private $containerPorts = [];
 
     /**
      * Container constructor.
@@ -33,9 +36,28 @@ class Container
     public function __construct($composeFile)
     {
         $this->composeFile = $composeFile;
-        $this->id = uniqid('', true) . rand(1, 1000000);
-        $this->exec('docker-compose -f ' . $this->composeFile . ' pull');
+        $this->id = uniqid() . rand(1, 1000000);
         $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' up -d');
+        exec('docker ps --no-trunc | grep ' . $this->id, $output, $returnVar);
+        foreach ($output as $line) {
+            if (preg_match('/^(\w+).+\s{3,}(.+\d+->\d+\/tcp)*\s{3,}\w+_(\w+)_\d+$/', $line, $matches)) {
+                $containerId = $matches[1];
+                if (count($matches) === 4) {
+                    $service = $matches[3];
+                    $this->containerPorts[$service] = [];
+                    $ports = explode(',', $matches[2]);
+                    foreach ($ports as $port) {
+                        if (preg_match('/:(\d+)->(\d+)/', $port, $matchesPort)) {
+                            $this->containerPorts[$service][$matchesPort[2]] = $matchesPort[1];
+                        }
+                    }
+                } else {
+                    $service = $matches[3];
+                    $this->containerPorts[$service] = [];
+                }
+                $this->containerIds[$service] = $containerId;
+            }
+        }
     }
 
     /**
@@ -110,14 +132,17 @@ class Container
      */
     public function getContainerId($service, $longId = true)
     {
-        exec('sh -c \'docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' ps -q ' . $service . ' | tr -d "\n"\'', $output, $returnVar);
-        if ($returnVar != 0) {
-            throw new \Exception('Cannot retrieve container ID of service ' . $service . ': ' . $output[0] . '.');
+        if (!isset($this->containerIds[$service])) {
+            exec('sh -c \'docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' ps -q ' . $service . ' | tr -d "\n"\'', $output, $returnVar);
+            if ($returnVar != 0) {
+                throw new \Exception('Cannot retrieve container ID of service ' . $service . ': ' . $output[0] . '.');
+            }
+            $this->containerIds[$service] = $output[0];
         }
-        if (!$longId) {
-            $output[0] = substr($output[0], 0, 12);
-        }
-        return $output[0];
+
+        return $longId
+            ? $this->containerIds[$service]
+            : substr($this->containerIds[$service], 0, 12);
     }
 
     /**
@@ -149,14 +174,17 @@ class Container
      */
     public function getHost()
     {
-        $docker = getenv('DOCKER_HOST');
-        if (!preg_match('@^(tcp://)?([^:]+)@', $docker, $matches)) {
-            $retval = '127.0.0.1';
+        if ($this->host === null) {
+            $docker = getenv('DOCKER_HOST');
+            if (!preg_match('@^(tcp://)?([^:]+)@', $docker, $matches)) {
+                $retval = '127.0.0.1';
+            } else {
+                $retval = $matches[2];
+            }
+            $this->host = $retval;
         }
-        else {
-            $retval = $matches[2];
-        }
-        return $retval;
+
+        return $this->host;
     }
 
     /**
@@ -168,13 +196,18 @@ class Container
      */
     public function getPort($containerPort, $service)
     {
-        $response = shell_exec(
-            'docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' port ' . $service . ' ' . $containerPort
-        );
-        if (preg_match('/.+:(\d+)/', $response, $matches)) {
-            return $matches[1];
+        if (!isset($this->containerPorts[$service][$containerPort])) {
+            $response = shell_exec(
+                'docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' port ' . $service . ' ' . $containerPort
+            );
+            if (preg_match('/.+:(\d+)/', $response, $matches)) {
+                $this->containerPorts[$service][$containerPort] = $matches[1];
+            } else {
+                throw new \Exception('Cannot get corresponding port of ' . $containerPort . ' on service ' . $service);
+            }
         }
-        throw new \Exception('Cannot get corresponding port of ' . $containerPort . ' on service ' . $service);
+
+        return $this->containerPorts[$service][$containerPort];
     }
 
     /**
