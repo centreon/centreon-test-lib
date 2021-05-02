@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2016-2018 Centreon
+ * Copyright 2016-2021 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -673,7 +674,7 @@ class UtilsContext extends RawMinkContext
                             '--disable-infobars',
                             '--start-maximized',
                             '--disable-site-isolation-trials',
-                            //'--disable-dev-shm-usage',
+                            //'--disable-dev-shm-usage', // uncomment this line on windows
                             '--no-sandbox',
                             '--headless',
                             '--disable-gpu',
