@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2016-2017 Centreon
+ * Copyright 2016-2021 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +24,9 @@ class Container
 {
     private $composeFile;
     private $id;
+    private $host = null;
+    private $containerIds = [];
+    private $containerPorts = [];
 
     /**
      * Container constructor.
@@ -32,9 +36,36 @@ class Container
     public function __construct($composeFile)
     {
         $this->composeFile = $composeFile;
-        $this->id = uniqid('', true) . rand(1, 1000000);
-        $this->exec('docker-compose -f ' . $this->composeFile . ' pull');
+        $this->id = uniqid() . rand(1, 1000000);
         $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' up -d');
+        $this->initContainersInfos();
+    }
+
+    /**
+     * Init container infos (ids, ports, services)
+     */
+    private function initContainersInfos()
+    {
+        exec('docker ps --no-trunc | grep ' . $this->id, $output, $returnVar);
+        foreach ($output as $line) {
+            if (preg_match('/^(\w+).+\s{3,}(.+\d+->\d+\/tcp)*\s{3,}\w+_(\w+)_\d+$/', $line, $matches)) {
+                $containerId = $matches[1];
+                if (count($matches) === 4) {
+                    $service = $matches[3];
+                    $this->containerPorts[$service] = [];
+                    $ports = explode(',', $matches[2]);
+                    foreach ($ports as $port) {
+                        if (preg_match('/:(\d+)->(\d+)/', $port, $matchesPort)) {
+                            $this->containerPorts[$service][$matchesPort[2]] = $matchesPort[1];
+                        }
+                    }
+                } else {
+                    $service = $matches[2];
+                    $this->containerPorts[$service] = [];
+                }
+                $this->containerIds[$service] = $containerId;
+            }
+        }
     }
 
     /**
@@ -44,7 +75,12 @@ class Container
     {
         exec($cmd . ' 2>&1', $output, $returnVar);
         if ($returnVar != 0) {
-            throw new \Exception('Cannot execute container control command: ' . $cmd . " \n " . implode("\n", $output) . ' (code ' . $returnVar . ')');
+            throw new \Exception(
+                'Cannot execute container control command: '
+                . $cmd . " \n "
+                . implode("\n", $output)
+                . ' (code ' . $returnVar . ')'
+            );
         }
     }
 
@@ -109,14 +145,13 @@ class Container
      */
     public function getContainerId($service, $longId = true)
     {
-        exec('sh -c \'docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' ps -q ' . $service . ' | tr -d "\n"\'', $output, $returnVar);
-        if ($returnVar != 0) {
-            throw new \Exception('Cannot retrieve container ID of service ' . $service . ': ' . $output[0] . '.');
+        if (!isset($this->containerIds[$service])) {
+            throw new \Exception('Cannot retrieve container ID of service ' . $service);
         }
-        if (!$longId) {
-            $output[0] = substr($output[0], 0, 12);
-        }
-        return $output[0];
+
+        return $longId
+            ? $this->containerIds[$service]
+            : substr($this->containerIds[$service], 0, 12);
     }
 
     /**
@@ -128,7 +163,7 @@ class Container
      */
     public function getLogs($service = '')
     {
-        $cmd = 'docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' logs --no-color';
+        $cmd = 'docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' logs -t --no-color';
         if (!empty($service)) {
             $cmd .= ' ' . $service;
         }
@@ -148,14 +183,17 @@ class Container
      */
     public function getHost()
     {
-        $docker = getenv('DOCKER_HOST');
-        if (!preg_match('@^(tcp://)?([^:]+)@', $docker, $matches)) {
-            $retval = '127.0.0.1';
+        if ($this->host === null) {
+            $docker = getenv('DOCKER_HOST');
+            if (!preg_match('@^(tcp://)?([^:]+)@', $docker, $matches)) {
+                $retval = '127.0.0.1';
+            } else {
+                $retval = $matches[2];
+            }
+            $this->host = $retval;
         }
-        else {
-            $retval = $matches[2];
-        }
-        return $retval;
+
+        return $this->host;
     }
 
     /**
@@ -167,13 +205,11 @@ class Container
      */
     public function getPort($containerPort, $service)
     {
-        $response = shell_exec(
-            'docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' port ' . $service . ' ' . $containerPort
-        );
-        if (preg_match('/.+:(\d+)/', $response, $matches)) {
-            return $matches[1];
+        if (!isset($this->containerPorts[$service][$containerPort])) {
+            throw new \Exception('Cannot get corresponding port of ' . $containerPort . ' on service ' . $service);
         }
-        throw new \Exception('Cannot get corresponding port of ' . $containerPort . ' on service ' . $service);
+
+        return $this->containerPorts[$service][$containerPort];
     }
 
     /**
