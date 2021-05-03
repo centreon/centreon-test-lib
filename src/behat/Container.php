@@ -48,7 +48,7 @@ class Container
     {
         exec('docker ps --no-trunc | grep ' . $this->id, $output, $returnVar);
         foreach ($output as $line) {
-            if (preg_match('/^(\w+).+\s{3,}(.+\d+->\d+\/tcp)*\s{3,}\w+_(\w+)_\d+$/', $line, $matches)) {
+            if (preg_match('/^(\w+).+\s{3,}(.+\d+->\d+\/tcp)+\s+\w+_(\w+)_\d+$/', $line, $matches)) {
                 $containerId = $matches[1];
                 if (count($matches) === 4) {
                     $service = $matches[3];
