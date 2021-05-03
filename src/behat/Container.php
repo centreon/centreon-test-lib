@@ -60,7 +60,7 @@ class Container
                         }
                     }
                 } else {
-                    $service = $matches[3];
+                    $service = $matches[2];
                     $this->containerPorts[$service] = [];
                 }
                 $this->containerIds[$service] = $containerId;
