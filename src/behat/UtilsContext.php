@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2016-2018 Centreon
+ * Copyright 2016-2021 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -667,17 +668,34 @@ class UtilsContext extends RawMinkContext
             $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
             $driver = new \Behat\Mink\Driver\Selenium2Driver(
                 'chrome',
-                array(
-                    'chrome' => array(
-                        'args' => array(
-                            '--disable-site-isolation-trials'
-                        )
-                    ),
+                [
+                    'chrome' => [
+                        'args' => [
+                            '--disable-infobars',
+                            '--start-maximized',
+                            '--disable-site-isolation-trials',
+                            //'--disable-dev-shm-usage', // uncomment this line on windows
+                            '--no-sandbox',
+                            '--headless',
+                            '--disable-gpu',
+                            '--disable-extensions',
+                            '–-disable-images',
+                            '--hide-icons',
+                            '--no-default-browser-check',
+                            '--no-experiments',
+                            '--no-first-run',
+                            '--no-initial-navigation',
+                            '--no-startup-window',
+                            '--no-wifi',
+                            '--suppress-message-center-popups',
+                            '--disable-extensions',
+                        ],
+                    ],
                     'browserName' => 'chrome',
                     'platform' => 'ANY',
                     'browser' => 'chrome',
                     'name' => 'Behat Test'
-                ),
+                ],
                 $url
             );
             $driver->setTimeouts(array(

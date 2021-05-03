@@ -169,12 +169,6 @@ class CentreonContext extends UtilsContext
             $output = $this->container->execute('cat /var/lib/mysql/queries.log 2>/dev/null', 'web', false);
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
-
-            // WebDriver video.
-            $filename = $this->composeFiles['log_directory'] . '/'
-                . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-' . $scenarioTitle . '.flv';
-            copy($this->webdriverVideoFile, $filename);
-            unlink($this->webdriverVideoFile);
         }
 
         // Stop Mink.
@@ -420,24 +414,10 @@ class CentreonContext extends UtilsContext
                 . 'check the configuration of your ContainerExtension in behat.yml.'
             );
         }
-        $this->container = new Container($composeFile);
-        $this->setContainerWebDriver();
 
-        // Record WebDriver screen.
-        $secretPath = __DIR__ . '/../../../../../secret';
-        file_put_contents($secretPath, 'secret');
-        $pipes = array();
-        $this->webdriverVideoFile = tempnam(sys_get_temp_dir(), 'webdrivervideo');
-        $this->webdriverVideoRecorder = proc_open(
-            'flvrec.py -P ' . $secretPath . ' -o ' . $this->webdriverVideoFile
-            . ' ' . $this->container->getHost() . ' ' . $this->container->getPort(5900, 'webdriver'),
-            array(
-                0 => array('file', '/dev/null', 'r'),
-                1 => array('file', '/dev/null', 'w'),
-                2 => array('file', '/dev/null', 'w')
-            ),
-            $pipes
-        );
+        $this->container = new Container($composeFile);
+
+        $this->setContainerWebDriver();
 
         // Set session parameters.
         $this->setMinkParameter(
@@ -456,21 +436,20 @@ class CentreonContext extends UtilsContext
         // Real application test, create an API authentication token.
         $ch = curl_init(
             'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') .
-            '/centreon/api/index.php?action=authenticate'
+            '/centreon/api/beta/platform/versions'
         );
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt(
-            $ch,
-            CURLOPT_POSTFIELDS,
-            array('username' => 'admin', 'password' => 'centreon'));
-        $res = curl_exec($ch);
+
         $limit = time() + 60;
-        while ((time() < $limit) && (($res === false) || empty($res))) {
+        while (time() < $limit) {
+            curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            if ($httpCode === 200) {
+                break;
+            }
             sleep(1);
-            $res = curl_exec($ch);
         }
 
         if (time() >= $limit) {
