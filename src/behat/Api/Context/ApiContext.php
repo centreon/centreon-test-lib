@@ -507,7 +507,7 @@ class ApiContext implements Context
         $this->setHttpHeaders(['Content-Type' => 'application/json']);
         $this->iSendARequestToWithBody(
             'POST',
-            $baseUriWithoutApi . '/authentication/providers/local',
+            $baseUriWithoutApi . '/authentication/providers/configurations/local',
             json_encode([
                 'login' => 'admin',
                 'password' => 'centreon',
