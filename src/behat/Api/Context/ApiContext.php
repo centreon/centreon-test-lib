@@ -35,7 +35,7 @@ class ApiContext implements Context
 {
     use JsonContextTrait, RestContextTrait, CentreonClapiContextTrait, FileSystemContextTrait;
 
-    public const ROOT_PATH = '/centreon/api';
+    public const ROOT_PATH = '/centreon';
 
     /**
      * @var Container
@@ -408,7 +408,7 @@ class ApiContext implements Context
 
         $this->spin(
             function() {
-                $requestUri = $this->getBaseUri() . '/latest/';
+                $requestUri = $this->getBaseUri() . '/api/latest/';
                 $response = $this->iSendARequestTo('GET', $requestUri);
                 if ($response->getStatusCode() === 500) {
                     // it means symfony router is up and do not handle this route
@@ -481,7 +481,7 @@ class ApiContext implements Context
         $this->setHttpHeaders(['Content-Type' => 'application/json']);
         $response = $this->iSendARequestToWithBody(
             'POST',
-            $this->getBaseUri() . '/latest/login',
+            $this->getBaseUri() . '/api/latest/login',
             json_encode([
                 'security' => [
                     'credentials' => [
@@ -503,17 +503,15 @@ class ApiContext implements Context
      */
     public function iAmLoggedInWithLocalProvider()
     {
-        $baseUriWithoutApi = str_replace('/api', '', $this->getBaseUri());
         $this->setHttpHeaders(['Content-Type' => 'application/json']);
         $this->iSendARequestToWithBody(
             'POST',
-            $baseUriWithoutApi . '/authentication/providers/configurations/local',
+            $this->getBaseUri() . '/authentication/providers/configurations/local',
             json_encode([
                 'login' => 'admin',
                 'password' => 'centreon',
             ])
         );
-
 
         if (preg_match('/PHPSESSID=(\S+)/', $this->getHttpResponse()->getHeader('set-cookie')[0], $matches)) {
             $this->setPhpSessionId($matches[1]);
@@ -545,7 +543,7 @@ class ApiContext implements Context
             function() use ($host, &$hostId) {
                 $response = $this->iSendARequestTo(
                     'GET',
-                    '/beta/monitoring/hosts?search={"host.name":"' . $host . '"}'
+                    '/api/beta/monitoring/hosts?search={"host.name":"' . $host . '"}'
                 );
                 $this->theJsonNodeShouldHaveElements('result', 1);
                 $response = json_decode($response->getBody()->__toString(), true);
@@ -574,7 +572,7 @@ class ApiContext implements Context
             function() use ($host, $service, &$hostId, &$serviceId) {
                 $response = $this->iSendARequestTo(
                     'GET',
-                    '/beta/monitoring/services?search='
+                    '/api/beta/monitoring/services?search='
                         . '{"host.name":"' . $host . '","service.description":"' . $service . '"}'
                 );
                 $this->theJsonNodeShouldHaveElements('result', 1);
@@ -608,7 +606,7 @@ class ApiContext implements Context
             function() use ($hostgroup, &$hostgroupId) {
                 $response = $this->iSendARequestTo(
                     'GET',
-                    '/beta/monitoring/hostgroups?search={"name":"' . $hostgroup . '"}'
+                    '/api/beta/monitoring/hostgroups?search={"name":"' . $hostgroup . '"}'
                 );
                 $this->theJsonNodeShouldHaveElements('result', 1);
                 $response = json_decode($response->getBody()->__toString(), true);
