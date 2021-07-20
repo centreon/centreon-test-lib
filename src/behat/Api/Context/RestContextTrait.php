@@ -115,7 +115,7 @@ Trait RestContextTrait
         $docDirectory = getcwd() . '/doc/API';
 
         if ($version === null) {  // get latest documentation version
-            $version = '2';
+            $version = '21.10';
 
             $files = scandir($docDirectory);
             foreach ($files as $file) {

@@ -543,7 +543,7 @@ class ApiContext implements Context
             function() use ($host, &$hostId) {
                 $response = $this->iSendARequestTo(
                     'GET',
-                    '/api/beta/monitoring/hosts?search={"host.name":"' . $host . '"}'
+                    '/api/latest/monitoring/hosts?search={"host.name":"' . $host . '"}'
                 );
                 $this->theJsonNodeShouldHaveElements('result', 1);
                 $response = json_decode($response->getBody()->__toString(), true);
@@ -572,7 +572,7 @@ class ApiContext implements Context
             function() use ($host, $service, &$hostId, &$serviceId) {
                 $response = $this->iSendARequestTo(
                     'GET',
-                    '/api/beta/monitoring/services?search='
+                    '/api/latest/monitoring/services?search='
                         . '{"host.name":"' . $host . '","service.description":"' . $service . '"}'
                 );
                 $this->theJsonNodeShouldHaveElements('result', 1);
@@ -606,7 +606,7 @@ class ApiContext implements Context
             function() use ($hostgroup, &$hostgroupId) {
                 $response = $this->iSendARequestTo(
                     'GET',
-                    '/api/beta/monitoring/hostgroups?search={"name":"' . $hostgroup . '"}'
+                    '/api/latest/monitoring/hostgroups?search={"name":"' . $hostgroup . '"}'
                 );
                 $this->theJsonNodeShouldHaveElements('result', 1);
                 $response = json_decode($response->getBody()->__toString(), true);
