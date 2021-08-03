@@ -19,8 +19,6 @@
 namespace Centreon\Test\Behat;
 
 use Behat\MinkExtension\Context\RawMinkContext;
-use Behat\Behat\Hook\Scope\AfterStepScope;
-use Behat\Behat\Tester\Exception\PendingException;
 use Centreon\Test\Behat\Exception\SpinStopException;
 
 class UtilsContext extends RawMinkContext
@@ -80,45 +78,6 @@ class UtilsContext extends RawMinkContext
             $this->getSession()->getDriver()->executeScript('window.confirm = function(){return true;}');
         } else {
             $this->getSession()->getDriver()->executeScript('window.confirm = function(){return false;}');
-        }
-    }
-
-    /**
-     * Take a screenshot on error
-     *
-     * @AfterStep
-     */
-    public function takeScreenshotOnError(AfterStepScope $scope)
-    {
-        $testResult = $scope->getTestResult();
-        if (!$testResult->isPassed()) {
-            $scenario = 'unknown';
-
-            if ($scope->getTestResult()->hasException()
-                && !$scope->getTestResult()->getException() instanceof PendingException) {
-                echo $scope->getTestResult()->getException()->getFile()
-                    . '('
-                    . $scope->getTestResult()->getException()->getLine()
-                    . ")\n\n"
-                    . $scope->getTestResult()->getException()->getTraceAsString()
-                    ;
-            }
-
-            $feature = $scope->getFeature();
-            $step = $scope->getStep();
-            $line = $step->getLine();
-
-            foreach ($feature->getScenarios() as $tmp) {
-                if ($tmp->getLine() > $line) {
-                    break;
-                }
-
-                $scenario = $tmp->getTitle();
-            }
-
-            $scenarioTitle = preg_replace('/(\s|\/)+/', '_', $scenario);
-            $filename = date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-' . $scenarioTitle . '.png';
-            $this->saveScreenshot($filename, $this->composeFiles['log_directory']);
         }
     }
 

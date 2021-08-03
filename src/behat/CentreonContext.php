@@ -18,7 +18,8 @@
 namespace Centreon\Test\Behat;
 
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
-use WebDriver\WebDriver;
+use Behat\Behat\Hook\Scope\AfterStepScope;
+use Behat\Behat\Tester\Exception\PendingException;
 use Centreon\Test\Behat\Administration\LdapConfigurationPage;
 use Centreon\Test\Behat\External\LoginPage;
 use Centreon\Test\Behat\Configuration\PollerConfigurationExportPage;
@@ -49,6 +50,60 @@ class CentreonContext extends UtilsContext
     public function __construct($parameters = array())
     {
         parent::__construct($parameters);
+    }
+
+    /**
+     * after step hook
+     *
+     * @AfterStep
+     */
+    public function afterStep(AfterStepScope $scope)
+    {
+        $this->takeScreenshotOnError($scope);
+
+        if (isset($this->container)) {
+            $containerLogs = $this->container->getLogs();
+            if (preg_match_all('/(php (?:warning|fatal).+$)/mi', $containerLogs, $matches)) {
+                throw new \Exception('PHP log issues: ' . implode(', ', $matches[0]));
+            }
+        }
+    }
+
+    /**
+     * Take a screenshot on error
+     */
+    private function takeScreenshotOnError(AfterStepScope $scope)
+    {
+        $testResult = $scope->getTestResult();
+        if (!$testResult->isPassed()) {
+            $scenario = 'unknown';
+
+            if ($scope->getTestResult()->hasException()
+                && !$scope->getTestResult()->getException() instanceof PendingException) {
+                echo $scope->getTestResult()->getException()->getFile()
+                    . '('
+                    . $scope->getTestResult()->getException()->getLine()
+                    . ")\n\n"
+                    . $scope->getTestResult()->getException()->getTraceAsString()
+                    ;
+            }
+
+            $feature = $scope->getFeature();
+            $step = $scope->getStep();
+            $line = $step->getLine();
+
+            foreach ($feature->getScenarios() as $tmp) {
+                if ($tmp->getLine() > $line) {
+                    break;
+                }
+
+                $scenario = $tmp->getTitle();
+            }
+
+            $scenarioTitle = preg_replace('/(\s|\/)+/', '_', $scenario);
+            $filename = date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-' . $scenarioTitle . '.png';
+            $this->saveScreenshot($filename, $this->composeFiles['log_directory']);
+        }
     }
 
     /**
