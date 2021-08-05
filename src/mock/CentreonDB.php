@@ -72,7 +72,7 @@ class CentreonDB extends \CentreonDB
      * @param array $parameters
      * @return CentreonDBResultSet The resultset
      */
-    public function query($queryString = null, $parameters = null)
+    public function query($queryString, $parameters = NULL, ...$parametersArgs)
     {
         return $this->execute($queryString, null);
     }
