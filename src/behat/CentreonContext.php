@@ -119,7 +119,7 @@ class CentreonContext extends UtilsContext
         $phpLogIssues = [];
         if (isset($this->container)) {
             $containerLogs = $this->container->getLogs();
-            if (preg_match_all('/(php (?:warning|fatal).+$)/mi', $containerLogs, $matches)) {
+            if (preg_match_all('/(php (?:warning|fatal|notice|deprecated).+$)/mi', $containerLogs, $matches)) {
                 $phpLogIssues = $matches[0];
             }
             if (!$scope->getTestResult()->isPassed()) {
