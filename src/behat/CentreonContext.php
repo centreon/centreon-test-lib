@@ -63,7 +63,7 @@ class CentreonContext extends UtilsContext
 
         if (isset($this->container)) {
             $containerLogs = $this->container->getLogs();
-            if (preg_match_all('/(php (?:warning|fatal).+$)/mi', $containerLogs, $matches)) {
+            if (preg_match_all('/(php (?:warning|fatal|notice|deprecated).+$)/mi', $containerLogs, $matches)) {
                 throw new \Exception('PHP log issues: ' . implode(', ', $matches[0]));
             }
         }
@@ -116,114 +116,107 @@ class CentreonContext extends UtilsContext
      */
     public function unsetContainer(AfterScenarioScope $scope)
     {
-        $phpLogIssues = [];
-        if (isset($this->container)) {
-            $containerLogs = $this->container->getLogs();
-            if (preg_match_all('/(php (?:warning|fatal|notice|deprecated).+$)/mi', $containerLogs, $matches)) {
-                $phpLogIssues = $matches[0];
-            }
-            if (!$scope->getTestResult()->isPassed()) {
-                $scenarioTitle = preg_replace('/(\s|\/)+/', '_', $scope->getScenario()->getTitle());
-                $filename = $this->composeFiles['log_directory'] . '/'
-                    . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-' . $scenarioTitle . '.txt';
+        if (isset($this->container) && !$scope->getTestResult()->isPassed()) {
+            $scenarioTitle = preg_replace('/(\s|\/)+/', '_', $scope->getScenario()->getTitle());
+            $filename = $this->composeFiles['log_directory'] . '/'
+                . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-' . $scenarioTitle . '.txt';
 
-                // Container logs.
-                $logTitle = "\n"
-                    . "##################\n"
-                    . "# Container logs #\n"
-                    . "##################\n\n";
-                file_put_contents($filename, $logTitle);
-                file_put_contents($filename, $containerLogs, FILE_APPEND);
+            // Container logs.
+            $logTitle = "\n"
+                . "##################\n"
+                . "# Container logs #\n"
+                . "##################\n\n";
+            file_put_contents($filename, $logTitle);
+            file_put_contents($filename, $this->container->getLogs(), FILE_APPEND);
 
-                // Centreon Engine logs.
-                $logTitle = "\n\n"
-                    . "###############\n"
-                    . "# Engine logs #\n"
-                    . "###############\n\n";
-                $output = $this->container->execute(
-                    'cat /var/log/centreon-engine/centengine.log 2>/dev/null',
-                    'web',
-                    false
-                );
-                file_put_contents($filename, $logTitle, FILE_APPEND);
-                file_put_contents($filename, $output['output'], FILE_APPEND);
+            // Centreon Engine logs.
+            $logTitle = "\n\n"
+                . "###############\n"
+                . "# Engine logs #\n"
+                . "###############\n\n";
+            $output = $this->container->execute(
+                'cat /var/log/centreon-engine/centengine.log 2>/dev/null',
+                'web',
+                false
+            );
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
 
-                // Centreon Broker logs.
-                $logTitle = "\n\n"
-                    . "###############\n"
-                    . "# Broker logs #\n"
-                    . "###############\n\n";
-                $output = $this->container->execute(
-                    'bash -c "cat /var/log/centreon-broker/*.log 2>/dev/null"',
-                    'web',
-                    false
-                );
-                file_put_contents($filename, $logTitle, FILE_APPEND);
-                file_put_contents($filename, $output['output'], FILE_APPEND);
+            // Centreon Broker logs.
+            $logTitle = "\n\n"
+                . "###############\n"
+                . "# Broker logs #\n"
+                . "###############\n\n";
+            $output = $this->container->execute(
+                'bash -c "cat /var/log/centreon-broker/*.log 2>/dev/null"',
+                'web',
+                false
+            );
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
 
-                // Centreon Broker logs.
-                $logTitle = "\n\n"
-                    . "#################\n"
-                    . "# Gorgone logs #\n"
-                    . "#################\n\n";
-                $output = $this->container->execute('cat /var/log/centreon-gorgone/gorgoned.log 2>/dev/null', 'web', false);
-                file_put_contents($filename, $logTitle, FILE_APPEND);
-                file_put_contents($filename, $output['output'], FILE_APPEND);
+            // Centreon Broker logs.
+            $logTitle = "\n\n"
+                . "#################\n"
+                . "# Gorgone logs #\n"
+                . "#################\n\n";
+            $output = $this->container->execute('cat /var/log/centreon-gorgone/gorgoned.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
 
-                // Centreon SQL errors.
-                $logTitle = "\n\n"
-                    . "#######################\n"
-                    . "# Centreon sql errors #\n"
-                    . "#######################\n\n";
-                $output = $this->container->execute('cat /var/log/centreon/sql-error.log 2>/dev/null', 'web', false);
-                file_put_contents($filename, $logTitle, FILE_APPEND);
-                file_put_contents($filename, $output['output'], FILE_APPEND);
+            // Centreon SQL errors.
+            $logTitle = "\n\n"
+                . "#######################\n"
+                . "# Centreon sql errors #\n"
+                . "#######################\n\n";
+            $output = $this->container->execute('cat /var/log/centreon/sql-error.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
 
-                // MySQL errors.
-                $logTitle = "\n\n"
-                    . "################\n"
-                    . "# Mysql errors #\n"
-                    . "################\n\n";
-                $output = $this->container->execute('bash -c "cat /var/lib/mysql/*.err 2>/dev/null"', 'web', false);
-                file_put_contents($filename, $logTitle, FILE_APPEND);
-                file_put_contents($filename, $output['output'], FILE_APPEND);
+            // MySQL errors.
+            $logTitle = "\n\n"
+                . "################\n"
+                . "# Mysql errors #\n"
+                . "################\n\n";
+            $output = $this->container->execute('bash -c "cat /var/lib/mysql/*.err 2>/dev/null"', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
 
-                // Centreon LDAP logs.
-                $logTitle = "\n\n"
-                    . "######################\n"
-                    . "# Centreon LDAP logs #\n"
-                    . "######################\n\n";
-                $output = $this->container->execute('cat /var/log/centreon/ldap.log 2>/dev/null', 'web', false);
-                file_put_contents($filename, $logTitle, FILE_APPEND);
-                file_put_contents($filename, $output['output'], FILE_APPEND);
+            // Centreon LDAP logs.
+            $logTitle = "\n\n"
+                . "######################\n"
+                . "# Centreon LDAP logs #\n"
+                . "######################\n\n";
+            $output = $this->container->execute('cat /var/log/centreon/ldap.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
 
-                // MySQL process list.
-                $logTitle = "\n\n"
-                    . "######################\n"
-                    . "# Mysql process list #\n"
-                    . "######################\n\n";
-                $output = $this->container->execute('mysql -e "SHOW FULL PROCESSLIST" 2>/dev/null', 'web', false);
-                file_put_contents($filename, $logTitle, FILE_APPEND);
-                file_put_contents($filename, $output['output'], FILE_APPEND);
+            // MySQL process list.
+            $logTitle = "\n\n"
+                . "######################\n"
+                . "# Mysql process list #\n"
+                . "######################\n\n";
+            $output = $this->container->execute('mysql -e "SHOW FULL PROCESSLIST" 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
 
-                // MySQL slow queries.
-                $logTitle = "\n\n"
-                    . "######################\n"
-                    . "# Mysql slow queries #\n"
-                    . "######################\n\n";
-                $output = $this->container->execute('cat /var/lib/mysql/slow_queries.log 2>/dev/null', 'web', false);
-                file_put_contents($filename, $logTitle, FILE_APPEND);
-                file_put_contents($filename, $output['output'], FILE_APPEND);
+            // MySQL slow queries.
+            $logTitle = "\n\n"
+                . "######################\n"
+                . "# Mysql slow queries #\n"
+                . "######################\n\n";
+            $output = $this->container->execute('cat /var/lib/mysql/slow_queries.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
 
-                // MySQL queries.
-                $logTitle = "\n\n"
-                    . "#################\n"
-                    . "# Mysql queries #\n"
-                    . "#################\n\n";
-                $output = $this->container->execute('cat /var/lib/mysql/queries.log 2>/dev/null', 'web', false);
-                file_put_contents($filename, $logTitle, FILE_APPEND);
-                file_put_contents($filename, $output['output'], FILE_APPEND);
-            }
+            // MySQL queries.
+            $logTitle = "\n\n"
+                . "#################\n"
+                . "# Mysql queries #\n"
+                . "#################\n\n";
+            $output = $this->container->execute('cat /var/lib/mysql/queries.log 2>/dev/null', 'web', false);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
         }
 
         // Stop Mink.
@@ -233,10 +226,6 @@ class CentreonContext extends UtilsContext
 
         // Destroy container.
         unset($this->container);
-
-        if (!empty($phpLogIssues)) {
-            throw new \Exception('PHP log issues: ' . implode(', ', $phpLogIssues));
-        }
     }
 
     /**
