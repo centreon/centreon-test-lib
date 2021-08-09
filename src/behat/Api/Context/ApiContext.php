@@ -23,6 +23,7 @@ namespace Centreon\Test\Behat\Api\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
+use Behat\Behat\Hook\Scope\AfterStepScope;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpClient\HttpClient;
@@ -267,6 +268,23 @@ class ApiContext implements Context
             throw new \Exception("Can't get container compose file of " . $name);
         }
         return $this->composeFiles[$name];
+    }
+
+    /**
+     * after step hook
+     *
+     * @AfterStep
+     *
+     * @param AfterStepScope $scope
+     */
+    public function afterStep(AfterStepScope $scope): void
+    {
+        if (isset($this->container)) {
+            $containerLogs = $this->container->getLogs();
+            if (preg_match_all('/(php (?:warning|fatal|notice|deprecated).+$)/mi', $containerLogs, $matches)) {
+                throw new \Exception('PHP log issues: ' . implode(', ', $matches[0]));
+            }
+        }
     }
 
     /**
