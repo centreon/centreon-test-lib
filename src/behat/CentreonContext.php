@@ -56,8 +56,10 @@ class CentreonContext extends UtilsContext
      * after step hook
      *
      * @AfterStep
+     *
+     * @param AfterStepScope $scope
      */
-    public function afterStep(AfterStepScope $scope)
+    public function afterStep(AfterStepScope $scope): void
     {
         $this->takeScreenshotOnError($scope);
 
@@ -71,8 +73,10 @@ class CentreonContext extends UtilsContext
 
     /**
      * Take a screenshot on error
+     *
+     * @param AfterStepScope $scope
      */
-    private function takeScreenshotOnError(AfterStepScope $scope)
+    private function takeScreenshotOnError(AfterStepScope $scope): void
     {
         $testResult = $scope->getTestResult();
         if (!$testResult->isPassed()) {
