@@ -29,8 +29,6 @@ use Centreon\Test\Mock\CentreonDB;
  */
 class CentreonDBStatement extends \PDOStatement
 {
-
-
     /**
      * @var string
      */
@@ -51,7 +49,6 @@ class CentreonDBStatement extends \PDOStatement
      */
     protected $params = null;
     protected $currentResultSet = null;
-    protected $fetchObjectName;
 
     /**
      * Constructor
@@ -173,21 +170,6 @@ class CentreonDBStatement extends \PDOStatement
     }
 
     /**
-     * Return a result with all rows
-     *
-     * @return array
-     */
-    public function fetchAll($how = null, $class_name = null, $ctor_args = null)
-    {
-        $result = [];
-        while ($row = $this->fetch()) {
-            $result[] = $row;
-        }
-
-        return $result;
-    }
-
-    /**
      * Reset the position of resultset
      */
     public function resetResultSet()
@@ -217,19 +199,5 @@ class CentreonDBStatement extends \PDOStatement
     public function closeCursor()
     {
         return;
-    }
-
-    /**
-     * Set fetch mode
-     *
-     * @param mixed $mode
-     * @param mixed $params
-     * @return bool
-     */
-    public function setFetchMode($mode, $params = null): bool
-    {
-        $this->fetchObjectName = $params;
-
-        return true;
     }
 }
