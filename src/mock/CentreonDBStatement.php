@@ -65,6 +65,15 @@ class CentreonDBStatement extends \PDOStatement
     }
 
     /**
+     * Bind column
+     * {@inheritDoc}
+     */
+    public function bindColumn($column, &$var, $type = \PDO::PARAM_STR, $maxlen = 0, $driverOptions = null)
+    {
+        return null;
+    }
+
+    /**
      * Bind parameter
      */
     public function bindParam($paramno, &$param, $type = null, $maxlen = null, $driverdata = null)
@@ -138,22 +147,7 @@ class CentreonDBStatement extends \PDOStatement
     public function fetchRow()
     {
         if (!is_null($this->currentResultSet)) {
-            $data = $this->currentResultSet->fetchRow();
-
-            if ($this->fetchObjectName !== null && is_array($data)) {
-                $result = new $this->fetchObjectName;
-                $reflection = new \ReflectionClass($result);
-
-                foreach ($data as $key => $val) {
-                    $property = $reflection->getProperty($key);
-                    $property->setAccessible(true);
-                    $property->setValue($result, $val);
-                }
-            } else {
-                $result = $data;
-            }
-
-            return $result;
+            return $this->currentResultSet->fetchRow();
         }
 
         return false;
@@ -167,6 +161,22 @@ class CentreonDBStatement extends \PDOStatement
     public function fetch($how = null, $orientation = null, $offset = null)
     {
         return $this->fetchRow();
+    }
+
+    /**
+     * Return a result
+     *
+     * @return array
+     */
+    public function fetchAll($mode = \PDO::FETCH_BOTH, ...$args)
+    {
+        $results = [];
+
+        while ($row = $this->fetch()) {
+            $results[] = $row;
+        }
+
+        return $results;
     }
 
     /**
