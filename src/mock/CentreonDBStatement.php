@@ -164,22 +164,6 @@ class CentreonDBStatement extends \PDOStatement
     }
 
     /**
-     * Return a result
-     *
-     * @return array
-     */
-    public function fetchAll($mode = \PDO::FETCH_BOTH, ...$args)
-    {
-        $results = [];
-
-        while ($row = $this->fetch()) {
-            $results[] = $row;
-        }
-
-        return $results;
-    }
-
-    /**
      * Reset the position of resultset
      */
     public function resetResultSet()
