@@ -194,4 +194,35 @@ class CentreonDBStatement extends \PDOStatement
     {
         return;
     }
+
+    /**
+     * Return a result
+     *
+     * @return array
+     */
+    public function fetchAll($mode = \PDO::FETCH_BOTH, ...$args)
+    {
+        $results = [];
+
+        while ($row = $this->fetch()) {
+            $results[] = $row;
+        }
+
+        return $results;
+    }
+
+
+    /**
+     * Set fetch mode
+     *
+     * @param mixed $mode
+     * @param mixed $params
+     * @return bool
+     */
+    public function setFetchMode(int $mode, ...$args): bool
+    {
+        $this->fetchObjectName = $args;
+
+        return true;
+    }
 }
