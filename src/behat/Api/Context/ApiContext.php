@@ -521,17 +521,6 @@ class ApiContext implements Context
     }
 
     /**
-     * Validate response following json format file
-     *
-     * @Then the response should use :type JSON format
-     */
-    public function theResponseShouldUseJsonFormat(string $type)
-    {
-        $this->theResponseCodeShouldBe(200);
-        $this->theResponseShouldBeFormattedLikeJsonFormat("monitoring/service/" . $type . ".json");
-    }
-
-    /**
      * Wait host to be monitored
      *
      * @Given /^I wait until host "(\S+)" is monitored(?: \(tries: (\d+)\))?$/
@@ -662,5 +651,43 @@ class ApiContext implements Context
     public function iWaitForNSeconds(int $time)
     {
         sleep($time);
+    }
+
+    /**
+     *
+     * @Given /^I want to generate the monitoring server configuration #(\d+)$/
+     */
+    public function iWantToGenerateTheMonitoringServerConfiguration(int $monitoringServerId)
+    {
+        $this->spin(
+            function() use ($monitoringServerId) {
+                $response = $this->iSendARequestTo(
+                    'GET',
+                    '/api/latest/configuration/monitoring-servers/' . $monitoringServerId . '/generate'
+                );
+                return true;
+            },
+            'The monitoring server configuration of #' . $monitoringServerId . ' is not generated',
+            1
+        );
+    }
+
+    /**
+     *
+     * @Given /^I want to reload the monitoring server configuration #(\d+)$/
+     */
+    public function iWantToReloadTheMonitoringServerConfiguration(int $monitoringServerId)
+    {
+        $this->spin(
+            function() use ($monitoringServerId) {
+                $response = $this->iSendARequestTo(
+                    'GET',
+                    '/api/latest/configuration/monitoring-servers/' . $monitoringServerId . '/reload'
+                );
+                return true;
+            },
+            'The monitoring server configuration of #' . $monitoringServerId . ' is not reloaded',
+            1
+        );
     }
 }
