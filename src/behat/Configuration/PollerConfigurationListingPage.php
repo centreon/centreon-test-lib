@@ -102,21 +102,32 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      */
     public function exportConfiguration()
     {
-        $this->context->assertFind('css', 'input[name="apply_configuration"]')->click();
+        $this->context->assertFind('css', 'button[name="apply_configuration"]')->click();
         return new PollerConfigurationExportPage($this->context, false);
     }
 
     /**
-     *  Do some action.
+     *  Click on duplicate button
      *
      *  Beware, you might need to call setConfirmBox(true) to use this
      *  method effectively.
      *
-     * @param $action  The action to perform on selected elements.
      */
-    public function moreActions($action)
+    public function duplicateAction()
     {
-        $this->context->assertFind('css', 'select[name="o1"]')->setValue($action);
+        $this->context->assertFind('css', 'button[name="duplicate_action"]')->click();
+    }
+
+    /**
+     *  Click on delete button
+     *
+     *  Beware, you might need to call setConfirmBox(true) to use this
+     *  method effectively.
+     *
+     */
+    public function deleteAction()
+    {
+        $this->context->assertFind('css', 'button[name="delete_action"]')->click();
     }
 
     /**
