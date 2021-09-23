@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2019 Centreon
+ * Copyright 2019-2021 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,11 +69,10 @@ class CentreonDB extends \CentreonDB
     /**
      * Stub for function query
      *
-     * @param string $query The query to execute
-     * @param array $parameters
+     * {@inheritdoc}
      * @return CentreonDBResultSet The resultset
      */
-    public function query($queryString = null, $parameters = null)
+    public function query($queryString, $parameters = null, ...$parametersArgs)
     {
         return $this->execute($queryString, null);
     }

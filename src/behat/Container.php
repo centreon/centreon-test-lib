@@ -159,7 +159,7 @@ class Container
      *
      *  @param $service Service name.
      *
-     *  @return The logs as a string.
+     *  @return string The logs as a string.
      */
     public function getLogs($service = '')
     {

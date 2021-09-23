@@ -29,8 +29,6 @@ use Centreon\Test\Mock\CentreonDB;
  */
 class CentreonDBStatement extends \PDOStatement
 {
-
-
     /**
      * @var string
      */
@@ -51,7 +49,6 @@ class CentreonDBStatement extends \PDOStatement
      */
     protected $params = null;
     protected $currentResultSet = null;
-    protected $fetchObjectName;
 
     /**
      * Constructor
@@ -65,6 +62,15 @@ class CentreonDBStatement extends \PDOStatement
         $this->query = $query;
         $this->resultsets = $resultsets;
         $this->db = $db;
+    }
+
+    /**
+     * Bind column
+     * {@inheritDoc}
+     */
+    public function bindColumn($column, &$var, $type = \PDO::PARAM_STR, $maxlen = 0, $driverOptions = null)
+    {
+        return null;
     }
 
     /**
@@ -141,22 +147,7 @@ class CentreonDBStatement extends \PDOStatement
     public function fetchRow()
     {
         if (!is_null($this->currentResultSet)) {
-            $data = $this->currentResultSet->fetchRow();
-
-            if ($this->fetchObjectName !== null && is_array($data)) {
-                $result = new $this->fetchObjectName;
-                $reflection = new \ReflectionClass($result);
-
-                foreach ($data as $key => $val) {
-                    $property = $reflection->getProperty($key);
-                    $property->setAccessible(true);
-                    $property->setValue($result, $val);
-                }
-            } else {
-                $result = $data;
-            }
-
-            return $result;
+            return $this->currentResultSet->fetchRow();
         }
 
         return false;
@@ -170,21 +161,6 @@ class CentreonDBStatement extends \PDOStatement
     public function fetch($how = null, $orientation = null, $offset = null)
     {
         return $this->fetchRow();
-    }
-
-    /**
-     * Return a result with all rows
-     *
-     * @return array
-     */
-    public function fetchAll($how = null, $class_name = null, $ctor_args = null)
-    {
-        $result = [];
-        while ($row = $this->fetch()) {
-            $result[] = $row;
-        }
-
-        return $result;
     }
 
     /**
@@ -220,15 +196,32 @@ class CentreonDBStatement extends \PDOStatement
     }
 
     /**
+     * Return a result
+     *
+     * @return array
+     */
+    public function fetchAll($mode = \PDO::FETCH_BOTH, ...$args)
+    {
+        $results = [];
+
+        while ($row = $this->fetch()) {
+            $results[] = $row;
+        }
+
+        return $results;
+    }
+
+
+    /**
      * Set fetch mode
      *
      * @param mixed $mode
      * @param mixed $params
      * @return bool
      */
-    public function setFetchMode($mode, $params = null): bool
+    public function setFetchMode(int $mode, ...$args): bool
     {
-        $this->fetchObjectName = $params;
+        $this->fetchObjectName = $args;
 
         return true;
     }
