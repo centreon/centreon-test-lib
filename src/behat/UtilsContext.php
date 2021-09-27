@@ -624,31 +624,38 @@ class UtilsContext extends RawMinkContext
         }
 
         try {
-            $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub';
+            $chromeArgs = [
+                '--disable-infobars',
+                '--start-maximized',
+                '--disable-site-isolation-trials',
+                '--no-sandbox',
+                '--headless',
+                '--disable-gpu',
+                '--disable-extensions',
+                '–-disable-images',
+                '--hide-icons',
+                '--no-default-browser-check',
+                '--no-experiments',
+                '--no-first-run',
+                '--no-initial-navigation',
+                '--no-startup-window',
+                '--no-wifi',
+                '--suppress-message-center-popups',
+                '--disable-extensions',
+            ];
+
+            // disable dev shm on windows
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                $chromeArgs[] = '--disable-dev-shm-usage';
+            }
+
+            $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver')
+                . '/wd/hub';
             $driver = new \Behat\Mink\Driver\Selenium2Driver(
                 'chrome',
                 [
                     'chrome' => [
-                        'args' => [
-                            '--disable-infobars',
-                            '--start-maximized',
-                            '--disable-site-isolation-trials',
-                            //'--disable-dev-shm-usage', // uncomment this line on windows
-                            '--no-sandbox',
-                            '--headless',
-                            '--disable-gpu',
-                            '--disable-extensions',
-                            '–-disable-images',
-                            '--hide-icons',
-                            '--no-default-browser-check',
-                            '--no-experiments',
-                            '--no-first-run',
-                            '--no-initial-navigation',
-                            '--no-startup-window',
-                            '--no-wifi',
-                            '--suppress-message-center-popups',
-                            '--disable-extensions',
-                        ],
+                        'args' => $chromeArgs
                     ],
                     'browserName' => 'chrome',
                     'platform' => 'ANY',

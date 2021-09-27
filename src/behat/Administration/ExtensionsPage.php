@@ -22,6 +22,10 @@ class ExtensionsPage
     const MODULE_TYPE = 'module';
     const WIDGET_TYPE = 'widget';
 
+    private const INSTALL_CSS_SELECTOR = 'span.MuiButton-startIcon';
+    private const UPGRADE_CSS_SELECTOR = 'div.MuiChip-deleteable[style="background-color:rgb(132,189,0)"]';
+    private const REMOVE_CSS_SELECTOR = '.MuiChip-deleteIcon';
+
     protected $validField = 'div[class*="content-wrapper"]';
 
     /**
@@ -83,9 +87,9 @@ class ExtensionsPage
 
         // get available actions
         $entry['actions'] = [
-            'install' => $extension->has('css', 'span[class*="content-icon-add"]'),
-            'upgrade' => $extension->has('css', 'span[class*="content-icon-update"]'),
-            'remove' => $extension->has('css', 'span[class*="icon-action-delete"]'),
+            'install' => $extension->has('css', self::INSTALL_CSS_SELECTOR),
+            'upgrade' => $extension->has('css', self::UPGRADE_CSS_SELECTOR),
+            'remove' => $extension->has('css', self::REMOVE_CSS_SELECTOR),
         ];
 
         return $entry;
@@ -104,14 +108,15 @@ class ExtensionsPage
         $extension = $this->getEntry($type, $name);
         if ($extension['actions']['install']) {
             $extensionDOM = $this->context->assertFind('css', '#' . $type . '-' . $name);
-            $this->context->assertFindIn($extensionDOM, 'css', 'span[class*="content-icon-add"]')->click();
+            $this->context->assertFindIn($extensionDOM, 'css', self::INSTALL_CSS_SELECTOR)->click();
 
             // check if extension is properly installed
             $this->context->spin(
                 function ($context) use ($type, $name) {
                     return $this->getEntry($type, $name)['actions']['remove'];
                 },
-                'Could not install ' . $type . ' ' . $name . '.'
+                'Could not install ' . $type . ' ' . $name . '.',
+                10
             );
         } else {
             throw new \Exception($type . ' ' . $name . ' is already installed.');
@@ -131,7 +136,7 @@ class ExtensionsPage
         $extension = $this->getEntry($type, $name);
         if ($extension['actions']['upgrade']) {
             $extensionDOM = $this->context->assertFind('css', '#' . $type . '-' . $name);
-            $this->context->assertFindIn($extensionDOM, 'css', 'span[class*="content-icon-update"]')->click();
+            $this->context->assertFindIn($extensionDOM, 'css', self::UPGRADE_CSS_SELECTOR)->click();
 
             // check if extension is properly upgraded
             $this->context->spin(
@@ -158,15 +163,12 @@ class ExtensionsPage
         $extension = $this->getEntry($type, $name);
         if ($extension['actions']['remove']) {
             $extensionDOM = $this->context->assertFind('css', '#' . $type . '-' . $name);
-            $this->context->assertFindIn($extensionDOM, 'css', 'span[class*="icon-action-delete"]')->click();
+            $this->context->assertFindIn($extensionDOM, 'css', self::REMOVE_CSS_SELECTOR)->click();
 
             // confirm popin
             $this->context->spin(
                 function ($context) {
-                    $this->context->assertFind(
-                        'css',
-                        'div[class*="popup-footer"] button[class*="button-regular-red"]'
-                    )->click();
+                    $this->context->assertFindButton('Delete')->click();
                     return true;
                 },
                 'Could not confirm remove of ' . $type . ' ' . $name . '.',
