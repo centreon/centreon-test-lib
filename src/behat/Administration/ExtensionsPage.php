@@ -22,9 +22,9 @@ class ExtensionsPage
     const MODULE_TYPE = 'module';
     const WIDGET_TYPE = 'widget';
 
-    private const INSTALL_CSS_SELECTOR = 'span[class^="MuiButton-startIcon"]';
-    private const UPGRADE_CSS_SELECTOR = 'div[class^="MuiChip-deletable"][style="background-color:rgb(255,154,19)"]';
-    private const REMOVE_CSS_SELECTOR = 'div[class^="MuiChip-deletable"]';
+    private const INSTALL_CSS_SELECTOR = 'span[class*="MuiButton-startIcon"]';
+    private const UPGRADE_CSS_SELECTOR = 'div[class*="MuiChip-deletable"][style="background-color:rgb(255,154,19)"]';
+    private const REMOVE_CSS_SELECTOR = '[class*="MuiChip-deleteIcon"]';
 
     protected $validField = 'div[class*="content-wrapper"]';
 
