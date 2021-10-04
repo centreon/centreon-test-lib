@@ -13,6 +13,7 @@
         "justinrainbow/json-schema": "^5.2",
         "symfony/property-access": "4.4.*",
         "league/openapi-psr7-validator": "^0.14.0",
+        "league/uri": "6.4.*",
         "nyholm/psr7": "^1.3",
         "psr/http-client": "^1.0"
     },
