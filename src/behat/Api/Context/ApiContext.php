@@ -504,7 +504,7 @@ class ApiContext implements Context
                 'security' => [
                     'credentials' => [
                         'login' => 'admin',
-                        'password' => 'centreon',
+                        'password' => 'Centreon!2021',
                     ],
                 ],
             ])
