@@ -18,7 +18,8 @@
     },
     "suggest": {
         "behat/mink": "Browser controller/emulator abstraction for PHP",
-        "behat/mink-selenium2-driver": "Mink driver using Selenium"
+        "behat/mink-selenium2-driver": "Mink driver using Selenium",
+        "phpstan/phpstan": "PHP static analysis"
     },
     "license": "Apache-2.0",
     "authors": [
