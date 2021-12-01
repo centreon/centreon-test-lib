@@ -7,7 +7,6 @@
     "require": {
         "behat/behat": "^3.0",
         "guzzlehttp/guzzle": "~7.3",
-        "phpstan/phpstan": "^0.12",
         "symfony/http-client": "4.4.*",
         "webmozart/assert": "^1.9",
         "justinrainbow/json-schema": "^5.2",
