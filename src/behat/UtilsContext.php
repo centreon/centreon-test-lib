@@ -626,7 +626,6 @@ class UtilsContext extends RawMinkContext
         try {
             $chromeArgs = [
                 '--disable-infobars',
-                '--start-maximized',
                 '--disable-site-isolation-trials',
                 '--no-sandbox',
                 '--headless',
@@ -642,6 +641,11 @@ class UtilsContext extends RawMinkContext
                 '--no-wifi',
                 '--suppress-message-center-popups',
                 '--disable-extensions',
+                '--disable-browser-side-navigation',
+                '--dns-prefetch-disable',
+                'enable-automation',
+                'start-maximized',
+                '--log-level=3',
             ];
 
             // disable dev shm on windows
