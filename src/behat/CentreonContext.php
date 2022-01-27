@@ -258,13 +258,13 @@ class CentreonContext extends UtilsContext
         // Mandatory with the new version of behat/mink
         // A call on the 'visit' method must be perform to start a session.
         $page = new LoginPage($this);
-        
+
         // Set Window Size
         $this->getSession()->resizeWindow(1600, 4000);
 
         // Prepare credentials.
         $user = 'admin';
-        $password = 'centreon';
+        $password = 'Centreon!2021';
         if (isset($this->parameters['centreon_user'])) {
             $user = $this->parameters['centreon_user'];
         }

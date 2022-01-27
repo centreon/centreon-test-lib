@@ -375,7 +375,7 @@ class CentreonAPIContext extends CentreonContext
         $response = $client->post($this->getMinkParameter('api_base') . '/api/index.php?action=authenticate', [
             'form_params' => [
                 'username' => 'admin',
-                'password' => 'centreon'
+                'password' => 'Centreon!2021'
             ]
         ]);
         $responseObj = json_decode($response->getBody());

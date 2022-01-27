@@ -45,7 +45,7 @@ Trait CentreonClapiContextTrait
         $this->getContainer()->copyToContainer($path, '/tmp/clapi.txt', 'web');
 
         $this->getContainer()->execute(
-            '/usr/share/centreon/bin/centreon -u admin -p centreon -i /tmp/clapi.txt',
+            '/usr/share/centreon/bin/centreon -u admin -p Centreon!2021 -i /tmp/clapi.txt',
             'web'
         );
 
@@ -60,7 +60,7 @@ Trait CentreonClapiContextTrait
     public function theConfigurationIsGeneratedAndExported()
     {
         $this->getContainer()->execute(
-            '/usr/share/centreon/bin/centreon -u admin -p centreon -a APPLYCFG -v "central"',
+            '/usr/share/centreon/bin/centreon -u admin -p Centreon!2021 -a APPLYCFG -v "central"',
             'web'
         );
     }
