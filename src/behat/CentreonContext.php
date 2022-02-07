@@ -313,7 +313,7 @@ class CentreonContext extends UtilsContext
         curl_exec($curlLogout);
         curl_close($curlLogout);
 
-        return new LoginPage($this, false);
+        return new LoginPage($this, true);
     }
 
     /**
