@@ -62,9 +62,9 @@ class LoginPage extends \Centreon\Test\Behat\Page
     {
         // Send login form.
         try {
-            $this->context->assertFind('css', 'input[name="useralias"]')->setValue($user);
-            $this->context->assertFind('css', 'input[name="password"]')->setValue($password);
-            $this->context->assertFind('css', 'input[name="submitLogin"]')->click();
+            $this->context->assertFind('css', 'input[aria-label="Alias"]')->setValue($user);
+            $this->context->assertFind('css', 'input[aria-label="Password"]')->setValue($password);
+            $this->context->assertFind('css', 'button[aria-label="Connect"]')->click();
         } catch (\Exception $e) {
             throw new \Exception("Cannot login.\n" . $e->getMessage());
         }
