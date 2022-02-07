@@ -21,6 +21,8 @@ class LoginPage extends \Centreon\Test\Behat\Page
 {
     protected $context;
 
+    private const LOGIN_FIELD_SELECTOR = 'input[aria-label="Alias"]';
+
     /**
      *  Navigate to and/or check that we are on the login page.
      */
@@ -51,7 +53,7 @@ class LoginPage extends \Centreon\Test\Behat\Page
     {
         return $this->context->getSession()->getPage()->has(
             'css',
-            'input[name="useralias"]'
+            self::LOGIN_FIELD_SELECTOR
         );
     }
 
@@ -62,7 +64,7 @@ class LoginPage extends \Centreon\Test\Behat\Page
     {
         // Send login form.
         try {
-            $this->context->assertFind('css', 'input[aria-label="Alias"]')->setValue($user);
+            $this->context->assertFind('css', self::LOGIN_FIELD_SELECTOR)->setValue($user);
             $this->context->assertFind('css', 'input[aria-label="Password"]')->setValue($password);
             $this->context->assertFind('css', 'button[aria-label="Connect"]')->click();
         } catch (\Exception $e) {
