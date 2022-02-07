@@ -301,7 +301,7 @@ class CentreonContext extends UtilsContext
         // LoginPage constructor will automatically throw if we are
         // not on the login page.
         $this->visit('index.php?disconnect=1');
-        return new LoginPage($this, false);
+        return new LoginPage($this, true);
     }
 
     /**
