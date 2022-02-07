@@ -31,7 +31,7 @@ class CentreonUpgradePage implements \Centreon\Test\Behat\Interfaces\Page
     {
         // Disconnect.
         $this->context = $context;
-        $this->context->visit('index.php?disconnect=1');
+        $this->context->iAmLoggedOut();
 
         // Check that page is valid for this class.
         $mythis = $this;

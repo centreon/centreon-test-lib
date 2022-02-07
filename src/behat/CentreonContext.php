@@ -300,8 +300,20 @@ class CentreonContext extends UtilsContext
     {
         // LoginPage constructor will automatically throw if we are
         // not on the login page.
-        $this->visit('index.php?disconnect=1');
-        return new LoginPage($this, true);
+        $logoutUrl = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web')
+            . '/centreon/authentication/logout';
+        $sessionId = $this->getSession()->getDriver()->getCookie('PHPSESSID');
+
+        $curlLogout = curl_init($logoutUrl);
+        curl_setopt($curlLogout, CURLOPT_COOKIE, 'PHPSESSID=' . $sessionId);
+        curl_setopt($curlLogout, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($curlLogout, CURLOPT_TIMEOUT, 5);
+        curl_setopt($curlLogout, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curlLogout, CURLOPT_POST, true);
+        curl_exec($curlLogout);
+        curl_close($curlLogout);
+
+        return new LoginPage($this, false);
     }
 
     /**
