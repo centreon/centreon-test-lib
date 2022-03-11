@@ -76,11 +76,11 @@ class LoginPage extends \Centreon\Test\Behat\Page
             function ($context) {
                 return $context->getSession()->getPage()->has(
                     'css',
-                    'div[data-testid="sidebar"]',
+                    'div[data-testid="sidebar"]'
                 );
             },
             'Login failed.',
-            10,
+            10
         );
     }
 }
