@@ -42,5 +42,6 @@ class CentreonUser extends \CentreonUser
         $this->gmt = $user["contact_location"];
         $this->js_effects = $user["contact_js_effects"];
         $this->is_admin = null;
+        $this->theme = $user['contact_theme'];
     }
 }
