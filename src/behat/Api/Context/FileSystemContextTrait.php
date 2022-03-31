@@ -42,6 +42,22 @@ Trait FileSystemContextTrait
     abstract public function spin(\Closure $closure, string $timeoutMsg = 'Load timeout', int $wait = 60);
 
     /**
+     * Execute a command on container
+     *
+     * @param string $command Command to execute
+     * @throws \Exception
+     *
+     * @Then the following command is executed : :command
+     */
+    public function theFollowingCommandIsExecuted(string $command)
+    {
+        $this->getContainer()->execute(
+            $command,
+            'web'
+        );
+    }
+
+    /**
      * Check content of a file
      *
      * @param string $filePath Path of file to check
