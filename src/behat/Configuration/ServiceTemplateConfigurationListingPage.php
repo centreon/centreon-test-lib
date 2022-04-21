@@ -26,11 +26,6 @@ class ServiceTemplateConfigurationListingPage extends \Centreon\Test\Behat\Listi
             'text',
             'td:nth-child(2)'
         ),
-        'icon' => array(
-            'attribute',
-            'td:nth-child(2) img',
-            'src'
-        ),
         'alias' => array(
             'text',
             'td:nth-child(3)'
