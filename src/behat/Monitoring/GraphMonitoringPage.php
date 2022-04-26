@@ -89,7 +89,7 @@ class GraphMonitoringPage implements \Centreon\Test\Behat\Interfaces\Page
     {
         $graphDivs = $this->context->getSession()->getPage()->findAll('css', 'div.graph');
         foreach ($graphDivs as $graphDiv) {
-            $graphName = $this->context->assertFindIn($graphDiv, 'css', 'div.title > span')->getText();
+            $graphName = $this->context->assertFindIn($graphDiv, 'css', 'div.title > span:nth-child(2)')->getText();
             if ($graphName == $hostname . ' - ' . $servicename) {
                 return true;
             }
@@ -111,7 +111,7 @@ class GraphMonitoringPage implements \Centreon\Test\Behat\Interfaces\Page
         if ($this->hasChart($hostname, $servicename)) {
             $graphDivs = $this->context->getSession()->getPage()->findAll('css', 'div.graph');
             foreach ($graphDivs as $graphDiv) {
-                $graphName = $this->context->assertFindIn($graphDiv, 'css', 'div.title > span')->getText();
+                $graphName = $this->context->assertFindIn($graphDiv, 'css', 'div.title > span:nth-child(2)')->getText();
                 if ($graphName == $hostname . ' - ' . $servicename) {
                     $graph = $graphDiv;
                 }

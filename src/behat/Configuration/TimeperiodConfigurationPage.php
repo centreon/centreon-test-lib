@@ -142,7 +142,7 @@ class TimeperiodConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         $currentExceptions = $this->getExceptions();
         $i = count($currentExceptions);
         foreach ($exceptionsArray as $array) {
-            $this->context->assertFind('css', '#tab2 span')->click();
+            $this->context->getSession()->evaluateScript('document.querySelector("#tab2 .list_two .FormRowValue span").click()');
             $this->context->assertFindField('exceptionInput_' . $i)->setValue($array['day']);
             $this->context->assertFindField('exceptionTimerange_' . $i)->setValue($array['timeRange']);
             $i++;

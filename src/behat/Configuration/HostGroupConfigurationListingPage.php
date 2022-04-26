@@ -29,11 +29,6 @@ class HostGroupConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
         'id' => array(
             'custom'
         ),
-        'icon' => array(
-            'attribute',
-            'td:nth-child(2) img',
-            'src'
-        ),
         'alias' => array(
             'text',
             'td:nth-child(4)'

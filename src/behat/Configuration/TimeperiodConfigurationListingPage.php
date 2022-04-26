@@ -26,11 +26,6 @@ class TimeperiodConfigurationListingPage extends \Centreon\Test\Behat\ListingPag
             'text',
             'td:nth-child(2)'
         ),
-        'icon' => array(
-            'attribute',
-            'td:nth-child(2) img',
-            'src'
-        ),
         'description' => array(
             'text',
             'td:nth-child(3)'
