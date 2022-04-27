@@ -42,6 +42,7 @@ class Centreon extends \Centreon
             'default_page' => '',
             'contact_location' => '0',
             'contact_js_effects' => '0',
+            'contact_theme' => 'light'
         ];
 
         $this->user = new CentreonUser($userInfos);
