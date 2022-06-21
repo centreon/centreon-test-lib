@@ -27,10 +27,6 @@ class ParametersCentreonUiPage extends \Centreon\Test\Behat\ConfigurationPage
             'input',
             'input[name="oreon_path"]'
         ),
-        'web_directory' => array(
-            'input',
-            'input[name="oreon_web_path"]'
-        ),
         'web_base_root' => array(
             'input',
             'input[name="centreon_web_base_root"]'
