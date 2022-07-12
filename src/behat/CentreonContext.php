@@ -431,7 +431,7 @@ class CentreonContext extends UtilsContext
     public function getCentreonDatabase()
     {
         if (!isset($this->dbCentreon)) {
-            $dsn = 'mysql:dbname=centreon;host=' . $this->container->getHost() . ';port=' .
+            $dsn = 'mysql:dbname=centreon-configuration;host=' . $this->container->getHost() . ';port=' .
                 $this->container->getPort(3306, 'web');
             $this->dbCentreon = new \PDO(
                 $dsn,
@@ -451,7 +451,7 @@ class CentreonContext extends UtilsContext
     public function getStorageDatabase()
     {
         if (!isset($this->dbStorage)) {
-            $dsn = 'mysql:dbname=centreon_storage;host=' . $this->container->getHost() . ';port=' .
+            $dsn = 'mysql:dbname=centreon-monitoring;host=' . $this->container->getHost() . ';port=' .
                 $this->container->getPort(3306, 'web');
             $this->dbStorage = new \PDO(
                 $dsn,
