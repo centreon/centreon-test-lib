@@ -1,7 +1,7 @@
 parameters:
     ignoreErrors:
         -
-            message: "#^\[CENTREON-ERROR\]#"
+            message: "#^[\[]CENTREON-ERROR[\]]#"
             paths:
                 - %currentWorkingDirectory%/src/Centreon
                 - %currentWorkingDirectory%/src/EventSubscriber
