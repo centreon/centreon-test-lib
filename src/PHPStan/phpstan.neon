@@ -3,4 +3,4 @@ parameters:
     paths:
         - %currentWorkingDirectory%/src/Core
 rules:
-    - Centreon\PHPStan\MyTestRule
+    - Centreon\PHPStan\Rules\MyTestRule
