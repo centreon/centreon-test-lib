@@ -1,0 +1,6 @@
+parameters:
+    level 6
+    paths:
+        - %currentWorkingDirectory%/src/Core
+rules:
+    - Centreon\PHPStan\MyTestRule
