@@ -11,5 +11,3 @@ parameters:
                 - %currentWorkingDirectory%/tests/php/Centreon
                 - %currentWorkingDirectory%/tests/php/Security
                 - %currentWorkingDirectory%/tests/php/Utility
-rules:
-    - Centreon\PHPStan\Rules\MyTestRule
