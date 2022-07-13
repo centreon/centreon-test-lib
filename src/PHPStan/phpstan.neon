@@ -1,13 +1,14 @@
-ignoreErrors:
-    message: "#^[CENTREON-ERROR]#"
-    paths:
-        - %currentWorkingDirectory%/src/Centreon
-        - %currentWorkingDirectory%/src/EventSubscriber
-        - %currentWorkingDirectory%/src/Security
-        - %currentWorkingDirectory%/src/Utility
-        - %currentWorkingDirectory%/tests/php/Core
-        - %currentWorkingDirectory%/tests/php/Centreon
-        - %currentWorkingDirectory%/tests/php/Security
-        - %currentWorkingDirectory%/tests/php/Utility
+parameters:
+    ignoreErrors:
+        message: "#^[CENTREON-ERROR]#"
+        paths:
+            - %currentWorkingDirectory%/src/Centreon
+            - %currentWorkingDirectory%/src/EventSubscriber
+            - %currentWorkingDirectory%/src/Security
+            - %currentWorkingDirectory%/src/Utility
+            - %currentWorkingDirectory%/tests/php/Core
+            - %currentWorkingDirectory%/tests/php/Centreon
+            - %currentWorkingDirectory%/tests/php/Security
+            - %currentWorkingDirectory%/tests/php/Utility
 rules:
     - Centreon\PHPStan\Rules\MyTestRule
