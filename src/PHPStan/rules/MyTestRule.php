@@ -33,7 +33,7 @@ class MyTestRule implements \PHPStan\Rules\Rule
         if (strlen($node->var->name) < 3) {
             return [
                 RuleErrorBuilder::message(
-                    '[CENTREON-ERROR] ' . $node->var->name . ': Parameter name is too short.'
+                    'CENTREON-ERROR ' . $node->var->name . ': Parameter name is too short.'
                 )->build(),
                 ];
         }
