@@ -1,0 +1,6 @@
+rules:
+    - Centreon\PHPStan\CustomRules\VariableLengthRules\VariableLengthCustomRule
+    - Centreon\PHPStan\CustomRules\VariableLengthRules\ParamLengthCustomRule
+    - Centreon\PHPStan\CustomRules\VariableLengthRules\PropertyPropertyLengthCustomRule
+    - Centreon\PHPStan\CustomRules\VariableLengthRules\PropertyFetchLengthCustomRule
+    - Centreon\PHPStan\CustomRules\StringMiscRules\StringBackTickCustomRule
