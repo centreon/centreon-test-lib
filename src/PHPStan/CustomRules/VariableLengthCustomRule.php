@@ -13,13 +13,6 @@ use Centreon\PHPStan\CustomRules;
 class VariableLengthCustomRule extends AbstractCustomRule implements Rule
 {
     /**
-     * @inheritDoc
-     *
-     * @var string
-     */
-    public string $errMessage = ' must be equal or superio to 3 characters.';
-
-    /**
      * This constant contains an array of variable names to whitelist by custom rule.
      */
     public const WHITELIST_VARIABLE_NAME = [
@@ -50,7 +43,7 @@ class VariableLengthCustomRule extends AbstractCustomRule implements Rule
         $varName = $this->getVariableNameFromNode($node);
         if ($varName !== null && strlen($varName) < 3 && ! in_array($varName, self::WHITELIST_VARIABLE_NAME)) {
             $varName = "$$varName";
-            $this->errMessage = 'must contain 3 or more characters.';
+            $this->errMessage = ' must contain 3 or more characters.';
             return [
                 RuleErrorBuilder::message(
                     $this->buildErrorMessage($varName)
