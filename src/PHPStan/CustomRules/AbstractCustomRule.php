@@ -8,22 +8,36 @@ use \PhpParser\Node;
 /**
  * AbstractCustomRule class defines TAG constant to be added in Custom Rule
  */
-class AbstractCustomRule
+abstract class AbstractCustomRule
 {
     /**
-     * Constant TAG that will be used in the beginning of the custom error.
+     * This constant contains a beginning tag for custom error displayed by PHPStan.
      */
-    protected const TAG = '[CENTRON-RULE]: ';
+    protected const TAG = '[CENTREON-RULE]: ';
 
     /**
-     * buildErrMessage method constructs the error message string using TAG constant,
-     * getType() method of Node class and $errMessage attribute.
+     * This property contains a specific error message displayed by PHPStan.
+     *
+     * @var string
+     */
+    protected string $errMessage;
+
+    /**
+     * This method returns variable name string to be displayed by PHPStan.
      *
      * @param Node $node
      * @return string
      */
-    protected function buildErrMessage(Node $node): string
+    abstract function getVariableNameFromNode(Node $node): ?string;
+
+    /**
+     * This method constructs the error message string displayed by PHPStan.
+     *
+     * @param string $varName
+     * @return string
+     */
+    protected function buildErrorMessage(string $varName): string
     {
-        return self::TAG . $node->getType() . $this->errMessage;
+        return self::TAG . $varName . $this->errMessage;
     }
 }
