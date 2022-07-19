@@ -10,7 +10,7 @@ use PHPStan\Rules\RuleErrorBuilder;
 use PhpParser\Node;
 use Centreon\PHPStan\CustomRules;
 
-class VariableLenthCustomRule extends AbstractCustomRule implements Rule
+class VariableLengthCustomRule extends AbstractCustomRule implements Rule
 {
     /**
      * @inheritDoc
