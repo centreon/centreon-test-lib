@@ -37,9 +37,12 @@ class StringBackTickCustomRule extends AbstractCustomRule implements Rule
     public function processNode(Node $node, Scope $scope): array
     {
         preg_match('/' . self::CENTREON_CONFIG_DATABASE . '/', $node->value, $matches);
-        if (! empty($matches)
+        if (
+            ! empty($matches)
             && ! preg_match('/`' . self::CENTREON_REALTIME_DATABASE .
-                            '`|`' . self::CENTREON_CONFIG_DATABASE . '`/', $node->value)) {
+            '`|`' . self::CENTREON_CONFIG_DATABASE . '`/', $node->value)
+        ) {
+            $this->errMessage = ' must be enclosed in backquotes.';
             $varName = $this->getVariableNameFromNode($node);
             return [
                 RuleErrorBuilder::message(
