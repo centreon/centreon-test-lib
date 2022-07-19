@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Centreon\PHPStan\CustomRules\StringMiscRules;
+namespace Centreon\PHPStan\CustomRules;
 
 use Centreon\PHPStan\CustomRules;
 use Centreon\PHPStan\CustomRules\AbstractCustomRule;
