@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" backupGlobals="false" colors="true" bootstrap="tests/php/bootstrap.php" failOnRisky="true" failOnWarning="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" backupGlobals="false" colors="true" failOnRisky="true" failOnWarning="true">
   <php>
     <ini name="error_reporting" value="30719"/>
     <!-- E_ALL & ~E_STRICT -->
@@ -12,5 +12,4 @@
       <directory>./tests/PHPStan/*</directory>
     </testsuite>
   </testsuites>
-  <logging/>
 </phpunit>
