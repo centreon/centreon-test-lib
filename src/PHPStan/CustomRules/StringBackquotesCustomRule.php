@@ -67,8 +67,6 @@ class StringBackquotesCustomRule implements Rule
                         CustomRuleErrorMessage::buildErrorMessage($matchSubGroup, " must be enclosed in backquotes.")
                     )->build();
                 }
-
-                return $error;
             }
         }
 
