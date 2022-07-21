@@ -53,7 +53,7 @@ class StringBackquotesCustomRule implements Rule
     {
         $errors = [];
         if (preg_match_all(
-            '/(' . self::CENTREON_REALTIME_DATABASE. '|' . self::CENTREON_CONFIG_DATABASE. ')\./',
+            '/(' . self::CENTREON_REALTIME_DATABASE . '|' . self::CENTREON_CONFIG_DATABASE . ')\./',
             $node->value,
             $matches
         )) {
