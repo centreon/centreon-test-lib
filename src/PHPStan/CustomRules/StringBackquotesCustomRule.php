@@ -57,7 +57,6 @@ class StringBackquotesCustomRule implements Rule
             $node->value,
             $matches
         )) {
-            $error = [];
             /**
              * $matches[0] = [':dbstg.',':db.']
              * $matches[1] = [':dbstg',':db']
