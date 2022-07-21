@@ -1,5 +1,23 @@
 <?php
 
+/*
+ * Copyright 2005 - 2022 Centreon (https://www.centreon.com/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * For more information : contact@centreon.com
+ */
+
 declare(strict_types=1);
 
 namespace Centreon\PHPStan\CustomRules;
@@ -8,9 +26,12 @@ use PHPStan\Rules\Rule;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\RuleErrorBuilder;
 use PhpParser\Node;
-use Centreon\PHPStan\CustomRules;
 
-class VariableLengthCustomRule extends AbstractCustomRule implements Rule
+/**
+ * This class implements custom rule for PHPStan to check if variable name contains more
+ * than 3 characters.
+ */
+class VariableLengthCustomRule implements Rule
 {
     /**
      * This constant contains an array of variable names to whitelist by custom rule.
@@ -23,8 +44,6 @@ class VariableLengthCustomRule extends AbstractCustomRule implements Rule
 
     /**
      * @inheritDoc
-     *
-     * @return string
      */
     public function getNodeType(): string
     {
@@ -33,33 +52,29 @@ class VariableLengthCustomRule extends AbstractCustomRule implements Rule
 
     /**
      * @inheritDoc
-     *
-     * @param Node $node
-     * @param Scope $scope
-     * @return array
      */
     public function processNode(Node $node, Scope $scope): array
     {
         $varName = $this->getVariableNameFromNode($node);
         if ($varName !== null && strlen($varName) < 3 && ! in_array($varName, self::WHITELIST_VARIABLE_NAME)) {
-            $varName = "$$varName";
-            $this->errMessage = ' must contain 3 or more characters.';
             return [
                 RuleErrorBuilder::message(
-                    $this->buildErrorMessage($varName)
+                    CustomRuleErrorMessage::buildErrorMessage("$$varName", " must contain 3 or more characters.")
                 )->build(),
             ];
         }
+
         return [];
     }
 
     /**
-     * @inheritDoc
+     * This method returns variable name from a scanned node if the node refers to
+     * variable/property/parameter
      *
      * @param Node $node
      * @return string|null
      */
-    public function getVariableNameFromNode(Node $node): ?string
+    private function getVariableNameFromNode(Node $node): ?string
     {
         switch ($node->getType()) {
             case 'PHPStan_Node_ClassPropertyNode':
