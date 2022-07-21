@@ -47,7 +47,7 @@ it('should return an error if :db is enclosed in backquotes and :dbstg is not.',
         RuleErrorBuilder::message(
             CustomRuleErrorMessage::buildErrorMessage(
                 StringBackquotesCustomRule::CENTREON_REALTIME_DATABASE,
-                ' must be enclosed in backquotes.'
+                'must be enclosed in backquotes.'
             )
         )->build(),
     ];
@@ -71,7 +71,7 @@ it('should return an error if :dbstg is enclosed in backquotes and :db is not.',
         RuleErrorBuilder::message(
             CustomRuleErrorMessage::buildErrorMessage(
                 StringBackquotesCustomRule::CENTREON_CONFIG_DATABASE,
-                ' must be enclosed in backquotes.'
+                'must be enclosed in backquotes.'
             )
         )->build(),
     ];
@@ -95,13 +95,13 @@ it('should return two errors if both :db and :dbstg is not enclosed in backquote
         RuleErrorBuilder::message(
             CustomRuleErrorMessage::buildErrorMessage(
                 StringBackquotesCustomRule::CENTREON_REALTIME_DATABASE,
-                ' must be enclosed in backquotes.'
+                'must be enclosed in backquotes.'
             )
         )->build(),
         RuleErrorBuilder::message(
             CustomRuleErrorMessage::buildErrorMessage(
                 StringBackquotesCustomRule::CENTREON_CONFIG_DATABASE,
-                ' must be enclosed in backquotes.'
+                'must be enclosed in backquotes.'
             )
         )->build(),
     ];

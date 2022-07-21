@@ -60,7 +60,7 @@ it('should return an error if the object property length is less than 3 characte
         RuleErrorBuilder::message(
             CustomRuleErrorMessage::buildErrorMessage(
                 "$$this->invalidVariableName",
-                " must contain 3 or more characters."
+                "must contain 3 or more characters."
             )
         )->build(),
     ];
@@ -84,7 +84,7 @@ it('should return an error if the object fetched property length is less than 3 
         RuleErrorBuilder::message(
             CustomRuleErrorMessage::buildErrorMessage(
                 "$$this->invalidVariableName",
-                " must contain 3 or more characters."
+                "must contain 3 or more characters."
             )
         )->build(),
     ];
@@ -105,7 +105,7 @@ it('should return an error if a variable length is less than 3 characters.', fun
         RuleErrorBuilder::message(
             CustomRuleErrorMessage::buildErrorMessage(
                 "$$this->invalidVariableName",
-                " must contain 3 or more characters."
+                "must contain 3 or more characters."
             )
         )->build(),
     ];
@@ -126,7 +126,7 @@ it('should return an error if a method parameter length is less than 3 character
         RuleErrorBuilder::message(
             CustomRuleErrorMessage::buildErrorMessage(
                 "$$this->invalidVariableName",
-                " must contain 3 or more characters."
+                "must contain 3 or more characters."
             )
         )->build(),
     ];

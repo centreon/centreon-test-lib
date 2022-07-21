@@ -59,7 +59,7 @@ class VariableLengthCustomRule implements Rule
         if ($varName !== null && strlen($varName) < 3 && ! in_array($varName, self::WHITELIST_VARIABLE_NAME)) {
             return [
                 RuleErrorBuilder::message(
-                    CustomRuleErrorMessage::buildErrorMessage("$$varName", " must contain 3 or more characters.")
+                    CustomRuleErrorMessage::buildErrorMessage("$$varName", "must contain 3 or more characters.")
                 )->build(),
             ];
         }
