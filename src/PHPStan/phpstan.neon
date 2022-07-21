@@ -1,0 +1,3 @@
+rules:
+    - Centreon\PHPStan\CustomRules\VariableLengthCustomRule
+    - Centreon\PHPStan\CustomRules\StringBackquotesCustomRule
