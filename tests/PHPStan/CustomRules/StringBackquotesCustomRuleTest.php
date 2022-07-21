@@ -41,10 +41,6 @@ it('should return an error if :db is enclosed in backquotes and :dbstg is not.',
             ON acg.acl_group_id = acl.group_id
             AND acg.acl_group_activate = \'1\'';
 
-    $this->instanceNodeString
-        ->expects($this->any())
-        ->method('getType')
-        ->willReturn('Scalar_String');
     $this->instanceNodeString->value = $this->scannedStringWithError;
 
     $expectedResult = [
@@ -69,10 +65,6 @@ it('should return an error if :dbstg is enclosed in backquotes and :db is not.',
             ON acg.acl_group_id = acl.group_id
             AND acg.acl_group_activate = \'1\'';
 
-    $this->instanceNodeString
-        ->expects($this->any())
-        ->method('getType')
-        ->willReturn('Scalar_String');
     $this->instanceNodeString->value = $this->scannedStringWithError;
 
     $expectedResult = [
@@ -97,10 +89,6 @@ it('should return two errors if both :db and :dbstg is not enclosed in backquote
             ON acg.acl_group_id = acl.group_id
             AND acg.acl_group_activate = \'1\'';
 
-    $this->instanceNodeString
-        ->expects($this->any())
-        ->method('getType')
-        ->willReturn('Scalar_String');
     $this->instanceNodeString->value = $this->scannedStringWithError;
 
     $expectedResult = [
@@ -133,10 +121,6 @@ it('should not return an error if both :db and :dbstg is enclosed in backquotes.
             ON acg.acl_group_id = acl.group_id
             AND acg.acl_group_activate = \'1\'';
 
-    $this->instanceNodeString
-        ->expects($this->any())
-        ->method('getType')
-        ->willReturn('Scalar_String');
     $this->instanceNodeString->value = $this->scannedStringWithoutError;
 
     $rule = new StringBackquotesCustomRule();
@@ -148,10 +132,6 @@ it('should not return an error if both :db and :dbstg is enclosed in backquotes.
 it('should not return an error if a scanned string does not contain neither :db nor :dbstg.', function () {
     $this->scannedStringNeutral = 'SELECT * FROM `topology` WHERE `topology_page` = :id';
 
-    $this->instanceNodeString
-        ->expects($this->any())
-        ->method('getType')
-        ->willReturn('Scalar_String');
     $this->instanceNodeString->value = $this->scannedStringNeutral;
 
     $rule = new StringBackquotesCustomRule();
