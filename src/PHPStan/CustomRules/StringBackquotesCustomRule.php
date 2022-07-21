@@ -70,6 +70,6 @@ class StringBackquotesCustomRule implements Rule
             }
         }
 
-        return [];
+        return $errors;
     }
 }
