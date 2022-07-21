@@ -76,17 +76,12 @@ class VariableLengthCustomRule implements Rule
      */
     private function getVariableNameFromNode(Node $node): ?string
     {
-        switch ($node->getType()) {
-            case 'PHPStan_Node_ClassPropertyNode':
-                return $node->getName();
-            case 'Expr_PropertyFetch':
-                return $node->name->name;
-            case 'Expr_Variable':
-                return $node->name;
-            case 'Param':
-                return $node->var->name;
-            default:
-                return null;
-        }
+        return match (true) {
+            $node instanceof \PHPStan\Node\ClassPropertyNode => $node->getName(),
+            $node instanceof Node\Expr\PropertyFetch => $node->name->name,
+            $node instanceof Node\Expr\Variable => $node->name,
+            $node instanceof Node\Param => $node->var->name,
+            default => null
+        };
     }
 }
