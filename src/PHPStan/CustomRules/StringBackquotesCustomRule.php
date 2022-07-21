@@ -51,6 +51,7 @@ class StringBackquotesCustomRule implements Rule
      */
     public function processNode(Node $node, Scope $scope): array
     {
+        $errors = [];
         if (preg_match_all(
             '/(' . self::CENTREON_REALTIME_DATABASE. '|' . self::CENTREON_CONFIG_DATABASE. ')\./',
             $node->value,
