@@ -70,9 +70,9 @@ class CentreonDB extends \CentreonDB
      * Stub for function query
      *
      * {@inheritdoc}
-     * @return CentreonDBResultSet The resultset
+     * @return CentreonDBStatement|false The resultset
      */
-    public function query($queryString, $parameters = null, ...$parametersArgs)
+    public function query($queryString, $parameters = null, ...$parametersArgs): CentreonDBStatement|false
     {
         return $this->execute($queryString, null);
     }
@@ -94,9 +94,9 @@ class CentreonDB extends \CentreonDB
      *
      * @param string $string The string to escape
      * @param string $paramtype
-     * @return string The string escaped
+     * @return string|false The string escaped
      */
-    public function quote($string, $paramtype = null)
+    public function quote(string $string, int $type = \PDO::PARAM_STR): string|false
     {
         return "'" . $string . "'";
     }
@@ -148,13 +148,13 @@ class CentreonDB extends \CentreonDB
      * @return CentreonDBStatement
      * @throws \Exception
      */
-    public function prepare($statement, $options = null)
+    public function prepare(string $query, array $options = []): CentreonDBStatement|false
     {
-        if (!isset($this->queries[$statement])) {
-            throw new \Exception('Query is not set.' . "\nQuery : " . $statement);
+        if (!isset($this->queries[$query])) {
+            throw new \Exception('Query is not set.' . "\nQuery : " . $query);
         }
 
-        return new CentreonDBStatement($statement, $this->queries[$statement], $this);
+        return new CentreonDBStatement($query, $this->queries[$query], $this);
     }
 
     /**
@@ -236,7 +236,7 @@ class CentreonDB extends \CentreonDB
     /**
      * @return bool
      */
-    public function rollback()
+    public function rollback(): bool
     {
         return true;
     }
@@ -252,7 +252,7 @@ class CentreonDB extends \CentreonDB
     /**
      * @return int|null
      */
-    public function lastInsertId($seqname = null)
+    public function lastInsertId(?string $name = null): string|false
     {
         return $this->lastInsertId;
     }
