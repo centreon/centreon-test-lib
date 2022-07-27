@@ -1,3 +1,9 @@
 rules:
     - Centreon\PHPStan\CustomRules\VariableLengthCustomRule
     - Centreon\PHPStan\CustomRules\StringBackquotesCustomRule
+    - Centreon\PHPStan\CustomRules\LoggerUseCaseCustomRule
+services:
+    -
+        class: Centreon\PHPStan\CustomRules\Collectors\MethodCallCollector
+        tags:
+            - phpstan.collector

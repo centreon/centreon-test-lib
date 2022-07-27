@@ -33,7 +33,7 @@ class CustomRuleErrorMessage
      * @param string $varName
      * @return string
      */
-    public static function buildErrorMessage(string $varName, string $errMessage): string
+    public static function buildErrorMessage(string $errMessage, string $varName = ''): string
     {
         return '[CENTREON-RULE]: ' . $varName . ' ' . $errMessage;
     }
