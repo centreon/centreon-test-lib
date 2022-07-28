@@ -31,23 +31,11 @@ use PHPStan\Rules\RuleErrorBuilder;
 
 class LogMethodInCatchCustomRule implements Rule
 {
-    public const LOGGER_METHODS = [
-        'setLoggerContact',
-        'setLoggerContactForDebug',
-        'setLogger',
-        'emergency',
-        'alert',
-        'critical',
-        'error',
-        'warning',
-        'notice',
-        'info',
-        'debug',
-        'log',
-        'prefixMessage',
-        'canBeLogged'
-    ];
-
+    /**
+     * @inheritDoc
+     *
+     * @return string
+     */
     public function getNodeType(): string
     {
         return Node\Stmt\Catch_::class;
@@ -56,11 +44,13 @@ class LogMethodInCatchCustomRule implements Rule
     public function processNode(Node $node, Scope $scope): array
     {
         $errors = [];
+        $loggerMethods = $this->getLoggerTraitMethods(LoggerTrait::class);
+
         foreach ($node->stmts as $stmt) {
             // $stmt->expr correcponds to MethodCall node;
             // ->name->name gets method name string;
             // in case of other statement or expression null is passed to in_array()
-            if (in_array($stmt->expr->name->name, self::LOGGER_METHODS)) {
+            if (in_array($stmt->expr->name->name, $loggerMethods)) {
                 return $errors;
             }
         }
@@ -70,5 +60,24 @@ class LogMethodInCatchCustomRule implements Rule
                         )
                     )->build();
         return $errors;
+    }
+
+    /**
+     * This method creates a Reflection of Logger Trait, extract the list of its methods
+     * and stores them as array of strings.
+     *
+     * @param string $class
+     * @return array
+     */
+    public function getLoggerTraitMethods(string $class): array
+    {
+        $loggerMethods = [];
+        $loggerTraitReflectionClass = new ReflectionClass($class);
+        $loggerTraitReflectionMethods = $loggerTraitReflectionClass->getMethods();
+        foreach ($loggerTraitReflectionMethods as $loggerTraitReflectionMethod) {
+            $loggerMethods[] = $loggerTraitReflectionMethod->name;
+        }
+
+        return $loggerMethods;
     }
 }
