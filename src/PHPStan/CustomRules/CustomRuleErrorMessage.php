@@ -35,6 +35,6 @@ class CustomRuleErrorMessage
      */
     public static function buildErrorMessage(string $errMessage, string $varName = ''): string
     {
-        return '[CENTREON-RULE]: ' . $varName . ' ' . $errMessage;
+        return empty($varName) ? '[CENTREON-RULE]: ' . $errMessage : '[CENTREON-RULE]: ' . $varName . ' ' . $errMessage;
     }
 }
