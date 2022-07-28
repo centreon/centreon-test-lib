@@ -35,8 +35,8 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 class StringBackquotesCustomRule implements Rule
 {
-    private const CENTREON_CONFIG_DATABASE = ':db';
-    private const CENTREON_REALTIME_DATABASE = ':dbstg';
+    public const CENTREON_CONFIG_DATABASE = ':db';
+    public const CENTREON_REALTIME_DATABASE = ':dbstg';
 
     /**
      * @inheritDoc
