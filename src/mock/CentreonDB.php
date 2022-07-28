@@ -50,9 +50,9 @@ class CentreonDB extends \CentreonDB
     protected $transactionQueries;
 
     /**
-     * @var int
+     * @var string|false
      */
-    protected $lastInsertId;
+    protected $lastInsertId = false;
 
     /**
      * Constructor
@@ -242,9 +242,9 @@ class CentreonDB extends \CentreonDB
     }
 
     /**
-     * @param int $id
+     * @param string|false $id
      */
-    public function setLastInsertId(int $id = null)
+    public function setLastInsertId($id = false)
     {
         $this->lastInsertId = $id;
     }
