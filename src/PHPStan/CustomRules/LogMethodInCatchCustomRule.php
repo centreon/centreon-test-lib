@@ -22,14 +22,18 @@ declare(strict_types=1);
 
 namespace Centreon\PHPStan\CustomRules;
 
+use Centreon\Domain\Log\LoggerTrait;
+use Centreon\PHPStan\CustomRules\CustomRuleErrorMessage;
 use PhpParser\Node;
-use ReflectionClass;
 use PHPStan\Rules\Rule;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\RuleErrorBuilder;
-use Centreon\Domain\Log\LoggerTrait;
-use Centreon\PHPStan\CustomRules\CustomRuleErrorMessage;
+use ReflectionClass;
 
+/**
+ * This class implements a custom rule for PHPStan to check if a catch block contains
+ * Logger trait method call.
+ */
 class LogMethodInCatchCustomRule implements Rule
 {
     /**

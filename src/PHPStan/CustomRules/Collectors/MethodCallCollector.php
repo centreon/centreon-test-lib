@@ -32,8 +32,6 @@ use PHPStan\Collectors\Collector;
  */
 class MethodCallCollector implements Collector
 {
-    private const USE_CASE = 'UseCase';
-
     /**
      * @inheritDoc
      *
@@ -51,21 +49,8 @@ class MethodCallCollector implements Collector
      * @param Scope $scope
      * @return array|null
      */
-    public function processNode(Node $node, Scope $scope): ?string
+    public function processNode(Node $node, Scope $scope): string
     {
-        // i.e. "Centreon\PHPStan\UseCase\MyClass"
-        $namespace = $scope->getNamespace();
-        // i.e. the last "MyClass" in "Centreon\PHPStan\UseCase\MyClass"
-        $namespaceEnd = end(explode('\\', $scope->getNamespace()));
-
-        // i.e. the last "MyClass" in "Centreon\PHPStan\UseCase\MyClass\MyClass"
-        $className = end(explode('\\', $scope->getClassReflection()->getName()));
-
-        if (strpos($namespace, self::USE_CASE) && ($className === $namespaceEnd)) {
-            // returns an array with method call string
-            return $node->name->name;
-        }
-
-        return null;
+        return $node->name->name;
     }
 }

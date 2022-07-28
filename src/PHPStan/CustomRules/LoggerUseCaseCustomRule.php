@@ -38,6 +38,7 @@ use ReflectionClass;
  */
 class LoggerUseCaseCustomRule implements Rule
 {
+    private const USE_CASE = 'UseCase';
     /**
      * @inheritDoc
      *
@@ -62,16 +63,19 @@ class LoggerUseCaseCustomRule implements Rule
 
         $methodCallData = $node->get(MethodCallCollector::class);
         foreach ($methodCallData as $file => $methodCalls) {
-            foreach ($methodCalls as $methodCall) {
-                if (in_array($methodCall, $loggerMethods)) {
-                    return $errors;
+            $fileName = str_replace('.php', '', $file);
+            $fileNameArray = array_reverse(explode(DIRECTORY_SEPARATOR, $fileName));
+            // check if full file name contains 'UseCase' and the last two elements of file path are equal
+            if (strpos($file, self::USE_CASE) !== false && ($fileNameArray[0] === $fileNameArray[1])) {
+                // check if the intersection of $loggerMethods and $methodCalls is empty
+                if (empty(array_intersect($loggerMethods, $methodCalls))) {
+                    $errors[] = RuleErrorBuilder::message(
+                        CustomRuleErrorMessage::buildErrorMessage(
+                            'Class must contain a Logger trait and call at least one of its methods.'
+                        )
+                    )->file($file)->line(0)->build();
                 }
             }
-            $errors[] = RuleErrorBuilder::message(
-                            CustomRuleErrorMessage::buildErrorMessage(
-                                'Class must contain a Logger trait and call at least one of its methods.'
-                            )
-                        )->file($file)->line(0)->build();
         }
         return $errors;
     }
