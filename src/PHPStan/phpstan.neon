@@ -1,6 +1,7 @@
 rules:
     - Centreon\PHPStan\CustomRules\VariableLengthCustomRule
     - Centreon\PHPStan\CustomRules\StringBackquotesCustomRule
+    - Centreon\PHPStan\CustomRules\LogMethodInCatchCustomRule
     - Centreon\PHPStan\CustomRules\LoggerUseCaseCustomRule
 services:
     -
