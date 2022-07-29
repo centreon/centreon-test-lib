@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\PHPStan\CustomRules;
 
-use Centreon\PHPStan\CustomRules\CustomRuleErrorMessage;
+use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use Centreon\PHPStan\CustomRules\VariableLengthCustomRule;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\PropertyFetch;
@@ -31,7 +31,6 @@ use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\If_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\ClassPropertyNode;
-use PHPStan\Rules\RuleErrorBuilder;
 
 beforeEach(function () {
     $this->nodeInstanceClassProperty = $this->createMock(ClassPropertyNode::class);
@@ -57,11 +56,8 @@ it('should return an error if the object property length is less than 3 characte
         ->willReturn($this->invalidVariableName);
 
     $expectedResult = [
-        RuleErrorBuilder::message(
-            CustomRuleErrorMessage::buildErrorMessage(
-                "must contain 3 or more characters.",
-                "$$this->invalidVariableName"
-            )
+        CentreonRuleErrorBuilder::message(
+            "$$this->invalidVariableName must contain 3 or more characters."
         )->build(),
     ];
 
@@ -81,11 +77,8 @@ it('should return an error if the object fetched property length is less than 3 
     $this->nodeInstancePropertyFetch->name->name = $this->invalidVariableName;
 
     $expectedResult = [
-        RuleErrorBuilder::message(
-            CustomRuleErrorMessage::buildErrorMessage(
-                "must contain 3 or more characters.",
-                "$$this->invalidVariableName"
-            )
+        CentreonRuleErrorBuilder::message(
+            "$$this->invalidVariableName must contain 3 or more characters."
         )->build(),
     ];
 
@@ -102,11 +95,8 @@ it('should return an error if a variable length is less than 3 characters.', fun
     $this->nodeInstanceVariable->name = $this->invalidVariableName;
 
     $expectedResult = [
-        RuleErrorBuilder::message(
-            CustomRuleErrorMessage::buildErrorMessage(
-                "must contain 3 or more characters.",
-                "$$this->invalidVariableName"
-            )
+        CentreonRuleErrorBuilder::message(
+            "$$this->invalidVariableName must contain 3 or more characters."
         )->build(),
     ];
 
@@ -123,11 +113,8 @@ it('should return an error if a method parameter length is less than 3 character
     $this->nodeInstanceParam->var->name = $this->invalidVariableName;
 
     $expectedResult = [
-        RuleErrorBuilder::message(
-            CustomRuleErrorMessage::buildErrorMessage(
-                "must contain 3 or more characters.",
-                "$$this->invalidVariableName"
-            )
+        CentreonRuleErrorBuilder::message(
+            "$$this->invalidVariableName must contain 3 or more characters."
         )->build(),
     ];
 

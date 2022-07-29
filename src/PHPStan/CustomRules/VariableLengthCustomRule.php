@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Centreon\PHPStan\CustomRules;
 
+use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
+use PhpParser\Node;
 use PHPStan\Rules\Rule;
 use PHPStan\Analyser\Scope;
-use PHPStan\Rules\RuleErrorBuilder;
-use PhpParser\Node;
 
 /**
  * This class implements custom rule for PHPStan to check if variable name contains more
@@ -58,9 +58,7 @@ class VariableLengthCustomRule implements Rule
         $varName = $this->getVariableNameFromNode($node);
         if ($varName !== null && strlen($varName) < 3 && ! in_array($varName, self::WHITELIST_VARIABLE_NAME)) {
             return [
-                RuleErrorBuilder::message(
-                    CustomRuleErrorMessage::buildErrorMessage("must contain 3 or more characters.", "$$varName")
-                )->build(),
+                CentreonRuleErrorBuilder::message("$$varName must contain 3 or more characters.")->build(),
             ];
         }
 

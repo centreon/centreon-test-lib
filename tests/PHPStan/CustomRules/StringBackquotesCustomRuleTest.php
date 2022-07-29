@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tests\PHPStan\CustomRules;
 
-use Centreon\PHPStan\CustomRules\CustomRuleErrorMessage;
+use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use Centreon\PHPStan\CustomRules\StringBackquotesCustomRule;
 use PhpParser\Node\Scalar\String_;
 use PHPStan\Analyser\Scope;
-use PHPStan\Rules\RuleErrorBuilder;
 
 beforeEach(function () {
     $this->instanceNodeString = $this->createMock(String_::class);
@@ -44,11 +43,8 @@ it('should return an error if :db is enclosed in backquotes and :dbstg is not.',
     $this->instanceNodeString->value = $this->scannedStringWithError;
 
     $expectedResult = [
-        RuleErrorBuilder::message(
-            CustomRuleErrorMessage::buildErrorMessage(
-                'must be enclosed in backquotes.',
-                StringBackquotesCustomRule::CENTREON_REALTIME_DATABASE
-            )
+        CentreonRuleErrorBuilder::message(
+            StringBackquotesCustomRule::CENTREON_REALTIME_DATABASE . ' must be enclosed in backquotes.'
         )->build(),
     ];
 
@@ -68,11 +64,8 @@ it('should return an error if :dbstg is enclosed in backquotes and :db is not.',
     $this->instanceNodeString->value = $this->scannedStringWithError;
 
     $expectedResult = [
-        RuleErrorBuilder::message(
-            CustomRuleErrorMessage::buildErrorMessage(
-                'must be enclosed in backquotes.',
-                StringBackquotesCustomRule::CENTREON_CONFIG_DATABASE
-            )
+        CentreonRuleErrorBuilder::message(
+            StringBackquotesCustomRule::CENTREON_CONFIG_DATABASE . ' must be enclosed in backquotes.'
         )->build(),
     ];
 
@@ -92,17 +85,11 @@ it('should return two errors if both :db and :dbstg is not enclosed in backquote
     $this->instanceNodeString->value = $this->scannedStringWithError;
 
     $expectedResult = [
-        RuleErrorBuilder::message(
-            CustomRuleErrorMessage::buildErrorMessage(
-                'must be enclosed in backquotes.',
-                StringBackquotesCustomRule::CENTREON_REALTIME_DATABASE
-            )
+        CentreonRuleErrorBuilder::message(
+            StringBackquotesCustomRule::CENTREON_REALTIME_DATABASE . ' must be enclosed in backquotes.'
         )->build(),
-        RuleErrorBuilder::message(
-            CustomRuleErrorMessage::buildErrorMessage(
-                'must be enclosed in backquotes.',
-                StringBackquotesCustomRule::CENTREON_CONFIG_DATABASE
-            )
+        CentreonRuleErrorBuilder::message(
+            StringBackquotesCustomRule::CENTREON_CONFIG_DATABASE . ' must be enclosed in backquotes.'
         )->build(),
     ];
 

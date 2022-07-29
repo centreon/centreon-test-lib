@@ -22,32 +22,33 @@ declare(strict_types=1);
 
 namespace Centreon\PHPStan\CustomRules;
 
-use Centreon\PHPStan\CustomRules\AbstractGetLoggerMethodsClass;
-use Centreon\PHPStan\CustomRules\CustomRuleErrorMessage;
+use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
+use Centreon\PHPStan\CustomRules\Traits\GetLoggerMethodsTrait;
 use PhpParser\Node;
 use PHPStan\Rules\Rule;
 use PHPStan\Analyser\Scope;
-use PHPStan\Rules\RuleErrorBuilder;
 
 /**
  * This class implements a custom rule for PHPStan to check if a catch block contains
  * Logger trait method call.
  */
-class LogMethodInCatchCustomRule extends AbstractGetLoggerMethodsClass implements Rule
+class LogMethodInCatchCustomRule implements Rule
 {
+    use GetLoggerMethodsTrait;
+
     /**
      * @inheritDoc
-     *
-     * @return string
      */
     public function getNodeType(): string
     {
         return Node\Stmt\Catch_::class;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function processNode(Node $node, Scope $scope): array
     {
-        $errors = [];
         $loggerMethods = $this->getLoggerTraitMethods();
 
         foreach ($node->stmts as $stmt) {
@@ -55,16 +56,12 @@ class LogMethodInCatchCustomRule extends AbstractGetLoggerMethodsClass implement
             // ->name->name gets method name string;
             // in case of other statement or expression null is passed to in_array()
             if (in_array($stmt->expr->name->name, $loggerMethods)) {
-                return $errors;
+                return [];
             }
         }
 
         return [
-            RuleErrorBuilder::message(
-                CustomRuleErrorMessage::buildErrorMessage(
-                    'Catch block must contain a Logger trait method call.'
-                )
-            )->build()
+            CentreonRuleErrorBuilder::message('Catch block must contain a Logger trait method call.')->build(),
         ];
     }
 }

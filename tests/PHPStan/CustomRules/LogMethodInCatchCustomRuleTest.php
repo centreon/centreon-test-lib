@@ -22,14 +22,13 @@ declare(strict_types=1);
 
 namespace Tests\PHPStan\CustomRules;
 
-use Centreon\PHPStan\CustomRules\CustomRuleErrorMessage;
+use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use Centreon\PHPStan\CustomRules\LogMethodInCatchCustomRule;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Catch_;
 use PHPStan\Analyser\Scope;
-use PHPStan\Rules\RuleErrorBuilder;
 
 beforeEach(function () {
     $this->scope = $this->createMock(Scope::class);
@@ -56,11 +55,7 @@ it('should return an error if no Logger trait method is used in catch block.', f
     $this->methodCallNodeInstanceTwo->name = 'methodTwo';
 
     $expectedResult = [
-        RuleErrorBuilder::message(
-            CustomRuleErrorMessage::buildErrorMessage(
-                'Catch block must contain a Logger trait method call.'
-            )
-        )->build(),
+        CentreonRuleErrorBuilder::message('Catch block must contain a Logger trait method call.')->build(),
     ];
 
     $rule = new LogMethodInCatchCustomRule();

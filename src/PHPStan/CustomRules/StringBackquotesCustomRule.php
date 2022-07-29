@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace Centreon\PHPStan\CustomRules;
 
-use Centreon\PHPStan\CustomRules\CustomRuleErrorMessage;
+use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
-use PHPStan\Rules\RuleError;
-use PHPStan\Rules\RuleErrorBuilder;
 
 /**
  * This class implements custom rule for PHPStan to check if variable :db or :dbstg
@@ -63,8 +61,8 @@ class StringBackquotesCustomRule implements Rule
              */
             if (! empty($matches[1])) {
                 foreach ($matches[1] as $matchSubGroup) {
-                    $errors[] = RuleErrorBuilder::message(
-                        CustomRuleErrorMessage::buildErrorMessage("must be enclosed in backquotes.", $matchSubGroup)
+                    $errors[] = CentreonRuleErrorBuilder::message(
+                        $matchSubGroup . ' must be enclosed in backquotes.'
                     )->build();
                 }
             }
