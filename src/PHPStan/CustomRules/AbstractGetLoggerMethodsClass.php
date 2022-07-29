@@ -22,19 +22,28 @@ declare(strict_types=1);
 
 namespace Centreon\PHPStan\CustomRules;
 
+use Centreon\Domain\Log\LoggerTrait;
+
 /**
- * This class defines static method to build custom error message in PHPStan
+ * This class implements getLoggerTraitMethods used in Log Custom Rules
  */
-class CustomRuleErrorMessage
+abstract class AbstractGetLoggerMethodsClass
 {
     /**
-     * This method constructs the error message string displayed by PHPStan.
+     * This method creates a Reflection of Logger Trait, extract the list of its methods
+     * and stores them as array of strings.
      *
-     * @param string $varName
-     * @return string
+     * @return string[]
      */
-    public static function buildErrorMessage(string $errMessage, string $varName = ''): string
+    public function getLoggerTraitMethods(): array
     {
-        return empty($varName) ? '[CENTREON-RULE]: ' . $errMessage : '[CENTREON-RULE]: ' . $varName . ' ' . $errMessage;
+        $loggerMethods = [];
+        $loggerTraitReflectionClass = new \ReflectionClass(LoggerTrait::class);
+        $loggerTraitReflectionMethods = $loggerTraitReflectionClass->getMethods();
+        foreach ($loggerTraitReflectionMethods as $loggerTraitReflectionMethod) {
+            $loggerMethods[] = $loggerTraitReflectionMethod->name;
+        }
+
+        return $loggerMethods;
     }
 }

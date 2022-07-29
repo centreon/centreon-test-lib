@@ -22,54 +22,49 @@ declare(strict_types=1);
 
 namespace Centreon\PHPStan\CustomRules;
 
+use Centreon\PHPStan\CustomRules\AbstractGetLoggerMethodsClass;
 use Centreon\PHPStan\CustomRules\CustomRuleErrorMessage;
 use PhpParser\Node;
-use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
-use PHPStan\Rules\RuleError;
+use PHPStan\Analyser\Scope;
 use PHPStan\Rules\RuleErrorBuilder;
 
 /**
- * This class implements custom rule for PHPStan to check if variable :db or :dbstg
- * are enclosed in backquotes.
+ * This class implements a custom rule for PHPStan to check if a catch block contains
+ * Logger trait method call.
  */
-class StringBackquotesCustomRule implements Rule
+class LogMethodInCatchCustomRule extends AbstractGetLoggerMethodsClass implements Rule
 {
-    public const CENTREON_CONFIG_DATABASE = ':db';
-    public const CENTREON_REALTIME_DATABASE = ':dbstg';
-
     /**
      * @inheritDoc
+     *
+     * @return string
      */
     public function getNodeType(): string
     {
-        return \PhpParser\Node\Scalar\String_::class;
+        return Node\Stmt\Catch_::class;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function processNode(Node $node, Scope $scope): array
     {
         $errors = [];
-        if (preg_match_all(
-            '/(' . self::CENTREON_REALTIME_DATABASE . '|' . self::CENTREON_CONFIG_DATABASE . ')\./',
-            $node->value,
-            $matches
-        )) {
-            /**
-             * $matches[0] = [':dbstg.',':db.']
-             * $matches[1] = [':dbstg',':db']
-             */
-            if (! empty($matches[1])) {
-                foreach ($matches[1] as $matchSubGroup) {
-                    $errors[] = RuleErrorBuilder::message(
-                        CustomRuleErrorMessage::buildErrorMessage("must be enclosed in backquotes.", $matchSubGroup)
-                    )->build();
-                }
+        $loggerMethods = $this->getLoggerTraitMethods();
+
+        foreach ($node->stmts as $stmt) {
+            // $stmt->expr corresponds to MethodCall node;
+            // ->name->name gets method name string;
+            // in case of other statement or expression null is passed to in_array()
+            if (in_array($stmt->expr->name->name, $loggerMethods)) {
+                return $errors;
             }
         }
 
-        return $errors;
+        return [
+            RuleErrorBuilder::message(
+                CustomRuleErrorMessage::buildErrorMessage(
+                    'Catch block must contain a Logger trait method call.'
+                )
+            )->build()
+        ];
     }
 }
