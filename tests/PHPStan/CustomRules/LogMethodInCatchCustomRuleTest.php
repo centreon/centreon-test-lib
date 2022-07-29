@@ -34,32 +34,26 @@ use PHPStan\Rules\RuleErrorBuilder;
 beforeEach(function () {
     $this->scope = $this->createMock(Scope::class);
     $this->instanceCatchNode = $this->createMock(Catch_::class);
-    $this->instanceMethodCallNodeOne = $this->createMock(MethodCall::class);
-    $this->instanceMethodCallNodeTwo = $this->createMock(MethodCall::class);
-    $this->instanceExpressionNodeOne = $this->createMock(Expr::class);
-    $this->instanceExpressionNodeTwo = $this->createMock(Expr::class);
-    $this->instanceStatementNodeOne = $this->createMock(Stmt::class);
-    $this->instanceStatementNodeTwo = $this->createMock(Stmt::class);
+    $this->methodCallNodeInstanceOne = $this->createMock(MethodCall::class);
+    $this->methodCallNodeInstanceTwo = $this->createMock(MethodCall::class);
+    $this->expressionNodeInstanceOne = $this->createMock(Expr::class);
+    $this->expressionNodeInstanceTwo = $this->createMock(Expr::class);
+    $this->statementNodeInstanceOne = $this->createMock(Stmt::class);
+    $this->statementNodeInstanceTwo = $this->createMock(Stmt::class);
+    $this->expressionNodeInstanceOne->name = $this->methodCallNodeInstanceOne;
+    $this->expressionNodeInstanceTwo->name = $this->methodCallNodeInstanceTwo;
+    $this->statementNodeInstanceOne->expr = $this->expressionNodeInstanceOne;
+    $this->statementNodeInstanceTwo->expr = $this->expressionNodeInstanceTwo;
+    $this->instanceCatchNode->stmts = [
+        $this->statementNodeInstanceOne,
+        $this->statementNodeInstanceTwo
+    ];
 });
 
 it('should return an error if no Logger trait method is used in catch block.', function () {
 
-    $methodCallOne = 'methodOne';
-    $methodCallTwo = 'methodTwo';
-
-    $this->instanceMethodCallNodeOne->name = $methodCallOne;
-    $this->instanceMethodCallNodeTwo->name = $methodCallTwo;
-
-    $this->instanceExpressionNodeOne->name = $this->instanceMethodCallNodeOne;
-    $this->instanceExpressionNodeTwo->name = $this->instanceMethodCallNodeTwo;
-
-    $this->instanceStatementNodeOne->expr = $this->instanceExpressionNodeOne;
-    $this->instanceStatementNodeTwo->expr = $this->instanceExpressionNodeTwo;
-
-    $this->instanceCatchNode->stmts = [
-        $this->instanceStatementNodeOne,
-        $this->instanceStatementNodeTwo
-    ];
+    $this->methodCallNodeInstanceOne->name = 'methodOne';
+    $this->methodCallNodeInstanceTwo->name = 'methodTwo';
 
     $expectedResult = [
         RuleErrorBuilder::message(
@@ -76,22 +70,8 @@ it('should return an error if no Logger trait method is used in catch block.', f
 
 it('should not return an error if one or more Logger trait methods are called in catch block.', function () {
 
-    $methodCallOne = 'methodOne';
-    $methodCallTwo = 'log';
-
-    $this->instanceMethodCallNodeOne->name = $methodCallOne;
-    $this->instanceMethodCallNodeTwo->name = $methodCallTwo;
-
-    $this->instanceExpressionNodeOne->name = $this->instanceMethodCallNodeOne;
-    $this->instanceExpressionNodeTwo->name = $this->instanceMethodCallNodeTwo;
-
-    $this->instanceStatementNodeOne->expr = $this->instanceExpressionNodeOne;
-    $this->instanceStatementNodeTwo->expr = $this->instanceExpressionNodeTwo;
-
-    $this->instanceCatchNode->stmts = [
-        $this->instanceStatementNodeOne,
-        $this->instanceStatementNodeTwo
-    ];
+    $this->methodCallNodeInstanceOne->name = 'methodOne';
+    $this->methodCallNodeInstanceTwo->name = 'log';
 
     $rule = new LogMethodInCatchCustomRule();
     $result = $rule->processNode($this->instanceCatchNode, $this->scope);
