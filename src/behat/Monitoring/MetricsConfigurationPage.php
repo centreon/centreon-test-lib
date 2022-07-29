@@ -35,7 +35,7 @@ class MetricsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'select[name="def_type"]'
         ),
         'known_metrics' => array(
-            'select',
+            'select2',
             'select#sl_list_metrics'
         ),
         'function' => array(
