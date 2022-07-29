@@ -58,11 +58,11 @@ class LogMethodInCatchCustomRule extends AbstractGetLoggerMethodsClass implement
                 return $errors;
             }
         }
-        $errors[] = RuleErrorBuilder::message(
-                        CustomRuleErrorMessage::buildErrorMessage(
-                            'Catch block must contain a Logger trait method call.'
-                        )
-                    )->build();
-        return $errors;
+
+        return RuleErrorBuilder::message(
+            CustomRuleErrorMessage::buildErrorMessage(
+                'Catch block must contain a Logger trait method call.'
+            )
+        )->build();
     }
 }
