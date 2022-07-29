@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Centreon\PHPStan\CustomRules;
 
 use Centreon\Domain\Log\LoggerTrait;
-use ReflectionClass;
 
 /**
  * This class implements getLoggerTraitMethods used in Log Custom Rules
