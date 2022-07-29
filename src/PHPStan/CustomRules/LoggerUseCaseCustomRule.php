@@ -70,12 +70,12 @@ class LoggerUseCaseCustomRule extends AbstractGetLoggerMethodsClass implements R
                 strpos($file, self::USE_CASE) !== false &&
                 ($fileNameArray[0] === $fileNameArray[1]) &&
                 empty(array_intersect($loggerMethods, $methodCalls))
-                ) {
-                    $errors[] = RuleErrorBuilder::message(
-                        CustomRuleErrorMessage::buildErrorMessage(
-                            'Class must contain a Logger trait and call at least one of its methods.'
-                        )
-                    )->file($file)->line(0)->build();
+            ) {
+                $errors[] = RuleErrorBuilder::message(
+                    CustomRuleErrorMessage::buildErrorMessage(
+                        'Class must contain a Logger trait and call at least one of its methods.'
+                    )
+                )->file($file)->line(0)->build();
             }
         }
         return $errors;
