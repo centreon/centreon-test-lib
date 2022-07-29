@@ -51,7 +51,7 @@ class LogMethodInCatchCustomRule extends AbstractGetLoggerMethodsClass implement
         $loggerMethods = $this->getLoggerTraitMethods();
 
         foreach ($node->stmts as $stmt) {
-            // $stmt->expr correcponds to MethodCall node;
+            // $stmt->expr corresponds to MethodCall node;
             // ->name->name gets method name string;
             // in case of other statement or expression null is passed to in_array()
             if (in_array($stmt->expr->name->name, $loggerMethods)) {
