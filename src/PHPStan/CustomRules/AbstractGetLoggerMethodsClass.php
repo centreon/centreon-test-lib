@@ -38,7 +38,7 @@ abstract class AbstractGetLoggerMethodsClass
     public function getLoggerTraitMethods(): array
     {
         $loggerMethods = [];
-        $loggerTraitReflectionClass = new ReflectionClass(LoggerTrait::class);
+        $loggerTraitReflectionClass = new \ReflectionClass(LoggerTrait::class);
         $loggerTraitReflectionMethods = $loggerTraitReflectionClass->getMethods();
         foreach ($loggerTraitReflectionMethods as $loggerTraitReflectionMethod) {
             $loggerMethods[] = $loggerTraitReflectionMethod->name;
