@@ -78,6 +78,7 @@ class LoggerUseCaseCustomRule extends AbstractGetLoggerMethodsClass implements R
                 )->file($file)->line(0)->build();
             }
         }
+
         return $errors;
     }
 }
