@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Centreon\PHPStan\CustomRules;
 
-use Centreon\Domain\Log\LoggerTrait;
+use Centreon\PHPStan\CustomRules\AbstractGetLoggerMethodsClass;
 use Centreon\PHPStan\CustomRules\Collectors\MethodCallCollector;
 use Centreon\PHPStan\CustomRules\CustomRuleErrorMessage;
 use PhpParser\Node;
@@ -30,13 +30,12 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
-use ReflectionClass;
 
 /**
  * This class implements a custom rule for PHPStan to check if a UseCase use LoggerTrait
  * and call its methods.
  */
-class LoggerUseCaseCustomRule implements Rule
+class LoggerUseCaseCustomRule extends AbstractGetLoggerMethodsClass implements Rule
 {
     private const USE_CASE = 'UseCase';
     /**
@@ -59,43 +58,26 @@ class LoggerUseCaseCustomRule implements Rule
     public function processNode(Node $node, Scope $scope): array
     {
         $errors = [];
-        $loggerMethods = $this->getLoggerTraitMethods(LoggerTrait::class);
+        $loggerMethods = $this->getLoggerTraitMethods();
 
         $methodCallData = $node->get(MethodCallCollector::class);
         foreach ($methodCallData as $file => $methodCalls) {
             $fileName = str_replace('.php', '', $file);
             $fileNameArray = array_reverse(explode(DIRECTORY_SEPARATOR, $fileName));
             // check if full file name contains 'UseCase' and the last two elements of file path are equal
-            if (strpos($file, self::USE_CASE) !== false && ($fileNameArray[0] === $fileNameArray[1])) {
-                // check if the intersection of $loggerMethods and $methodCalls is empty
-                if (empty(array_intersect($loggerMethods, $methodCalls))) {
+            // check if the intersection of $loggerMethods and $methodCalls is empty
+            if (
+                strpos($file, self::USE_CASE) !== false &&
+                ($fileNameArray[0] === $fileNameArray[1]) &&
+                empty(array_intersect($loggerMethods, $methodCalls))
+                ) {
                     $errors[] = RuleErrorBuilder::message(
                         CustomRuleErrorMessage::buildErrorMessage(
                             'Class must contain a Logger trait and call at least one of its methods.'
                         )
                     )->file($file)->line(0)->build();
-                }
             }
         }
         return $errors;
-    }
-
-    /**
-     * This method creates a Reflection of Logger Trait, extract the list of its methods
-     * and stores them as array of strings.
-     *
-     * @param string $class
-     * @return array
-     */
-    public function getLoggerTraitMethods(string $class): array
-    {
-        $loggerMethods = [];
-        $loggerTraitReflectionClass = new ReflectionClass($class);
-        $loggerTraitReflectionMethods = $loggerTraitReflectionClass->getMethods();
-        foreach ($loggerTraitReflectionMethods as $loggerTraitReflectionMethod) {
-            $loggerMethods[] = $loggerTraitReflectionMethod->name;
-        }
-
-        return $loggerMethods;
     }
 }

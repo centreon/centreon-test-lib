@@ -22,50 +22,79 @@ declare(strict_types=1);
 
 namespace Tests\PHPStan\CustomRules;
 
-use Centreon\Domain\Log\LoggerTrait;
 use Centreon\PHPStan\CustomRules\CustomRuleErrorMessage;
 use Centreon\PHPStan\CustomRules\LogMethodInCatchCustomRule;
+use PhpParser\Node\Expr;
+use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Catch_;
-use PhpParser\Node\Stmt\If_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\RuleErrorBuilder;
 
 beforeEach(function () {
     $this->scope = $this->createMock(Scope::class);
     $this->instanceCatchNode = $this->createMock(Catch_::class);
+    $this->instanceMethodCallNodeOne = $this->createMock(MethodCall::class);
+    $this->instanceMethodCallNodeTwo = $this->createMock(MethodCall::class);
+    $this->instanceExpressionNodeOne = $this->createMock(Expr::class);
+    $this->instanceExpressionNodeTwo = $this->createMock(Expr::class);
+    $this->instanceStatementNodeOne = $this->createMock(Stmt::class);
+    $this->instanceStatementNodeTwo = $this->createMock(Stmt::class);
 });
 
-// it('should return an error if no Logger trait method is used in catch block.', function () {
+it('should return an error if no Logger trait method is used in catch block.', function () {
 
-//     // get test logic
+    $methodCallOne = 'methodOne';
+    $methodCallTwo = 'methodTwo';
 
-//     $expectedResult = [
-//         RuleErrorBuilder::message(
-//             CustomRuleErrorMessage::buildErrorMessage(
-//                 'Catch block must contain a Logger trait method call.'
-//             )
-//         )->build(),
-//     ];
+    $this->instanceMethodCallNodeOne->name = $methodCallOne;
+    $this->instanceMethodCallNodeTwo->name = $methodCallTwo;
 
-//     $rule = new LogMethodInCatchCustomRule();
-//     $result = $rule->processNode($this->instanceCatchNode, $this->scope);
-//     expect($result[0]->message)->toBe($expectedResult[0]->message);
-// });
+    $this->instanceExpressionNodeOne->name = $this->instanceMethodCallNodeOne;
+    $this->instanceExpressionNodeTwo->name = $this->instanceMethodCallNodeTwo;
 
-// it('should not return an error if one or more Logger trait methods are called in catch block.', function () {
+    $this->instanceStatementNodeOne->expr = $this->instanceExpressionNodeOne;
+    $this->instanceStatementNodeTwo->expr = $this->instanceExpressionNodeTwo;
 
-//     // get test logic
+    $this->instanceCatchNode->stmts = [
+        $this->instanceStatementNodeOne,
+        $this->instanceStatementNodeTwo
+    ];
 
-//     $rule = new LogMethodInCatchCustomRule();
-//     $result = $rule->processNode($this->instanceCatchNode, $this->scope);
-//     expect($result)->toBeArray();
-//     expect($result)->toBeEmpty();
-// });
+    $expectedResult = [
+        RuleErrorBuilder::message(
+            CustomRuleErrorMessage::buildErrorMessage(
+                'Catch block must contain a Logger trait method call.'
+            )
+        )->build(),
+    ];
 
-it('should not return an error if scanned node does not refer to catch block', function () {
-    $this->instanceIfNode = $this->createMock(If_::class);
     $rule = new LogMethodInCatchCustomRule();
-    $result = $rule->processNode($this->instanceIfNode, $this->scope);
+    $result = $rule->processNode($this->instanceCatchNode, $this->scope);
+    expect($result[0]->message)->toBe($expectedResult[0]->message);
+});
+
+it('should not return an error if one or more Logger trait methods are called in catch block.', function () {
+
+    $methodCallOne = 'methodOne';
+    $methodCallTwo = 'log';
+
+    $this->instanceMethodCallNodeOne->name = $methodCallOne;
+    $this->instanceMethodCallNodeTwo->name = $methodCallTwo;
+
+    $this->instanceExpressionNodeOne->name = $this->instanceMethodCallNodeOne;
+    $this->instanceExpressionNodeTwo->name = $this->instanceMethodCallNodeTwo;
+
+    $this->instanceStatementNodeOne->expr = $this->instanceExpressionNodeOne;
+    $this->instanceStatementNodeTwo->expr = $this->instanceExpressionNodeTwo;
+
+    $this->instanceCatchNode->stmts = [
+        $this->instanceStatementNodeOne,
+        $this->instanceStatementNodeTwo
+    ];
+
+    $rule = new LogMethodInCatchCustomRule();
+    $result = $rule->processNode($this->instanceCatchNode, $this->scope);
     expect($result)->toBeArray();
     expect($result)->toBeEmpty();
 });

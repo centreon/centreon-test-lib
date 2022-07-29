@@ -22,19 +22,18 @@ declare(strict_types=1);
 
 namespace Centreon\PHPStan\CustomRules;
 
-use Centreon\Domain\Log\LoggerTrait;
+use Centreon\PHPStan\CustomRules\AbstractGetLoggerMethodsClass;
 use Centreon\PHPStan\CustomRules\CustomRuleErrorMessage;
 use PhpParser\Node;
 use PHPStan\Rules\Rule;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\RuleErrorBuilder;
-use ReflectionClass;
 
 /**
  * This class implements a custom rule for PHPStan to check if a catch block contains
  * Logger trait method call.
  */
-class LogMethodInCatchCustomRule implements Rule
+class LogMethodInCatchCustomRule extends AbstractGetLoggerMethodsClass implements Rule
 {
     /**
      * @inheritDoc
@@ -49,7 +48,7 @@ class LogMethodInCatchCustomRule implements Rule
     public function processNode(Node $node, Scope $scope): array
     {
         $errors = [];
-        $loggerMethods = $this->getLoggerTraitMethods(LoggerTrait::class);
+        $loggerMethods = $this->getLoggerTraitMethods();
 
         foreach ($node->stmts as $stmt) {
             // $stmt->expr correcponds to MethodCall node;
@@ -65,24 +64,5 @@ class LogMethodInCatchCustomRule implements Rule
                         )
                     )->build();
         return $errors;
-    }
-
-    /**
-     * This method creates a Reflection of Logger Trait, extract the list of its methods
-     * and stores them as array of strings.
-     *
-     * @param string $class
-     * @return array
-     */
-    public function getLoggerTraitMethods(string $class): array
-    {
-        $loggerMethods = [];
-        $loggerTraitReflectionClass = new ReflectionClass($class);
-        $loggerTraitReflectionMethods = $loggerTraitReflectionClass->getMethods();
-        foreach ($loggerTraitReflectionMethods as $loggerTraitReflectionMethod) {
-            $loggerMethods[] = $loggerTraitReflectionMethod->name;
-        }
-
-        return $loggerMethods;
     }
 }

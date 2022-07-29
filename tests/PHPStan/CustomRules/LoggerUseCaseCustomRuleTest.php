@@ -23,16 +23,82 @@ declare(strict_types=1);
 namespace Tests\PHPStan\CustomRules;
 
 use Centreon\PHPStan\CustomRules\CustomRuleErrorMessage;
-use Centreon\PHPStan\CustomRules\Collectors\MethodCallCollector;
 use Centreon\PHPStan\CustomRules\LoggerUseCaseCustomRule;
-use PhpParser\Node;
 use PHPStan\Analyser\Scope;
-use PHPStan\Node\ClassPropertyNode;
 use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\RuleErrorBuilder;
 
 beforeEach(function () {
     $this->scope = $this->createMock(Scope::class);
     $this->collectedDataNode = $this->createMock(CollectedDataNode::class);
+});
 
+it('should return an error if a Use Case does not contain a call to Logger method.', function () {
+    $file = 'centreon\src\Core\Application\RealTime\UseCase\FindHost\FindHost.php';
+    $methodCalls = [
+        'methodOne',
+        'methodTwo',
+        'methodThree'
+    ];
+
+    $methodCallData = [$file => $methodCalls];
+    $this->collectedDataNode
+        ->expects($this->any())
+        ->method('get')
+        ->willReturn($methodCallData);
+
+    $expectedResult = [
+        RuleErrorBuilder::message(
+            CustomRuleErrorMessage::buildErrorMessage(
+                'Class must contain a Logger trait and call at least one of its methods.'
+            )
+        )->build(),
+    ];
+
+    $rule = new LoggerUseCaseCustomRule();
+    $result = $rule->processNode($this->collectedDataNode, $this->scope);
+    expect($result[0]->message)->toBe($expectedResult[0]->message);
+});
+
+it('should not return an error if a Use Case contain a call to Logger method.', function () {
+    $file = 'centreon\src\Core\Application\RealTime\UseCase\FindHost\FindHost.php';
+    $methodCalls = [
+        'methodOne',
+        'methodTwo',
+        'methodThree',
+        'critical'
+    ];
+
+    $methodCallData = [$file => $methodCalls];
+    $this->collectedDataNode
+        ->expects($this->any())
+        ->method('get')
+        ->willReturn($methodCallData);
+
+    $rule = new LoggerUseCaseCustomRule();
+    $result = $rule->processNode($this->collectedDataNode, $this->scope);
+    expect($result)->toBeArray();
+    expect($result)->toBeEmpty();
+});
+
+it(
+    'should not return an error if scanned file is not a Use case and does not contain a call to Logger method.',
+    function () {
+        $file = 'centreon\src\Core\Application\RealTime\UseCase\FindHost\FindHostResponse.php';
+        $methodCalls = [
+            'methodOne',
+            'methodTwo',
+            'methodThree'
+        ];
+
+        $methodCallData = [$file => $methodCalls];
+        $this->collectedDataNode
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn($methodCallData);
+
+        $rule = new LoggerUseCaseCustomRule();
+        $result = $rule->processNode($this->collectedDataNode, $this->scope);
+        expect($result)->toBeArray();
+        expect($result)->toBeEmpty();
 });
