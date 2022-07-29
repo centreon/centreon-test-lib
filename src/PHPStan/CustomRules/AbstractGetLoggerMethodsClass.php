@@ -34,7 +34,6 @@ abstract class AbstractGetLoggerMethodsClass
      * This method creates a Reflection of Logger Trait, extract the list of its methods
      * and stores them as array of strings.
      *
-     * @param string $class
      * @return string[]
      */
     public function getLoggerTraitMethods(): array
