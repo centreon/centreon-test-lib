@@ -20,21 +20,37 @@
 
 declare(strict_types=1);
 
-namespace Centreon\PHPStan\CustomRules;
+namespace Centreon\PHPStan\CustomRules\Collectors;
+
+use PhpParser\Node;
+use PHPStan\Analyser\Scope;
+use PHPStan\Collectors\Collector;
 
 /**
- * This class defines static method to build custom error message in PHPStan
+ * This class implements Collector interface to collect the information about
+ * method calls in UseCases.
  */
-class CustomRuleErrorMessage
+class MethodCallCollector implements Collector
 {
     /**
-     * This method constructs the error message string displayed by PHPStan.
+     * @inheritDoc
      *
-     * @param string $varName
      * @return string
      */
-    public static function buildErrorMessage(string $errMessage, string $varName = ''): string
+    public function getNodeType(): string
     {
-        return empty($varName) ? '[CENTREON-RULE]: ' . $errMessage : '[CENTREON-RULE]: ' . $varName . ' ' . $errMessage;
+        return \PhpParser\Node\Expr\MethodCall::class;
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @param Node $node
+     * @param Scope $scope
+     * @return array|null
+     */
+    public function processNode(Node $node, Scope $scope): string
+    {
+        return $node->name->name;
     }
 }
