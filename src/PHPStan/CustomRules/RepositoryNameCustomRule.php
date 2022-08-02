@@ -28,9 +28,9 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 
 /**
- * This class implements a custom rule for PHPStan to check Repository naming requirements:
- * - it must start with data storage prefix, followed by action and context mentions
- * - it must match the Interface name it implements without 'Interface' ending and data storage prefix
+ * This class implements a custom rule for PHPStan to check Repository naming requirement
+ * it must start with data storage prefix, followed by action and context mentions, and finish
+ * by 'Repository' mention.
  */
 class RepositoryNameCustomRule implements Rule
 {
@@ -60,13 +60,10 @@ class RepositoryNameCustomRule implements Rule
                     CentreonRuleErrorBuilder::message(
                         'Repository name must start with data storage prefix(i.e. \'Db\', \'Redis\', etc.),' .
                         ' followed by \'Read\' or \'Write\' and context mention.'
-                    )->tip(
-                        'Repository name must be the same as implemented Repository Interface without \'Interface\'' .
-                        ' suffix and data storage information prefix (i.e. \'Db\', \'Redis\', etc.).'
                     )->build(),
                 ];
             }
-            // remove $matches[0] = matched Repository name
+            // remove $matches[0] = matched Repository namespace
             array_shift($matches);
             // remove $matches[1] = data storage prefix
             array_shift($matches);
@@ -76,9 +73,6 @@ class RepositoryNameCustomRule implements Rule
             if (! in_array($nameToMatch, $interfaceImplementations)) {
                 return [
                     CentreonRuleErrorBuilder::message(
-                        'Repository name must start with data storage prefix(i.e. \'Db\', \'Redis\', etc.),' .
-                        ' followed by \'Read\' or \'Write\' and context mention.'
-                    )->tip(
                         'Repository name must be the same as implemented Repository Interface without \'Interface\'' .
                         ' suffix and data storage information prefix (i.e. \'Db\', \'Redis\', etc.).'
                     )->build(),

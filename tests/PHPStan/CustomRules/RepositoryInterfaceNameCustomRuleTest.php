@@ -37,13 +37,34 @@ beforeEach(function () {
     $this->node->name = $this->identifierNodeInstance;
 });
 
-// it(
-//     'should return an error if Repository Interface name does not start with \'Read\' or \'Write\' and end with ' .
-//     '\'RepositoryInterface\'.',
-//     function () {
+it(
+    'should return an error if Repository Interface name does not start with \'Read\' or \'Write\' and end with ' .
+    '\'RepositoryInterface\'.',
+    function () {
+        $invalidInterfaceImplementations = 'Path\To\Some\Interface';
 
-//     }
-// );
+        $this->nameNodeInstanceInterface
+            ->expects($this->any())
+            ->method('toString')
+            ->willReturn($invalidInterfaceImplementations);
+
+        $this->node->implements = [
+            $this->nameNodeInstanceInterface,
+        ];
+
+        $this->identifierNodeInstance->name = 'DbReadHostgroupRepository';
+
+        $expectedResult = [
+            CentreonRuleErrorBuilder::message(
+                "At least one Interface name must start with 'Read' or 'Write' and end with 'RepositoryInterface'."
+            )->build(),
+        ];
+
+        $rule = new RepositoryInterfaceNameCustomRule();
+        $result = $rule->processNode($this->node, $this->scope);
+        expect($result[0]->message)->toBe($expectedResult[0]->message);
+    }
+);
 
 it(
     'should not return an error if Repository Interface name does start with \'Read\' or \'Write\' and end with ' .
@@ -52,9 +73,9 @@ it(
         $validInterfaceImplementations = 'Core\Application\Common\Session\Repository\ReadSessionRepositoryInterface';
 
         $this->nameNodeInstanceInterface
-        ->expects($this->any())
-        ->method('toString')
-        ->willReturn($validInterfaceImplementations);
+            ->expects($this->any())
+            ->method('toString')
+            ->willReturn($validInterfaceImplementations);
 
     $this->node->implements = [
         $this->nameNodeInstanceInterface,

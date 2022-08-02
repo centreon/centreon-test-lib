@@ -28,6 +28,7 @@ use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\NullableType;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
+use PHPStan\Rules\RuleError;
 
 class RepositoryMethodReturnCustomRule implements Rule
 {
@@ -47,43 +48,59 @@ class RepositoryMethodReturnCustomRule implements Rule
         $errors = [];
         if (strpos($node->name->name, 'Repository') !== false) {
             foreach ($node->getMethods() as $classMethod) {
-                if (
-                    preg_match('/^find/', $classMethod->name->name) &&
-                    ! (
-                        (
-                            $classMethod->getReturnType() instanceof NullableType &&
-                            (
-                                class_exists($classMethod->getReturnType()->type->toString()) ||
-                                interface_exists($classMethod->getReturnType()->type->toString())
-                            )
-                        ) ||
-                        $classMethod->getReturnType()->toString() === 'array'
-                    )
-                ) {
-                    $errors[] =
-                        CentreonRuleErrorBuilder::message(
-                            $classMethod->name->name . " must return null, an object or an array of objects."
-                        )->line($classMethod->getLine())->build();
+                if ($this->getErrorsForReturnTypeInFindMethod($classMethod) !== null) {
+                    $errors[] = $this->getErrorsForReturnTypeInFindMethod($classMethod);
                 }
 
-                if (
-                    preg_match('/^get/', $classMethod->name->name) &&
-                    ! (
-                        (
-                            class_exists($classMethod->getReturnType()->toString()) ||
-                            interface_exists($classMethod->getReturnType()->toString())
-                        ) ||
-                        $classMethod->getReturnType()->toString() === 'array'
-                    )
-                ) {
-                    $errors[] =
-                        CentreonRuleErrorBuilder::message(
-                            $classMethod->name->name . " must return and object or an array of objects."
-                        )->line($classMethod->getLine())->build();
+                if ($this->getErrorsForReturnTypeInGetMethod($classMethod) !== null) {
+                    $errors[] = $this->getErrorsForReturnTypeInGetMethod($classMethod);
                 }
             }
         }
 
         return $errors;
+    }
+
+    private function getErrorsForReturnTypeInFindMethod(ClassMethod $classMethod): ?RuleError
+    {
+        if (
+            preg_match('/^find/', $classMethod->name->name) &&
+            ! (
+                (
+                    $classMethod->getReturnType() instanceof NullableType &&
+                    (
+                        class_exists($classMethod->getReturnType()->type->toString()) ||
+                        interface_exists($classMethod->getReturnType()->type->toString())
+                    )
+                ) ||
+                $classMethod->getReturnType()->toString() === 'array'
+            )
+        ) {
+            return CentreonRuleErrorBuilder::message(
+                $classMethod->name->name . " must return null, an object or an array of objects."
+            )->line($classMethod->getLine())->build();
+        }
+
+        return null;
+    }
+
+    private function getErrorsForReturnTypeInGetMethod(ClassMethod $classMethod): ?RuleError
+    {
+        if (
+            preg_match('/^get/', $classMethod->name->name) &&
+            ! (
+                (
+                    class_exists($classMethod->getReturnType()->toString()) ||
+                    interface_exists($classMethod->getReturnType()->toString())
+                ) ||
+                $classMethod->getReturnType()->toString() === 'array'
+            )
+        ) {
+            return CentreonRuleErrorBuilder::message(
+                $classMethod->name->name . " must return and object or an array of objects."
+            )->line($classMethod->getLine())->build();
+        }
+
+        return null;
     }
 }
