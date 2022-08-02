@@ -39,6 +39,6 @@ class CentreonRuleErrorBuilder extends RuleErrorBuilder
      */
     public static function message(string $message): RuleErrorBuilder
     {
-        return parent::message('[CENTREON-RULE] ' . $message);
+        return parent::message('[CENTREON-RULE]: ' . $message);
     }
 }

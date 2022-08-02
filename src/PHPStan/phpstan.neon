@@ -3,6 +3,10 @@ rules:
     - Centreon\PHPStan\CustomRules\StringBackquotesCustomRule
     - Centreon\PHPStan\CustomRules\LogMethodInCatchCustomRule
     - Centreon\PHPStan\CustomRules\LoggerUseCaseCustomRule
+    - Centreon\PHPStan\CustomRules\RepositoryImplementsInterfaceCustomRule
+    - Centreon\PHPStan\CustomRules\RepositoryNameCustomRule
+    - Centreon\PHPStan\CustomRules\RepositoryInterfaceNameCustomRule
+    - Centreon\PHPStan\CustomRules\RepositoryMethodReturnCustomRule
 services:
     -
         class: Centreon\PHPStan\CustomRules\Collectors\MethodCallCollector

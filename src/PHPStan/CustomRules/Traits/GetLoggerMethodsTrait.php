@@ -25,7 +25,7 @@ namespace Centreon\PHPStan\CustomRules\Traits;
 use Centreon\Domain\Log\LoggerTrait;
 
 /**
- * This class implements getLoggerTraitMethods used in Log Custom Rules
+ * This trait implements getLoggerTraitMethods used in Log Custom Rules
  */
 trait GetLoggerMethodsTrait
 {
