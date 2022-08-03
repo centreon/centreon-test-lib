@@ -53,7 +53,7 @@ class RepositoryNameCustomRule implements Rule
         ) {
             return [
                 CentreonRuleErrorBuilder::message(
-                    'Repository name must start with data storage prefix(i.e. \'Db\', \'Redis\', etc.), '
+                    'Repository name must start with data storage prefix (i.e. \'Db\', \'Redis\', etc.), '
                         . 'followed by \'Read\' or \'Write\' and context mention.'
                 )->build(),
             ];
