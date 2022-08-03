@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Centreon\PHPStan\CustomRules;
+namespace Centreon\PHPStan\CustomRules\RepositoryRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use PhpParser\Node;
@@ -48,11 +48,11 @@ class RepositoryInterfaceNameCustomRule implements Rule
     {
         // if there's no implementation of Repository Interface it's RepositoryImplementsInterfaceCustomRule
         // that will return an error.
-        if (strpos($node->name->name, 'Repository') !== false && ! empty($node->implements)) {
+        if (str_contains($node->name->name, 'Repository') && ! empty($node->implements)) {
             foreach ($node->implements as $implementation) {
                 $arrayInterfaceName = explode('\\', $implementation->toString());
                 $interfaceName = end($arrayInterfaceName);
-                if (preg_match('/^(Read|Write)([a-zA-Z]{1,})(RepositoryInterface)$/', $interfaceName)) {
+                if (preg_match('/^(?:Read|Write)[a-zA-Z]+RepositoryInterface$/', $interfaceName)) {
                     return [];
                 }
             }

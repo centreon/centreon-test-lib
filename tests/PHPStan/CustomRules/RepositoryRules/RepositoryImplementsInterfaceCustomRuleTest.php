@@ -20,10 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\PHPStan\CustomRules;
+namespace Tests\PHPStan\CustomRules\RepositoryRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
-use Centreon\PHPStan\CustomRules\RepositoryImplementsInterfaceCustomRule;
+use Centreon\PHPStan\CustomRules\RepositoryRules\RepositoryImplementsInterfaceCustomRule;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Class_;

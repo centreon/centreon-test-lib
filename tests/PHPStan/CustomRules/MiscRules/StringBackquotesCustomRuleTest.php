@@ -20,10 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\PHPStan\CustomRules;
+namespace Tests\PHPStan\CustomRules\MiscRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
-use Centreon\PHPStan\CustomRules\StringBackquotesCustomRule;
+use Centreon\PHPStan\CustomRules\MiscRules\StringBackquotesCustomRule;
 use PhpParser\Node\Scalar\String_;
 use PHPStan\Analyser\Scope;
 

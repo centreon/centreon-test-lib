@@ -20,16 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Centreon\PHPStan\CustomRules;
+namespace Centreon\PHPStan\CustomRules\RepositoryRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use PhpParser\Node;
-use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\NullableType;
+use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
 
+/**
+ * This class implements a custom rule for PHPStan to check if a Repository method find
+ * returns null, an object or an array of objects and if method get returns an object or
+ * an array of objects.
+ */
 class RepositoryMethodReturnCustomRule implements Rule
 {
     /**
@@ -46,22 +51,27 @@ class RepositoryMethodReturnCustomRule implements Rule
     public function processNode(Node $node, Scope $scope): array
     {
         $errors = [];
-        if (strpos($node->name->name, 'Repository') !== false) {
+        if (str_contains($node->name->name, 'Repository')) {
             foreach ($node->getMethods() as $classMethod) {
-                if ($this->getErrorsForReturnTypeInFindMethod($classMethod) !== null) {
-                    $errors[] = $this->getErrorsForReturnTypeInFindMethod($classMethod);
-                }
-
-                if ($this->getErrorsForReturnTypeInGetMethod($classMethod) !== null) {
-                    $errors[] = $this->getErrorsForReturnTypeInGetMethod($classMethod);
-                }
+                $errors = [
+                    ...$errors,
+                    ...$this->getErrorsForReturnTypeInFindMethod($classMethod),
+                    ...$this->getErrorsForReturnTypeInGetMethod($classMethod),
+                ];
             }
         }
 
         return $errors;
     }
 
-    private function getErrorsForReturnTypeInFindMethod(ClassMethod $classMethod): ?RuleError
+    /**
+     * This method checks if return statement in find method signature returns null,
+     * an object or an array. Otherwise it returns an array of PHPStan RuleErrors.
+     *
+     * @param ClassMethod $classMethod
+     * @return RuleError[]
+     */
+    private function getErrorsForReturnTypeInFindMethod(ClassMethod $classMethod): array
     {
         if (
             preg_match('/^find/', $classMethod->name->name) &&
@@ -69,6 +79,8 @@ class RepositoryMethodReturnCustomRule implements Rule
                 (
                     $classMethod->getReturnType() instanceof NullableType &&
                     (
+                        // $classMethod->getReturnType()->type->toString() get a string of a class name (i.e. "Host")
+                        // in case of a nullable object return statement in method signature.
                         class_exists($classMethod->getReturnType()->type->toString()) ||
                         interface_exists($classMethod->getReturnType()->type->toString())
                     )
@@ -76,31 +88,44 @@ class RepositoryMethodReturnCustomRule implements Rule
                 $classMethod->getReturnType()->toString() === 'array'
             )
         ) {
-            return CentreonRuleErrorBuilder::message(
-                $classMethod->name->name . " must return null, an object or an array of objects."
-            )->line($classMethod->getLine())->build();
+            return [
+                CentreonRuleErrorBuilder::message(
+                    $classMethod->name->name . " must return null, an object or an array of objects."
+                )->line($classMethod->getLine())->build(),
+            ];
         }
 
-        return null;
+        return [];
     }
 
-    private function getErrorsForReturnTypeInGetMethod(ClassMethod $classMethod): ?RuleError
+    /**
+     * This method checks if return statement in get method signature returns an object or an array.
+     * Otherwise it returns an array of PHPStan RuleErrors.
+     *
+     * @param ClassMethod $classMethod
+     * @return RuleError[]
+     */
+    private function getErrorsForReturnTypeInGetMethod(ClassMethod $classMethod): array
     {
         if (
             preg_match('/^get/', $classMethod->name->name) &&
             ! (
                 (
+                    // $classMethod->getReturnType()->toString() get a string of a class name (i.e. "Host")
+                    // in case of a non-nullable object return statement in method signature.
                     class_exists($classMethod->getReturnType()->toString()) ||
                     interface_exists($classMethod->getReturnType()->toString())
                 ) ||
                 $classMethod->getReturnType()->toString() === 'array'
             )
         ) {
-            return CentreonRuleErrorBuilder::message(
-                $classMethod->name->name . " must return and object or an array of objects."
-            )->line($classMethod->getLine())->build();
+            return [
+                CentreonRuleErrorBuilder::message(
+                    $classMethod->name->name . " must return an object or an array of objects."
+                )->line($classMethod->getLine())->build(),
+            ];
         }
 
-        return null;
+        return [];
     }
 }

@@ -20,10 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\PHPStan\CustomRules;
+namespace Tests\PHPStan\CustomRules\LoggerRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
-use Centreon\PHPStan\CustomRules\LogMethodInCatchCustomRule;
+use Centreon\PHPStan\CustomRules\LoggerRules\LogMethodInCatchCustomRule;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Stmt;

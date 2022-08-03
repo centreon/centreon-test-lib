@@ -20,10 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\PHPStan\CustomRules;
+namespace Tests\PHPStan\CustomRules\LoggerRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
-use Centreon\PHPStan\CustomRules\LoggerUseCaseCustomRule;
+use Centreon\PHPStan\CustomRules\LoggerRules\LoggerUseCaseCustomRule;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 

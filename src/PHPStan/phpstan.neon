@@ -1,12 +1,13 @@
 rules:
-    - Centreon\PHPStan\CustomRules\VariableLengthCustomRule
-    - Centreon\PHPStan\CustomRules\StringBackquotesCustomRule
-    - Centreon\PHPStan\CustomRules\LogMethodInCatchCustomRule
-    - Centreon\PHPStan\CustomRules\LoggerUseCaseCustomRule
-    - Centreon\PHPStan\CustomRules\RepositoryImplementsInterfaceCustomRule
-    - Centreon\PHPStan\CustomRules\RepositoryNameCustomRule
-    - Centreon\PHPStan\CustomRules\RepositoryInterfaceNameCustomRule
-    - Centreon\PHPStan\CustomRules\RepositoryMethodReturnCustomRule
+    - Centreon\PHPStan\CustomRules\MiscRules\VariableLengthCustomRule
+    - Centreon\PHPStan\CustomRules\MiscRules\StringBackquotesCustomRule
+    - Centreon\PHPStan\CustomRules\LoggerRules\LogMethodInCatchCustomRule
+    - Centreon\PHPStan\CustomRules\LoggerRules\LoggerUseCaseCustomRule
+    - Centreon\PHPStan\CustomRules\RepositoryRules\RepositoryImplementsInterfaceCustomRule
+    - Centreon\PHPStan\CustomRules\RepositoryRules\RepositoryNameCustomRule
+    - Centreon\PHPStan\CustomRules\RepositoryRules\RepositoryInterfaceNameCustomRule
+    - Centreon\PHPStan\CustomRules\RepositoryRules\RepositoryMethodReturnCustomRule
+    - Centreon\PHPStan\CustomRules\RepositoryRules\RepositoryNameValidationByInterfaceCustomRule
 services:
     -
         class: Centreon\PHPStan\CustomRules\Collectors\MethodCallCollector

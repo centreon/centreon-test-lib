@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Centreon\PHPStan\CustomRules;
+namespace Centreon\PHPStan\CustomRules\RepositoryRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use PhpParser\Node;
@@ -28,10 +28,11 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 
 /**
- * This class implements a custom rule for PHPStan to check if a Repository implements
- * an Interface defined in Application layer.
+ * This class implements a custom rule for PHPStan to check Repository naming requirement.
+ * It must match the implemented Interface name with exception of data storage prefix
+ * (in Repository name) and Interface metntion (in Interface name).
  */
-class RepositoryImplementsInterfaceCustomRule implements Rule
+class RepositoryNameValidationByInterfaceCustomRule implements Rule
 {
     /**
      * @inheritDoc
@@ -46,16 +47,30 @@ class RepositoryImplementsInterfaceCustomRule implements Rule
      */
     public function processNode(Node $node, Scope $scope): array
     {
-        if (strpos($node->name->name, 'Repository') !== false) {
+        if (str_contains($node->name->name, 'Repository')) {
             foreach ($node->implements as $implementation) {
-                if (strpos($implementation->toString(), 'Application') !== false) {
+                $arrayInterfaceName = explode('\\', $implementation->toString());
+                $interfaceName = end($arrayInterfaceName);
+                if (
+                    preg_match(
+                        '/^((Read|Write)([a-zA-Z]{1,})Repository)Interface$/',
+                        $interfaceName,
+                        $matches
+                    ) &&
+                    // $matches[1] = i.e. 'ReadSessionRepository'
+                    str_contains($node->name->name, $matches[1])
+                ) {
                     return [];
                 }
             }
 
             return [
                 CentreonRuleErrorBuilder::message(
-                    'Repositories must implement an Interface defined in Application layer.'
+                    'Repository name should match the implemented Interface name with exception of data storage prefix '
+                        . 'and \'Interface\' mention.'
+                )->tip(
+                    'For example, Repository name: \'DbReadSessionRepository\' and implemented Interface name: '
+                        . '\'ReadSessionRepositoryInterface\'.'
                 )->build(),
             ];
         }

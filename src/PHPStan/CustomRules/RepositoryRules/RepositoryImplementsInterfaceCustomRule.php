@@ -20,28 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Centreon\PHPStan\CustomRules;
+namespace Centreon\PHPStan\CustomRules\RepositoryRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
-use Centreon\PHPStan\CustomRules\Traits\GetLoggerMethodsTrait;
 use PhpParser\Node;
-use PHPStan\Rules\Rule;
 use PHPStan\Analyser\Scope;
+use PHPStan\Rules\Rule;
 
 /**
- * This class implements a custom rule for PHPStan to check if a catch block contains
- * Logger trait method call.
+ * This class implements a custom rule for PHPStan to check if a Repository implements
+ * an Interface defined in Application layer.
  */
-class LogMethodInCatchCustomRule implements Rule
+class RepositoryImplementsInterfaceCustomRule implements Rule
 {
-    use GetLoggerMethodsTrait;
-
     /**
      * @inheritDoc
      */
     public function getNodeType(): string
     {
-        return Node\Stmt\Catch_::class;
+        return Node\Stmt\Class_::class;
     }
 
     /**
@@ -49,19 +46,20 @@ class LogMethodInCatchCustomRule implements Rule
      */
     public function processNode(Node $node, Scope $scope): array
     {
-        $loggerMethods = $this->getLoggerTraitMethods();
-
-        foreach ($node->stmts as $stmt) {
-            // $stmt->expr corresponds to MethodCall node;
-            // ->name->name gets method name string;
-            // in case of other statement or expression null is passed to in_array()
-            if (in_array($stmt->expr->name->name, $loggerMethods)) {
-                return [];
+        if (str_contains($node->name->name, 'Repository')) {
+            foreach ($node->implements as $implementation) {
+                if (str_contains($implementation->toString(), '\\Application\\')) {
+                    return [];
+                }
             }
+
+            return [
+                CentreonRuleErrorBuilder::message(
+                    'Repositories must implement an Interface defined in Application layer.'
+                )->build(),
+            ];
         }
 
-        return [
-            CentreonRuleErrorBuilder::message('Catch block must contain a Logger trait method call.')->build(),
-        ];
+        return [];
     }
 }

@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\PHPStan\CustomRules;
+namespace Tests\PHPStan\CustomRules\RepositoryRules;
 
-use PhpParser\Node\Name;
-use PHPStan\Analyser\Scope;
-use PhpParser\Node\Identifier;
-use PhpParser\Node\Stmt\Class_;
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
-use Centreon\PHPStan\CustomRules\RepositoryInterfaceNameCustomRule;
+use Centreon\PHPStan\CustomRules\RepositoryRules\RepositoryInterfaceNameCustomRule;
+use PhpParser\Node\Identifier;
+use PhpParser\Node\Name;
+use PhpParser\Node\Stmt\Class_;
+use PHPStan\Analyser\Scope;
 
 beforeEach(function () {
     $this->scope = $this->createMock(Scope::class);
