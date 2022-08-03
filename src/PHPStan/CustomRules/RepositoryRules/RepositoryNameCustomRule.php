@@ -49,7 +49,7 @@ class RepositoryNameCustomRule implements Rule
     {
         if (
             str_contains($node->name->name, 'Repository') &&
-            ! preg_match('/^[a-zA-Z]{2,}(?:Read|Write)[a-zA-Z]{1,}Repository$/', $node->name->name)
+            ! preg_match('/^[a-zA-Z]{2,}(?:Read|Write)[a-zA-Z]+Repository$/', $node->name->name)
         ) {
             return [
                 CentreonRuleErrorBuilder::message(
