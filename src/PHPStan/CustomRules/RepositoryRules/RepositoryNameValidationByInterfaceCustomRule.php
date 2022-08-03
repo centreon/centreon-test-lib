@@ -30,7 +30,7 @@ use PHPStan\Rules\Rule;
 /**
  * This class implements a custom rule for PHPStan to check Repository naming requirement.
  * It must match the implemented Interface name with exception of data storage prefix
- * (in Repository name) and Interface metntion (in Interface name).
+ * (in Repository name) and Interface mention (in Interface name).
  */
 class RepositoryNameValidationByInterfaceCustomRule implements Rule
 {
