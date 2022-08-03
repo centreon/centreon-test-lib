@@ -35,7 +35,7 @@ class CentreonRuleErrorBuilder extends RuleErrorBuilder
      * parent's method message
      *
      * @param string $message
-     * @return self
+     * @return RuleErrorBuilder
      */
     public static function message(string $message): RuleErrorBuilder
     {
