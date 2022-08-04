@@ -173,7 +173,7 @@ class CentreonDBStatement extends \CentreonDBStatement
     /**
      * Return a result
      *
-     * @return array
+     * @return mixed
      */
     public function fetch(
         int $mode = \PDO::FETCH_DEFAULT,
