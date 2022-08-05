@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2016-2017 Centreon
+ * Copyright 2016-2022 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,8 +36,10 @@ class MetricsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'select[name="def_type"]'
         ),
         'known_metrics' => array(
-            'select2',
-            'select#sl_list_metrics'
+            'custom',
+            'knownMetrics'
+            //'select2',
+            //'select#sl_list_metrics'
         ),
         'function' => array(
             'custom',
@@ -50,7 +53,7 @@ class MetricsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
 
     /**
      *
-     * @var type 
+     * @var string
      */
     protected $listingClass = '\Centreon\Test\Behat\Monitoring\MetricsConfigurationListingPage';
 
@@ -78,12 +81,12 @@ class MetricsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
             'Current page does not match class ' . __CLASS__
         );
     }
-    
+
     /**
-     * 
-     * @param type $value
+     *
+     * @param string $value
      */
-    public function setFunction($value) 
+    public function setFunction($value): void
     {
         if (!empty($value)) {
             $this->context->spin(
@@ -96,7 +99,28 @@ class MetricsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
                 },
                 'Can not load metrics before setting function'
             );
-        }  
+        }
         $this->context->assertFind('css', 'textarea[name="rpn_function"]')->setValue($value);
+    }
+
+    /**
+     *
+     * @param int|string|null $value
+     */
+    public function setKnownMetrics($value): void
+    {
+        $cssSelector = 'select#sl_list_metrics';
+
+        $this->context->emptySelectTwo($cssSelector);
+
+        if ($value !== null) {
+            $this->context->spin(
+                function ($context) use ($cssSelector, $value) {
+                    $context->selectToSelectTwo($cssSelector, $value);
+                    return true;
+                },
+                'Cannot get metric ' . $value,
+            );
+        }
     }
 }
