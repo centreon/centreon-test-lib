@@ -20,13 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\PHPStan\CustomRules;
+namespace Tests\PHPStan\CustomRules\LoggerRules;
 
-use Centreon\PHPStan\CustomRules\CustomRuleErrorMessage;
-use Centreon\PHPStan\CustomRules\LoggerUseCaseCustomRule;
+use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
+use Centreon\PHPStan\CustomRules\LoggerRules\LoggerUseCaseCustomRule;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
-use PHPStan\Rules\RuleErrorBuilder;
 
 beforeEach(function () {
     $this->scope = $this->createMock(Scope::class);
@@ -48,10 +47,8 @@ it('should return an error if a Use Case does not contain a call to Logger metho
         ->willReturn($methodCallData);
 
     $expectedResult = [
-        RuleErrorBuilder::message(
-            CustomRuleErrorMessage::buildErrorMessage(
-                'Class must contain a Logger trait and call at least one of its methods.'
-            )
+        CentreonRuleErrorBuilder::message(
+            'Class must contain a Logger trait and call at least one of its methods.'
         )->build(),
     ];
 
