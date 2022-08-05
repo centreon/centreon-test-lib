@@ -29,5 +29,20 @@
             "Centreon\\Test\\Traits\\": "src/traits",
             "Centreon\\PHPStan\\": "src/PHPStan"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\PHPStan\\": "tests/PHPStan"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "symfony/flex": true
+        }
+    },
+    "require-dev": {
+        "pestphp/pest": "^1.21",
+        "centreon/centreon": "dev-develop"
     }
 }
