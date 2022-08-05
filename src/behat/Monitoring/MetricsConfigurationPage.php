@@ -117,7 +117,7 @@ class MetricsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
                     $context->selectToSelectTwo($cssSelector, $value);
                     return true;
                 },
-                'Cannot get metric ' . $value,
+                'Cannot get metric ' . $value
             );
         }
     }
