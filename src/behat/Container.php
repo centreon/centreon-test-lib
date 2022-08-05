@@ -55,7 +55,9 @@ class Container
                     $this->containerPorts[$service] = [];
                     $ports = explode(',', $matches[2]);
                     foreach ($ports as $port) {
-                        if (preg_match('/:(\d+)->(\d+)/', $port, $matchesPort)) {
+                        // example : 0.0.0.0:49354->80/tcp, :::49353->80/tcp
+                        // avoid to catch port which begin with ":::"
+                        if (preg_match('/[^:]:(\d+)->(\d+)/', $port, $matchesPort)) {
                             $this->containerPorts[$service][$matchesPort[2]] = $matchesPort[1];
                         }
                     }
