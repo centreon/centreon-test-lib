@@ -22,19 +22,23 @@ declare(strict_types=1);
 
 namespace Centreon\PHPStan\CustomRules;
 
+use PHPStan\Rules\RuleErrorBuilder;
+
 /**
- * This class defines static method to build custom error message in PHPStan
+ * This class defines a method to build a custom error message for PHPStan custom rules by
+ * overloading its parent's method message().
  */
-class CustomRuleErrorMessage
+class CentreonRuleErrorBuilder extends RuleErrorBuilder
 {
     /**
-     * This method constructs the error message string displayed by PHPStan.
+     * This method builds a custom error message for PHPStan custom rules by overloading its
+     * parent's method message
      *
-     * @param string $varName
-     * @return string
+     * @param string $message
+     * @return RuleErrorBuilder
      */
-    public static function buildErrorMessage(string $errMessage, string $varName = ''): string
+    public static function message(string $message): RuleErrorBuilder
     {
-        return empty($varName) ? '[CENTREON-RULE]: ' . $errMessage : '[CENTREON-RULE]: ' . $varName . ' ' . $errMessage;
+        return parent::message('[CENTREON-RULE]: ' . $message);
     }
 }

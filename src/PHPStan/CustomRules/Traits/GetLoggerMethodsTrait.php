@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Centreon\PHPStan\CustomRules;
+namespace Centreon\PHPStan\CustomRules\Traits;
 
 use Centreon\Domain\Log\LoggerTrait;
 
 /**
- * This class implements getLoggerTraitMethods used in Log Custom Rules
+ * This trait implements getLoggerTraitMethods used in Log Custom Rules
  */
-abstract class AbstractGetLoggerMethodsClass
+trait GetLoggerMethodsTrait
 {
     /**
      * This method creates a Reflection of Logger Trait, extract the list of its methods

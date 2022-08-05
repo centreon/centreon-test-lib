@@ -20,28 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Centreon\PHPStan\CustomRules;
+namespace Centreon\PHPStan\CustomRules\LoggerRules;
 
-use Centreon\PHPStan\CustomRules\AbstractGetLoggerMethodsClass;
+use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use Centreon\PHPStan\CustomRules\Collectors\MethodCallCollector;
-use Centreon\PHPStan\CustomRules\CustomRuleErrorMessage;
+use Centreon\PHPStan\CustomRules\Traits\GetLoggerMethodsTrait;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
-use PHPStan\Rules\RuleErrorBuilder;
 
 /**
  * This class implements a custom rule for PHPStan to check if a UseCase use LoggerTrait
  * and call its methods.
  */
-class LoggerUseCaseCustomRule extends AbstractGetLoggerMethodsClass implements Rule
+class LoggerUseCaseCustomRule implements Rule
 {
+    use GetLoggerMethodsTrait;
+
     private const USE_CASE = 'UseCase';
     /**
      * @inheritDoc
-     *
-     * @return string
      */
     public function getNodeType(): string
     {
@@ -50,10 +49,6 @@ class LoggerUseCaseCustomRule extends AbstractGetLoggerMethodsClass implements R
 
     /**
      * @inheritDoc
-     *
-     * @param Node $node
-     * @param Scope $scope
-     * @return array
      */
     public function processNode(Node $node, Scope $scope): array
     {
@@ -71,10 +66,8 @@ class LoggerUseCaseCustomRule extends AbstractGetLoggerMethodsClass implements R
                 ($fileNameArray[0] === $fileNameArray[1]) &&
                 empty(array_intersect($loggerMethods, $methodCalls))
             ) {
-                $errors[] = RuleErrorBuilder::message(
-                    CustomRuleErrorMessage::buildErrorMessage(
-                        'Class must contain a Logger trait and call at least one of its methods.'
-                    )
+                $errors[] = CentreonRuleErrorBuilder::message(
+                    'Class must contain a Logger trait and call at least one of its methods.'
                 )->file($file)->line(0)->build();
             }
         }
