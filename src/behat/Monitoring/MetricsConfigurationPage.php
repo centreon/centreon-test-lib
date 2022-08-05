@@ -38,8 +38,6 @@ class MetricsConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
         'known_metrics' => array(
             'custom',
             'knownMetrics'
-            //'select2',
-            //'select#sl_list_metrics'
         ),
         'function' => array(
             'custom',
