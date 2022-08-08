@@ -62,7 +62,7 @@ class LoggerUseCaseCustomRule implements Rule
             // check if full file name contains 'UseCase' and the last two elements of file path are equal
             // check if the intersection of $loggerMethods and $methodCalls is empty
             if (
-                strpos($file, self::USE_CASE) !== false &&
+                str_contains($file, self::USE_CASE) &&
                 ($fileNameArray[0] === $fileNameArray[1]) &&
                 empty(array_intersect($loggerMethods, $methodCalls))
             ) {
