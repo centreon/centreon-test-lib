@@ -48,8 +48,8 @@ class RepositoryNameCustomRule implements Rule
     public function processNode(Node $node, Scope $scope): array
     {
         if (
-            str_contains($node->name->name, 'Repository') &&
-            ! preg_match('/^[a-zA-Z]{2,}(?:Read|Write)[a-zA-Z]+Repository$/', $node->name->name)
+            str_contains($node->name->name, 'Repository')
+            && ! preg_match('/^[a-zA-Z]{2,}(?:Read|Write)[a-zA-Z]+Repository$/', $node->name->name)
         ) {
             return [
                 CentreonRuleErrorBuilder::message(

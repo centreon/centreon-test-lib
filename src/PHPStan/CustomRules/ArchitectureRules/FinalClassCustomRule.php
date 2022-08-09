@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Centreon\PHPStan\CustomRules\ArchitectureRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
+use Centreon\PHPStan\CustomRules\Traits\CheckIfInUseCaseTrait;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
@@ -33,6 +34,7 @@ use PHPStan\Rules\Rule;
  */
 class FinalClassCustomRule implements Rule
 {
+    use CheckIfInUseCaseTrait;
 
     /**
      * @inheritDoc
@@ -52,7 +54,7 @@ class FinalClassCustomRule implements Rule
                 str_ends_with($node->name->name, 'Request')
                 || str_ends_with($node->name->name, 'Response')
                 || str_ends_with($node->name->name, 'Controller')
-                || $this->checkIfUseCase($node->namespacedName->toString())
+                || $this->checkIfInUseCase($scope->getFile())
             )
             && ! $node->isFinal()
         ) {
@@ -63,20 +65,5 @@ class FinalClassCustomRule implements Rule
             ];
         }
         return [];
-    }
-
-    /**
-     * This method checks if a class is a Use Case
-     *
-     * @param string $namespacedName
-     * @return boolean
-     */
-    private function checkIfUseCase(string $namespacedName): bool
-    {
-        $namespacedNameArray = array_reverse(explode('\\', $namespacedName));
-        if (str_contains($namespacedName, 'UseCase') && ($namespacedNameArray[0] == $namespacedNameArray[1])) {
-            return true;
-        }
-        return false;
     }
 }

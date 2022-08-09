@@ -22,18 +22,22 @@ declare(strict_types=1);
 
 namespace Centreon\PHPStan\CustomRules\ArchitectureRules;
 
+use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
+use Centreon\PHPStan\CustomRules\Traits\CheckIfInUseCaseTrait;
+use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node;
+use PhpParser\Node\Stmt\TryCatch;
 use PHPStan\Rules\Rule;
 use PHPStan\Analyser\Scope;
-use PhpParser\Node\Stmt\ClassMethod;
-use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
-use PhpParser\Node\Stmt\TryCatch;
 
 /**
- * Undocumented class
+ * This class implements a custom rule for PHPStan to check if thrown Exception is in
+ * try/catch block and if it is caught.
  */
 class ExceptionInUseCaseCustomRule implements Rule
 {
+    use CheckIfInUseCaseTrait;
+
     /**
      * @inheritDoc
      */
@@ -74,22 +78,13 @@ class ExceptionInUseCaseCustomRule implements Rule
                 )->build(),
             ];
         }
+
         return [];
     }
 
-    public function checkIfInUseCase(string $fileName): bool
-    {
-        $fileNamespaced = str_replace('.php', '', $fileName);
-        $fileNameArray = array_reverse(explode(DIRECTORY_SEPARATOR, $fileNamespaced));
-        if (str_contains($fileName, 'UseCase') && ($fileNameArray[0] === $fileNameArray[1])) {
-            return true;
-        }
-
-        return false;
-    }
-
     /**
-     * Undocumented function
+     * This method gets all the parent TryCatch nodes of a give node and
+     * stores then in array.
      *
      * @param Node $node
      * @return TryCatch[]
@@ -107,7 +102,7 @@ class ExceptionInUseCaseCustomRule implements Rule
     }
 
     /**
-     * Undocumented function
+     * This method checks if an Exception thrown can be caught by catch block.
      *
      * @param string $exceptionThrown
      * @param string $exceptionCaught

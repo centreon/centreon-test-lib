@@ -24,6 +24,7 @@ namespace Centreon\PHPStan\CustomRules\LoggerRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use Centreon\PHPStan\CustomRules\Collectors\MethodCallCollector;
+use Centreon\PHPStan\CustomRules\Traits\CheckIfInUseCaseTrait;
 use Centreon\PHPStan\CustomRules\Traits\GetLoggerMethodsTrait;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
@@ -36,9 +37,9 @@ use PHPStan\Rules\Rule;
  */
 class LoggerUseCaseCustomRule implements Rule
 {
+    use CheckIfInUseCaseTrait;
     use GetLoggerMethodsTrait;
 
-    private const USE_CASE = 'UseCase';
     /**
      * @inheritDoc
      */
@@ -57,15 +58,7 @@ class LoggerUseCaseCustomRule implements Rule
 
         $methodCallData = $node->get(MethodCallCollector::class);
         foreach ($methodCallData as $file => $methodCalls) {
-            $fileName = str_replace('.php', '', $file);
-            $fileNameArray = array_reverse(explode(DIRECTORY_SEPARATOR, $fileName));
-            // check if full file name contains 'UseCase' and the last two elements of file path are equal
-            // check if the intersection of $loggerMethods and $methodCalls is empty
-            if (
-                str_contains($file, self::USE_CASE) &&
-                ($fileNameArray[0] === $fileNameArray[1]) &&
-                empty(array_intersect($loggerMethods, $methodCalls))
-            ) {
+            if ($this->checkIfInUseCase($file) && empty(array_intersect($loggerMethods, $methodCalls))) {
                 $errors[] = CentreonRuleErrorBuilder::message(
                     'Class must contain a Logger trait and call at least one of its methods.'
                 )->file($file)->line(0)->build();
