@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Centreon\PHPStan\CustomRules\ArchitectureRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
-use Centreon\PHPStan\CustomRules\Traits\CheckIfInUseCaseTrait;
+use Centreon\PHPStan\CustomRules\Traits\UseCaseTrait;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
@@ -34,7 +34,7 @@ use PHPStan\Rules\Rule;
  */
 class FinalClassCustomRule implements Rule
 {
-    use CheckIfInUseCaseTrait;
+    use UseCaseTrait;
 
     /**
      * @inheritDoc
@@ -54,7 +54,7 @@ class FinalClassCustomRule implements Rule
                 str_ends_with($node->name->name, 'Request')
                 || str_ends_with($node->name->name, 'Response')
                 || str_ends_with($node->name->name, 'Controller')
-                || $this->checkIfInUseCase($scope->getFile())
+                || $this->fileInUseCase($scope->getFile())
             )
             && ! $node->isFinal()
         ) {

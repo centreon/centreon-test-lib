@@ -65,8 +65,8 @@ it(
 
         $this->instanceNameNode
             ->expects($this->any())
-            ->method('toString')
-            ->willReturn('PDOException');
+            ->method('toCodeString')
+            ->willReturn('\PDOException');
 
         $this->node
             ->expects($this->any())
@@ -106,8 +106,8 @@ it(
 
         $this->instanceNameNode
             ->expects($this->any())
-            ->method('toString')
-            ->willReturn('Exception');
+            ->method('toCodeString')
+            ->willReturn('\Exception');
 
         $this->node
             ->expects($this->any())
@@ -138,23 +138,23 @@ it(
 
         $this->instanceNameNode01
             ->expects($this->any())
-            ->method('toString')
-            ->willReturn('DOMException');
+            ->method('toCodeString')
+            ->willReturn('\DOMException');
 
         $this->instanceNameNode02
             ->expects($this->any())
-            ->method('toString')
-            ->willReturn('IntlException');
+            ->method('toCodeString')
+            ->willReturn('\IntlException');
 
         $this->instanceNameNode03
             ->expects($this->any())
-            ->method('toString')
-            ->willReturn('LogicException');
+            ->method('toCodeString')
+            ->willReturn('\LogicException');
 
         $this->instanceNameNode04
             ->expects($this->any())
-            ->method('toString')
-            ->willReturn('PharException');
+            ->method('toCodeString')
+            ->willReturn('\PharException');
 
         $expectedResult = [
             CentreonRuleErrorBuilder::message(
@@ -182,8 +182,8 @@ it(
 
         $this->instanceNameNode
             ->expects($this->any())
-            ->method('toString')
-            ->willReturn('Exception');
+            ->method('toCodeString')
+            ->willReturn('\Exception');
 
         $this->node
             ->expects($this->any())
@@ -214,23 +214,23 @@ it(
 
         $this->instanceNameNode01
             ->expects($this->any())
-            ->method('toString')
-            ->willReturn('DOMException');
+            ->method('toCodeString')
+            ->willReturn('\DOMException');
 
         $this->instanceNameNode02
             ->expects($this->any())
-            ->method('toString')
-            ->willReturn('IntlException');
+            ->method('toCodeString')
+            ->willReturn('\IntlException');
 
         $this->instanceNameNode03
             ->expects($this->any())
-            ->method('toString')
-            ->willReturn('LogicException');
+            ->method('toCodeString')
+            ->willReturn('\LogicException');
 
         $this->instanceNameNode04
             ->expects($this->any())
-            ->method('toString')
-            ->willReturn('Exception');
+            ->method('toCodeString')
+            ->willReturn('\Exception');
 
         $rule = new ExceptionInUseCaseCustomRule();
         $result = $rule->processNode($this->node, $this->scope);
@@ -253,8 +253,8 @@ it(
 
         $this->instanceNameNode
             ->expects($this->any())
-            ->method('toString')
-            ->willReturn('PDOException');
+            ->method('toCodeString')
+            ->willReturn('\PDOException');
 
         $this->node
             ->expects($this->any())
@@ -285,13 +285,13 @@ it(
 
         $this->instanceNameNode01
             ->expects($this->any())
-            ->method('toString')
-            ->willReturn('PDOException');
+            ->method('toCodeString')
+            ->willReturn('\PDOException');
 
         $this->instanceNameNode02
             ->expects($this->any())
-            ->method('toString')
-            ->willReturn('IntlException');
+            ->method('toCodeString')
+            ->willReturn('\IntlException');
 
         $rule = new ExceptionInUseCaseCustomRule();
         $result = $rule->processNode($this->node, $this->scope);
@@ -313,8 +313,8 @@ it(
 
         $this->instanceNameNode
             ->expects($this->any())
-            ->method('toString')
-            ->willReturn('PDOException');
+            ->method('toCodeString')
+            ->willReturn('\PDOException');
 
         $this->node
             ->expects($this->any())

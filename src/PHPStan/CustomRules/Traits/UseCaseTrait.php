@@ -26,7 +26,7 @@ namespace Centreon\PHPStan\CustomRules\Traits;
  * This trait implements checkIfInUseCase method to check if a file is
  * a Use Case.
  */
-trait CheckIfInUseCaseTrait
+trait UseCaseTrait
 {
     /**
      * This method checks if a file is a Use Case.
@@ -34,14 +34,13 @@ trait CheckIfInUseCaseTrait
      * @param string $fileNamePath
      * @return boolean
      */
-    public function checkIfInUseCase(string $fileNamePath): bool
+
+    // rename method to 'FileIsUseCase'
+    private function fileInUseCase(string $fileNamePath): bool
     {
         $fileNamespaced = str_replace('.php', '', $fileNamePath);
         $fileNameArray = array_reverse(explode(DIRECTORY_SEPARATOR, $fileNamespaced));
-        if (str_contains($fileNamePath, 'UseCase') && ($fileNameArray[0] === $fileNameArray[1])) {
-            return true;
-        }
 
-        return false;
+        return str_contains($fileNamePath, 'UseCase') && ($fileNameArray[0] === $fileNameArray[1]);
     }
 }

@@ -23,12 +23,13 @@ declare(strict_types=1);
 namespace Centreon\PHPStan\CustomRules\ArchitectureRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
-use Centreon\PHPStan\CustomRules\Traits\CheckIfInUseCaseTrait;
+use Centreon\PHPStan\CustomRules\Traits\UseCaseTrait;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\TryCatch;
 use PHPStan\Rules\Rule;
 use PHPStan\Analyser\Scope;
+use PHPStan\Rules\RuleError;
 
 /**
  * This class implements a custom rule for PHPStan to check if thrown Exception is in
@@ -36,7 +37,7 @@ use PHPStan\Analyser\Scope;
  */
 class ExceptionInUseCaseCustomRule implements Rule
 {
-    use CheckIfInUseCaseTrait;
+    use UseCaseTrait;
 
     /**
      * @inheritDoc
@@ -51,36 +52,30 @@ class ExceptionInUseCaseCustomRule implements Rule
      */
     public function processNode(Node $node, Scope $scope): array
     {
-        if ($this->checkIfInUseCase($scope->getFile())) {
-            // get string representation of Exception class
-            $exceptionThrown = $node->expr->class->toString();
-            $parentTryCatchNodes = $this->getAllParentTryCatchNodes($node);
-            if (empty($parentTryCatchNodes)) {
-                return [
-                    CentreonRuleErrorBuilder::message(
-                        'Exception thrown in UseCase should be in a try catch block, and must be caught.'
-                    )->build(),
-                ];
-            }
+        if (! $this->fileInUseCase($scope->getFile())) {
+            return [];
+        }
 
-            foreach ($parentTryCatchNodes as $parentTryCatchNode) {
-                foreach ($parentTryCatchNode->catches as $catch) {
-                    foreach ($catch->types as $type) {
-                        if ($this->exceptionThrownCanBeCaught($exceptionThrown, $type->toString())) {
-                            return [];
-                        }
-                    }
-                }
-            }
+        // get string representation of Exception class
+        $exceptionThrown = $node->expr->class->toCodeString();
+        $parentTryCatchNodes = $this->getAllParentTryCatchNodes($node);
+        $caughtExceptionTypes = $this->getCaughtExceptionTypes($parentTryCatchNodes);
 
+        if (empty($parentTryCatchNodes)) {
             return [
-                CentreonRuleErrorBuilder::message(
-                    'Exception thrown in UseCase should be in a try catch block, and must be caught.'
-                )->build(),
+                $this->getCentreonCustomExceptionError(),
             ];
         }
 
-        return [];
+        foreach ($caughtExceptionTypes as $caughtExceptionType) {
+            if (is_a($exceptionThrown, $caughtExceptionType, true)) {
+                return [];
+            }
+        }
+
+        return [
+            $this->getCentreonCustomExceptionError(),
+        ];
     }
 
     /**
@@ -103,20 +98,34 @@ class ExceptionInUseCaseCustomRule implements Rule
     }
 
     /**
-     * This method checks if an Exception thrown can be caught by catch block.
+     * This method return an array of Exception types caught in all TryCatch nodes.
      *
-     * @param string $exceptionThrown
-     * @param string $exceptionCaught
-     * @return boolean
+     * @param TryCatch[] $parentTryCatchNodes
+     * @return string[]
      */
-    private function exceptionThrownCanBeCaught(string $exceptionThrown, string $exceptionCaught): bool
+    private function getCaughtExceptionTypes(array $parentTryCatchNodes): array
     {
-        $instanceExceptionThrown = new $exceptionThrown;
-        $instanceExceptionCaught = new $exceptionCaught;
-        if ($instanceExceptionThrown instanceof $instanceExceptionCaught) {
-            return true;
+        $caughtExceptionTypes = [];
+        foreach ($parentTryCatchNodes as $parentTryCatchNode) {
+            foreach ($parentTryCatchNode->catches as $catch) {
+                foreach ($catch->types as $type) {
+                    $caughtExceptionTypes[] = $type->toCodeString();
+                }
+            }
         }
 
-        return false;
+        return $caughtExceptionTypes;
+    }
+
+    /**
+     * This method returns Centreon Custom error for Exception Custom Rule.
+     *
+     * @return RuleError
+     */
+    private function getCentreonCustomExceptionError(): RuleError
+    {
+        return CentreonRuleErrorBuilder::message(
+            'Exception thrown in UseCase should be in a try catch block, and must be caught.'
+        )->build();
     }
 }

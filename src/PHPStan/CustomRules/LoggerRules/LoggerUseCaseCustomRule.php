@@ -24,7 +24,7 @@ namespace Centreon\PHPStan\CustomRules\LoggerRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use Centreon\PHPStan\CustomRules\Collectors\MethodCallCollector;
-use Centreon\PHPStan\CustomRules\Traits\CheckIfInUseCaseTrait;
+use Centreon\PHPStan\CustomRules\Traits\UseCaseTrait;
 use Centreon\PHPStan\CustomRules\Traits\GetLoggerMethodsTrait;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
@@ -37,7 +37,7 @@ use PHPStan\Rules\Rule;
  */
 class LoggerUseCaseCustomRule implements Rule
 {
-    use CheckIfInUseCaseTrait;
+    use UseCaseTrait;
     use GetLoggerMethodsTrait;
 
     /**
@@ -58,7 +58,7 @@ class LoggerUseCaseCustomRule implements Rule
 
         $methodCallData = $node->get(MethodCallCollector::class);
         foreach ($methodCallData as $file => $methodCalls) {
-            if ($this->checkIfInUseCase($file) && empty(array_intersect($loggerMethods, $methodCalls))) {
+            if ($this->fileInUseCase($file) && empty(array_intersect($loggerMethods, $methodCalls))) {
                 $errors[] = CentreonRuleErrorBuilder::message(
                     'Class must contain a Logger trait and call at least one of its methods.'
                 )->file($file)->line(0)->build();
