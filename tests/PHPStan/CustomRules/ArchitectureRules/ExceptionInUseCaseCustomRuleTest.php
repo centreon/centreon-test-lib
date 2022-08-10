@@ -240,8 +240,8 @@ it(
 );
 
 it(
-    'should return no error if scanned class is UseCase and an Exception is thrown inside try/catch block, but '
-        . 'try/catch block is not a direct parent of a thrown Exception.',
+    'should return no error if scanned class is UseCase and an Exception is thrown (and caught) inside try/catch block,'
+        . 'but try/catch block is not a direct parent of a thrown Exception.',
     function () {
         $this->scope
         ->expects($this->any())
