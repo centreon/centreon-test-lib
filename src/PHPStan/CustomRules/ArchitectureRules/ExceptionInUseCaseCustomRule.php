@@ -52,9 +52,10 @@ class ExceptionInUseCaseCustomRule implements Rule
     public function processNode(Node $node, Scope $scope): array
     {
         if ($this->checkIfInUseCase($scope->getFile())) {
+            // get string representation of Exception class
             $exceptionThrown = $node->expr->class->toString();
-            $parentTryCatchArray = $this->getAllParentTryCatch($node);
-            if (empty($parentTryCatchArray)) {
+            $parentTryCatchNodes = $this->getAllParentTryCatchNodes($node);
+            if (empty($parentTryCatchNodes)) {
                 return [
                     CentreonRuleErrorBuilder::message(
                         'Exception thrown in UseCase should be in a try catch block, and must be caught.'
@@ -62,7 +63,7 @@ class ExceptionInUseCaseCustomRule implements Rule
                 ];
             }
 
-            foreach ($parentTryCatchArray as $parentTryCatchNode) {
+            foreach ($parentTryCatchNodes as $parentTryCatchNode) {
                 foreach ($parentTryCatchNode->catches as $catch) {
                     foreach ($catch->types as $type) {
                         if ($this->exceptionThrownCanBeCaught($exceptionThrown, $type->toString())) {
@@ -89,16 +90,16 @@ class ExceptionInUseCaseCustomRule implements Rule
      * @param Node $node
      * @return TryCatch[]
      */
-    private function getAllParentTryCatch(Node $node): array
+    private function getAllParentTryCatchNodes(Node $node): array
     {
-        $parentTryCatchArray = [];
+        $parentTryCatchNodes = [];
         while (! $node->getAttribute('parent') instanceof ClassMethod) {
             if ($node->getAttribute('parent') instanceof TryCatch) {
-                $parentTryCatchArray[] = $node->getAttribute('parent');
+                $parentTryCatchNodes[] = $node->getAttribute('parent');
             }
             $node = $node->getAttribute('parent');
         }
-        return $parentTryCatchArray;
+        return $parentTryCatchNodes;
     }
 
     /**
