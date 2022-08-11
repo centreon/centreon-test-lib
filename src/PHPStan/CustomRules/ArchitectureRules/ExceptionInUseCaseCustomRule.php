@@ -94,6 +94,7 @@ class ExceptionInUseCaseCustomRule implements Rule
             }
             $node = $node->getAttribute('parent');
         }
+
         return $parentTryCatchNodes;
     }
 
