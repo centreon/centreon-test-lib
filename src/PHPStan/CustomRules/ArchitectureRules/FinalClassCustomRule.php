@@ -64,6 +64,7 @@ class FinalClassCustomRule implements Rule
                 )->build(),
             ];
         }
+
         return [];
     }
 }

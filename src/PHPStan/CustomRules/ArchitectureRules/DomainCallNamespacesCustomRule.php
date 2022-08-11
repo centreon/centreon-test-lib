@@ -64,6 +64,7 @@ class DomainCallNamespacesCustomRule implements Rule
                 }
             }
         }
+
         return $errors;
     }
 }
