@@ -20,26 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Centreon\PHPStan\CustomRules\LoggerRules;
+namespace Centreon\PHPStan\CustomRules\ArchitectureRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
-use Centreon\PHPStan\CustomRules\Collectors\MethodCallCollector;
-use Centreon\PHPStan\CustomRules\Traits\UseCaseTrait;
-use Centreon\PHPStan\CustomRules\Traits\GetLoggerMethodsTrait;
+use Centreon\PHPStan\CustomRules\Collectors\UseUseCollector;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
 
 /**
- * This class implements a custom rule for PHPStan to check if a UseCase use LoggerTrait
- * and call its methods.
+ * This class implements a custom rule for PHPStan to check that classes in Domain layer
+ * do not call namespaces from Application or Infrastructure layers.
  */
-class LoggerUseCaseCustomRule implements Rule
+class DomainCallNamespacesCustomRule implements Rule
 {
-    use UseCaseTrait;
-    use GetLoggerMethodsTrait;
-
     /**
      * @inheritDoc
      */
@@ -54,14 +49,19 @@ class LoggerUseCaseCustomRule implements Rule
     public function processNode(Node $node, Scope $scope): array
     {
         $errors = [];
-        $loggerMethods = $this->getLoggerTraitMethods();
-
-        $methodCallData = $node->get(MethodCallCollector::class);
-        foreach ($methodCallData as $file => $methodCalls) {
-            if ($this->fileInUseCase($file) && empty(array_intersect($loggerMethods, $methodCalls))) {
-                $errors[] = CentreonRuleErrorBuilder::message(
-                    'Class must contain a Logger trait and call at least one of its methods.'
-                )->file($file)->line(0)->build();
+        $useUseData = $node->get(UseUseCollector::class);
+        foreach ($useUseData as $file => $useUse) {
+            if (str_contains($file, DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR)) {
+                foreach ($useUse as [$line, $useNamespace]) {
+                    if (
+                        str_contains($useNamespace, '\\Application\\')
+                        || str_contains($useNamespace, '\\Infrastructure\\')
+                    ) {
+                        $errors[] = CentreonRuleErrorBuilder::message(
+                            'Domain must not call Application or Infrastructure namespaces.'
+                        )->line($line)->file($file)->build();
+                    }
+                }
             }
         }
 

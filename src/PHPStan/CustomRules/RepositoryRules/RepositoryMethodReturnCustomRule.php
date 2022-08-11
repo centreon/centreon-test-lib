@@ -74,18 +74,18 @@ class RepositoryMethodReturnCustomRule implements Rule
     private function getErrorsForReturnTypeInFindMethod(ClassMethod $classMethod): array
     {
         if (
-            preg_match('/^find/', $classMethod->name->name) &&
-            ! (
+            preg_match('/^find/', $classMethod->name->name)
+            && ! (
                 (
                     $classMethod->getReturnType() instanceof NullableType &&
                     (
                         // $classMethod->getReturnType()->type->toString() get a string of a class name (i.e. "Host")
                         // in case of a nullable object return statement in method signature.
-                        class_exists($classMethod->getReturnType()->type->toString()) ||
-                        interface_exists($classMethod->getReturnType()->type->toString())
+                        class_exists($classMethod->getReturnType()->type->toString())
+                        || interface_exists($classMethod->getReturnType()->type->toString())
                     )
-                ) ||
-                $classMethod->getReturnType()->toString() === 'array'
+                )
+                || $classMethod->getReturnType()->toString() === 'array'
             )
         ) {
             return [
@@ -113,10 +113,10 @@ class RepositoryMethodReturnCustomRule implements Rule
                 (
                     // $classMethod->getReturnType()->toString() get a string of a class name (i.e. "Host")
                     // in case of a non-nullable object return statement in method signature.
-                    class_exists($classMethod->getReturnType()->toString()) ||
-                    interface_exists($classMethod->getReturnType()->toString())
-                ) ||
-                $classMethod->getReturnType()->toString() === 'array'
+                    class_exists($classMethod->getReturnType()->toString())
+                    || interface_exists($classMethod->getReturnType()->toString())
+                )
+                || $classMethod->getReturnType()->toString() === 'array'
             )
         ) {
             return [

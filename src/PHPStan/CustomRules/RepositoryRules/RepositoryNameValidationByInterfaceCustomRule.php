@@ -56,9 +56,9 @@ class RepositoryNameValidationByInterfaceCustomRule implements Rule
                         '/^((Read|Write)([a-zA-Z]{1,})Repository)Interface$/',
                         $interfaceName,
                         $matches
-                    ) &&
+                    )
                     // $matches[1] = i.e. 'ReadSessionRepository'
-                    str_contains($node->name->name, $matches[1])
+                    && str_contains($node->name->name, $matches[1])
                 ) {
                     return [];
                 }

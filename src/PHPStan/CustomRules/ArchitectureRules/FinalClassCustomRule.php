@@ -20,32 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Centreon\PHPStan\CustomRules\LoggerRules;
+namespace Centreon\PHPStan\CustomRules\ArchitectureRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
-use Centreon\PHPStan\CustomRules\Collectors\MethodCallCollector;
 use Centreon\PHPStan\CustomRules\Traits\UseCaseTrait;
-use Centreon\PHPStan\CustomRules\Traits\GetLoggerMethodsTrait;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
-use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
 
 /**
- * This class implements a custom rule for PHPStan to check if a UseCase use LoggerTrait
- * and call its methods.
+ * This class implements a custom rule for PHPStan to check if UseCase, Request, Response
+ * or Controller classes are final.
  */
-class LoggerUseCaseCustomRule implements Rule
+class FinalClassCustomRule implements Rule
 {
     use UseCaseTrait;
-    use GetLoggerMethodsTrait;
 
     /**
      * @inheritDoc
      */
     public function getNodeType(): string
     {
-        return CollectedDataNode::class;
+        return Node\Stmt\Class_::class;
     }
 
     /**
@@ -53,18 +49,22 @@ class LoggerUseCaseCustomRule implements Rule
      */
     public function processNode(Node $node, Scope $scope): array
     {
-        $errors = [];
-        $loggerMethods = $this->getLoggerTraitMethods();
-
-        $methodCallData = $node->get(MethodCallCollector::class);
-        foreach ($methodCallData as $file => $methodCalls) {
-            if ($this->fileInUseCase($file) && empty(array_intersect($loggerMethods, $methodCalls))) {
-                $errors[] = CentreonRuleErrorBuilder::message(
-                    'Class must contain a Logger trait and call at least one of its methods.'
-                )->file($file)->line(0)->build();
-            }
+        if (
+            (
+                str_ends_with($node->name->name, 'Request')
+                || str_ends_with($node->name->name, 'Response')
+                || str_ends_with($node->name->name, 'Controller')
+                || $this->fileInUseCase($scope->getFile())
+            )
+            && ! $node->isFinal()
+        ) {
+            return [
+                CentreonRuleErrorBuilder::message(
+                    'Class ' . $node->name->name . ' must be final.'
+                )->build(),
+            ];
         }
 
-        return $errors;
+        return [];
     }
 }

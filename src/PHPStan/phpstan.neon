@@ -8,8 +8,15 @@ rules:
     - Centreon\PHPStan\CustomRules\RepositoryRules\RepositoryInterfaceNameCustomRule
     - Centreon\PHPStan\CustomRules\RepositoryRules\RepositoryMethodReturnCustomRule
     - Centreon\PHPStan\CustomRules\RepositoryRules\RepositoryNameValidationByInterfaceCustomRule
+    - Centreon\PHPStan\CustomRules\ArchitectureRules\DomainCallNamespacesCustomRule
+    - Centreon\PHPStan\CustomRules\ArchitectureRules\FinalClassCustomRule
+    - Centreon\PHPStan\CustomRules\ArchitectureRules\ExceptionInUseCaseCustomRule
 services:
     -
         class: Centreon\PHPStan\CustomRules\Collectors\MethodCallCollector
+        tags:
+            - phpstan.collector
+    -
+        class: Centreon\PHPStan\CustomRules\Collectors\UseUseCollector
         tags:
             - phpstan.collector

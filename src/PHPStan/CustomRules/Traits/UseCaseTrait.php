@@ -20,37 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Centreon\PHPStan\CustomRules\Collectors;
-
-use PhpParser\Node;
-use PHPStan\Analyser\Scope;
-use PHPStan\Collectors\Collector;
+namespace Centreon\PHPStan\CustomRules\Traits;
 
 /**
- * This class implements Collector interface to collect the information about
- * method calls in UseCases.
+ * This trait implements checkIfInUseCase method to check if a file is
+ * a Use Case.
  */
-class MethodCallCollector implements Collector
+trait UseCaseTrait
 {
     /**
-     * @inheritDoc
+     * This method checks if a file is a Use Case.
      *
-     * @return string
+     * @param string $fileNamePath
+     * @return boolean
      */
-    public function getNodeType(): string
+    private function fileInUseCase(string $fileNamePath): bool
     {
-        return \PhpParser\Node\Expr\MethodCall::class;
-    }
+        $fileNamespaced = str_replace('.php', '', $fileNamePath);
+        $fileNameArray = array_reverse(explode(DIRECTORY_SEPARATOR, $fileNamespaced));
 
-    /**
-     * @inheritDoc
-     *
-     * @param Node $node
-     * @param Scope $scope
-     * @return array|null
-     */
-    public function processNode(Node $node, Scope $scope): string
-    {
-        return $node->name->name;
+        return str_contains($fileNamePath, 'UseCase') && ($fileNameArray[0] === $fileNameArray[1]);
     }
 }
