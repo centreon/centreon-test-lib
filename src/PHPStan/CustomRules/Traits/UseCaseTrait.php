@@ -34,8 +34,6 @@ trait UseCaseTrait
      * @param string $fileNamePath
      * @return boolean
      */
-
-    // rename method to 'FileIsUseCase'
     private function fileInUseCase(string $fileNamePath): bool
     {
         $fileNamespaced = str_replace('.php', '', $fileNamePath);
