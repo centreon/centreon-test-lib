@@ -51,7 +51,7 @@ class RepositoryNameCustomRule implements Rule
             str_contains($node->name->name, 'Repository')
             && ! preg_match('/^[a-zA-Z]{2,}(?:Read|Write)[a-zA-Z]+Repository$/', $node->name->name)
             // check if class is not a Repository Exception
-            && ! is_a($node->name->name, \Exception::class, true)
+            && ! is_a($node->namespacedName->toCodeString(), \Exception::class, true)
         ) {
             return [
                 CentreonRuleErrorBuilder::message(

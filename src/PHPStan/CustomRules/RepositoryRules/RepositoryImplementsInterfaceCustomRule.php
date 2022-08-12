@@ -49,7 +49,7 @@ class RepositoryImplementsInterfaceCustomRule implements Rule
         if (
             str_contains($node->name->name, 'Repository')
             && ! $node->isAbstract()
-            && ! is_a($node->name->name, \Exception::class, true)
+            && ! is_a($node->namespacedName->toCodeString(), \Exception::class, true)
         ) {
             foreach ($node->implements as $implementation) {
                 if (str_contains($implementation->toString(), '\\Application\\')) {
