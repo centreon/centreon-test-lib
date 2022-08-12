@@ -47,7 +47,9 @@ class RepositoryNameValidationByInterfaceCustomRule implements Rule
      */
     public function processNode(Node $node, Scope $scope): array
     {
-        if (str_contains($node->name->name, 'Repository')) {
+        // if there's no implementation of Repository Interface it's RepositoryImplementsInterfaceCustomRule
+        // that will return an error.
+        if (str_contains($node->name->name, 'Repository') && ! empty($node->implements)) {
             foreach ($node->implements as $implementation) {
                 $arrayInterfaceName = explode('\\', $implementation->toString());
                 $interfaceName = end($arrayInterfaceName);

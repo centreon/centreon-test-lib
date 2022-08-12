@@ -46,7 +46,11 @@ class RepositoryImplementsInterfaceCustomRule implements Rule
      */
     public function processNode(Node $node, Scope $scope): array
     {
-        if (str_contains($node->name->name, 'Repository')) {
+        if (
+            str_contains($node->name->name, 'Repository')
+            && ! $node->isAbstract()
+            && ! is_a($node->name->name, \Exception::class, true)
+        ) {
             foreach ($node->implements as $implementation) {
                 if (str_contains($implementation->toString(), '\\Application\\')) {
                     return [];
