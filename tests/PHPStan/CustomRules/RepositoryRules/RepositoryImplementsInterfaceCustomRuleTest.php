@@ -34,7 +34,9 @@ beforeEach(function () {
     $this->node = $this->createMock(Class_::class);
     $this->identifierNodeInstance = $this->createMock(Identifier::class);
     $this->nameNodeInstanceInterface = $this->createMock(Name::class);
+    $this->nameNodeInstanceForNamespacedName = $this->createMock(Name::class);
     $this->node->name = $this->identifierNodeInstance;
+    $this->node->namespacedName = $this->nameNodeInstanceForNamespacedName;
     $this->node->implements = [
         $this->nameNodeInstanceInterface,
     ];
@@ -49,6 +51,16 @@ it('should return an error if Repository does not implement an Interface defined
         ->willReturn($invalidInterfaceImplementations);
 
     $this->identifierNodeInstance->name = 'DbReadHostgroupRepository';
+
+    $this->node
+        ->expects($this->any())
+        ->method('isAbstract')
+        ->willReturn(false);
+
+    $this->nameNodeInstanceForNamespacedName
+        ->expects($this->any())
+        ->method('toCodeString')
+        ->willReturn('Core\Infrastructure\RealTime\Repository\HostGroup\DbReadHostGroupRepository');
 
     $expectedResult = [
         CentreonRuleErrorBuilder::message(
@@ -71,6 +83,16 @@ it('should not return an error if Repository does implement an Interface defined
 
     $this->identifierNodeInstance->name = 'DbReadSessionRepository';
 
+    $this->node
+        ->expects($this->any())
+        ->method('isAbstract')
+        ->willReturn(false);
+
+    $this->nameNodeInstanceForNamespacedName
+        ->expects($this->any())
+        ->method('toCodeString')
+        ->willReturn('Core\Infrastructure\Common\Repository\DbReadSessionRepository');
+
     $rule = new RepositoryImplementsInterfaceCustomRule();
     $result = $rule->processNode($this->node, $this->scope);
     expect($result)->toBeArray();
@@ -86,6 +108,70 @@ it('should not return an error if scanned class is not a Repository.', function 
         ->willReturn($invalidInterfaceImplementations);
 
     $this->identifierNodeInstance->name = 'SomeClassName';
+
+    $this->node
+        ->expects($this->any())
+        ->method('isAbstract')
+        ->willReturn(false);
+
+    $this->nameNodeInstanceForNamespacedName
+        ->expects($this->any())
+        ->method('toCodeString')
+        ->willReturn('Namespaced\Name\Of\SomeClassName');
+
+    $rule = new RepositoryImplementsInterfaceCustomRule();
+    $result = $rule->processNode($this->node, $this->scope);
+    expect($result)->toBeArray();
+    expect($result)->toBeEmpty();
+});
+
+it('should return no error if Repository is an abstract class.', function () {
+    $invalidInterfaceImplementations = '';
+
+    $this->nameNodeInstanceInterface
+        ->expects($this->any())
+        ->method('toString')
+        ->willReturn($invalidInterfaceImplementations);
+
+    $this->identifierNodeInstance->name = 'AbstractDbReadNotificationRepository';
+
+    $this->node
+        ->expects($this->any())
+        ->method('isAbstract')
+        ->willReturn(true);
+
+    $this->nameNodeInstanceForNamespacedName
+        ->expects($this->any())
+        ->method('toCodeString')
+        ->willReturn(
+            'Core\Infrastructure\Configuration\NotificationPolicy\Repository\AbstractDbReadNotificationRepository'
+        );
+
+    $rule = new RepositoryImplementsInterfaceCustomRule();
+    $result = $rule->processNode($this->node, $this->scope);
+    expect($result)->toBeArray();
+    expect($result)->toBeEmpty();
+});
+
+it('should return no error if Repository is an Exception.', function () {
+    $invalidInterfaceImplementations = '';
+
+    $this->nameNodeInstanceInterface
+        ->expects($this->any())
+        ->method('toString')
+        ->willReturn($invalidInterfaceImplementations);
+
+    $this->identifierNodeInstance->name = 'RepositoryException';
+
+    $this->node
+        ->expects($this->any())
+        ->method('isAbstract')
+        ->willReturn(false);
+
+    $this->nameNodeInstanceForNamespacedName
+        ->expects($this->any())
+        ->method('toCodeString')
+        ->willReturn('Core\Infrastructure\Common\Repository\RepositoryException');
 
     $rule = new RepositoryImplementsInterfaceCustomRule();
     $result = $rule->processNode($this->node, $this->scope);

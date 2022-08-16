@@ -24,15 +24,18 @@ namespace Tests\PHPStan\CustomRules\RepositoryRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use Centreon\PHPStan\CustomRules\RepositoryRules\RepositoryNameCustomRule;
-use PhpParser\Node\Identifier;
-use PhpParser\Node\Stmt\Class_;
 use PHPStan\Analyser\Scope;
+use PhpParser\Node\Identifier;
+use PhpParser\Node\Name;
+use PhpParser\Node\Stmt\Class_;
 
 beforeEach(function () {
     $this->node = $this->createMock(Class_::class);
     $this->scope = $this->createMock(Scope::class);
     $this->identifierNodeInstance = $this->createMock(Identifier::class);
+    $this->nameNodeInstanceForNamespacedName = $this->createMock(Name::class);
     $this->node->name = $this->identifierNodeInstance;
+    $this->node->namespacedName = $this->nameNodeInstanceForNamespacedName;
 });
 
 it('should return an error if Repository name does not correspont to naming requirement.', function () {
@@ -45,13 +48,23 @@ it('should return an error if Repository name does not correspont to naming requ
         )->build(),
     ];
 
+    $this->nameNodeInstanceForNamespacedName
+        ->expects($this->any())
+        ->method('toCodeString')
+        ->willReturn('Core\Infrastructure\RealTime\Repository\HostGroup\DbHostIdRepository');
+
     $rule = new RepositoryNameCustomRule();
     $result = $rule->processNode($this->node, $this->scope);
     expect($result[0]->message)->toBe($expectedResult[0]->message);
 });
 
 it('should not return an error if Repository name does correspond to naming requirement.', function () {
-    $this->identifierNodeInstance->name = 'DbReadHostIdRepository';
+    $this->identifierNodeInstance->name = 'DbReadSessionRepository';
+
+    $this->nameNodeInstanceForNamespacedName
+        ->expects($this->any())
+        ->method('toCodeString')
+        ->willReturn('Core\Infrastructure\Common\Repository\DbReadSessionRepository');
 
     $rule = new RepositoryNameCustomRule();
     $result = $rule->processNode($this->node, $this->scope);
@@ -61,6 +74,25 @@ it('should not return an error if Repository name does correspond to naming requ
 
 it('should not return an error if scanned class is not a Repository.', function () {
     $this->identifierNodeInstance->name = 'SomeClass';
+
+    $this->nameNodeInstanceForNamespacedName
+        ->expects($this->any())
+        ->method('toCodeString')
+        ->willReturn('Namespaced\Name\Of\SomeClassName');
+
+    $rule = new RepositoryNameCustomRule();
+    $result = $rule->processNode($this->node, $this->scope);
+    expect($result)->toBeArray();
+    expect($result)->toBeEmpty();
+});
+
+it('should return no error if Repository is an Exception.', function () {
+    $this->identifierNodeInstance->name = 'RepositoryException';
+
+    $this->nameNodeInstanceForNamespacedName
+        ->expects($this->any())
+        ->method('toCodeString')
+        ->willReturn('Core\Infrastructure\Common\Repository\RepositoryException');
 
     $rule = new RepositoryNameCustomRule();
     $result = $rule->processNode($this->node, $this->scope);

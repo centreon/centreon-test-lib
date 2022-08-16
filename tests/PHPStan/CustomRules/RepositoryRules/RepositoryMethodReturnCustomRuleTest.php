@@ -70,7 +70,7 @@ it(
         $expectedResult = [
             CentreonRuleErrorBuilder::message(
                 $this->identifierNodeInstanceForClassMethod->name .
-                " must return null, an object or an array of objects."
+                " must return null, an object, an iterable or an array of objects."
             )->line($this->classMethodNodeInstance->getLine())->build(),
         ];
 
@@ -145,6 +145,27 @@ it('should not return an error if Repository\'s find method returns an array.', 
         ->expects($this->any())
         ->method('toString')
         ->willReturn('array');
+
+    $this->identifierNodeInstanceForClass->name = 'DbReadHostgroupRepository';
+
+    $rule = new RepositoryMethodReturnCustomRule();
+    $resultForObject = $rule->processNode($this->node, $this->scope);
+    expect($resultForObject)->toBeArray();
+    expect($resultForObject)->toBeEmpty();
+});
+
+it('should return no error if Repository\'s find method returns an iterable', function () {
+    $this->identifierNodeInstanceForClassMethod->name = 'findHost';
+
+    $this->classMethodNodeInstance
+        ->expects($this->any())
+        ->method('getReturnType')
+        ->willReturn($this->identifierNodeInstanceForMethodReturnType);
+
+    $this->identifierNodeInstanceForMethodReturnType
+        ->expects($this->any())
+        ->method('toString')
+        ->willReturn('iterable');
 
     $this->identifierNodeInstanceForClass->name = 'DbReadHostgroupRepository';
 

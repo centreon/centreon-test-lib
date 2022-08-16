@@ -86,11 +86,12 @@ class RepositoryMethodReturnCustomRule implements Rule
                     )
                 )
                 || $classMethod->getReturnType()->toString() === 'array'
+                || $classMethod->getReturnType()->toString() === 'iterable'
             )
         ) {
             return [
                 CentreonRuleErrorBuilder::message(
-                    $classMethod->name->name . " must return null, an object or an array of objects."
+                    $classMethod->name->name . " must return null, an object, an iterable or an array of objects."
                 )->line($classMethod->getLine())->build(),
             ];
         }
