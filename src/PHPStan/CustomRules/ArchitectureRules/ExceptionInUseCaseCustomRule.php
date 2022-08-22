@@ -53,7 +53,7 @@ class ExceptionInUseCaseCustomRule implements Rule
     public function processNode(Node $node, Scope $scope): array
     {
         // check if file is UseCase or check if Exception is thrown in constructor
-        if (! $this->fileInUseCase($scope->getFile()) || $this->isInConstructor($scope)) {
+        if (! $this->fileInUseCase($scope->getFile())) {
             return [];
         }
 
@@ -129,16 +129,5 @@ class ExceptionInUseCaseCustomRule implements Rule
         return CentreonRuleErrorBuilder::message(
             'Exception thrown in UseCase should be in a try catch block, and must be caught.'
         )->build();
-    }
-
-    /**
-     * This function checks if an Exception is thrown in the constructor method.
-     *
-     * @param Scope $scope
-     * @return boolean
-     */
-    private function isInConstructor(Scope $scope): bool
-    {
-        return ($scope->getFunction() !== null && $scope->getFunctionName() === '__construct');
     }
 }
