@@ -133,7 +133,7 @@ return $config
         'phpdoc_no_package' => true,
         'phpdoc_no_useless_inheritdoc' => true,
         'phpdoc_order' => true,
-        'phpdoc_return_self_reference' => ['replacements' => ['this' => 'self', '$this' => 'self']],
+        'phpdoc_return_self_reference' => ['replacements' => ['this' => 'self', '@this' => 'self']],
         'phpdoc_scalar' => true,
         'phpdoc_separation' => true,
         'phpdoc_single_line_var_spacing' => true,
@@ -182,5 +182,5 @@ return $config
     ->setFinder(
         PhpCsFixer\Finder::create()
             ->exclude('vendor')
-            ->in('/src')
+            ->in(__DIR__ . '/src')
     );
