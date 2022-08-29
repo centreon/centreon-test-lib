@@ -28,8 +28,12 @@
             "Centreon\\Test\\Behat\\": "src/behat",
             "Centreon\\Test\\Mock\\": "src/mock",
             "Centreon\\Test\\Traits\\": "src/traits",
-            "Centreon\\PHPStan\\": "src/PHPStan"
-        }
+            "Centreon\\PHPStan\\": "src/PHPStan",
+            "Centreon\\PhpCsFixer\\": "src/PhpCsFixer"
+        },
+        "files": [
+            "./src/PhpCsFixer/PhpCsFixerHelper.php"
+        ]
     },
     "config": {
         "allow-plugins": {
