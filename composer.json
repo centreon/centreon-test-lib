@@ -30,10 +30,7 @@
             "Centreon\\Test\\Traits\\": "src/traits",
             "Centreon\\PHPStan\\": "src/PHPStan",
             "Centreon\\PhpCsFixer\\": "src/PhpCsFixer"
-        },
-        "files": [
-            "./src/PhpCsFixer/PhpCsFixerHelper.php"
-        ]
+        }
     },
     "config": {
         "allow-plugins": {
