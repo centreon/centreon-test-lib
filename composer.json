@@ -14,7 +14,8 @@
         "symfony/http-client": "^5.4.0",
         "symfony/property-access": "^5.4.0",
         "webmozart/assert": "^1.9",
-        "phpstan/phpstan": "^1.0"
+        "phpstan/phpstan": "^1.0",
+        "friendsofphp/php-cs-fixer": "^3.10"
     },
     "suggest": {
         "behat/mink": "Browser controller/emulator abstraction for PHP",
@@ -28,6 +29,12 @@
             "Centreon\\Test\\Mock\\": "src/mock",
             "Centreon\\Test\\Traits\\": "src/traits",
             "Centreon\\PHPStan\\": "src/PHPStan"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/flex": true,
+            "pestphp/pest-plugin": true
         }
     }
 }
