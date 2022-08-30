@@ -19,10 +19,16 @@
  *
  */
 
-use Centreon\PhpCsFixer\PhpCsFixerHelper;
+use Centreon\PhpCsFixer\PhpCsFixerRuleSet;
+use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 
 $finder = Finder::create()
-  ->in(__DIR__ . '/src');
+    ->in(__DIR__ . '/src');
 
-return PhpCsFixerHelper::styles($finder);
+$rules = PhpCsFixerRuleSet::getRules();
+
+return (new Config())
+    ->setFinder($finder)
+    ->setRiskyAllowed(true)
+    ->setRules($rules);
