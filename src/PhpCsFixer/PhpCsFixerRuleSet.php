@@ -99,7 +99,7 @@ class PhpCsFixerRuleSet
                     'switch',
                     'throw',
                     'use'
-                    ]
+                ],
             ],
             'no_homoglyph_names' => true,
             'no_leading_namespace_whitespace' => true,
