@@ -64,8 +64,8 @@ class ExceptionInUseCaseCustomRule implements Rule
             return [];
         }
 
-        // get string representation of Exception class
-        $exceptionThrown = $node->expr->class->toCodeString();
+        // check if Exception class is not null and get string representation of Exception class
+        $exceptionThrown = $node->expr->class !== null ? $node->expr->class->toCodeString() : '';
         $parentTryCatchNodes = $this->getAllParentTryCatchNodes($node);
         $caughtExceptionTypes = $this->getCaughtExceptionTypes($parentTryCatchNodes);
 

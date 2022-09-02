@@ -73,20 +73,21 @@ class RepositoryMethodReturnCustomRule implements Rule
      */
     private function getErrorsForReturnTypeInFindMethod(ClassMethod $classMethod): array
     {
+        $returnType = $classMethod->getReturnType();
         if (
             preg_match('/^find/', $classMethod->name->name)
             && ! (
                 (
-                    $classMethod->getReturnType() instanceof NullableType &&
+                    $returnType instanceof NullableType &&
                     (
                         // $classMethod->getReturnType()->type->toString() get a string of a class name (i.e. "Host")
                         // in case of a nullable object return statement in method signature.
-                        class_exists($classMethod->getReturnType()->type->toString())
-                        || interface_exists($classMethod->getReturnType()->type->toString())
+                        class_exists($returnType->type->toString())
+                        || interface_exists($returnType->type->toString())
                     )
                 )
-                || $classMethod->getReturnType()->toString() === 'array'
-                || $classMethod->getReturnType()->toString() === 'iterable'
+                || ($returnType instanceof NullableType ? '' : $returnType->toString()) === 'array'
+                || ($returnType instanceof NullableType ? '' : $returnType->toString()) === 'iterable'
             )
         ) {
             return [
@@ -108,16 +109,17 @@ class RepositoryMethodReturnCustomRule implements Rule
      */
     private function getErrorsForReturnTypeInGetMethod(ClassMethod $classMethod): array
     {
+        $returnType = $classMethod->getReturnType();
         if (
             preg_match('/^get/', $classMethod->name->name) &&
             ! (
                 (
                     // $classMethod->getReturnType()->toString() get a string of a class name (i.e. "Host")
                     // in case of a non-nullable object return statement in method signature.
-                    class_exists($classMethod->getReturnType()->toString())
-                    || interface_exists($classMethod->getReturnType()->toString())
+                    class_exists($returnType instanceof NullableType ? '' : $returnType->toString())
+                    || interface_exists($returnType instanceof NullableType ? '' : $returnType->toString())
                 )
-                || $classMethod->getReturnType()->toString() === 'array'
+                || ($returnType instanceof NullableType ? '' : $returnType->toString()) === 'array'
             )
         ) {
             return [
