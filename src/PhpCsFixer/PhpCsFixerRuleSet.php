@@ -64,7 +64,6 @@ class PhpCsFixerRuleSet
             'general_phpdoc_annotation_remove' => ['annotations' => ['author', 'package', 'subpackage']],
             'general_phpdoc_tag_rename' => ['case_sensitive' => true, 'replacements' => ['inheritdoc' => 'inheritDoc']],
             'get_class_to_class_keyword' => true,
-            'group_import' => true,
             'heredoc_indentation' => true,
             'heredoc_to_nowdoc' => true,
             'implode_call' => true,
