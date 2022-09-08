@@ -58,7 +58,6 @@ class ExceptionInUseCaseCustomRule implements Rule
         if (
             ! $this->fileInUseCase($scope->getFile())
             || $this->getParentClassMethod($node)->name->name === '__construct'
-            // temporarily excluded private methods from checking
             || $this->getParentClassMethod($node)->isPrivate() === true
         ) {
             return [];
