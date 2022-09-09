@@ -25,8 +25,10 @@ namespace Tests\PHPStan\CustomRules\ArchitectureRules;
 use Centreon\PHPStan\CustomRules\ArchitectureRules\ExceptionInUseCaseCustomRule;
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Catch_;
+use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\If_;
 use PhpParser\Node\Stmt\Throw_;
@@ -49,6 +51,14 @@ beforeEach(function () {
     $this->instanceNameNode04 = $this->createMock(Name::class);
     $this->node->expr = $this->instanceNew_Node;
     $this->instanceNew_Node->class = $this->instanceNameNode;
+    $this->instanceClass_Node = $this->createMock(Class_::class);
+    $this->instanceIdentifierNode = $this->createMock(Identifier::class);
+    $this->instanceClassMethodNode->name = $this->instanceIdentifierNode;
+    $this->instanceClassMethodNode
+            ->expects($this->any())
+            ->method('getAttribute')
+            ->with($this->equalTo('parent'))
+            ->willReturn($this->instanceClass_Node);
 });
 
 it(
@@ -327,6 +337,38 @@ it(
             ->method('getAttribute')
             ->with($this->equalTo('parent'))
             ->willReturn($this->instanceClassMethodNode);
+
+        $rule = new ExceptionInUseCaseCustomRule();
+        $result = $rule->processNode($this->node, $this->scope);
+        expect($result)->toBeArray();
+        expect($result)->toBeEmpty();
+    }
+);
+
+it(
+    'should return no error if scanned class is UseCase and an Exception is thrown outside try/catch block in '
+        . 'constructor method',
+    function () {
+        $this->scope
+        ->expects($this->any())
+        ->method('getFile')
+        ->willReturn(
+            'Core' . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
+                . 'FindInstallationStatus' . DIRECTORY_SEPARATOR . 'FindInstallationStatus.php'
+        );
+
+        $this->instanceNameNode
+            ->expects($this->any())
+            ->method('toCodeString')
+            ->willReturn('\PDOException');
+
+        $this->node
+            ->expects($this->any())
+            ->method('getAttribute')
+            ->with($this->equalTo('parent'))
+            ->willReturn($this->instanceClassMethodNode);
+
+        $this->instanceIdentifierNode->name = '__construct';
 
         $rule = new ExceptionInUseCaseCustomRule();
         $result = $rule->processNode($this->node, $this->scope);

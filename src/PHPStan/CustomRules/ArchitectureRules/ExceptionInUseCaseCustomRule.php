@@ -26,6 +26,8 @@ use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use Centreon\PHPStan\CustomRules\Traits\UseCaseTrait;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Throw_;
 use PhpParser\Node\Stmt\TryCatch;
 use PHPStan\Rules\Rule;
 use PHPStan\Analyser\Scope;
@@ -52,13 +54,17 @@ class ExceptionInUseCaseCustomRule implements Rule
      */
     public function processNode(Node $node, Scope $scope): array
     {
-        // check if file is UseCase or check if Exception is thrown in constructor
-        if (! $this->fileInUseCase($scope->getFile())) {
+        // check if file is UseCase
+        if (
+            ! $this->fileInUseCase($scope->getFile())
+            || $this->getParentClassMethod($node)->name->name === '__construct'
+            || $this->getParentClassMethod($node)->isPrivate() === true
+        ) {
             return [];
         }
 
-        // get string representation of Exception class
-        $exceptionThrown = $node->expr->class->toCodeString();
+        // check if Exception class is not null and get string representation of Exception class
+        $exceptionThrown = $node->expr->class !== null ? $node->expr->class->toCodeString() : '';
         $parentTryCatchNodes = $this->getAllParentTryCatchNodes($node);
         $caughtExceptionTypes = $this->getCaughtExceptionTypes($parentTryCatchNodes);
 
@@ -129,5 +135,20 @@ class ExceptionInUseCaseCustomRule implements Rule
         return CentreonRuleErrorBuilder::message(
             'Exception thrown in UseCase should be in a try catch block, and must be caught.'
         )->build();
+    }
+
+    /**
+     * This method returns the parent ClassMethod node.
+     *
+     * @param Throw_ $node
+     * @return ClassMethod
+     */
+    private function getParentClassMethod(Throw_ $node): ClassMethod
+    {
+        while (! $node->getAttribute('parent') instanceof Class_) {
+            $node = $node->getAttribute('parent');
+        }
+
+        return $node;
     }
 }
