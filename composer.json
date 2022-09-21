@@ -42,7 +42,6 @@
         }
     },
     "require-dev": {
-        "pestphp/pest": "^1.21",
-        "centreon/centreon": "dev-develop"
+        "pestphp/pest": "^1.21"
     }
 }
