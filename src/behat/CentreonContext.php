@@ -512,14 +512,21 @@ class CentreonContext extends UtilsContext
 
         // Real application test, create an API authentication token.
         $ch = curl_init(
-            'http://' . $this->container->getContainerId('web', true) .
+            'http://' . $this->container->getContainerId('web', false) .
             '/centreon/api/latest/platform/versions'
         );
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $message = "url: " . 'http://' . $this->container->getContainerId('web', true) .
+        $message = "url: " . 'http://' . $this->container->getContainerId('web', false) .
         '/centreon/api/latest/platform/versions' . "\n";
+
+        sleep(5);
+
+        exec('docker ps -a', $output);
+        foreach ($output as $line) {
+            $message .= $line . "\n";
+        }
 
         $limit = time() + 60;
         while (time() < $limit) {
