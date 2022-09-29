@@ -135,6 +135,19 @@ class CentreonContext extends UtilsContext
 
             // Centreon Engine logs.
             $logTitle = "\n\n"
+                . "###################\n"
+                . "# HTTP / PHP logs #\n"
+                . "###################\n\n";
+            $output = $this->container->execute(
+                'cat /var/log/php-fpm/centreon-error.log /var/log/httpd24/error_log /var/log/httpd24/access_log 2>/dev/null',
+                'web',
+                false
+            );
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // Centreon Engine logs.
+            $logTitle = "\n\n"
                 . "###############\n"
                 . "# Engine logs #\n"
                 . "###############\n\n";
