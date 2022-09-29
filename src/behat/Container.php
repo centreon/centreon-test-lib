@@ -188,7 +188,7 @@ class Container
         if ($this->host === null) {
             $docker = getenv('DOCKER_HOST');
             if (!preg_match('@^(tcp://)?([^:]+)@', $docker, $matches)) {
-                $retval = '127.0.0.1';
+                $retval = 'localhost';
             } else {
                 $retval = $matches[2];
             }
