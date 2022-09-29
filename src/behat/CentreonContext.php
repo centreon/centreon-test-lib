@@ -511,7 +511,7 @@ class CentreonContext extends UtilsContext
         );
 
         exec(
-            'docker exec -ti ' . $this->container->getContainerId('web', false) . ' bash -c '
+            'docker exec ' . $this->container->getContainerId('web', false) . ' bash -c '
                 . '"for i in {1..60} ; do curl http://localhost:80/centreon/api/latest/platform/versions; '
                 . '[ \$? = 0 ] && exit 0; '
                 . 'sleep 1; '
