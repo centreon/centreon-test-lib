@@ -518,11 +518,17 @@ class CentreonContext extends UtilsContext
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $message = "url: " . 'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') .
+        '/centreon/api/latest/platform/versions' . "\n";
 
         $limit = time() + 60;
         while (time() < $limit) {
-            curl_exec($ch);
+            $returnContent = curl_exec($ch);
+            if ($returnContent !== false) {
+                $message .= $returnContent . "\n";
+            }
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $message .= 'http code : ' . $httpCode . "\n";
             if ($httpCode === 200) {
                 break;
             }
@@ -531,7 +537,8 @@ class CentreonContext extends UtilsContext
 
         if (time() >= $limit) {
             throw new \Exception(
-                'Centreon Web did not respond within a 120 seconds time frame (API authentication test).'
+                'Centreon Web did not respond within a 120 seconds time frame (API authentication test).' . "\n"
+                . $message
             );
         }
     }
