@@ -510,42 +510,21 @@ class CentreonContext extends UtilsContext
             'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon'
         );
 
-        // Real application test, create an API authentication token.
-        $ch = curl_init(
-            'http://' . $this->container->getContainerId('web', false) .
-            '/centreon/api/latest/platform/versions'
+        exec(
+            'docker exec -ti ' . $this->container->getContainerId('web', false) . ' bash -c '
+                . '"for i in {1..60} ; do curl http://localhost:80/centreon/api/latest/platform/versions; '
+                . '[ \$? = 0 ] && exit 0; '
+                . 'sleep 1; '
+                . 'done; '
+                . 'exit 2"',
+            $output,
+            $resultCode
         );
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $message = "url: " . 'http://' . $this->container->getContainerId('web', false) .
-        '/centreon/api/latest/platform/versions' . "\n";
 
-        sleep(5);
-
-        exec('docker ps -a', $output);
-        foreach ($output as $line) {
-            $message .= $line . "\n";
-        }
-
-        $limit = time() + 60;
-        while (time() < $limit) {
-            $returnContent = curl_exec($ch);
-            if ($returnContent !== false) {
-                $message .= $returnContent . "\n";
-            }
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            $message .= 'http code : ' . $httpCode . "\n";
-            if ($httpCode === 200) {
-                break;
-            }
-            sleep(1);
-        }
-
-        if (time() >= $limit) {
+        if ($resultCode !== 0) {
             throw new \Exception(
-                'Centreon Web did not respond within a 120 seconds time frame (API authentication test).' . "\n"
-                . $message
+                $output .
+                'Centreon Web did not respond within a 60 seconds time frame (API call test).' . "\n"
             );
         }
     }
