@@ -523,7 +523,7 @@ class CentreonContext extends UtilsContext
 
         if ($resultCode !== 0) {
             throw new \Exception(
-                $output .
+                implode("\n", $output) .
                 'Centreon Web did not respond within a 60 seconds time frame (API call test).' . "\n"
             );
         }
