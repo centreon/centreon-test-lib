@@ -135,19 +135,6 @@ class CentreonContext extends UtilsContext
 
             // Centreon Engine logs.
             $logTitle = "\n\n"
-                . "###################\n"
-                . "# HTTP / PHP logs #\n"
-                . "###################\n\n";
-            $output = $this->container->execute(
-                'cat /var/log/php-fpm/centreon-error.log /var/log/httpd24/error_log /var/log/httpd24/access_log 2>/dev/null',
-                'web',
-                false
-            );
-            file_put_contents($filename, $logTitle, FILE_APPEND);
-            file_put_contents($filename, $output['output'], FILE_APPEND);
-
-            // Centreon Engine logs.
-            $logTitle = "\n\n"
                 . "###############\n"
                 . "# Engine logs #\n"
                 . "###############\n\n";
@@ -512,7 +499,7 @@ class CentreonContext extends UtilsContext
 
         exec(
             'docker exec ' . $this->container->getContainerId('web', false) . ' bash -c '
-                . '"for i in {1..60} ; do curl http://web/centreon/api/latest/platform/versions; '
+                . '"for i in {1..60} ; do curl http://localhost/centreon/api/latest/platform/versions; '
                 . '[ \$? = 0 ] && exit 0; '
                 . 'sleep 1; '
                 . 'done; '
