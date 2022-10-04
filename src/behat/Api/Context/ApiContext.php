@@ -712,7 +712,7 @@ class ApiContext implements Context
     /**
      * @Given I am logged in with :username\/:password
      */
-    public function iAmLoggedInWith($username, $password)
+    public function iAmLoggedInWith(string $username, string $password)
     {
         $this->setHttpHeaders(['Content-Type' => 'application/json']);
         $response = $this->iSendARequestToWithBody(
