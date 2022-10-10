@@ -252,25 +252,6 @@ class ApiContext implements Context
     }
 
     /**
-     *  Set containers Compose files.
-     */
-    public function setContainersComposeFiles($files)
-    {
-        $this->composeFiles = $files;
-    }
-
-    /**
-     *  Get a container Compose file.
-     */
-    public function getContainerComposeFile($name)
-    {
-        if (empty($this->composeFiles[$name])) {
-            throw new \Exception("Can't get container compose file of " . $name);
-        }
-        return $this->composeFiles[$name];
-    }
-
-    /**
      * after step hook
      *
      * @AfterStep
@@ -406,20 +387,16 @@ class ApiContext implements Context
     }
 
     /**
-     * launch Centreon container
+     * Launch Centreon Web container and setup context.
      *
-     * @param string $name name of the service container
+     * @param string $composeFilePath Path to docker-compose.yml
+     * @param string[] $profiles docker-compose profiles to activate
+     * @throws \Exception
      */
-    public function launchCentreonWebContainer(string $name = 'web')
+    public function launchCentreonWebContainer(string $composeFilePath, array $profiles): void
     {
-        $composeFile = $this->getContainerComposeFile($name);
-        if (empty($composeFile)) {
-            throw new \Exception(
-                'Could not launch containers without Docker Compose file for ' . $name . ': '
-                . 'check the configuration of your ContainerExtension in behat.yml.'
-            );
-        }
-        $this->container = new Container($composeFile);
+        $this->container = new Container($composeFilePath, $profiles);
+
         $this->setBaseUri(
             'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . self::ROOT_PATH
         );
@@ -486,7 +463,7 @@ class ApiContext implements Context
      */
     public function aRunningInstanceOfCentreonApi()
     {
-        $this->launchCentreonWebContainer('web');
+        $this->launchCentreonWebContainer('docker-compose.yml');
     }
 
     /**
