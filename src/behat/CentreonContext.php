@@ -237,7 +237,7 @@ class CentreonContext extends UtilsContext
      */
     public function aCentreonServer()
     {
-        $this->launchCentreonWebContainer(__DIR__ . '/../../../../../docker-compose.yml', ['webdriver']);
+        $this->launchCentreonWebContainer(__DIR__ . '/../../../../../docker-compose.yml', ['web', 'webdriver']);
     }
 
     /**
@@ -342,7 +342,10 @@ class CentreonContext extends UtilsContext
     */
     public function iAmLoggedInACentreonServerWithAConfiguredProxy()
     {
-        $this->launchCentreonWebContainer(__DIR__ . '/../../../../../docker-compose.yml', ['webdriver', 'squid-simple']);
+        $this->launchCentreonWebContainer(
+            __DIR__ . '/../../../../../docker-compose.yml',
+            ['web', 'webdriver', 'squid-simple']
+        );
         $this->iAmLoggedIn();
         $this->setConfiguredProxy();
     }
@@ -353,7 +356,10 @@ class CentreonContext extends UtilsContext
     public function iAmLoggedInACentreonServerWithAConfiguredLdap()
     {
         // Launch container.
-        $this->launchCentreonWebContainer(__DIR__ . '/../../../../../docker-compose.yml', ['webdriver', 'openldap']);
+        $this->launchCentreonWebContainer(
+            __DIR__ . '/../../../../../docker-compose.yml',
+            ['web', 'webdriver', 'openldap']
+        );
         $this->iAmLoggedIn();
 
         // Configure LDAP parameters.
@@ -482,21 +488,28 @@ class CentreonContext extends UtilsContext
             'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon'
         );
 
-        exec(
-            'docker exec ' . $this->container->getContainerId('web', false) . ' bash -c '
-                . '"for i in {1..60} ; do curl http://localhost/centreon/api/latest/platform/versions; '
-                . '[ \$? = 0 ] && exit 0; '
-                . 'sleep 1; '
-                . 'done; '
-                . 'exit 2"',
-            $output,
-            $resultCode
+        // Real application test, create an API authentication token.
+        $ch = curl_init(
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') .
+            '/centreon/api/latest/platform/versions'
         );
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        if ($resultCode !== 0) {
+        $limit = time() + 60;
+        while (time() < $limit) {
+            curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            if ($httpCode === 200) {
+                break;
+            }
+            sleep(1);
+        }
+
+        if (time() >= $limit) {
             throw new \Exception(
-                implode("\n", $output) .
-                'Centreon Web did not respond within a 60 seconds time frame (API call test).' . "\n"
+                'Centreon Web did not respond within a 60 seconds time frame (API authentication test).'
             );
         }
     }
@@ -761,23 +774,6 @@ class CentreonContext extends UtilsContext
             throw new \Exception('Cannot get RRD path in database.');
         }
         return $res['RRDdatabase_path'];
-    }
-
-    /**
-     *
-     * @param string $rrdMetricFile
-     * @return boolean
-     */
-    private function checkRrdFilesAreAvalaible($rrdMetricFile)
-    {
-        $rrdFileExist = false;
-        $output = $this->container->execute('ls ' . $rrdMetricFile .' 2>/dev/null', 'web', false);
-
-        if ($output['output'] === $rrdMetricFile) {
-            $rrdFileExist = true;
-        }
-
-        return $rrdFileExist;
     }
 
     /**
