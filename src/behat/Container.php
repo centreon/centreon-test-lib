@@ -40,7 +40,13 @@ class Container
         $this->id = uniqid() . rand(1, 1000000);
         $this->exec(
             'docker-compose -f ' . $this->composeFile . ' '
-            . implode(' --profile ', $profiles)
+            . implode(
+                ' ',
+                array_map(
+                    fn (string $profile) => '--profile ' . $profile,
+                    $profiles
+                )
+            )
             . ' -p ' . $this->id . ' up -d'
         );
         $this->initContainersInfos();
