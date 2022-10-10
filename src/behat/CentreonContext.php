@@ -237,7 +237,7 @@ class CentreonContext extends UtilsContext
      */
     public function aCentreonServer()
     {
-        $this->launchCentreonWebContainer('docker-compose.yml', ['webdriver']);
+        $this->launchCentreonWebContainer(__DIR__ . '/../../../../../docker-compose.yml', ['webdriver']);
     }
 
     /**
@@ -342,7 +342,7 @@ class CentreonContext extends UtilsContext
     */
     public function iAmLoggedInACentreonServerWithAConfiguredProxy()
     {
-        $this->launchCentreonWebContainer('docker-compose.yml', ['webdriver', 'squid-simple']);
+        $this->launchCentreonWebContainer(__DIR__ . '/../../../../../docker-compose.yml', ['webdriver', 'squid-simple']);
         $this->iAmLoggedIn();
         $this->setConfiguredProxy();
     }
@@ -353,7 +353,7 @@ class CentreonContext extends UtilsContext
     public function iAmLoggedInACentreonServerWithAConfiguredLdap()
     {
         // Launch container.
-        $this->launchCentreonWebContainer('docker-compose.yml', ['webdriver', 'openldap']);
+        $this->launchCentreonWebContainer(__DIR__ . '/../../../../../docker-compose.yml', ['webdriver', 'openldap']);
         $this->iAmLoggedIn();
 
         // Configure LDAP parameters.
