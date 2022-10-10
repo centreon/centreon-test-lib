@@ -463,7 +463,7 @@ class ApiContext implements Context
      */
     public function aRunningInstanceOfCentreonApi()
     {
-        $this->launchCentreonWebContainer('docker-compose.yml');
+        $this->launchCentreonWebContainer(__DIR__ . '/../../../../../docker-compose.yml');
     }
 
     /**
