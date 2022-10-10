@@ -685,4 +685,27 @@ class ApiContext implements Context
             1
         );
     }
+
+    /**
+     * @Given I am logged in with :username\/:password
+     */
+    public function iAmLoggedInWith(string $username, string $password)
+    {
+        $this->setHttpHeaders(['Content-Type' => 'application/json']);
+        $response = $this->iSendARequestToWithBody(
+            'POST',
+            $this->getBaseUri() . '/api/latest/login',
+            json_encode([
+                'security' => [
+                    'credentials' => [
+                        'login' => $username,
+                        'password' => $password,
+                    ],
+                ],
+            ])
+        );
+
+        $response = json_decode($response->getBody()->__toString(), true);
+        $this->setToken($response['security']['token']);
+    }
 }
