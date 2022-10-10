@@ -237,15 +237,7 @@ class CentreonContext extends UtilsContext
      */
     public function aCentreonServer()
     {
-        $this->launchCentreonWebContainer('web');
-    }
-
-    /**
-     * @Given a freshly installed Centreon server
-     */
-    public function aFreshlyInstalledCentreonServer()
-    {
-        $this->launchCentreonWebContainer('web_fresh');
+        $this->launchCentreonWebContainer('docker-compose.yml', ['webdriver']);
     }
 
     /**
@@ -350,7 +342,7 @@ class CentreonContext extends UtilsContext
     */
     public function iAmLoggedInACentreonServerWithAConfiguredProxy()
     {
-        $this->launchCentreonWebContainer('web_squid_simple');
+        $this->launchCentreonWebContainer('docker-compose.yml', ['webdriver', 'squid-simple']);
         $this->iAmLoggedIn();
         $this->setConfiguredProxy();
     }
@@ -361,7 +353,7 @@ class CentreonContext extends UtilsContext
     public function iAmLoggedInACentreonServerWithAConfiguredLdap()
     {
         // Launch container.
-        $this->launchCentreonWebContainer('web_openldap');
+        $this->launchCentreonWebContainer('docker-compose.yml', ['webdriver', 'openldap']);
         $this->iAmLoggedIn();
 
         // Configure LDAP parameters.
@@ -464,22 +456,15 @@ class CentreonContext extends UtilsContext
     }
 
     /**
-     *  Launch Centreon Web container and setup context.
+     * Launch Centreon Web container and setup context.
      *
-     * @param $name Entry name.
+     * @param string $composeFilePath Path to docker-compose.yml
+     * @param string[] $profiles docker-compose profiles to activate
      * @throws \Exception
      */
-    public function launchCentreonWebContainer($name)
+    public function launchCentreonWebContainer(string $composeFilePath, array $profiles = []): void
     {
-        $composeFile = $this->getContainerComposeFile($name);
-        if (empty($composeFile)) {
-            throw new \Exception(
-                'Could not launch containers without Docker Compose file for ' . $name . ': '
-                . 'check the configuration of your ContainerExtension in behat.yml.'
-            );
-        }
-
-        $this->container = new Container($composeFile);
+        $this->container = new Container($composeFilePath, $profiles);
 
         $this->setContainerWebDriver();
 
