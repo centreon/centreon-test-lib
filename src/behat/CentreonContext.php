@@ -237,7 +237,7 @@ class CentreonContext extends UtilsContext
      */
     public function aCentreonServer()
     {
-        $this->launchCentreonWebContainer(__DIR__ . '/../../../../../docker-compose.yml', ['web', 'webdriver']);
+        $this->launchCentreonWebContainer('docker-compose-web', ['web', 'webdriver']);
     }
 
     /**
@@ -342,10 +342,7 @@ class CentreonContext extends UtilsContext
     */
     public function iAmLoggedInACentreonServerWithAConfiguredProxy()
     {
-        $this->launchCentreonWebContainer(
-            __DIR__ . '/../../../../../docker-compose.yml',
-            ['web', 'webdriver', 'squid-simple']
-        );
+        $this->launchCentreonWebContainer('docker-compose-web', ['web', 'webdriver', 'squid-simple']);
         $this->iAmLoggedIn();
         $this->setConfiguredProxy();
     }
@@ -356,10 +353,7 @@ class CentreonContext extends UtilsContext
     public function iAmLoggedInACentreonServerWithAConfiguredLdap()
     {
         // Launch container.
-        $this->launchCentreonWebContainer(
-            __DIR__ . '/../../../../../docker-compose.yml',
-            ['web', 'webdriver', 'openldap']
-        );
+        $this->launchCentreonWebContainer('docker-compose-web', ['web', 'webdriver', 'openldap']);
         $this->iAmLoggedIn();
 
         // Configure LDAP parameters.
@@ -464,13 +458,17 @@ class CentreonContext extends UtilsContext
     /**
      * Launch Centreon Web container and setup context.
      *
-     * @param string $composeFilePath Path to docker-compose.yml
+     * @param string $composeBehatProperty Bind property to docker-compose.yml path
      * @param string[] $profiles docker-compose profiles to activate
      * @throws \Exception
      */
-    public function launchCentreonWebContainer(string $composeFilePath, array $profiles = []): void
+    public function launchCentreonWebContainer(string $composeBehatProperty, array $profiles = []): void
     {
-        $this->container = new Container($composeFilePath, $profiles);
+        if (!isset($this->composeFiles[$composeBehatProperty])) {
+            throw new \Exception('Property "' . $composeBehatProperty . '" does not exist in behat.yml');
+        }
+
+        $this->container = new Container($this->composeFiles[$composeBehatProperty], $profiles);
 
         $this->setContainerWebDriver();
 
