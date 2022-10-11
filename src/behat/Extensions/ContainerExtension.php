@@ -50,7 +50,7 @@ class ContainerExtension implements ExtensionInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('log_directory')->defaultValue(sys_get_temp_dir())->end()
-                ->scalarNode('docker-compose-web')->defaultValue('docker-compose.yml')->end()
+                ->scalarNode('docker_compose_web')->defaultValue('docker-compose.yml')->end()
             ->end()
         ->end();
     }
