@@ -85,6 +85,25 @@ class ApiContext implements Context
     }
 
     /**
+     *  Set containers Compose files.
+     */
+    public function setContainersComposeFiles($files)
+    {
+        $this->composeFiles = $files;
+    }
+
+    /**
+     *  Get a container Compose file.
+     */
+    public function getContainerComposeFile($name)
+    {
+        if (empty($this->composeFiles[$name])) {
+            throw new \Exception("Can't get container compose file of " . $name);
+        }
+        return $this->composeFiles[$name];
+    }
+
+    /**
      * @return Container
      */
     protected function getContainer()
