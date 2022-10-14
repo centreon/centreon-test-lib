@@ -241,6 +241,14 @@ class CentreonContext extends UtilsContext
     }
 
     /**
+     * @Given a freshly installed Centreon server
+     */
+    public function aFreshlyInstalledCentreonServer()
+    {
+        $this->launchCentreonWebContainer('docker_compose_web', ['web-fresh', 'webdriver']);
+    }
+
+    /**
      * Login to Centreon
      *
      * @Given I am logged in
