@@ -58,7 +58,7 @@ class RestApiContext extends CentreonContext
                 $this->container->copyToContainer(
                     $basedir . '/' . $dir,
                     '/usr/share/centreon/www/img/media/' . $dir,
-                    'web'
+                    $this->webService
                 );
             }
         }
@@ -67,7 +67,7 @@ class RestApiContext extends CentreonContext
         $this->container->copyToContainer(
             'tests/rest_api/IF-MIB.txt',
             '/usr/share/centreon/IF-MIB.txt',
-            'web'
+            $this->webService
         );
 
         // Synchronize images.
@@ -89,7 +89,7 @@ class RestApiContext extends CentreonContext
             ' run "collections/' . $collection . '.postman_collection.json"' .
             ' --reporter-cli-no-assertions' .
             ' --environment="environment/' . $this->postmanEnv . '.postman_environment.json"' .
-            ' --global-var "url=' . $this->container->getContainerId('web', false) . '"';
+            ' --global-var "url=' . $this->container->getContainerId($this->webService, false) . '"';
         exec($cmd, $output, $returnValue);
         file_put_contents($this->logfile, implode("\n", $output));
         $this->apiReturnValue = $returnValue;

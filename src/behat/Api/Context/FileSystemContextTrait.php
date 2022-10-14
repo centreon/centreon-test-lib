@@ -56,7 +56,7 @@ Trait FileSystemContextTrait
             function() use ($filePath, $regexp) {
                 $content = $this->getContainer()->execute(
                     'cat ' . $filePath,
-                    'web'
+                    $this->webService
                 )['output'];
 
                 return preg_match($regexp, $content);

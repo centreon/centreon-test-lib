@@ -42,11 +42,11 @@ Trait CentreonClapiContextTrait
         $path = stream_get_meta_data($file)['uri'];
         file_put_contents($path, $data->getRaw());
 
-        $this->getContainer()->copyToContainer($path, '/tmp/clapi.txt', 'web');
+        $this->getContainer()->copyToContainer($path, '/tmp/clapi.txt', $this->webService);
 
         $this->getContainer()->execute(
             '/usr/share/centreon/bin/centreon -u admin -p Centreon!2021 -i /tmp/clapi.txt',
-            'web'
+            $this->webService
         );
 
         fclose($file);
@@ -61,7 +61,7 @@ Trait CentreonClapiContextTrait
     {
         $this->getContainer()->execute(
             '/usr/share/centreon/bin/centreon -u admin -p Centreon!2021 -a APPLYCFG -v "central"',
-            'web'
+            $this->webService
         );
     }
 }

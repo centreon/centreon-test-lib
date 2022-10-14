@@ -38,6 +38,11 @@ class CentreonContext extends UtilsContext
     public $container;
 
     /**
+     * @var string
+     */
+    protected $webService = 'web';
+
+    /**
      * @var \Centreon\Test\Behat\Configuration\PollerConfigurationExportPage
      */
     protected $pollerConfigurationPage;
@@ -140,7 +145,7 @@ class CentreonContext extends UtilsContext
                 . "###############\n\n";
             $output = $this->container->execute(
                 'cat /var/log/centreon-engine/centengine.log 2>/dev/null',
-                'web',
+                $this->webService,
                 false
             );
             file_put_contents($filename, $logTitle, FILE_APPEND);
@@ -153,7 +158,7 @@ class CentreonContext extends UtilsContext
                 . "###############\n\n";
             $output = $this->container->execute(
                 'bash -c "cat /var/log/centreon-broker/*.log 2>/dev/null"',
-                'web',
+                $this->webService,
                 false
             );
             file_put_contents($filename, $logTitle, FILE_APPEND);
@@ -164,7 +169,11 @@ class CentreonContext extends UtilsContext
                 . "#################\n"
                 . "# Gorgone logs #\n"
                 . "#################\n\n";
-            $output = $this->container->execute('cat /var/log/centreon-gorgone/gorgoned.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute(
+                'cat /var/log/centreon-gorgone/gorgoned.log 2>/dev/null',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -173,7 +182,11 @@ class CentreonContext extends UtilsContext
                 . "#######################\n"
                 . "# Centreon sql errors #\n"
                 . "#######################\n\n";
-            $output = $this->container->execute('cat /var/log/centreon/sql-error.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute(
+                'cat /var/log/centreon/sql-error.log 2>/dev/null',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -182,7 +195,11 @@ class CentreonContext extends UtilsContext
                 . "################\n"
                 . "# Mysql errors #\n"
                 . "################\n\n";
-            $output = $this->container->execute('bash -c "cat /var/lib/mysql/*.err 2>/dev/null"', 'web', false);
+            $output = $this->container->execute(
+                'bash -c "cat /var/lib/mysql/*.err 2>/dev/null"',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -191,7 +208,7 @@ class CentreonContext extends UtilsContext
                 . "######################\n"
                 . "# Centreon LDAP logs #\n"
                 . "######################\n\n";
-            $output = $this->container->execute('cat /var/log/centreon/ldap.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute('cat /var/log/centreon/ldap.log 2>/dev/null', $this->webService, false);
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -200,7 +217,7 @@ class CentreonContext extends UtilsContext
                 . "######################\n"
                 . "# Mysql process list #\n"
                 . "######################\n\n";
-            $output = $this->container->execute('mysql -e "SHOW FULL PROCESSLIST" 2>/dev/null', 'web', false);
+            $output = $this->container->execute('mysql -e "SHOW FULL PROCESSLIST" 2>/dev/null', $this->webService, false);
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -209,7 +226,11 @@ class CentreonContext extends UtilsContext
                 . "######################\n"
                 . "# Mysql slow queries #\n"
                 . "######################\n\n";
-            $output = $this->container->execute('cat /var/lib/mysql/slow_queries.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute(
+                'cat /var/lib/mysql/slow_queries.log 2>/dev/null',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -218,7 +239,11 @@ class CentreonContext extends UtilsContext
                 . "#################\n"
                 . "# Mysql queries #\n"
                 . "#################\n\n";
-            $output = $this->container->execute('cat /var/lib/mysql/queries.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute(
+                'cat /var/lib/mysql/queries.log 2>/dev/null',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
         }
@@ -300,7 +325,7 @@ class CentreonContext extends UtilsContext
     {
         // LoginPage constructor will automatically throw if we are
         // not on the login page.
-        $logoutUrl = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web')
+        $logoutUrl = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService)
             . '/centreon/authentication/logout';
         $sessionId = $this->getSession()->getDriver()->getCookie('PHPSESSID');
 
@@ -337,11 +362,11 @@ class CentreonContext extends UtilsContext
         $this->iAmLoggedInACentreonServer();
         $this->container->execute(
             "ln -snf /usr/share/zoneinfo/" . $timezone . " /etc/localtime",
-            'web'
+            $this->webService
         );
         $this->container->execute(
             'bash -c "echo ' . $timezone . ' > /etc/timezone"',
-            'web'
+            $this->webService
         );
     }
 
@@ -432,7 +457,7 @@ class CentreonContext extends UtilsContext
     {
         if (!isset($this->dbCentreon)) {
             $dsn = 'mysql:dbname=centreon;host=' . $this->container->getHost() . ';port=' .
-                $this->container->getPort(3306, 'web');
+                $this->container->getPort(3306, $this->webService);
             $this->dbCentreon = new \PDO(
                 $dsn,
                 'root',
@@ -452,7 +477,7 @@ class CentreonContext extends UtilsContext
     {
         if (!isset($this->dbStorage)) {
             $dsn = 'mysql:dbname=centreon_storage;host=' . $this->container->getHost() . ';port=' .
-                $this->container->getPort(3306, 'web');
+                $this->container->getPort(3306, $this->webService);
             $this->dbStorage = new \PDO(
                 $dsn,
                 'root',
@@ -472,6 +497,12 @@ class CentreonContext extends UtilsContext
      */
     public function launchCentreonWebContainer(string $composeBehatProperty, array $profiles = []): void
     {
+        foreach ($profiles as $profile) {
+            if (preg_match('/^web/', $profile)) {
+                $this->webService = $profile;
+            }
+        }
+
         if (!isset($this->composeFiles[$composeBehatProperty])) {
             throw new \Exception('Property "' . $composeBehatProperty . '" does not exist in behat.yml');
         }
@@ -483,7 +514,7 @@ class CentreonContext extends UtilsContext
         // Set session parameters.
         $this->setMinkParameter(
             'base_url',
-            'http://' . $this->container->getContainerId('web', false) . '/centreon'
+            'http://' . $this->container->getContainerId($this->webService, false) . '/centreon'
         );
 
         /**
@@ -491,12 +522,12 @@ class CentreonContext extends UtilsContext
          */
         $this->setMinkParameter(
             'api_base',
-            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon'
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService) . '/centreon'
         );
 
         // Real application test, create an API authentication token.
         $ch = curl_init(
-            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') .
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService) .
             '/centreon/api/latest/platform/versions'
         );
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
@@ -649,11 +680,11 @@ class CentreonContext extends UtilsContext
     {
         $this->context->container->execute(
             'yum clean all',
-            'web'
+            $this->webService
         );
         $this->context->container->execute(
             'yum update -y --nogpgcheck centreon-web',
-            'web'
+            $this->webService
         );
     }
 
@@ -676,7 +707,7 @@ class CentreonContext extends UtilsContext
     {
         $this->container->execute(
             'su -s /bin/sh apache -c "/usr/bin/env php -q /usr/share/centreon/cron/centAcl.php"',
-            'web',
+            $this->webService,
             false
         );
     }
