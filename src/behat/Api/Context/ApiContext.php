@@ -591,6 +591,17 @@ class ApiContext implements Context
     }
 
     /**
+     * Wait x seconds
+     * @param int $seconds
+     *
+     * @Given /^I wait (\d+) seconds$/
+     */
+    public function iWaitXSeconds(int $seconds = 5): void
+    {
+        sleep($seconds);
+    }
+
+    /**
      * Wait host to be monitored
      *
      * @Given /^I wait until host "(\S+)" is monitored(?: \(tries: (\d+)\))?$/
