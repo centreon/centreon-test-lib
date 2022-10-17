@@ -38,7 +38,8 @@ class Container
     {
         $this->composeFile = $composeFilePath;
         $this->id = uniqid() . rand(1, 1000000);
-        $this->exec(
+
+        $command =
             'docker-compose -f ' . $this->composeFile . ' '
             . implode(
                 ' ',
@@ -47,8 +48,18 @@ class Container
                     $profiles
                 )
             )
-            . ' -p ' . $this->id . ' up -d'
-        );
+            . ' -p ' . $this->id . ' up -d';
+
+        passthru($command, $returnVar);
+
+        if ($returnVar != 0) {
+            throw new \Exception(
+                'Cannot execute container control command: '
+                . $command. " \n "
+                . ' (code ' . $returnVar . ')'
+            );
+        }
+
         $this->initContainersInfos();
     }
 
