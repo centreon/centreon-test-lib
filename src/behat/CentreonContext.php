@@ -138,6 +138,18 @@ class CentreonContext extends UtilsContext
             file_put_contents($filename, $logTitle);
             file_put_contents($filename, $this->container->getLogs(), FILE_APPEND);
 
+            $logTitle = "\n\n"
+                . "################\n"
+                . "# Web App logs #\n"
+                . "################\n\n";
+            $output = $this->container->execute(
+                'cat /var/log/centreon/centreon-web.log 2>/dev/null',
+                $this->webService,
+                false
+            );
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
             // Centreon Engine logs.
             $logTitle = "\n\n"
                 . "###############\n"
