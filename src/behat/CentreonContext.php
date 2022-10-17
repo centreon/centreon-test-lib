@@ -510,7 +510,7 @@ class CentreonContext extends UtilsContext
     public function launchCentreonWebContainer(string $composeBehatProperty, array $profiles = []): void
     {
         foreach ($profiles as $profile) {
-            if (preg_match('/^web/', $profile)) {
+            if (preg_match('/^web(?!driver)/', $profile)) {
                 $this->webService = $profile;
             }
         }
