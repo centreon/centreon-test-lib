@@ -570,7 +570,7 @@ class CentreonContext extends UtilsContext
     {
         $proxyConfig = new ParametersCentreonUiPage($this);
         $proxyConfig->setProperties(array(
-            'proxy_url'=> 'squid',
+            'proxy_url'=> 'squid-simple',
             'proxy_port'=> '3128'
         ));
         $proxyConfig->save();
