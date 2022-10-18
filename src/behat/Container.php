@@ -40,7 +40,7 @@ class Container
         $this->id = uniqid() . rand(1, 1000000);
 
         $command =
-            'docker-compose --quiet-pull -f ' . $this->composeFile . ' '
+            'docker-compose -f ' . $this->composeFile . ' '
             . implode(
                 ' ',
                 array_map(
@@ -48,7 +48,7 @@ class Container
                     $profiles
                 )
             )
-            . ' -p ' . $this->id . ' up -d';
+            . ' -p ' . $this->id . ' up -d --quiet-pull';
 
         passthru($command, $returnVar);
 
