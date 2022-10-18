@@ -40,7 +40,7 @@ class Container
         $this->id = uniqid() . rand(1, 1000000);
 
         $command =
-            'docker-compose -f ' . $this->composeFile . ' '
+            'docker-compose --quiet-pull -f ' . $this->composeFile . ' '
             . implode(
                 ' ',
                 array_map(
