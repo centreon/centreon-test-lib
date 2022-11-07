@@ -25,7 +25,7 @@ namespace Centreon\Test\Mock;
  * @package centreon-test-lib
  * @subpackage test
  */
-class CentreonDBResultSet extends CentreonDBStatement
+class CentreonDBResultSet
 {
     protected $resultset = [];
     protected $params = null;
@@ -82,13 +82,10 @@ class CentreonDBResultSet extends CentreonDBStatement
     /**
      * Return a result
      *
-     * @return mixed
+     * @return array
      */
-    public function fetch(
-        int $mode = \PDO::FETCH_DEFAULT,
-        int $cursorOrientation = \PDO::FETCH_ORI_NEXT,
-        int $cursorOffset = 0
-    ): mixed {
+    public function fetch()
+    {
         return $this->fetchRow();
     }
 
@@ -97,7 +94,7 @@ class CentreonDBResultSet extends CentreonDBStatement
      *
      * @return array
      */
-    public function fetchAll(int $mode = \PDO::FETCH_DEFAULT, mixed ...$args): array
+    public function fetchAll()
     {
         $this->pos = count($this->resultset);
         return $this->resultset;
@@ -134,7 +131,7 @@ class CentreonDBResultSet extends CentreonDBStatement
      *
      * @return int
      */
-    public function rowCount(): int
+    public function rowCount()
     {
         return count($this->resultset);
     }
@@ -161,11 +158,8 @@ class CentreonDBResultSet extends CentreonDBStatement
         return 0;
     }
 
-    /**
-     * @return bool
-     */
-    public function closeCursor(): bool
+    public function closeCursor()
     {
-        return true;
+        return;
     }
 }

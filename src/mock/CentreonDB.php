@@ -50,9 +50,9 @@ class CentreonDB extends \CentreonDB
     protected $transactionQueries;
 
     /**
-     * @var string|false
+     * @var int
      */
-    protected $lastInsertId = false;
+    protected $lastInsertId;
 
     /**
      * Constructor
@@ -70,9 +70,9 @@ class CentreonDB extends \CentreonDB
      * Stub for function query
      *
      * {@inheritdoc}
-     * @return CentreonDBStatement|false The resultset
+     * @return CentreonDBResultSet The resultset
      */
-    public function query($queryString, $parameters = null, ...$parametersArgs): CentreonDBStatement|false
+    public function query($queryString, $parameters = null, ...$parametersArgs)
     {
         return $this->execute($queryString, null);
     }
@@ -94,9 +94,9 @@ class CentreonDB extends \CentreonDB
      *
      * @param string $string The string to escape
      * @param string $paramtype
-     * @return string|false The string escaped
+     * @return string The string escaped
      */
-    public function quote(string $string, int $type = \PDO::PARAM_STR): string|false
+    public function quote($string, $paramtype = null)
     {
         return "'" . $string . "'";
     }
@@ -148,13 +148,13 @@ class CentreonDB extends \CentreonDB
      * @return CentreonDBStatement
      * @throws \Exception
      */
-    public function prepare(string $query, array $options = []): CentreonDBStatement|false
+    public function prepare($statement, $options = null)
     {
-        if (!isset($this->queries[$query])) {
-            throw new \Exception('Query is not set.' . "\nQuery : " . $query);
+        if (!isset($this->queries[$statement])) {
+            throw new \Exception('Query is not set.' . "\nQuery : " . $statement);
         }
 
-        return new CentreonDBStatement($query, $this->queries[$query], $this);
+        return new CentreonDBStatement($statement, $this->queries[$statement], $this);
     }
 
     /**
@@ -236,15 +236,15 @@ class CentreonDB extends \CentreonDB
     /**
      * @return bool
      */
-    public function rollback(): bool
+    public function rollback()
     {
         return true;
     }
 
     /**
-     * @param string|false $id
+     * @param int $id
      */
-    public function setLastInsertId($id = false)
+    public function setLastInsertId(int $id = null)
     {
         $this->lastInsertId = $id;
     }
@@ -252,7 +252,7 @@ class CentreonDB extends \CentreonDB
     /**
      * @return int|null
      */
-    public function lastInsertId(?string $name = null): string|false
+    public function lastInsertId($seqname = null)
     {
         return $this->lastInsertId;
     }

@@ -27,7 +27,7 @@ use Centreon\Test\Mock\CentreonDB;
  * @package centreon-test-lib
  * @subpackage test
  */
-class CentreonDBStatement extends \CentreonDBStatement
+class CentreonDBStatement extends \PDOStatement
 {
     /**
      * @var string
@@ -68,55 +68,38 @@ class CentreonDBStatement extends \CentreonDBStatement
      * Bind column
      * {@inheritDoc}
      */
-    public function bindColumn(
-        string|int $column,
-        mixed &$var,
-        int $type = \PDO::PARAM_STR,
-        int $maxLength = 0,
-        mixed $driverOptions = null
-    ): bool {
-        return true;
+    public function bindColumn($column, &$var, $type = \PDO::PARAM_STR, $maxlen = 0, $driverOptions = null)
+    {
+        return null;
     }
 
     /**
      * Bind parameter
      */
-    public function bindParam(
-        string|int $param,
-        mixed &$var,
-        int $type = \PDO::PARAM_STR,
-        int $maxLength = 0,
-        mixed $driverOptions = null
-    ): bool {
-        $this->bindValue($param, $var);
-
-        return true;
+    public function bindParam($paramno, &$param, $type = null, $maxlen = null, $driverdata = null)
+    {
+        $this->bindValue($paramno, $param);
     }
 
     /**
      * Bind value
      */
-    public function bindValue(
-        string|int $param,
-        mixed $value,
-        int $type = \PDO::PARAM_STR
-    ): bool {
+    public function bindValue($paramno, $param, $type = null)
+    {
         if (is_null($this->params)) {
             $this->params = array();
         }
-        if (is_int($param)) {
-            $this->params[$param - 1] = $value;
+        if (is_int($paramno)) {
+            $this->params[$paramno - 1] = $param;
         } else {
-            $this->params[$param] = $value;
+            $this->params[$paramno] = $param;
         }
-
-        return true;
     }
 
     /**
      * Execute statement
      */
-    public function execute($params = null): bool
+    public function execute($bound_input_params = null)
     {
         $matching = null;
 
@@ -151,7 +134,7 @@ class CentreonDBStatement extends \CentreonDBStatement
      *
      * @return int
      */
-    public function rowCount(): int
+    public function rowCount()
     {
         return $this->currentResultSet->rowCount();
     }
@@ -173,13 +156,10 @@ class CentreonDBStatement extends \CentreonDBStatement
     /**
      * Return a result
      *
-     * @return mixed
+     * @return array
      */
-    public function fetch(
-        int $mode = \PDO::FETCH_DEFAULT,
-        int $cursorOrientation = \PDO::FETCH_ORI_NEXT,
-        int $cursorOffset = 0
-    ): mixed {
+    public function fetch($how = null, $orientation = null, $offset = null)
+    {
         return $this->fetchRow();
     }
 
@@ -210,9 +190,9 @@ class CentreonDBStatement extends \CentreonDBStatement
     /**
      * Close cursor
      */
-    public function closeCursor(): bool
+    public function closeCursor()
     {
-        return true;
+        return;
     }
 
     /**
@@ -220,7 +200,7 @@ class CentreonDBStatement extends \CentreonDBStatement
      *
      * @return array
      */
-    public function fetchAll(int $mode = \PDO::FETCH_DEFAULT, mixed ...$args): array
+    public function fetchAll($mode = \PDO::FETCH_BOTH, ...$args)
     {
         $results = [];
 
