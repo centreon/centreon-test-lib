@@ -556,7 +556,7 @@ class ApiContext implements Context
                 'security' => [
                     'credentials' => [
                         'login' => 'admin',
-                        'password' => 'Centreon!2021',
+                        'password' => 'centreon',
                     ],
                 ],
             ])
@@ -579,7 +579,7 @@ class ApiContext implements Context
             $this->getBaseUri() . '/authentication/providers/configurations/local',
             json_encode([
                 'login' => 'admin',
-                'password' => 'Centreon!2021',
+                'password' => 'centreon',
             ])
         );
 

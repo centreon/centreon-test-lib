@@ -301,7 +301,7 @@ class CentreonContext extends UtilsContext
 
         // Prepare credentials.
         $user = 'admin';
-        $password = 'Centreon!2021';
+        $password = 'centreon';
         if (isset($this->parameters['centreon_user'])) {
             $user = $this->parameters['centreon_user'];
         }
