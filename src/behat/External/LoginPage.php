@@ -21,6 +21,8 @@ class LoginPage extends \Centreon\Test\Behat\Page
 {
     protected $context;
 
+    private const LOGIN_FIELD_SELECTOR = 'input[aria-label="Alias"]';
+
     /**
      *  Navigate to and/or check that we are on the login page.
      */
@@ -51,7 +53,7 @@ class LoginPage extends \Centreon\Test\Behat\Page
     {
         return $this->context->getSession()->getPage()->has(
             'css',
-            'input[name="useralias"]'
+            self::LOGIN_FIELD_SELECTOR
         );
     }
 
@@ -62,9 +64,9 @@ class LoginPage extends \Centreon\Test\Behat\Page
     {
         // Send login form.
         try {
-            $this->context->assertFind('css', 'input[name="useralias"]')->setValue($user);
-            $this->context->assertFind('css', 'input[name="password"]')->setValue($password);
-            $this->context->assertFind('css', 'input[name="submitLogin"]')->click();
+            $this->context->assertFind('css', self::LOGIN_FIELD_SELECTOR)->setValue($user);
+            $this->context->assertFind('css', 'input[aria-label="Password"]')->setValue($password);
+            $this->context->assertFind('css', 'button[aria-label="Connect"]')->click();
         } catch (\Exception $e) {
             throw new \Exception("Cannot login.\n" . $e->getMessage());
         }
@@ -74,9 +76,11 @@ class LoginPage extends \Centreon\Test\Behat\Page
             function ($context) {
                 return $context->getSession()->getPage()->has(
                     'css',
-                    'nav#sidebar'
+                    'div[data-testid="sidebar"]'
                 );
-            }, 'Login failed.', 10
+            },
+            'Login failed.',
+            10
         );
     }
 }

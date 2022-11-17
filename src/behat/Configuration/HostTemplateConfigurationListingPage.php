@@ -29,11 +29,6 @@ class HostTemplateConfigurationListingPage extends \Centreon\Test\Behat\ListingP
         'id' => array(
             'custom'
         ),
-        'icon' => array(
-            'attribute',
-            'td:nth-child(2) img',
-            'src'
-        ),
         'description' => array(
             'text',
             'td:nth-child(3)'

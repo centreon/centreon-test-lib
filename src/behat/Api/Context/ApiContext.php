@@ -44,6 +44,11 @@ class ApiContext implements Context
     public $container;
 
     /**
+     * @var string
+     */
+    protected $webService = 'web';
+
+    /**
      * @var array List of container Compose files.
      */
     protected $composeFiles;
@@ -82,6 +87,25 @@ class ApiContext implements Context
     {
         $this->setHttpClient(HttpClient::create());
         $this->setHttpHeaders(['Content-Type' => 'application/json']);
+    }
+
+    /**
+     *  Set containers Compose files.
+     */
+    public function setContainersComposeFiles($files)
+    {
+        $this->composeFiles = $files;
+    }
+
+    /**
+     *  Get a container Compose file.
+     */
+    public function getContainerComposeFile($name)
+    {
+        if (empty($this->composeFiles[$name])) {
+            throw new \Exception("Can't get container compose file of " . $name);
+        }
+        return $this->composeFiles[$name];
     }
 
     /**
@@ -252,25 +276,6 @@ class ApiContext implements Context
     }
 
     /**
-     *  Set containers Compose files.
-     */
-    public function setContainersComposeFiles($files)
-    {
-        $this->composeFiles = $files;
-    }
-
-    /**
-     *  Get a container Compose file.
-     */
-    public function getContainerComposeFile($name)
-    {
-        if (empty($this->composeFiles[$name])) {
-            throw new \Exception("Can't get container compose file of " . $name);
-        }
-        return $this->composeFiles[$name];
-    }
-
-    /**
      * after step hook
      *
      * @AfterStep
@@ -311,6 +316,18 @@ class ApiContext implements Context
             file_put_contents($filename, $logTitle);
             file_put_contents($filename, $this->container->getLogs(), FILE_APPEND);
 
+            $logTitle = "\n\n"
+                . "################\n"
+                . "# Web App logs #\n"
+                . "################\n\n";
+            $output = $this->container->execute(
+                'cat /var/log/centreon/centreon-web.log 2>/dev/null',
+                $this->webService,
+                false
+            );
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
             // Centreon Engine logs.
             $logTitle = "\n\n"
                 . "###############\n"
@@ -318,7 +335,7 @@ class ApiContext implements Context
                 . "###############\n\n";
             $output = $this->container->execute(
                 'cat /var/log/centreon-engine/centengine.log 2>/dev/null',
-                'web',
+                $this->webService,
                 false
             );
             file_put_contents($filename, $logTitle, FILE_APPEND);
@@ -331,7 +348,7 @@ class ApiContext implements Context
                 . "###############\n\n";
             $output = $this->container->execute(
                 'bash -c "cat /var/log/centreon-broker/*.log 2>/dev/null"',
-                'web',
+                $this->webService,
                 false
             );
             file_put_contents($filename, $logTitle, FILE_APPEND);
@@ -342,7 +359,11 @@ class ApiContext implements Context
                 . "#################\n"
                 . "# Gorgone logs #\n"
                 . "#################\n\n";
-            $output = $this->container->execute('cat /var/log/centreon-gorgone/gorgoned.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute(
+                'cat /var/log/centreon-gorgone/gorgoned.log 2>/dev/null',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -351,7 +372,11 @@ class ApiContext implements Context
                 . "#######################\n"
                 . "# Centreon sql errors #\n"
                 . "#######################\n\n";
-            $output = $this->container->execute('cat /var/log/centreon/sql-error.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute(
+                'cat /var/log/centreon/sql-error.log 2>/dev/null',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -360,7 +385,11 @@ class ApiContext implements Context
                 . "################\n"
                 . "# Mysql errors #\n"
                 . "################\n\n";
-            $output = $this->container->execute('bash -c "cat /var/lib/mysql/*.err 2>/dev/null"', 'web', false);
+            $output = $this->container->execute(
+                'bash -c "cat /var/lib/mysql/*.err 2>/dev/null"',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -369,7 +398,11 @@ class ApiContext implements Context
                 . "######################\n"
                 . "# Centreon LDAP logs #\n"
                 . "######################\n\n";
-            $output = $this->container->execute('cat /var/log/centreon/ldap.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute(
+                'cat /var/log/centreon/ldap.log 2>/dev/null',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -378,7 +411,11 @@ class ApiContext implements Context
                 . "######################\n"
                 . "# Mysql process list #\n"
                 . "######################\n\n";
-            $output = $this->container->execute('mysql -e "SHOW FULL PROCESSLIST" 2>/dev/null', 'web', false);
+            $output = $this->container->execute(
+                'mysql -e "SHOW FULL PROCESSLIST" 2>/dev/null',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -387,7 +424,11 @@ class ApiContext implements Context
                 . "######################\n"
                 . "# Mysql slow queries #\n"
                 . "######################\n\n";
-            $output = $this->container->execute('cat /var/lib/mysql/slow_queries.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute(
+                'cat /var/lib/mysql/slow_queries.log 2>/dev/null',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -396,7 +437,11 @@ class ApiContext implements Context
                 . "#################\n"
                 . "# Mysql queries #\n"
                 . "#################\n\n";
-            $output = $this->container->execute('cat /var/lib/mysql/queries.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute(
+                'cat /var/lib/mysql/queries.log 2>/dev/null',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
         }
@@ -406,22 +451,29 @@ class ApiContext implements Context
     }
 
     /**
-     * launch Centreon container
+     * Launch Centreon Web container and setup context.
      *
-     * @param string $name name of the service container
+     * @param string $composeBehatProperty Bind property to docker-compose.yml path
+     * @param string[] $profiles docker-compose profiles to activate
+     * @throws \Exception
      */
-    public function launchCentreonWebContainer(string $name = 'web')
+    public function launchCentreonWebContainer(string $composeBehatProperty, array $profiles): void
     {
-        $composeFile = $this->getContainerComposeFile($name);
-        if (empty($composeFile)) {
-            throw new \Exception(
-                'Could not launch containers without Docker Compose file for ' . $name . ': '
-                . 'check the configuration of your ContainerExtension in behat.yml.'
-            );
+        foreach ($profiles as $profile) {
+            if (preg_match('/^web(?!driver)/', $profile)) {
+                $this->webService = $profile;
+            }
         }
-        $this->container = new Container($composeFile);
+
+        if (!isset($this->composeFiles[$composeBehatProperty])) {
+            throw new \Exception('Property "' . $composeBehatProperty . '" does not exist in behat.yml');
+        }
+
+        $this->container = new Container($this->composeFiles[$composeBehatProperty], $profiles);
+
         $this->setBaseUri(
-            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . self::ROOT_PATH
+            'http://' . $this->container->getHost() . ':'
+            . $this->container->getPort(80, $this->webService) . self::ROOT_PATH
         );
 
         $this->spin(
@@ -486,7 +538,7 @@ class ApiContext implements Context
      */
     public function aRunningInstanceOfCentreonApi()
     {
-        $this->launchCentreonWebContainer('web');
+        $this->launchCentreonWebContainer('docker_compose_web', ['web']);
     }
 
     /**
@@ -504,7 +556,7 @@ class ApiContext implements Context
                 'security' => [
                     'credentials' => [
                         'login' => 'admin',
-                        'password' => 'centreon',
+                        'password' => 'Centreon!2021',
                     ],
                 ],
             ])
@@ -527,7 +579,7 @@ class ApiContext implements Context
             $this->getBaseUri() . '/authentication/providers/configurations/local',
             json_encode([
                 'login' => 'admin',
-                'password' => 'centreon',
+                'password' => 'Centreon!2021',
             ])
         );
 
@@ -536,6 +588,17 @@ class ApiContext implements Context
         } else {
             throw new \Exception('Php session id not found in cookies');
         }
+    }
+
+    /**
+     * Wait x seconds
+     * @param int $seconds
+     *
+     * @Given /^I wait (\d+) seconds$/
+     */
+    public function iWaitXSeconds(int $seconds = 5): void
+    {
+        sleep($seconds);
     }
 
     /**
@@ -707,5 +770,28 @@ class ApiContext implements Context
             'The monitoring server configuration of #' . $monitoringServerId . ' is not reloaded',
             1
         );
+    }
+
+    /**
+     * @Given I am logged in with :username\/:password
+     */
+    public function iAmLoggedInWith(string $username, string $password)
+    {
+        $this->setHttpHeaders(['Content-Type' => 'application/json']);
+        $response = $this->iSendARequestToWithBody(
+            'POST',
+            $this->getBaseUri() . '/api/latest/login',
+            json_encode([
+                'security' => [
+                    'credentials' => [
+                        'login' => $username,
+                        'password' => $password,
+                    ],
+                ],
+            ])
+        );
+
+        $response = json_decode($response->getBody()->__toString(), true);
+        $this->setToken($response['security']['token']);
     }
 }
