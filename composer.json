@@ -14,8 +14,7 @@
         "symfony/http-client": "^4.4.0",
         "symfony/property-access": "^4.4.0",
         "webmozart/assert": "^1.9",
-        "phpstan/phpstan": "^1.0",
-        "friendsofphp/php-cs-fixer": "^3.10"
+        "phpstan/phpstan": "^1.0"
     },
     "suggest": {
         "behat/mink": "Browser controller/emulator abstraction for PHP",
@@ -28,8 +27,7 @@
             "Centreon\\Test\\Behat\\": "src/behat",
             "Centreon\\Test\\Mock\\": "src/mock",
             "Centreon\\Test\\Traits\\": "src/traits",
-            "Centreon\\PHPStan\\": "src/PHPStan",
-            "Centreon\\PhpCsFixer\\": "src/PhpCsFixer"
+            "Centreon\\PHPStan\\": "src/PHPStan"
         }
     },
     "config": {
