@@ -263,32 +263,13 @@ class UtilsContext extends RawMinkContext
     /**
      *  Select an element in list.
      *
-     * @param $css_id  The ID of the select.
+     * @param $cssId  The ID of the select.
      * @param $value   The requested value.
      * @throws \Exception
      */
-    public function selectInList($css_id, $value)
+    public function selectInList($cssId, $value)
     {
-        $found = false;
-        $elements = $this->getSession()->getPage()->findAll('css', $css_id . ' option');
-        foreach ($elements as $element) {
-            if ($element->getText() == $value) {
-                $this->spin(
-                    function ($context) use ($element) {
-                        $element->click();
-                        return true;
-                    },
-                    "Cannot select '$value' ($css_id)",
-                    5
-                );
-
-                $found = true;
-                break;
-            }
-        }
-        if (!$found) {
-            throw new \Exception('Could not find value ' . $value . ' in selection list ' . $css_id . '.');
-        }
+        $this->assertFind('css', $cssId)->selectOption($value);
     }
 
     /**
