@@ -108,9 +108,14 @@ class PhpCsFixerRuleSet
             'no_singleline_whitespace_before_semicolons' => true,
             'no_spaces_around_offset' => true,
             'no_superfluous_elseif' => true,
-            'no_trailing_comma_in_list_call' => true,
-            'no_trailing_comma_in_singleline_array' => true,
-            'no_trailing_comma_in_singleline_function_call' => true,
+            'no_trailing_comma_in_singleline' => [
+                'elements' => [
+                    'arguments',
+                    'array',
+                    'array_destructuring',
+                    'group_import',
+                ]
+            ],
             'no_trailing_whitespace_in_string' => true,
             'no_unneeded_control_parentheses' => true,
             'no_unneeded_curly_braces' => true,
@@ -145,7 +150,8 @@ class PhpCsFixerRuleSet
             'phpdoc_separation' => true,
             'phpdoc_single_line_var_spacing' => true,
             'phpdoc_summary' => true,
-            'phpdoc_to_comment' => true,
+            // phpdoc_to_comment is error-prone for inline type-hinting (ex: phpstan, psalm, ...)
+            'phpdoc_to_comment' => false,
             'phpdoc_to_property_type' => true,
             'phpdoc_to_return_type' => true,
             'phpdoc_trim' => true,
@@ -185,6 +191,7 @@ class PhpCsFixerRuleSet
             'visibility_required' => true,
             'void_return' => true,
             'whitespace_after_comma_in_array' => true,
+            'declare_strict_types' => true,
         ];
     }
 }
