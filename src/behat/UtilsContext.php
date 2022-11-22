@@ -273,7 +273,15 @@ class UtilsContext extends RawMinkContext
         $elements = $this->getSession()->getPage()->findAll('css', $css_id . ' option');
         foreach ($elements as $element) {
             if ($element->getText() == $value) {
-                $element->click();
+                $this->spin(
+                    function ($context) use ($element) {
+                        $element->click();
+                        return true;
+                    },
+                    "Cannot select '$value' ($css_id)",
+                    2
+                );
+
                 $found = true;
                 break;
             }
@@ -380,7 +388,14 @@ class UtilsContext extends RawMinkContext
     {
         $object = $this->assertFind('css', $cssId);
         $parent = $object->getParent();
-        $this->assertFindIn($parent, 'css', '.clearAllSelect2')->click();
+        $this->spin(
+            function ($context) use ($parent) {
+                $context->assertFindIn($parent, 'css', '.clearAllSelect2')->click();
+                return true;
+            },
+            "Cannot clear select2 ($cssId)",
+            2
+        );
     }
 
     /**
@@ -394,7 +409,15 @@ class UtilsContext extends RawMinkContext
     {
         // Open select2.
         $selectDiv = $this->assertFind('css', $cssId)->getParent();
-        $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
+        $this->spin(
+            function ($context) use ($selectDiv) {
+                $context->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
+                return true;
+            },
+            "Cannot open select2 ($cssId)",
+            2
+        );
+
         $this->spin(
             function ($context) {
                 return $context->assertFind('css', '.select2-container--open .select2-search__field')->isVisible();
