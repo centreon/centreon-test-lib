@@ -279,7 +279,7 @@ class UtilsContext extends RawMinkContext
                         return true;
                     },
                     "Cannot select '$value' ($css_id)",
-                    2
+                    5
                 );
 
                 $found = true;
@@ -394,7 +394,7 @@ class UtilsContext extends RawMinkContext
                 return true;
             },
             "Cannot clear select2 ($cssId)",
-            2
+            5
         );
     }
 
@@ -415,7 +415,7 @@ class UtilsContext extends RawMinkContext
                 return true;
             },
             "Cannot open select2 ($cssId)",
-            2
+            5
         );
 
         $this->spin(
