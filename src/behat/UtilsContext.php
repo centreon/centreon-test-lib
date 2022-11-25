@@ -20,6 +20,10 @@ namespace Centreon\Test\Behat;
 
 use Behat\MinkExtension\Context\RawMinkContext;
 use Centreon\Test\Behat\Exception\SpinStopException;
+use Behat\Mink\Mink;
+use Behat\Mink\Session;
+use Behat\Mink\Driver\PantherDriver;
+use Symfony\Component\Panther\PantherTestCase;
 
 class UtilsContext extends RawMinkContext
 {
@@ -263,24 +267,13 @@ class UtilsContext extends RawMinkContext
     /**
      *  Select an element in list.
      *
-     * @param $css_id  The ID of the select.
+     * @param $cssId  The ID of the select.
      * @param $value   The requested value.
      * @throws \Exception
      */
-    public function selectInList($css_id, $value)
+    public function selectInList($cssId, $value)
     {
-        $found = false;
-        $elements = $this->getSession()->getPage()->findAll('css', $css_id . ' option');
-        foreach ($elements as $element) {
-            if ($element->getText() == $value) {
-                $element->click();
-                $found = true;
-                break;
-            }
-        }
-        if (!$found) {
-            throw new \Exception('Could not find value ' . $value . ' in selection list ' . $css_id . '.');
-        }
+        $this->assertFind('css', $cssId)->selectOption($value);
     }
 
     /**
@@ -526,9 +519,11 @@ class UtilsContext extends RawMinkContext
                     }
                     return false;
                 },
-                'this error will not be displayed'
+                'this error will not be displayed',
+                10
             );
         } catch (\Exception $e) {
+            var_dump($e->getMessage());
             // do not throw error cause it is possible that there is no iframe in the page
         }
     }
@@ -603,6 +598,7 @@ class UtilsContext extends RawMinkContext
     public function setContainerWebDriver()
     {
         // Wait for WebDriver container.
+        /*
         $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub/status';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
@@ -622,6 +618,7 @@ class UtilsContext extends RawMinkContext
                 'WebDriver did not respond within a 120 seconds time frame (url: ' . $url . ').'
             );
         }
+        */
 
         try {
             $chromeArgs = [
@@ -646,6 +643,13 @@ class UtilsContext extends RawMinkContext
                 'enable-automation',
                 'start-maximized',
                 '--log-level=3',
+                '--disable-dev-shm-usage',
+
+                '--disable-popup-blocking',
+                '--disable-application-cache',
+                '--disable-web-security',
+                '--start-maximized',
+                '--ignore-certificate-errors',
             ];
 
             // disable dev shm on windows
@@ -653,6 +657,7 @@ class UtilsContext extends RawMinkContext
                 $chromeArgs[] = '--disable-dev-shm-usage';
             }
 
+            /*
             $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver')
                 . '/wd/hub';
 
@@ -668,19 +673,55 @@ class UtilsContext extends RawMinkContext
                 ],
                 $url
             );
+            */
+            $defaultOptions = [
+                //'webServerDir' => __DIR__.'/../../../../public', // the Flex directory structure
+                //'hostname' => $this->container->getHost(),
+                //'port' => $this->container->getPort(80, 'web'),
+                //'hostname' => '127.0.0.1',
+                //'port' => 9080,
+                //'router' => '',
+                //'external_base_uri' => null,
+                //'readinessPath' => '',
+                'external_base_uri' => 'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web'),
+                'browser' => 'chrome',
+            ];
+            //var_dump($defaultOptions);
+            $kernelOptions = []; # unused cause we do not extend class KernelTestCase
+            $managerOptions = [
+                'goog:chromeOptions' => $chromeArgs,
+            ];
+            $driver = new PantherDriver($defaultOptions, $kernelOptions, $managerOptions);
+            //sleep(2);
+            $driver->start();
 
+            /*
             $driver->setTimeouts(array(
                 'page load' => 180000,
                 'script' => 180000
             ));
+            */
         } catch (\Exception $e) {
             throw new \Exception("Cannot instantiate mink driver.\n" . $e->getMessage());
         }
 
         try {
+            $session = new Session($driver);
+            $mink = new Mink([
+                'panther' => $session,
+            ]);
+            $mink->setDefaultSessionName('panther');
+            $this->setMink($mink);
+            //sleep(5);
+            //var_dump($mink->getSession('panther')->getPage()->getOuterHtml());
+            //$mink->getSession('panther')->visit('http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon');
+            //$this->saveScreenshot('toto.png', $this->composeFiles['log_directory']);
+            //$mink->getSession('panther')->getPage()->findLink('Chat')->click();
+            /*
             $sessionName = $this->getMink()->getDefaultSessionName();
             $session = new \Behat\Mink\Session($driver);
             $this->getMink()->registerSession($sessionName, $session);
+            */
         } catch (\Exception $e) {
             throw new \Exception("Cannot register mink session.\n" . $e->getMessage());
         }

@@ -526,7 +526,8 @@ class CentreonContext extends UtilsContext
         // Set session parameters.
         $this->setMinkParameter(
             'base_url',
-            'http://' . $this->container->getContainerId($this->webService, false) . '/centreon'
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon'
+            //'http://' . $this->container->getContainerId($this->webService, false) . '/centreon'
         );
 
         /**
