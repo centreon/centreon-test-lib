@@ -1,13 +1,13 @@
 <?php
 
 /*
- * Copyright 2005 - 2022 Centreon (https://www.centreon.com/)
+ * Copyright 2005 - 2023 Centreon (https://www.centreon.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,18 +19,34 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Centreon\PhpCsFixer;
 
 class PhpCsFixerRuleSet
 {
+    private const YEAR = 2023;
+    private const LICENSE_APACHE = 'apache';
+    private const LICENSE_PRIVATE = 'private';
+    private const LICENSES = [
+        'centreon/centreon-test-lib' => self::LICENSE_APACHE,
+        'centreon/centreon' => self::LICENSE_APACHE,
+        'centreon/centreon-autodiscovery' => self::LICENSE_PRIVATE,
+        'centreon/centreon-bam' => self::LICENSE_PRIVATE,
+        'centreon/centreon-cloud-business-extensions' => self::LICENSE_PRIVATE,
+        'centreon/centreon-cloud-extensions' => self::LICENSE_PRIVATE,
+        'centreon/centreon-license-manager' => self::LICENSE_PRIVATE,
+        'centreon/centreon-pp-manager' => self::LICENSE_PRIVATE,
+    ];
+
     /**
-     * This method returns an array of defined rules Php-Cs-Fixer
+     * This method returns an array of defined rules Php-Cs-Fixer.
      *
      * @return array
      */
     public static function getRules(): array
     {
-        return [
+        $rules = [
             'align_multiline_comment' => true,
             'array_indentation' => true,
             'array_push' => true,
@@ -46,8 +62,8 @@ class PhpCsFixerRuleSet
                     'property' => 'one',
                     'const' => 'only_if_meta',
                     'trait_import' => 'none',
-                    'case' => 'none'
-                ]
+                    'case' => 'none',
+                ],
             ],
             'clean_namespace' => true,
             'combine_consecutive_issets' => true,
@@ -97,7 +113,7 @@ class PhpCsFixerRuleSet
                     'square_brace_block',
                     'switch',
                     'throw',
-                    'use'
+                    'use',
                 ],
             ],
             'no_homoglyph_names' => true,
@@ -114,7 +130,7 @@ class PhpCsFixerRuleSet
                     'array',
                     'array_destructuring',
                     'group_import',
-                ]
+                ],
             ],
             'no_trailing_whitespace_in_string' => true,
             'no_unneeded_control_parentheses' => true,
@@ -193,5 +209,122 @@ class PhpCsFixerRuleSet
             'whitespace_after_comma_in_array' => true,
             'declare_strict_types' => true,
         ];
+
+        // Set the header dynamically based on the current detected project name.
+        $projectLicense = self::detectCentreonProjectLicense(__DIR__);
+        $phpLicenseHeader = match ($projectLicense) {
+            self::LICENSE_APACHE => self::getHeaderLicenseApache(self::YEAR),
+            self::LICENSE_PRIVATE => self::getHeaderLicensePrivate(self::YEAR),
+            default => '',
+        };
+        if ($phpLicenseHeader) {
+            $rules += [
+                'header_comment' => [
+                    'location' => 'after_open',
+                    'header' => $phpLicenseHeader,
+                ],
+            ];
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Return the header for an Apache License.
+     *
+     * @param int $year
+     */
+    private static function getHeaderLicenseApache(int $year): string
+    {
+        return <<<HEADER
+            Copyright 2005 - {$year} Centreon (https://www.centreon.com/)
+
+            Licensed under the Apache License, Version 2.0 (the "License");
+            you may not use this file except in compliance with the License.
+            You may obtain a copy of the License at
+
+            https://www.apache.org/licenses/LICENSE-2.0
+
+            Unless required by applicable law or agreed to in writing, software
+            distributed under the License is distributed on an "AS IS" BASIS,
+            WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+            See the License for the specific language governing permissions and
+            limitations under the License.
+
+            For more information : contact@centreon.com
+
+            HEADER;
+    }
+
+    /**
+     * Return the header for a private License.
+     *
+     * @param int $year
+     */
+    private static function getHeaderLicensePrivate(int $year): string
+    {
+        return <<<HEADER
+            Centreon
+
+            Copyright 2005 - {$year} Centreon (https://www.centreon.com/)
+
+            Unauthorized reproduction, copy and distribution
+            are not allowed.
+
+            For more information : contact@centreon.com
+
+            HEADER;
+    }
+
+    /**
+     * Recursively find the root main project which uses this project in its vendor.
+     *
+     * @param string $directory
+     *
+     * @return string|null
+     */
+    private static function detectCentreonProjectLicense(string $directory): ?string
+    {
+        // "end" conditions -> '', '.', '/'
+        while (\mb_strlen($directory) > 1) {
+            if (
+                // A composer.json file is mandatory.
+                is_file($composerFile = $directory . '/composer.json')
+
+                // Avoid a composer.json from inside the Centreon vendor directory.
+                && ! str_ends_with(dirname($directory), '/vendor/centreon')
+
+                // There should have a defined license.
+                && ($license = self::getCentreonProjectLicense($composerFile))
+            ) {
+                return $license;
+            }
+
+            $directory = dirname($directory);
+        }
+
+        return null;
+    }
+
+    /**
+     * Extract the project name from the composer json file
+     * and then return the related license if defined.
+     *
+     * @param string $composerFile
+     */
+    private static function getCentreonProjectLicense(string $composerFile): ?string
+    {
+        try {
+            $composerContent = (string) file_get_contents($composerFile);
+            $composerData = json_decode($composerContent, true, 512, JSON_THROW_ON_ERROR);
+            $projectName = $composerData['name'] ?? null;
+
+            if ($projectName && isset(self::LICENSES[$projectName])) {
+                return self::LICENSES[$projectName];
+            }
+        } catch (\JsonException) {
+        }
+
+        return null;
     }
 }
