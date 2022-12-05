@@ -29,6 +29,9 @@ use Centreon\Test\Behat\Monitoring\ServiceMonitoringDetailsPage;
 use Centreon\Test\Behat\Administration\ParametersCentreonUiPage;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
+use Behat\Mink\Mink;
+use Behat\Mink\Session;
+use Behat\Mink\Driver\PantherDriver;
 
 class CentreonContext extends UtilsContext
 {

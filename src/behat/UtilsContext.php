@@ -20,9 +20,6 @@ namespace Centreon\Test\Behat;
 
 use Behat\MinkExtension\Context\RawMinkContext;
 use Centreon\Test\Behat\Exception\SpinStopException;
-use Behat\Mink\Mink;
-use Behat\Mink\Session;
-use Behat\Mink\Driver\PantherDriver;
 
 class UtilsContext extends RawMinkContext
 {
