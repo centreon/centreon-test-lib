@@ -23,7 +23,6 @@ use Centreon\Test\Behat\Exception\SpinStopException;
 use Behat\Mink\Mink;
 use Behat\Mink\Session;
 use Behat\Mink\Driver\PantherDriver;
-use Symfony\Component\Panther\PantherTestCase;
 
 class UtilsContext extends RawMinkContext
 {
@@ -96,9 +95,9 @@ class UtilsContext extends RawMinkContext
      */
     public function spin($closure, $timeoutMsg = 'Load timeout', $wait = 60)
     {
-        $limit = time() + $wait;
+        $limit = \microtime(true) + ($wait * 1000);
         $lastException = null;
-        while (time() <= $limit) {
+        while (\microtime(true) <= $limit) {
             try {
                 if ($closure($this)) {
                     return true;
@@ -109,7 +108,7 @@ class UtilsContext extends RawMinkContext
             } catch (\Exception $e) {
                 $lastException = $e;
             }
-            sleep(1);
+            \usleep(100000);
         }
         if (is_null($lastException)) {
             throw new \Exception($timeoutMsg);
@@ -273,7 +272,20 @@ class UtilsContext extends RawMinkContext
      */
     public function selectInList($cssId, $value)
     {
-        $this->assertFind('css', $cssId)->selectOption($value);
+        $found = false;
+        $elements = $this->getSession()->getPage()->findAll('css', $cssId . ' option');
+        foreach ($elements as $element) {
+            if ($element->getText() == trim($value)) {
+                $element->getParent()->selectOption($element->getValue());
+                $found = true;
+                break;
+            }
+        }
+        if (!$found) {
+            throw new \Exception('Could not find value ' . $value . ' in selection list ' . $cssId . '.');
+        }
+
+        var_dump(time() - $toto);
     }
 
     /**
@@ -386,24 +398,23 @@ class UtilsContext extends RawMinkContext
     public function selectToSelectTwo($cssId, $what)
     {
         // Open select2.
-        $selectDiv = $this->assertFind('css', $cssId)->getParent();
-        $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
+        $this->assertFind('css', $cssId)->getParent()->find('css', 'span.select2-selection')->click();
+
+        $select2Input = null;
         $this->spin(
-            function ($context) {
-                return $context->assertFind('css', '.select2-container--open .select2-search__field')->isVisible();
+            function ($context) use (&$select2Input) {
+                $select2Input = $context->assertFind('css', '.select2-container--open .select2-search__field');
+                return $select2Input->isVisible();
             },
             'Cannot set select2 ' . $cssId . ' active'
         );
-        sleep(1);
-        $select2Input = $this->getSession()->getDriver()->getWebDriverSession()->activeElement();
 
         // Set search.
-        $select2Input->clear();
-        $select2Input->postValue(['value' => [$what]]);
+        $select2Input->setValue($what);
 
         $chosenResults = [];
         $this->spin(
-            function ($context) use (&$chosenResults) {
+            function ($context) use ($select2Input, &$chosenResults) {
                 $select2Span = $context->assertFind('css', 'span.select2-results');
                 $chosenResults = $select2Span->findAll(
                     'css',
@@ -438,22 +449,6 @@ class UtilsContext extends RawMinkContext
                 break;
             }
         }
-
-        // Click parent element to close select2 search field if select2 is not auto closed
-        if ($this->getSession()->getPage()->has('css', '.select2-container--open .select2-search__field')) {
-            $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
-        }
-        // Wait select2 search field is totally closed
-        $this->spin(
-            function ($context) {
-                return !$context->getSession()->getPage()->has(
-                    'css',
-                    '.select2-container--open .select2-search__field'
-                );
-            },
-            'select2 ' . $cssId . ' search field is not closed',
-            30
-        );
     }
 
     /**
@@ -512,7 +507,6 @@ class UtilsContext extends RawMinkContext
                         // we consider the iFrame was resized once its height is greater than 50px
                         // we also check if $lastUri is part of the iFrame URL ($parameters)
                         if (strstr($parameters, self::$lastUri) !== false && $iframeHeight > 50) {
-                            //caution : switchToI*F*rame is the Mink method and need an argument
                             $context->getSession()->getDriver()->switchToIFrame("main-content");
                             return true;
                         }
@@ -523,7 +517,6 @@ class UtilsContext extends RawMinkContext
                 10
             );
         } catch (\Exception $e) {
-            var_dump($e->getMessage());
             // do not throw error cause it is possible that there is no iframe in the page
         }
     }
@@ -597,29 +590,6 @@ class UtilsContext extends RawMinkContext
      */
     public function setContainerWebDriver()
     {
-        // Wait for WebDriver container.
-        /*
-        $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver') . '/wd/hub/status';
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $res = curl_exec($ch);
-        $limit = time() + 120;
-        while ((time() < $limit) &&
-            (($res === false) ||
-                empty($res)) ||
-            ((bool)json_decode($res, true)['value']['ready'] == false)) {
-            sleep(1);
-            $res = curl_exec($ch);
-        }
-        if (time() >= $limit) {
-            throw new \Exception(
-                'WebDriver did not respond within a 120 seconds time frame (url: ' . $url . ').'
-            );
-        }
-        */
-
         try {
             $chromeArgs = [
                 '--disable-infobars',
@@ -644,7 +614,6 @@ class UtilsContext extends RawMinkContext
                 'start-maximized',
                 '--log-level=3',
                 '--disable-dev-shm-usage',
-
                 '--disable-popup-blocking',
                 '--disable-application-cache',
                 '--disable-web-security',
@@ -653,27 +622,10 @@ class UtilsContext extends RawMinkContext
             ];
 
             // disable dev shm on windows
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                $chromeArgs[] = '--disable-dev-shm-usage';
-            }
+            //if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            //    $chromeArgs[] = '--disable-dev-shm-usage';
+            //}
 
-            /*
-            $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver')
-                . '/wd/hub';
-
-            $driver = new \Behat\Mink\Driver\Selenium2Driver(
-                'chrome',
-                [
-                    'chrome' => [
-                        'switches' => $chromeArgs
-                    ],
-                    'goog:chromeOptions' => [
-                        'w3c' => false
-                    ],
-                ],
-                $url
-            );
-            */
             $defaultOptions = [
                 //'webServerDir' => __DIR__.'/../../../../public', // the Flex directory structure
                 //'hostname' => $this->container->getHost(),
@@ -686,21 +638,13 @@ class UtilsContext extends RawMinkContext
                 'external_base_uri' => 'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web'),
                 'browser' => 'chrome',
             ];
-            //var_dump($defaultOptions);
+
             $kernelOptions = []; # unused cause we do not extend class KernelTestCase
             $managerOptions = [
                 'goog:chromeOptions' => $chromeArgs,
             ];
             $driver = new PantherDriver($defaultOptions, $kernelOptions, $managerOptions);
-            //sleep(2);
             $driver->start();
-
-            /*
-            $driver->setTimeouts(array(
-                'page load' => 180000,
-                'script' => 180000
-            ));
-            */
         } catch (\Exception $e) {
             throw new \Exception("Cannot instantiate mink driver.\n" . $e->getMessage());
         }
@@ -712,16 +656,6 @@ class UtilsContext extends RawMinkContext
             ]);
             $mink->setDefaultSessionName('panther');
             $this->setMink($mink);
-            //sleep(5);
-            //var_dump($mink->getSession('panther')->getPage()->getOuterHtml());
-            //$mink->getSession('panther')->visit('http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon');
-            //$this->saveScreenshot('toto.png', $this->composeFiles['log_directory']);
-            //$mink->getSession('panther')->getPage()->findLink('Chat')->click();
-            /*
-            $sessionName = $this->getMink()->getDefaultSessionName();
-            $session = new \Behat\Mink\Session($driver);
-            $this->getMink()->registerSession($sessionName, $session);
-            */
         } catch (\Exception $e) {
             throw new \Exception("Cannot register mink session.\n" . $e->getMessage());
         }

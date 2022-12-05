@@ -133,7 +133,7 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
                     $this->$setter($value);
                     break;
                 case 'input':
-                    $this->context->assertFind('css', $propertyLocator)->setValue($value);
+                    $this->context->assertFind('css', $propertyLocator)->setValue((string) $value);
                     break;
                 case 'radio':
                     $radio = $this->context->assertFind('css', $propertyLocator . '[value="' . $value . '"]');
