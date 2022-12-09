@@ -281,8 +281,6 @@ class UtilsContext extends RawMinkContext
         if (!$found) {
             throw new \Exception('Could not find value ' . $value . ' in selection list ' . $cssId . '.');
         }
-
-        var_dump(time() - $toto);
     }
 
     /**
