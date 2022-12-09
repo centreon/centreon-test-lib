@@ -606,8 +606,8 @@ class CentreonContext extends UtilsContext
         // Set session parameters.
         $this->setMinkParameter(
             'base_url',
-            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon'
-            //'http://' . $this->container->getContainerId($this->webService, false) . '/centreon'
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService)
+                . '/centreon'
         );
 
         /**
@@ -615,7 +615,8 @@ class CentreonContext extends UtilsContext
          */
         $this->setMinkParameter(
             'api_base',
-            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService) . '/centreon'
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService)
+                . '/centreon'
         );
 
         // Real application test, create an API authentication token.
@@ -877,7 +878,7 @@ class CentreonContext extends UtilsContext
     private function checkRrdFilesAreAvalaible($rrdMetricFile)
     {
         $rrdFileExist = false;
-        $output = $this->container->execute('ls ' . $rrdMetricFile .' 2>/dev/null', 'web', false);
+        $output = $this->container->execute('ls ' . $rrdMetricFile .' 2>/dev/null', $this->webService, false);
 
         if ($output['output'] === $rrdMetricFile) {
             $rrdFileExist = true;
