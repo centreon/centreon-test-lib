@@ -492,7 +492,7 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
         foreach ($macros as $name => $value) {
             $this->context->assertFind('css', '#macro_add p')->click();
             $this->context->assertFindField('macroInput_' . $i)->setValue($name);
-            $this->context->assertFindField('macroValue_' . $i)->setValue($value);
+            $this->context->assertFindField('macroValue_' . $i)->setValue((string) $value);
             $i++;
         }
     }
