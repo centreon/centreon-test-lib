@@ -152,10 +152,12 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
                     $this->context->selectInList($propertyLocator, $value);
                     break;
                 case 'select2':
-                    $value = is_array($value) ? $value : array($value);
                     $this->context->emptySelectTwo($propertyLocator);
-                    foreach ($value as $element) {
-                        $this->context->selectToSelectTwo($propertyLocator, $element);
+                    if (!empty($value)) {
+                        $value = is_array($value) ? $value : array($value);
+                        foreach ($value as $element) {
+                            $this->context->selectToSelectTwo($propertyLocator, $element);
+                        }
                     }
                     break;
                 default:
