@@ -437,7 +437,7 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
     /**
      *  Get macros.
      *
-     * @return macros
+     * @return array<string,string>
      */
     protected function getMacros()
     {
