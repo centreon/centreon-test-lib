@@ -113,8 +113,7 @@ class PollerConfigurationExportPage extends ConfigurationPage
 
         foreach ($pollers as $poller) {
             if ('all' == $poller) {
-                $this->context->assertFind('css', '.select2-search__field')->click();
-                $this->context->assertFindButton('Select all')->click();
+                $this->context->assertFind('css', '.select2-results-header__select-all > button')->press();
                 $this->context->assertFind('css', '.popin-wrapper .button_group_center .btc.bt_success')->click();
                 $this->context->spin(
                     function () {
