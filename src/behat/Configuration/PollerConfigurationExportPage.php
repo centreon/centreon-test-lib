@@ -113,6 +113,8 @@ class PollerConfigurationExportPage extends ConfigurationPage
 
         foreach ($pollers as $poller) {
             if ('all' == $poller) {
+                $this->context->assertFind('css', 'select#nhost')
+                    ->getParent()->find('css', '.select2-selection')->press();
                 $this->context->assertFind('css', '.select2-results-header__select-all > button')->press();
                 $this->context->spin(
                     function () {
