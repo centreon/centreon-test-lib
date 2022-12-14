@@ -759,7 +759,7 @@ class CentreonContext extends UtilsContext
         $serviceConfig->save();
 
         // Ensure service is monitored.
-        $this->restartAllPollers();
+        $this->reloadAllPollers();
 
         // Send multiple perfdata.
         $perfdata = '';
