@@ -395,55 +395,44 @@ class UtilsContext extends RawMinkContext
         // Open select2.
         $this->assertFind('css', $cssId)->getParent()->find('css', 'span.select2-selection')->click();
 
-        $select2Input = null;
         $this->spin(
-            function ($context) use (&$select2Input) {
-                $select2Input = $context->assertFind('css', '.select2-container--open .select2-search__field');
-                return $select2Input->isVisible();
+            function ($context) {
+                return $context->assertFind('css', '.select2-container--open .select2-search__field')->isVisible();
             },
             'Cannot set select2 ' . $cssId . ' active'
         );
 
         // Set search.
-        $select2Input->setValue($what);
+        $this->getSession()->evaluateScript(
+            'jQuery(`' . $cssId . '`).parent()'
+            . '.find(".select2-container--open .select2-search__field").val(`' . $what . '`).trigger("keyup")'
+        );
 
         $chosenResults = [];
         $this->spin(
-            function ($context) use ($select2Input, &$chosenResults) {
+            function ($context) use (&$chosenResults) {
                 $select2Span = $context->assertFind('css', 'span.select2-results');
                 $chosenResults = $select2Span->findAll(
                     'css',
                     'li.select2-results__option:not(.loading-results):not(.select2-results__message)'
                 );
                 if (count($chosenResults) === 0) {
-                    throw new \Exception($select2Span->getHtml());
+                    return false;
                 }
                 return true;
             },
             'Cannot find results in select2 ' . $cssId,
-            30
+            5
         );
 
         foreach ($chosenResults as $result) {
-            $found = false;
-            $this->spin(
-                function ($context) use ($result, $what, &$found) {
-                    $html = $result->getHtml();
-                    if (preg_match('/>(.+)</', $html, $matches)) {
-                        if ($matches[1] == $what) {
-                            $result->click();
-                            $found = true;
-                        }
-                    }
-                    return true;
-                },
-                'Cannot select "' . $what . '" in select2 "' . $cssId . '"',
-                10
-            );
-            if ($found) {
-                break;
+            if (preg_match('/>(.+)</', $result->getHtml(), $matches) && $matches[1] == $what) {
+                $result->click();
+                return;
             }
         }
+
+        throw new \Exception('Cannot select ' . $what);
     }
 
     /**
