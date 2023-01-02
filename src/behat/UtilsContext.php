@@ -408,9 +408,9 @@ class UtilsContext extends RawMinkContext
             . '.find(".select2-container--open .select2-search__field").val(`' . $what . '`).trigger("keyup")'
         );
 
-        $chosenResults = [];
         $this->spin(
-            function ($context) use (&$chosenResults) {
+            function ($context) use ($what) {
+                $chosenResults = [];
                 $select2Span = $context->assertFind('css', 'span.select2-results');
                 $chosenResults = $select2Span->findAll(
                     'css',
@@ -419,20 +419,17 @@ class UtilsContext extends RawMinkContext
                 if (count($chosenResults) === 0) {
                     return false;
                 }
-                return true;
+                foreach ($chosenResults as $result) {
+                    if (preg_match('/>(.+)</', $result->getHtml(), $matches) && $matches[1] == $what) {
+                        $result->click();
+                        return true;
+                    }
+                }
+                return false;
             },
             'Cannot find results in select2 ' . $cssId,
             5
         );
-
-        foreach ($chosenResults as $result) {
-            if (preg_match('/>(.+)</', $result->getHtml(), $matches) && $matches[1] == $what) {
-                $result->click();
-                return;
-            }
-        }
-
-        throw new \Exception('Cannot select ' . $what);
     }
 
     /**
