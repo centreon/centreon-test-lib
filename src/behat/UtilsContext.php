@@ -92,9 +92,9 @@ class UtilsContext extends RawMinkContext
      */
     public function spin($closure, $timeoutMsg = 'Load timeout', $wait = 60)
     {
-        $limit = \microtime(true) + ($wait * 1000);
+        $limit = time() + $wait;
         $lastException = null;
-        while (\microtime(true) <= $limit) {
+        while (time() <= $limit) {
             try {
                 if ($closure($this)) {
                     return true;
@@ -404,8 +404,7 @@ class UtilsContext extends RawMinkContext
 
         // Set search.
         $this->getSession()->evaluateScript(
-            'jQuery(`' . $cssId . '`).parent()'
-            . '.find(".select2-container--open .select2-search__field").val(`' . $what . '`).trigger("keyup")'
+            'jQuery(".select2-container--open .select2-search__field").val(`' . $what . '`).trigger("keyup")'
         );
 
         $this->spin(
@@ -428,7 +427,7 @@ class UtilsContext extends RawMinkContext
                 return false;
             },
             'Cannot find results in select2 ' . $cssId,
-            5
+            10
         );
     }
 
