@@ -38,6 +38,11 @@ class CentreonContext extends UtilsContext
     public $container;
 
     /**
+     * @var string
+     */
+    protected $webService = 'web';
+
+    /**
      * @var \Centreon\Test\Behat\Configuration\PollerConfigurationExportPage
      */
     protected $pollerConfigurationPage;
@@ -133,6 +138,18 @@ class CentreonContext extends UtilsContext
             file_put_contents($filename, $logTitle);
             file_put_contents($filename, $this->container->getLogs(), FILE_APPEND);
 
+            $logTitle = "\n\n"
+                . "################\n"
+                . "# Web App logs #\n"
+                . "################\n\n";
+            $output = $this->container->execute(
+                'cat /var/log/centreon/centreon-web.log 2>/dev/null',
+                $this->webService,
+                false
+            );
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
             // Centreon Engine logs.
             $logTitle = "\n\n"
                 . "###############\n"
@@ -140,7 +157,7 @@ class CentreonContext extends UtilsContext
                 . "###############\n\n";
             $output = $this->container->execute(
                 'cat /var/log/centreon-engine/centengine.log 2>/dev/null',
-                'web',
+                $this->webService,
                 false
             );
             file_put_contents($filename, $logTitle, FILE_APPEND);
@@ -153,7 +170,7 @@ class CentreonContext extends UtilsContext
                 . "###############\n\n";
             $output = $this->container->execute(
                 'bash -c "cat /var/log/centreon-broker/*.log 2>/dev/null"',
-                'web',
+                $this->webService,
                 false
             );
             file_put_contents($filename, $logTitle, FILE_APPEND);
@@ -164,7 +181,11 @@ class CentreonContext extends UtilsContext
                 . "#################\n"
                 . "# Gorgone logs #\n"
                 . "#################\n\n";
-            $output = $this->container->execute('cat /var/log/centreon-gorgone/gorgoned.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute(
+                'cat /var/log/centreon-gorgone/gorgoned.log 2>/dev/null',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -173,7 +194,11 @@ class CentreonContext extends UtilsContext
                 . "#######################\n"
                 . "# Centreon sql errors #\n"
                 . "#######################\n\n";
-            $output = $this->container->execute('cat /var/log/centreon/sql-error.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute(
+                'cat /var/log/centreon/sql-error.log 2>/dev/null',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -182,7 +207,11 @@ class CentreonContext extends UtilsContext
                 . "################\n"
                 . "# Mysql errors #\n"
                 . "################\n\n";
-            $output = $this->container->execute('bash -c "cat /var/lib/mysql/*.err 2>/dev/null"', 'web', false);
+            $output = $this->container->execute(
+                'bash -c "cat /var/lib/mysql/*.err 2>/dev/null"',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -191,7 +220,7 @@ class CentreonContext extends UtilsContext
                 . "######################\n"
                 . "# Centreon LDAP logs #\n"
                 . "######################\n\n";
-            $output = $this->container->execute('cat /var/log/centreon/ldap.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute('cat /var/log/centreon/ldap.log 2>/dev/null', $this->webService, false);
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -200,7 +229,7 @@ class CentreonContext extends UtilsContext
                 . "######################\n"
                 . "# Mysql process list #\n"
                 . "######################\n\n";
-            $output = $this->container->execute('mysql -e "SHOW FULL PROCESSLIST" 2>/dev/null', 'web', false);
+            $output = $this->container->execute('mysql -e "SHOW FULL PROCESSLIST" 2>/dev/null', $this->webService, false);
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -209,7 +238,11 @@ class CentreonContext extends UtilsContext
                 . "######################\n"
                 . "# Mysql slow queries #\n"
                 . "######################\n\n";
-            $output = $this->container->execute('cat /var/lib/mysql/slow_queries.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute(
+                'cat /var/lib/mysql/slow_queries.log 2>/dev/null',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
 
@@ -218,7 +251,11 @@ class CentreonContext extends UtilsContext
                 . "#################\n"
                 . "# Mysql queries #\n"
                 . "#################\n\n";
-            $output = $this->container->execute('cat /var/lib/mysql/queries.log 2>/dev/null', 'web', false);
+            $output = $this->container->execute(
+                'cat /var/lib/mysql/queries.log 2>/dev/null',
+                $this->webService,
+                false
+            );
             file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents($filename, $output['output'], FILE_APPEND);
         }
@@ -237,7 +274,7 @@ class CentreonContext extends UtilsContext
      */
     public function aCentreonServer()
     {
-        $this->launchCentreonWebContainer('web');
+        $this->launchCentreonWebContainer('docker_compose_web', ['web', 'webdriver']);
     }
 
     /**
@@ -245,7 +282,7 @@ class CentreonContext extends UtilsContext
      */
     public function aFreshlyInstalledCentreonServer()
     {
-        $this->launchCentreonWebContainer('web_fresh');
+        $this->launchCentreonWebContainer('docker_compose_web', ['web-fresh', 'webdriver']);
     }
 
     /**
@@ -300,7 +337,7 @@ class CentreonContext extends UtilsContext
     {
         // LoginPage constructor will automatically throw if we are
         // not on the login page.
-        $logoutUrl = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web')
+        $logoutUrl = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService)
             . '/centreon/authentication/logout';
         $sessionId = $this->getSession()->getDriver()->getCookie('PHPSESSID');
 
@@ -337,11 +374,11 @@ class CentreonContext extends UtilsContext
         $this->iAmLoggedInACentreonServer();
         $this->container->execute(
             "ln -snf /usr/share/zoneinfo/" . $timezone . " /etc/localtime",
-            'web'
+            $this->webService
         );
         $this->container->execute(
             'bash -c "echo ' . $timezone . ' > /etc/timezone"',
-            'web'
+            $this->webService
         );
     }
 
@@ -350,7 +387,7 @@ class CentreonContext extends UtilsContext
     */
     public function iAmLoggedInACentreonServerWithAConfiguredProxy()
     {
-        $this->launchCentreonWebContainer('web_squid_simple');
+        $this->launchCentreonWebContainer('docker_compose_web', ['web', 'webdriver', 'squid-simple']);
         $this->iAmLoggedIn();
         $this->setConfiguredProxy();
     }
@@ -361,7 +398,7 @@ class CentreonContext extends UtilsContext
     public function iAmLoggedInACentreonServerWithAConfiguredLdap()
     {
         // Launch container.
-        $this->launchCentreonWebContainer('web_openldap');
+        $this->launchCentreonWebContainer('docker_compose_web', ['web', 'webdriver', 'openldap']);
         $this->iAmLoggedIn();
 
         // Configure LDAP parameters.
@@ -432,7 +469,7 @@ class CentreonContext extends UtilsContext
     {
         if (!isset($this->dbCentreon)) {
             $dsn = 'mysql:dbname=centreon;host=' . $this->container->getHost() . ';port=' .
-                $this->container->getPort(3306, 'web');
+                $this->container->getPort(3306, $this->webService);
             $this->dbCentreon = new \PDO(
                 $dsn,
                 'root',
@@ -452,7 +489,7 @@ class CentreonContext extends UtilsContext
     {
         if (!isset($this->dbStorage)) {
             $dsn = 'mysql:dbname=centreon_storage;host=' . $this->container->getHost() . ';port=' .
-                $this->container->getPort(3306, 'web');
+                $this->container->getPort(3306, $this->webService);
             $this->dbStorage = new \PDO(
                 $dsn,
                 'root',
@@ -464,29 +501,32 @@ class CentreonContext extends UtilsContext
     }
 
     /**
-     *  Launch Centreon Web container and setup context.
+     * Launch Centreon Web container and setup context.
      *
-     * @param $name Entry name.
+     * @param string $composeBehatProperty Bind property to docker-compose.yml path
+     * @param string[] $profiles docker-compose profiles to activate
      * @throws \Exception
      */
-    public function launchCentreonWebContainer($name)
+    public function launchCentreonWebContainer(string $composeBehatProperty, array $profiles = []): void
     {
-        $composeFile = $this->getContainerComposeFile($name);
-        if (empty($composeFile)) {
-            throw new \Exception(
-                'Could not launch containers without Docker Compose file for ' . $name . ': '
-                . 'check the configuration of your ContainerExtension in behat.yml.'
-            );
+        foreach ($profiles as $profile) {
+            if (preg_match('/^web(?!driver)/', $profile)) {
+                $this->webService = $profile;
+            }
         }
 
-        $this->container = new Container($composeFile);
+        if (!isset($this->composeFiles[$composeBehatProperty])) {
+            throw new \Exception('Property "' . $composeBehatProperty . '" does not exist in behat.yml');
+        }
+
+        $this->container = new Container($this->composeFiles[$composeBehatProperty], $profiles);
 
         $this->setContainerWebDriver();
 
         // Set session parameters.
         $this->setMinkParameter(
             'base_url',
-            'http://' . $this->container->getContainerId('web', false) . '/centreon'
+            'http://' . $this->container->getContainerId($this->webService, false) . '/centreon'
         );
 
         /**
@@ -494,12 +534,12 @@ class CentreonContext extends UtilsContext
          */
         $this->setMinkParameter(
             'api_base',
-            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') . '/centreon'
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService) . '/centreon'
         );
 
         // Real application test, create an API authentication token.
         $ch = curl_init(
-            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, 'web') .
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService) .
             '/centreon/api/latest/platform/versions'
         );
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
@@ -518,7 +558,7 @@ class CentreonContext extends UtilsContext
 
         if (time() >= $limit) {
             throw new \Exception(
-                'Centreon Web did not respond within a 120 seconds time frame (API authentication test).'
+                'Centreon Web did not respond within a 60 seconds time frame (API authentication test).'
             );
         }
     }
@@ -530,7 +570,7 @@ class CentreonContext extends UtilsContext
     {
         $proxyConfig = new ParametersCentreonUiPage($this);
         $proxyConfig->setProperties(array(
-            'proxy_url'=> 'squid',
+            'proxy_url'=> 'squid-simple',
             'proxy_port'=> '3128'
         ));
         $proxyConfig->save();
@@ -652,11 +692,11 @@ class CentreonContext extends UtilsContext
     {
         $this->context->container->execute(
             'yum clean all',
-            'web'
+            $this->webService
         );
         $this->context->container->execute(
             'yum update -y --nogpgcheck centreon-web',
-            'web'
+            $this->webService
         );
     }
 
@@ -679,7 +719,7 @@ class CentreonContext extends UtilsContext
     {
         $this->container->execute(
             'su -s /bin/sh apache -c "/usr/bin/env php -q /usr/share/centreon/cron/centAcl.php"',
-            'web',
+            $this->webService,
             false
         );
     }
@@ -750,6 +790,23 @@ class CentreonContext extends UtilsContext
 
     /**
      *
+     * @param string $rrdMetricFile
+     * @return boolean
+     */
+    private function checkRrdFilesAreAvalaible($rrdMetricFile)
+    {
+        $rrdFileExist = false;
+        $output = $this->container->execute('ls ' . $rrdMetricFile .' 2>/dev/null', 'web', false);
+
+        if ($output['output'] === $rrdMetricFile) {
+            $rrdFileExist = true;
+        }
+
+        return $rrdFileExist;
+    }
+
+    /**
+     *
      * @param string $metricName
      * @param string $hostname
      * @param string $serviceDescription
@@ -783,23 +840,6 @@ class CentreonContext extends UtilsContext
             throw new \Exception('Cannot get RRD path in database.');
         }
         return $res['RRDdatabase_path'];
-    }
-
-    /**
-     *
-     * @param string $rrdMetricFile
-     * @return boolean
-     */
-    private function checkRrdFilesAreAvalaible($rrdMetricFile)
-    {
-        $rrdFileExist = false;
-        $output = $this->container->execute('ls ' . $rrdMetricFile .' 2>/dev/null', 'web', false);
-
-        if ($output['output'] === $rrdMetricFile) {
-            $rrdFileExist = true;
-        }
-
-        return $rrdFileExist;
     }
 
     /**

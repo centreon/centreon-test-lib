@@ -263,24 +263,13 @@ class UtilsContext extends RawMinkContext
     /**
      *  Select an element in list.
      *
-     * @param $css_id  The ID of the select.
+     * @param $cssId  The ID of the select.
      * @param $value   The requested value.
      * @throws \Exception
      */
-    public function selectInList($css_id, $value)
+    public function selectInList($cssId, $value)
     {
-        $found = false;
-        $elements = $this->getSession()->getPage()->findAll('css', $css_id . ' option');
-        foreach ($elements as $element) {
-            if ($element->getText() == $value) {
-                $element->click();
-                $found = true;
-                break;
-            }
-        }
-        if (!$found) {
-            throw new \Exception('Could not find value ' . $value . ' in selection list ' . $css_id . '.');
-        }
+        $this->assertFind('css', $cssId)->selectOption($value);
     }
 
     /**
@@ -380,7 +369,14 @@ class UtilsContext extends RawMinkContext
     {
         $object = $this->assertFind('css', $cssId);
         $parent = $object->getParent();
-        $this->assertFindIn($parent, 'css', '.clearAllSelect2')->click();
+        $this->spin(
+            function ($context) use ($parent) {
+                $context->assertFindIn($parent, 'css', '.clearAllSelect2')->click();
+                return true;
+            },
+            "Cannot clear select2 ($cssId)",
+            5
+        );
     }
 
     /**
@@ -394,7 +390,15 @@ class UtilsContext extends RawMinkContext
     {
         // Open select2.
         $selectDiv = $this->assertFind('css', $cssId)->getParent();
-        $this->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
+        $this->spin(
+            function ($context) use ($selectDiv) {
+                $context->assertFindIn($selectDiv, 'css', 'span.select2-selection')->click();
+                return true;
+            },
+            "Cannot open select2 ($cssId)",
+            5
+        );
+
         $this->spin(
             function ($context) {
                 return $context->assertFind('css', '.select2-container--open .select2-search__field')->isVisible();
@@ -655,19 +659,20 @@ class UtilsContext extends RawMinkContext
 
             $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver')
                 . '/wd/hub';
+
             $driver = new \Behat\Mink\Driver\Selenium2Driver(
                 'chrome',
                 [
                     'chrome' => [
-                        'args' => $chromeArgs
+                        'switches' => $chromeArgs
                     ],
-                    'browserName' => 'chrome',
-                    'platform' => 'ANY',
-                    'browser' => 'chrome',
-                    'name' => 'Behat Test'
+                    'goog:chromeOptions' => [
+                        'w3c' => false
+                    ],
                 ],
                 $url
             );
+
             $driver->setTimeouts(array(
                 'page load' => 180000,
                 'script' => 180000
