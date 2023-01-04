@@ -41,7 +41,7 @@ class CentreonContext extends UtilsContext
     public $container;
 
     /**
-     * @var string
+     * @var string the service name of web container in docker compose file
      */
     protected $webService = 'web';
 
@@ -606,8 +606,12 @@ class CentreonContext extends UtilsContext
         // Set session parameters.
         $this->setMinkParameter(
             'base_url',
+<<<<<<< HEAD
             'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService)
                 . '/centreon'
+=======
+            'http://' . $this->container->getContainerId($this->webService, false) . '/centreon'
+>>>>>>> master
         );
 
         /**
@@ -615,8 +619,12 @@ class CentreonContext extends UtilsContext
          */
         $this->setMinkParameter(
             'api_base',
+<<<<<<< HEAD
             'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService)
                 . '/centreon'
+=======
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService) . '/centreon'
+>>>>>>> master
         );
 
         // Real application test, create an API authentication token.

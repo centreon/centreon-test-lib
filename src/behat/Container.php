@@ -44,7 +44,7 @@ class Container
             . implode(
                 ' ',
                 array_map(
-                    fn (string $profile) => '--profile ' . $profile,
+                    fn (string $profile) => '--profile ' . escapeshellarg($profile),
                     $profiles
                 )
             )
@@ -52,7 +52,7 @@ class Container
 
         passthru($command, $returnVar);
 
-        if ($returnVar != 0) {
+        if ($returnVar !== 0) {
             throw new \Exception(
                 'Cannot execute container control command: '
                 . $command. " \n "
