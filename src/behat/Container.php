@@ -30,14 +30,36 @@ class Container
 
     /**
      * Container constructor.
-     * @param $composeFile Docker Compose file used to run the services.
+     * @param string $composeFilePath Docker Compose file used to run the services.
+     * @param string[] $profiles docker-compose profiles to activate
      * @throws \Exception
      */
-    public function __construct($composeFile)
+    public function __construct(string $composeFilePath, array $profiles = [])
     {
-        $this->composeFile = $composeFile;
+        $this->composeFile = $composeFilePath;
         $this->id = uniqid() . rand(1, 1000000);
-        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' up -d');
+
+        $command =
+            'docker-compose -f ' . $this->composeFile . ' '
+            . implode(
+                ' ',
+                array_map(
+                    fn (string $profile) => '--profile ' . escapeshellarg($profile),
+                    $profiles
+                )
+            )
+            . ' -p ' . $this->id . ' up -d --quiet-pull';
+
+        passthru($command, $returnVar);
+
+        if ($returnVar !== 0) {
+            throw new \Exception(
+                'Cannot execute container control command: '
+                . $command. " \n "
+                . ' (code ' . $returnVar . ')'
+            );
+        }
+
         $this->initContainersInfos();
     }
 
@@ -48,7 +70,7 @@ class Container
     {
         exec('docker ps --no-trunc | grep ' . $this->id, $output, $returnVar);
         foreach ($output as $line) {
-            if (preg_match('/^(\w+).+\s{3,}(.+\d+->\d+\/tcp)+\s+\w+_(\w+)_\d+$/', $line, $matches)) {
+            if (preg_match('/^(\w+).+\s{3,}(.+\d+->\d+\/tcp)+\s+\w+(?:_|\-)([\w-]+)(?:_|\-)\d+$/', $line, $matches)) {
                 $containerId = $matches[1];
                 if (count($matches) === 4) {
                     $service = $matches[3];

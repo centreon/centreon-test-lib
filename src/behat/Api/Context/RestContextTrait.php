@@ -40,7 +40,7 @@ Trait RestContextTrait
     /**
      * @var ValidatorBuilder
      */
-    private $apiValidator;
+    protected $apiValidator;
 
     /**
      * @return HttpClientInterface

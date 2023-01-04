@@ -29,11 +29,6 @@ class ContactConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
         'id' => array(
             'custom'
         ),
-        'icon' => array(
-            'attribute',
-            'td:nth-child(2) img',
-            'src'
-        ),
         'name' => array(
             'text',
             'td:nth-child(3)'
