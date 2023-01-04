@@ -96,29 +96,18 @@ class CentreonContext extends UtilsContext
                 '--ignore-certificate-errors',
             ];
 
-            // disable dev shm on windows
-            //if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            //    $chromeArgs[] = '--disable-dev-shm-usage';
-            //}
-
             $defaultOptions = [
-                //'webServerDir' => __DIR__.'/../../../../public', // the Flex directory structure
-                //'hostname' => $this->container->getHost(),
-                //'port' => $this->container->getPort(80, 'web'),
-                //'hostname' => '127.0.0.1',
-                //'port' => 9080,
-                //'router' => '',
-                //'external_base_uri' => null,
-                //'readinessPath' => '',
                 'external_base_uri' => 'http://' . $this->container->getHost() . ':'
                     . $this->container->getPort(80, $this->webService),
                 'browser' => 'chrome',
             ];
 
             $kernelOptions = []; # unused cause we do not extend class KernelTestCase
+
             $managerOptions = [
                 'goog:chromeOptions' => $chromeArgs,
             ];
+
             $driver = new PantherDriver($defaultOptions, $kernelOptions, $managerOptions);
             $driver->start();
         } catch (\Exception $e) {
@@ -606,12 +595,8 @@ class CentreonContext extends UtilsContext
         // Set session parameters.
         $this->setMinkParameter(
             'base_url',
-<<<<<<< HEAD
             'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService)
                 . '/centreon'
-=======
-            'http://' . $this->container->getContainerId($this->webService, false) . '/centreon'
->>>>>>> master
         );
 
         /**
@@ -619,12 +604,8 @@ class CentreonContext extends UtilsContext
          */
         $this->setMinkParameter(
             'api_base',
-<<<<<<< HEAD
             'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService)
                 . '/centreon'
-=======
-            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService) . '/centreon'
->>>>>>> master
         );
 
         // Real application test, create an API authentication token.
@@ -880,23 +861,6 @@ class CentreonContext extends UtilsContext
 
     /**
      *
-     * @param string $rrdMetricFile
-     * @return boolean
-     */
-    private function checkRrdFilesAreAvalaible($rrdMetricFile)
-    {
-        $rrdFileExist = false;
-        $output = $this->container->execute('ls ' . $rrdMetricFile .' 2>/dev/null', $this->webService, false);
-
-        if ($output['output'] === $rrdMetricFile) {
-            $rrdFileExist = true;
-        }
-
-        return $rrdFileExist;
-    }
-
-    /**
-     *
      * @param string $metricName
      * @param string $hostname
      * @param string $serviceDescription
@@ -930,6 +894,23 @@ class CentreonContext extends UtilsContext
             throw new \Exception('Cannot get RRD path in database.');
         }
         return $res['RRDdatabase_path'];
+    }
+
+    /**
+     *
+     * @param string $rrdMetricFile
+     * @return boolean
+     */
+    private function checkRrdFilesAreAvalaible($rrdMetricFile)
+    {
+        $rrdFileExist = false;
+        $output = $this->container->execute('ls ' . $rrdMetricFile .' 2>/dev/null', $this->webService, false);
+
+        if ($output['output'] === $rrdMetricFile) {
+            $rrdFileExist = true;
+        }
+
+        return $rrdFileExist;
     }
 
     /**
