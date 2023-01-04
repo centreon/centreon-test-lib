@@ -655,19 +655,20 @@ class UtilsContext extends RawMinkContext
 
             $url = 'http://' . $this->container->getHost() . ':' . $this->container->getPort(4444, 'webdriver')
                 . '/wd/hub';
+
             $driver = new \Behat\Mink\Driver\Selenium2Driver(
                 'chrome',
                 [
                     'chrome' => [
-                        'args' => $chromeArgs
+                        'switches' => $chromeArgs
                     ],
-                    'browserName' => 'chrome',
-                    'platform' => 'ANY',
-                    'browser' => 'chrome',
-                    'name' => 'Behat Test'
+                    'goog:chromeOptions' => [
+                        'w3c' => false
+                    ],
                 ],
                 $url
             );
+
             $driver->setTimeouts(array(
                 'page load' => 180000,
                 'script' => 180000
