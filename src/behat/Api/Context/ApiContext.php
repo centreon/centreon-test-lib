@@ -44,7 +44,7 @@ class ApiContext implements Context
     public $container;
 
     /**
-     * @var string
+     * @var string the service name of web container in docker compose file
      */
     protected $webService = 'web';
 
