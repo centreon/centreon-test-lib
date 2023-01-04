@@ -44,7 +44,7 @@ class Container
             . implode(
                 ' ',
                 array_map(
-                    fn (string $profile) => '--profile ' . $profile,
+                    fn (string $profile) => '--profile ' . escapeshellarg($profile),
                     $profiles
                 )
             )
