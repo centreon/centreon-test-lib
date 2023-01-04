@@ -790,23 +790,6 @@ class CentreonContext extends UtilsContext
 
     /**
      *
-     * @param string $rrdMetricFile
-     * @return boolean
-     */
-    private function checkRrdFilesAreAvalaible($rrdMetricFile)
-    {
-        $rrdFileExist = false;
-        $output = $this->container->execute('ls ' . $rrdMetricFile .' 2>/dev/null', 'web', false);
-
-        if ($output['output'] === $rrdMetricFile) {
-            $rrdFileExist = true;
-        }
-
-        return $rrdFileExist;
-    }
-
-    /**
-     *
      * @param string $metricName
      * @param string $hostname
      * @param string $serviceDescription
@@ -840,6 +823,23 @@ class CentreonContext extends UtilsContext
             throw new \Exception('Cannot get RRD path in database.');
         }
         return $res['RRDdatabase_path'];
+    }
+
+    /**
+     *
+     * @param string $rrdMetricFile
+     * @return boolean
+     */
+    private function checkRrdFilesAreAvalaible($rrdMetricFile)
+    {
+        $rrdFileExist = false;
+        $output = $this->container->execute('ls ' . $rrdMetricFile .' 2>/dev/null', 'web', false);
+
+        if ($output['output'] === $rrdMetricFile) {
+            $rrdFileExist = true;
+        }
+
+        return $rrdFileExist;
     }
 
     /**
