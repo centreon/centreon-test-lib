@@ -87,11 +87,12 @@ Trait RestContextTrait
     abstract protected function getBaseUri();
 
     /**
-     * @param string $name
-     * @return mixed
-     * @throws \Exception
+     * Replace custom variables
+     *
+     * @param string $value
+     * @return string
      */
-    abstract protected function getCustomVariable(string $name);
+    abstract protected function replaceCustomVariables(string $value): string;
 
     /**
      * Parse URI path
@@ -253,23 +254,6 @@ Trait RestContextTrait
             $this->locatePath($url),
             $parameters
         );
-    }
-
-    /**
-     * Replace custom variables
-     *
-     * @param string $value
-     * @return string
-     */
-    private function replaceCustomVariables(string $value): string
-    {
-        if (preg_match_all('/<([\w\d]+)>/', $value, $matches)) {
-            foreach ($matches[1] as $match) {
-                $value = str_replace('<' . $match . '>', $this->getCustomVariable($match), $value);
-            }
-        }
-
-        return $value;
     }
 
     /**
