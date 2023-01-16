@@ -55,6 +55,14 @@ Trait JsonContextTrait
     abstract protected function addCustomVariable(string $name, $value);
 
     /**
+     * Replace custom variables
+     *
+     * @param string $value
+     * @return string
+     */
+    abstract protected function replaceCustomVariables(string $value): string;
+
+    /**
      * @return JsonInspector
      */
     private function getInspector()
@@ -404,7 +412,7 @@ Trait JsonContextTrait
         $actual = $this->getJson();
 
         try {
-            $expected = new Json($content);
+            $expected = new Json((string) $this->replaceCustomVariables($content));
         } catch (\Exception $e) {
             throw new \Exception('The expected JSON is not a valid');
         }
