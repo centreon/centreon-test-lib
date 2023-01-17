@@ -412,7 +412,7 @@ Trait JsonContextTrait
         $actual = $this->getJson();
 
         try {
-            $expected = new Json((string) $this->replaceCustomVariables($content));
+            $expected = new Json($this->replaceCustomVariables($content));
         } catch (\Exception $e) {
             throw new \Exception('The expected JSON is not a valid');
         }
