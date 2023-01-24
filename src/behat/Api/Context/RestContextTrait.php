@@ -504,4 +504,12 @@ Trait RestContextTrait
             . $this->getHttpResponse()->getBody()->__toString();
         Assert::eq($expectedCode, $actualCode, $message);
     }
+
+    /**
+     * @Given I Wait until broker bulk is done
+     */
+    public function iWaitUntilBrokerBulkIsDone()
+    {
+        sleep(10);
+    }
 }
