@@ -497,7 +497,7 @@ class ApiContext implements Context
             function() {
                 $requestUri = $this->getBaseUri() . '/api/latest/';
                 $response = $this->iSendARequestTo('GET', $requestUri);
-                if ($response->getStatusCode() === 500) {
+                if ($response->getStatusCode() === 404) {
                     // it means symfony router is up and do not handle this route
                     return true;
                 } else {
