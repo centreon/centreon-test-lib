@@ -606,7 +606,7 @@ class CentreonContext extends UtilsContext
         $this->assertFindButton('Save')->click();
 
         // Wait
-        $this->getSession()->wait(5000);
+        $this->getSession()->wait(2000);
     }
 
     /**
