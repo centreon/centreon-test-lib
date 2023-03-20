@@ -703,13 +703,12 @@ class CentreonContext extends UtilsContext
     private function getEngineReloadCount(): int
     {
         $getEngineLogsCommand = 'cat /var/log/centreon-engine/centengine.log | grep "Configuration reloaded" | wc -l';
+
         $output = $this->container->execute(
             $getEngineLogsCommand,
             $this->webService,
-            false
+            true
         );
-
-        var_dump('count of reload : ' . (int) $output['output']);
 
         return (int) $output['output'];
     }
