@@ -673,6 +673,8 @@ class CentreonContext extends UtilsContext
      */
     public function reloadAllPollers()
     {
+        $reloadCount = $this->getEngineReloadCount();
+
         $page = new PollerConfigurationExportPage($this);
         $page->setProperties(array(
             'pollers' => 'all',
@@ -683,6 +685,32 @@ class CentreonContext extends UtilsContext
             'restart_method' => PollerConfigurationExportPage::METHOD_RELOAD
         ));
         $page->export();
+
+        $this->spin(
+            function($context) use ($reloadCount) {
+               return $context->getEngineReloadCount() > $reloadCount;
+            },
+            'centreon engine is not reloaded',
+            30
+        );
+    }
+
+    /**
+     * Get count of reload from centreon engine logs
+     *
+     * @return int
+     */
+    private function getEngineReloadCount(): int
+    {
+        $getEngineLogsCommand = 'grep "Configuration reloaded" /var/log/centreon-engine/centengine.log | wc -l';
+
+        $output = $this->container->execute(
+            $getEngineLogsCommand,
+            $this->webService,
+            true
+        );
+
+        return (int) $output['output'];
     }
 
     /**
