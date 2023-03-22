@@ -269,7 +269,18 @@ class UtilsContext extends RawMinkContext
      */
     public function selectInList($cssId, $value)
     {
-        $this->assertFind('css', $cssId)->selectOption($value);
+        $found = false;
+        $elements = $this->getSession()->getPage()->findAll('css', $cssId . ' option');
+        foreach ($elements as $element) {
+            if ($element->getText() == $value) {
+                $element->click();
+                $found = true;
+                break;
+            }
+        }
+        if (!$found) {
+            throw new \Exception('Could not find value ' . $value . ' in selection list ' . $cssId . '.');
+        }
     }
 
     /**
