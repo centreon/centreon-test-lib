@@ -257,6 +257,23 @@ class ApiContext implements Context
     }
 
     /**
+     * Replace custom variables
+     *
+     * @param string $value
+     * @return string
+     */
+    protected function replaceCustomVariables(string $value): string
+    {
+        if (preg_match_all('/<([\w\d]+)>/', $value, $matches)) {
+            foreach ($matches[1] as $match) {
+                $value = str_replace('<' . $match . '>', $this->getCustomVariable($match), $value);
+            }
+        }
+
+        return $value;
+    }
+
+    /**
      *  Set containers Compose files.
      */
     public function setContainersComposeFiles($files)
@@ -480,7 +497,7 @@ class ApiContext implements Context
             function() {
                 $requestUri = $this->getBaseUri() . '/api/latest/';
                 $response = $this->iSendARequestTo('GET', $requestUri);
-                if ($response->getStatusCode() === 500) {
+                if ($response->getStatusCode() === 404) {
                     // it means symfony router is up and do not handle this route
                     return true;
                 } else {
