@@ -249,9 +249,9 @@ class PhpCsFixerRuleSet
      *
      * @param string $directory
      *
-     * @return string|null
+     * @return string
      */
-    private static function detectCentreonProjectLicense(string $directory): ?string
+    private static function detectCentreonProjectLicense(string $directory): string
     {
         // "end" conditions -> '', '.', '/'
         while (\mb_strlen($directory) > 1) {
@@ -271,7 +271,7 @@ class PhpCsFixerRuleSet
             $directory = dirname($directory);
         }
 
-        return null;
+        return '';
     }
 
     /**
