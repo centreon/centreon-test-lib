@@ -31,11 +31,15 @@ class PhpCsFixerRuleSet
     private const LICENSES = [
         'centreon/centreon-test-lib' => self::LICENSE_APACHE,
         'centreon/centreon' => self::LICENSE_APACHE,
+        'centreon/centreon-anomaly-detection' => self::LICENSE_PRIVATE,
         'centreon/centreon-autodiscovery' => self::LICENSE_PRIVATE,
         'centreon/centreon-bam' => self::LICENSE_PRIVATE,
         'centreon/centreon-cloud-business-extensions' => self::LICENSE_PRIVATE,
         'centreon/centreon-cloud-extensions' => self::LICENSE_PRIVATE,
+        'centreon/centreon-it-edition-extensions' => self::LICENSE_PRIVATE,
         'centreon/centreon-license-manager' => self::LICENSE_PRIVATE,
+        'centreon/centreon-map' => self::LICENSE_PRIVATE,
+        'centreon/centreon-mbi' => self::LICENSE_PRIVATE,
         'centreon/centreon-pp-manager' => self::LICENSE_PRIVATE,
     ];
 
@@ -212,12 +216,7 @@ class PhpCsFixerRuleSet
 
         // Set the header dynamically based on the current detected project name.
         $projectLicense = self::detectCentreonProjectLicense(__DIR__);
-        $phpLicenseHeader = match ($projectLicense) {
-            self::LICENSE_APACHE => self::getHeaderLicenseApache(self::YEAR),
-            self::LICENSE_PRIVATE => self::getHeaderLicensePrivate(self::YEAR),
-            default => '',
-        };
-        if ($phpLicenseHeader) {
+        if ($phpLicenseHeader = self::getLicenseHeader($projectLicense)) {
             $rules += [
                 'header_comment' => [
                     'location' => 'after_open',
@@ -230,50 +229,19 @@ class PhpCsFixerRuleSet
     }
 
     /**
-     * Return the header for an Apache License.
+     * Return the header based on the project license type.
      *
-     * @param int $year
+     * @param string $projectLicense
      */
-    private static function getHeaderLicenseApache(int $year): string
+    private static function getLicenseHeader(string $projectLicense): string
     {
-        return <<<HEADER
-            Copyright 2005 - {$year} Centreon (https://www.centreon.com/)
+        $content = match ($projectLicense) {
+            self::LICENSE_APACHE => (string) file_get_contents(__DIR__ . '/license.apache.txt'),
+            self::LICENSE_PRIVATE => (string) file_get_contents(__DIR__ . '/license.private.txt'),
+            default => '',
+        };
 
-            Licensed under the Apache License, Version 2.0 (the "License");
-            you may not use this file except in compliance with the License.
-            You may obtain a copy of the License at
-
-            https://www.apache.org/licenses/LICENSE-2.0
-
-            Unless required by applicable law or agreed to in writing, software
-            distributed under the License is distributed on an "AS IS" BASIS,
-            WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-            See the License for the specific language governing permissions and
-            limitations under the License.
-
-            For more information : contact@centreon.com
-
-            HEADER;
-    }
-
-    /**
-     * Return the header for a private License.
-     *
-     * @param int $year
-     */
-    private static function getHeaderLicensePrivate(int $year): string
-    {
-        return <<<HEADER
-            Centreon
-
-            Copyright 2005 - {$year} Centreon (https://www.centreon.com/)
-
-            Unauthorized reproduction, copy and distribution
-            are not allowed.
-
-            For more information : contact@centreon.com
-
-            HEADER;
+        return str_replace('{YEAR}', (string) self::YEAR, $content);
     }
 
     /**
