@@ -220,7 +220,7 @@ class CentreonContext extends UtilsContext
                 . "########################\n"
                 . "# Browser console logs #\n"
                 . "########################\n\n";
-            file_put_contents($filename, $logTitle);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents(
                 $filename,
                 var_export($this->getSession()->getDriver()->getClient()->getWebDriver()->manage()->getLog('browser'), true),
@@ -231,7 +231,7 @@ class CentreonContext extends UtilsContext
                 . "##################\n"
                 . "# Webdriver logs #\n"
                 . "##################\n\n";
-            file_put_contents($filename, $logTitle);
+            file_put_contents($filename, $logTitle, FILE_APPEND);
             file_put_contents(
                 $filename,
                 shell_exec('cat /tmp/chromedriver.log 2>/dev/null'),
