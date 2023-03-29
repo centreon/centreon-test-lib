@@ -105,9 +105,15 @@ class CentreonContext extends UtilsContext
             $kernelOptions = []; # unused cause we do not extend class KernelTestCase
 
             $managerOptions = [
-                'goog:chromeOptions' => $chromeArgs,
-                'goog:loggingPrefs' => [
-                    'browser' => 'ALL', // calls to console.* methods
+                'capabilities' => [
+                    'goog:chromeOptions' => $chromeArgs,
+                    'goog:loggingPrefs' => [
+                        'browser' => 'ALL', // calls to console.* methods
+                    ],
+                ],
+                'chromedriver_arguments' => [
+                    '--log-path=/tmp/chromedriver.log',
+                    '--log-level=DEBUG'
                 ],
             ];
 
@@ -211,13 +217,24 @@ class CentreonContext extends UtilsContext
             file_put_contents($filename, $this->container->getLogs(), FILE_APPEND);
 
             $logTitle = "\n"
-                . "################\n"
-                . "# Browser logs #\n"
-                . "################\n\n";
+                . "########################\n"
+                . "# Browser console logs #\n"
+                . "########################\n\n";
             file_put_contents($filename, $logTitle);
             file_put_contents(
                 $filename,
-                $this->getSession()->getDriver()->getClient()->getWebDriver()->manage()->getLog('browser'),
+                implode("\n", $this->getSession()->getDriver()->getClient()->getWebDriver()->manage()->getLog('browser')),
+                FILE_APPEND
+            );
+
+            $logTitle = "\n"
+                . "##################\n"
+                . "# Webdriver logs #\n"
+                . "##################\n\n";
+            file_put_contents($filename, $logTitle);
+            file_put_contents(
+                $filename,
+                shell_exec('cat /tmp/chromedriver.log 2>/dev/null'),
                 FILE_APPEND
             );
 
