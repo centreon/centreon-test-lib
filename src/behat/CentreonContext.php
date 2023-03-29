@@ -223,7 +223,7 @@ class CentreonContext extends UtilsContext
             file_put_contents($filename, $logTitle);
             file_put_contents(
                 $filename,
-                implode("\n", $this->getSession()->getDriver()->getClient()->getWebDriver()->manage()->getLog('browser')),
+                var_export($this->getSession()->getDriver()->getClient()->getWebDriver()->manage()->getLog('browser'), true),
                 FILE_APPEND
             );
 
