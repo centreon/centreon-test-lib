@@ -106,6 +106,9 @@ class CentreonContext extends UtilsContext
 
             $managerOptions = [
                 'goog:chromeOptions' => $chromeArgs,
+                'goog:loggingPrefs' => [
+                    'browser' => 'ALL', // calls to console.* methods
+                ],
             ];
 
             $driver = new PantherDriver($defaultOptions, $kernelOptions, $managerOptions);
@@ -206,6 +209,17 @@ class CentreonContext extends UtilsContext
                 . "##################\n\n";
             file_put_contents($filename, $logTitle);
             file_put_contents($filename, $this->container->getLogs(), FILE_APPEND);
+
+            $logTitle = "\n"
+                . "################\n"
+                . "# Browser logs #\n"
+                . "################\n\n";
+            file_put_contents($filename, $logTitle);
+            file_put_contents(
+                $filename,
+                $this->getSession()->getDriver()->getClient()->getWebDriver()->manage()->getLog('browser'),
+                FILE_APPEND
+            );
 
             $logTitle = "\n\n"
                 . "################\n"
