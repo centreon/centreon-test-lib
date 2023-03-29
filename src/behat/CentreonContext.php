@@ -105,12 +105,12 @@ class CentreonContext extends UtilsContext
             $kernelOptions = []; # unused cause we do not extend class KernelTestCase
 
             $managerOptions = [
-                'capabilities' => [
+//                'capabilities' => [
                     'goog:chromeOptions' => $chromeArgs,
                     'goog:loggingPrefs' => [
                         'browser' => 'ALL', // calls to console.* methods
                     ],
-                ],
+//                ],
                 'chromedriver_arguments' => [
                     '--log-path=/tmp/chromedriver.log',
                     '--log-level=DEBUG'
