@@ -117,6 +117,9 @@ class CentreonContext extends UtilsContext
                 ],
             ];
 
+            $_SERVER['PANTHER_NO_SANDBOX'] = 1;
+            $_SERVER['PANTHER_CHROME_ARGUMENTS'] = implode(' ', $chromeArgs);
+
             $driver = new PantherDriver($defaultOptions, $kernelOptions, $managerOptions);
             $driver->start();
         } catch (\Exception $e) {
