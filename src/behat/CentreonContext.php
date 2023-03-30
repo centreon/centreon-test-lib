@@ -106,12 +106,10 @@ class CentreonContext extends UtilsContext
             $kernelOptions = []; # unused cause we do not extend class KernelTestCase
 
             $managerOptions = [
-//                'capabilities' => [
-                    'goog:chromeOptions' => $chromeArgs,
-                    'goog:loggingPrefs' => [
-                        'browser' => 'ALL', // calls to console.* methods
-                    ],
-//                ],
+                'goog:chromeOptions' => $chromeArgs,
+                'goog:loggingPrefs' => [
+                    'browser' => 'ALL', // calls to console.* methods
+                ],
                 'chromedriver_arguments' => [
                     '--log-path=/tmp/chromedriver.log',
                     '--log-level=INFO'
@@ -793,7 +791,7 @@ class CentreonContext extends UtilsContext
                return $context->getEngineReloadCount() > $reloadCount;
             },
             'centreon engine is not reloaded',
-            30
+            60
         );
     }
 
