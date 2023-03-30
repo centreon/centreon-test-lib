@@ -446,7 +446,6 @@ class CentreonContext extends UtilsContext
         curl_setopt($curlLogout, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($curlLogout, CURLOPT_TIMEOUT, 5);
         curl_setopt($curlLogout, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curlLogout, CURLOPT_POST, true);
         curl_exec($curlLogout);
         curl_close($curlLogout);
 
