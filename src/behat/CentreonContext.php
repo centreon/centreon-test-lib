@@ -811,7 +811,7 @@ class CentreonContext extends UtilsContext
             true
         );
 
-        return (int) $output['output'];
+        return is_numeric($output['output']) ? (int) $output['output'] : 0;
     }
 
     /**
