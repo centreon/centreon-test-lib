@@ -1088,31 +1088,31 @@ class CentreonContext extends UtilsContext
      */
     protected function comparePageProperties(ConfigurationPage $currentPage, array $expectedProperties): void
     {
-        $wrongProperties = [];
-        try {
-            $this->spin(
-                function () use ($currentPage, $expectedProperties, &$wrongProperties)  {
-                    $wrongProperties = [];
-                    $currentProperties = $currentPage->getProperties();
-                    foreach ($expectedProperties as $key => $value) {
+        $this->spin(
+            function () use ($currentPage, $expectedProperties)  {
+                $wrongProperties = [];
+                $currentProperties = $currentPage->getProperties();
+                foreach ($expectedProperties as $key => $value) {
+                    if ($value != $currentProperties[$key]) {
+                        if (is_array($value)) {
+                            $value = implode(' ', $value);
+                        }
                         if ($value != $currentProperties[$key]) {
-                            if (is_array($value)) {
-                                $value = implode(' ', $value);
-                            }
-                            if ($value != $currentProperties[$key]) {
-                                $wrongProperties[] = $key;
-                            }
+                            $wrongProperties[] = $key;
                         }
                     }
-                    return empty($wrongProperties);
-                },
-                "Some properties are not being updated : ",
-                30
-            );
-        } catch (\Exception $e) {
-            throw new \Exception(
-                "Some properties are not being updated : " . implode(',', array_unique($wrongProperties))
-            );
-        }
+                }
+
+                if (!empty($wrongProperties)) {
+                    throw new \Exception(
+                        "Some properties are not being updated : " . implode(',', array_unique($wrongProperties))
+                    );
+                }
+
+                return true;
+            },
+            "Load Timeout",
+            30
+        );
     }
 }
