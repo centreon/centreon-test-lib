@@ -54,27 +54,23 @@ class Container
             )
             . ' -p ' . $this->id . ' up -d --quiet-pull';
 
-        try {
-            $this->spin(
-                function ($context) use ($command) {
-                    passthru($command, $returnVar);
+        $this->spin(
+            function ($context) use ($command) {
+                passthru($command, $returnVar);
 
-                    if ($returnVar !== 0) {
-                        throw new \Exception(
-                            'Cannot execute container control command: '
-                            . $command. " \n "
-                            . ' (code ' . $returnVar . ')'
-                        );
-                    }
+                if ($returnVar !== 0) {
+                    throw new \Exception(
+                        'Cannot execute container control command: '
+                        . $command. " \n "
+                        . ' (code ' . $returnVar . ')'
+                    );
+                }
 
-                    return true;
-                },
-                'Cannot start docker containers',
-                30
-            );
-        } catch (\Exception $e) {
-            echo 'Exception: ' . $e->getMessage();
-        }
+                return true;
+            },
+            'Cannot start docker containers',
+            30
+        );
 
         $this->initContainersInfos();
     }
