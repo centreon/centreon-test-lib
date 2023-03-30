@@ -19,10 +19,12 @@
 namespace Centreon\Test\Behat;
 
 use Behat\MinkExtension\Context\RawMinkContext;
-use Centreon\Test\Behat\Exception\SpinStopException;
+use Centreon\Test\Behat\SpinTrait;
 
 class UtilsContext extends RawMinkContext
 {
+    use SpinTrait;
+
     const TIMEOUT_REACT = 3;
 
     /**
@@ -78,43 +80,6 @@ class UtilsContext extends RawMinkContext
             $this->getSession()->getDriver()->executeScript('window.confirm = function(){return true;}');
         } else {
             $this->getSession()->getDriver()->executeScript('window.confirm = function(){return false;}');
-        }
-    }
-
-    /**
-     * Waiting an action
-     *
-     * @param closure $closure The function to execute for test the loading.
-     * @param string $timeoutMsg The custom message on timeout.
-     * @param int $wait The timeout in seconds.
-     * @return bool
-     * @throws \Exception
-     */
-    public function spin($closure, $timeoutMsg = 'Load timeout', $wait = 60)
-    {
-        $limit = time() + $wait;
-        $lastException = null;
-        while (time() <= $limit) {
-            try {
-                if ($closure($this)) {
-                    return true;
-                }
-            } catch (SpinStopException $e) {
-                // stop spining
-                throw $e;
-            } catch (\Exception $e) {
-                $lastException = $e;
-            }
-            \usleep(100000);
-        }
-        if (is_null($lastException)) {
-            throw new \Exception($timeoutMsg);
-        } else {
-            throw new \Exception(
-                $timeoutMsg . ': ' . $lastException->getMessage() . ' (code ' .
-                $lastException->getCode() . ', file ' . $lastException->getFile() .
-                ':' . $lastException->getLine() . ')'
-            );
         }
     }
 

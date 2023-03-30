@@ -17,11 +17,15 @@
  */
 namespace Centreon\Test\Behat;
 
+use Centreon\Test\Behat\SpinTrait;
+
 /**
  *  Run a container and manage it.
  */
 class Container
 {
+    use SpinTrait;
+
     private $composeFile;
     private $id;
     private $host = null;
@@ -50,14 +54,26 @@ class Container
             )
             . ' -p ' . $this->id . ' up -d --quiet-pull';
 
-        passthru($command, $returnVar);
+        try {
+            $this->spin(
+                function ($context) use ($command) {
+                    passthru($command, $returnVar);
 
-        if ($returnVar !== 0) {
-            throw new \Exception(
-                'Cannot execute container control command: '
-                . $command. " \n "
-                . ' (code ' . $returnVar . ')'
+                    if ($returnVar !== 0) {
+                        throw new \Exception(
+                            'Cannot execute container control command: '
+                            . $command. " \n "
+                            . ' (code ' . $returnVar . ')'
+                        );
+                    }
+
+                    return true;
+                },
+                'Cannot start docker containers',
+                30
             );
+        } catch (\Exception $e) {
+            echo 'Exception: ' . $e->getMessage();
         }
 
         $this->initContainersInfos();
@@ -115,8 +131,19 @@ class Container
      */
     public function __destruct()
     {
-        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' kill');
-        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' down -v');
+        try {
+            $this->spin(
+                function ($context) {
+                    $context->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' kill');
+                    $context->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' down -v');
+                    return true;
+                },
+                'Cannot stop docker containers',
+                30
+            );
+        } catch (\Exception $e) {
+            echo 'Exception: ' . $e->getMessage();
+        }
     }
 
     /**
