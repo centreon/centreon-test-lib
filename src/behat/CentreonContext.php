@@ -20,6 +20,7 @@ namespace Centreon\Test\Behat;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Tester\Exception\PendingException;
+use Centreon\Test\Behat\ConfigurationPage;
 use Centreon\Test\Behat\Administration\LdapConfigurationPage;
 use Centreon\Test\Behat\External\LoginPage;
 use Centreon\Test\Behat\Configuration\PollerConfigurationExportPage;
@@ -1075,6 +1076,43 @@ class CentreonContext extends UtilsContext
 
         if (!fnmatch($result->getRaw(), $output)) {
             throw new \Exception("The result doesn't match: {$output}");
+        }
+    }
+
+    /**
+     * check if expected properties match current page properties
+     *
+     * @param ConfigurationPage $currentPage
+     * @param array $expectedProperties
+     * @throws \Exception
+     */
+    protected function comparePageProperties(ConfigurationPage $currentPage, array $expectedProperties): void
+    {
+        $wrongProperties = [];
+        try {
+            $this->spin(
+                function () use ($currentPage, $expectedProperties, &$wrongProperties)  {
+                    $wrongProperties = [];
+                    $currentProperties = $currentPage->getProperties();
+                    foreach ($expectedProperties as $key => $value) {
+                        if ($value != $currentProperties[$key]) {
+                            if (is_array($value)) {
+                                $value = implode(' ', $value);
+                            }
+                            if ($value != $currentProperties[$key]) {
+                                $wrongProperties[] = $key;
+                            }
+                        }
+                    }
+                    return empty($wrongProperties);
+                },
+                "Some properties are not being updated : ",
+                30
+            );
+        } catch (\Exception $e) {
+            throw new \Exception(
+                "Some properties are not being updated : " . implode(',', array_unique($wrongProperties))
+            );
         }
     }
 }
