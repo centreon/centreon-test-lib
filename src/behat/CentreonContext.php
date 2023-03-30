@@ -113,7 +113,7 @@ class CentreonContext extends UtilsContext
 //                ],
                 'chromedriver_arguments' => [
                     '--log-path=/tmp/chromedriver.log',
-                    '--log-level=DEBUG'
+                    '--log-level=INFO'
                 ],
             ];
 
