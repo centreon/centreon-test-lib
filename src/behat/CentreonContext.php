@@ -215,6 +215,23 @@ class CentreonContext extends UtilsContext
             file_put_contents($filename, $logTitle);
             file_put_contents($filename, $this->container->getLogs(), FILE_APPEND);
 
+            $driver = $this->getSession()->getDriver();
+            if ($driver instanceof \Behat\Mink\Driver\PantherDriver) {
+                $logTitle = "\n"
+                    . "########################\n"
+                    . "# Browser console logs #\n"
+                    . "########################\n\n";
+                file_put_contents($filename, $logTitle, FILE_APPEND);
+                file_put_contents(
+                    $filename,
+                    var_export(
+                        $driver->getClient()->getWebDriver()->manage()->getLog('browser'),
+                        true
+                    ),
+                    FILE_APPEND
+                );
+            }
+
             $logTitle = "\n\n"
                 . "################\n"
                 . "# Web App logs #\n"
