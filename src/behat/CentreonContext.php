@@ -111,10 +111,6 @@ class CentreonContext extends UtilsContext
                 'goog:loggingPrefs' => [
                     'browser' => 'ALL', // calls to console.* methods
                 ],
-                'chromedriver_arguments' => [
-                    '--log-path=/tmp/chromedriver.log',
-                    '--log-level=INFO'
-                ],
             ];
 
             $_SERVER['PANTHER_NO_SANDBOX'] = 1;
@@ -218,17 +214,6 @@ class CentreonContext extends UtilsContext
                 . "##################\n\n";
             file_put_contents($filename, $logTitle);
             file_put_contents($filename, $this->container->getLogs(), FILE_APPEND);
-
-            $logTitle = "\n"
-                . "########################\n"
-                . "# Browser console logs #\n"
-                . "########################\n\n";
-            file_put_contents($filename, $logTitle, FILE_APPEND);
-            file_put_contents(
-                $filename,
-                var_export($this->getSession()->getDriver()->getClient()->getWebDriver()->manage()->getLog('browser'), true),
-                FILE_APPEND
-            );
 
             $logTitle = "\n"
                 . "##################\n"
