@@ -208,23 +208,12 @@ class CentreonContext extends UtilsContext
                 . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-' . $scenarioTitle . '.txt';
 
             // Container logs.
-            $logTitle = "\n"
+            $logTitle = ''
                 . "##################\n"
                 . "# Container logs #\n"
                 . "##################\n\n";
             file_put_contents($filename, $logTitle);
             file_put_contents($filename, $this->container->getLogs(), FILE_APPEND);
-
-            $logTitle = "\n"
-                . "##################\n"
-                . "# Webdriver logs #\n"
-                . "##################\n\n";
-            file_put_contents($filename, $logTitle, FILE_APPEND);
-            file_put_contents(
-                $filename,
-                shell_exec('cat /tmp/chromedriver.log 2>/dev/null'),
-                FILE_APPEND
-            );
 
             $logTitle = "\n\n"
                 . "################\n"
