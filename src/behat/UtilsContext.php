@@ -386,6 +386,7 @@ class UtilsContext extends RawMinkContext
                 foreach ($chosenResults as $result) {
                     if (preg_match('/>(.+)</', $result->getHtml(), $matches) && $matches[1] == $what) {
                         $result->click();
+                        $select2Span->blur();
                         return true;
                     }
                 }

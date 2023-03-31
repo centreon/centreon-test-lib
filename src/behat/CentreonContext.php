@@ -1103,7 +1103,7 @@ class CentreonContext extends UtilsContext
                 return true;
             },
             "Load Timeout",
-            30
+            60
         );
     }
 }
