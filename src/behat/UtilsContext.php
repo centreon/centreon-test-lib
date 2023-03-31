@@ -373,7 +373,7 @@ class UtilsContext extends RawMinkContext
         );
 
         $this->spin(
-            function ($context) use ($what) {
+            function ($context) use ($what, $cssId) {
                 $chosenResults = [];
                 $select2Span = $context->assertFind('css', 'span.select2-results');
                 $chosenResults = $select2Span->findAll(
@@ -386,7 +386,7 @@ class UtilsContext extends RawMinkContext
                 foreach ($chosenResults as $result) {
                     if (preg_match('/>(.+)</', $result->getHtml(), $matches) && $matches[1] == $what) {
                         $result->click();
-                        $select2Span->blur();
+                        $context->assertFind('css', $cssId)->blur();
                         return true;
                     }
                 }
