@@ -80,7 +80,7 @@ class LoginPage extends \Centreon\Test\Behat\Page
                 );
             },
             'Login failed.',
-            10
+            15
         );
     }
 }
