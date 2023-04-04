@@ -125,12 +125,12 @@ class PollerConfigurationExportPage extends ConfigurationPage
                 $this->context->assertFind('css', '.popin-wrapper .button_group_center .btc.bt_success')->click();
                 $this->context->spin(
                     function () {
-                        return count(
+                        return empty(
                             $this->context->getSession()->getPage()->findAll(
                                 'css',
                                 '.select2-container--open li.select2-results__option'
                             )
-                        ) == 0;
+                        );
                     }
                 );
             } else {
