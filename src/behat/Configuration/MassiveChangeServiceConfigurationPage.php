@@ -413,7 +413,7 @@ class MassiveChangeServiceConfigurationPage extends \Centreon\Test\Behat\Configu
     /**
      *  Get macros.
      *
-     * @return macros
+     * @return array<string,string>
      */
     protected function getMacros()
     {
@@ -461,7 +461,7 @@ class MassiveChangeServiceConfigurationPage extends \Centreon\Test\Behat\Configu
                 $macros[$macroName] = $this->context->assertFind(
                     'css',
                     '#macroValue_' . $macroId
-                )->setValue($finalMacros[$macroNames[$i]]);
+                )->setValue((string) $finalMacros[$macroNames[$i]]);
             }
             $i++;
         }

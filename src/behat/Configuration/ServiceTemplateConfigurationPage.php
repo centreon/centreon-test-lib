@@ -421,7 +421,7 @@ class ServiceTemplateConfigurationPage extends \Centreon\Test\Behat\Configuratio
                 $macros[$macroName] = $this->context->assertFind(
                     'css',
                     '#macroValue_' . $macroId
-                )->setValue($finalMacros[$macroNames[$i]]);
+                )->setValue((string) $finalMacros[$macroNames[$i]]);
             }
             $i++;
         }

@@ -202,6 +202,27 @@ class Container
     }
 
     /**
+     * Get the container ip address of a service.
+     *
+     * @param string $service Service name.
+     * @return string
+     * @throws \Exception
+     */
+    public function getContainerIpAddress(string $service): string
+    {
+        $containerIpAddress = shell_exec(
+            "docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "
+            . $this->getContainerId($service, false)
+        );
+
+        if (!is_string($containerIpAddress)) {
+            throw new \Exception('Cannot retrieve container ip address of service ' . $service);
+        }
+
+        return $containerIpAddress;
+    }
+
+    /**
      *  Get the container(s) logs.
      *
      *  @param $service Service name.
