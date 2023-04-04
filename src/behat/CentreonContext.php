@@ -64,7 +64,7 @@ class CentreonContext extends UtilsContext
     /**
      *  Properly set WebDriver driver.
      */
-    public function setContainerWebDriver()
+    public function setContainerWebDriver(): void
     {
         try {
             $chromeArgs = [
@@ -119,7 +119,7 @@ class CentreonContext extends UtilsContext
             $driver = new PantherDriver($defaultOptions, $kernelOptions, $managerOptions);
             $driver->start();
         } catch (\Exception $e) {
-            throw new \Exception("Cannot instantiate panther driver : " . $e->getMessage());
+            throw new \Exception("Cannot instantiate panther driver : " . $e->getMessage(), (int) $e->getCode(), $e);
         }
 
         try {
@@ -129,8 +129,8 @@ class CentreonContext extends UtilsContext
             ]);
             $mink->setDefaultSessionName('panther');
             $this->setMink($mink);
-        } catch (\Exception $e) {
-            throw new \Exception("Cannot register mink session.\n" . $e->getMessage());
+        } catch (\Throwable $e) {
+            throw new \Exception("Cannot register mink session.\n" . $e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 

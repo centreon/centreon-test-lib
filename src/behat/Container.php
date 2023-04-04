@@ -137,7 +137,7 @@ class Container
                 'Cannot stop docker containers',
                 30
             );
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             echo 'Exception: ' . $e->getMessage();
         }
     }

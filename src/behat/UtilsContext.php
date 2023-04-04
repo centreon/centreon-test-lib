@@ -462,7 +462,7 @@ class UtilsContext extends RawMinkContext
                 'this error will not be displayed',
                 10
             );
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             // do not throw error cause it is possible that there is no iframe in the page
         }
     }

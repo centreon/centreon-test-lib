@@ -25,13 +25,13 @@ trait SpinTrait
     /**
      * Waiting an action
      *
-     * @param closure $closure The function to execute for test the loading.
+     * @param callable $closure The function to execute for test the loading.
      * @param string $timeoutMsg The custom message on timeout.
      * @param int $wait The timeout in seconds.
      * @return bool
      * @throws \Exception
      */
-    public function spin($closure, $timeoutMsg = 'Load timeout', $wait = 60)
+    public function spin(callable $closure, string $timeoutMsg = 'Load timeout', int $wait = 60)
     {
         $limit = time() + $wait;
         $lastException = null;
@@ -43,10 +43,10 @@ trait SpinTrait
             } catch (SpinStopException $e) {
                 // stop spining
                 throw $e;
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $lastException = $e;
             }
-            \usleep(100000);
+            \usleep(100_000);
         }
         if (is_null($lastException)) {
             throw new \Exception($timeoutMsg);
