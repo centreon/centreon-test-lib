@@ -154,7 +154,7 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
                 case 'select2':
                     $this->context->emptySelectTwo($propertyLocator);
                     if (!empty($value)) {
-                        $value = is_array($value) ? $value : array($value);
+                        $value = (array) $value;
                         foreach ($value as $element) {
                             $this->context->selectToSelectTwo($propertyLocator, $element);
                         }
