@@ -17,11 +17,15 @@
  */
 namespace Centreon\Test\Behat;
 
+use Centreon\Test\Behat\SpinTrait;
+
 /**
  *  Run a container and manage it.
  */
 class Container
 {
+    use SpinTrait;
+
     private $composeFile;
     private $id;
     private $host = null;
@@ -50,15 +54,23 @@ class Container
             )
             . ' -p ' . $this->id . ' up -d --quiet-pull';
 
-        passthru($command, $returnVar);
+        $this->spin(
+            function ($context) use ($command) {
+                passthru($command, $returnVar);
 
-        if ($returnVar !== 0) {
-            throw new \Exception(
-                'Cannot execute container control command: '
-                . $command. " \n "
-                . ' (code ' . $returnVar . ')'
-            );
-        }
+                if ($returnVar !== 0) {
+                    throw new \Exception(
+                        'Cannot execute container control command: '
+                        . $command. " \n "
+                        . ' (code ' . $returnVar . ')'
+                    );
+                }
+
+                return true;
+            },
+            'Cannot start docker containers',
+            30
+        );
 
         $this->initContainersInfos();
     }
@@ -115,8 +127,19 @@ class Container
      */
     public function __destruct()
     {
-        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' kill');
-        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' down -v');
+        try {
+            $this->spin(
+                function ($context) {
+                    $context->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' kill');
+                    $context->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' down -v');
+                    return true;
+                },
+                'Cannot stop docker containers',
+                30
+            );
+        } catch (\Throwable $e) {
+            echo 'Exception: ' . $e->getMessage();
+        }
     }
 
     /**
@@ -176,6 +199,27 @@ class Container
         return $longId
             ? $this->containerIds[$service]
             : substr($this->containerIds[$service], 0, 12);
+    }
+
+    /**
+     * Get the container ip address of a service.
+     *
+     * @param string $service Service name.
+     * @return string
+     * @throws \Exception
+     */
+    public function getContainerIpAddress(string $service): string
+    {
+        $containerIpAddress = shell_exec(
+            "docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "
+            . $this->getContainerId($service, false)
+        );
+
+        if (!is_string($containerIpAddress)) {
+            throw new \Exception('Cannot retrieve container ip address of service ' . $service);
+        }
+
+        return $containerIpAddress;
     }
 
     /**

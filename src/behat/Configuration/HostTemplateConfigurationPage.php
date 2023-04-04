@@ -455,7 +455,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
                 $macros[$macroName] = $this->context->assertFind(
                     'css',
                     '#macroValue_' . $macroId
-                )->setValue($finalMacros[$macroNames[$i]]);
+                )->setValue((string) $finalMacros[$macroNames[$i]]);
             }
             $i++;
         }

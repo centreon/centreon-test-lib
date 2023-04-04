@@ -55,7 +55,7 @@ class MetaServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
             'input[name="regexp_str"]'
         ),
         'metric' => array(
-            'select',
+            'select2',
             'select[name="metric"]'
         ),
         'check_period' => array(

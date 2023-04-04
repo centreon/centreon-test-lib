@@ -113,14 +113,25 @@ class PollerConfigurationExportPage extends ConfigurationPage
 
         foreach ($pollers as $poller) {
             if ('all' == $poller) {
-                $this->context->assertFind('css', '.select2-search__field')->click();
-                $this->context->assertFindButton('Select all')->click();
+                $this->context->assertFind('css', 'select#nhost')
+                    ->getParent()->find('css', '.select2-selection')->press();
+                $this->context->assertFind('css', '.select2-results-header__select-all > button')->press();
+                $this->context->spin(
+                    function () {
+                        return $this->context->getSession()->getPage()->has('css', '.centreon-popin .popin-wrapper');
+                    }
+                );
+
                 $this->context->assertFind('css', '.popin-wrapper .button_group_center .btc.bt_success')->click();
                 $this->context->spin(
                     function () {
-                        return !$this->context->assertFind('css', '.centreon-popin')->isVisible();
-                    },
-                    'Select all confirmation popin did not close properly.'
+                        return empty(
+                            $this->context->getSession()->getPage()->findAll(
+                                'css',
+                                '.select2-container--open li.select2-results__option'
+                            )
+                        );
+                    }
                 );
             } else {
                 $this->context->selectToSelectTwo('select#nhost', $poller);

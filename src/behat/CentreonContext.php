@@ -20,6 +20,7 @@ namespace Centreon\Test\Behat;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Tester\Exception\PendingException;
+use Centreon\Test\Behat\ConfigurationPage;
 use Centreon\Test\Behat\Administration\LdapConfigurationPage;
 use Centreon\Test\Behat\External\LoginPage;
 use Centreon\Test\Behat\Configuration\PollerConfigurationExportPage;
@@ -29,6 +30,9 @@ use Centreon\Test\Behat\Monitoring\ServiceMonitoringDetailsPage;
 use Centreon\Test\Behat\Administration\ParametersCentreonUiPage;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
+use Behat\Mink\Mink;
+use Behat\Mink\Session;
+use Behat\Mink\Driver\PantherDriver;
 
 class CentreonContext extends UtilsContext
 {
@@ -55,6 +59,79 @@ class CentreonContext extends UtilsContext
     public function __construct($parameters = array())
     {
         parent::__construct($parameters);
+    }
+
+    /**
+     *  Properly set WebDriver driver.
+     */
+    public function setContainerWebDriver(): void
+    {
+        try {
+            $chromeArgs = [
+                '--disable-infobars',
+                '--disable-site-isolation-trials',
+                '--no-sandbox',
+                '--headless',
+                '--disable-gpu',
+                '--disable-extensions',
+                '–-disable-images',
+                '--hide-icons',
+                '--no-default-browser-check',
+                '--no-experiments',
+                '--no-first-run',
+                '--no-initial-navigation',
+                '--no-startup-window',
+                '--no-wifi',
+                '--suppress-message-center-popups',
+                '--disable-extensions',
+                '--disable-browser-side-navigation',
+                '--dns-prefetch-disable',
+                'enable-automation',
+                'start-maximized',
+                '--log-level=3',
+                '--disable-dev-shm-usage',
+                '--disable-popup-blocking',
+                '--disable-application-cache',
+                '--disable-web-security',
+                '--start-maximized',
+                '--ignore-certificate-errors',
+                '--window-size=1600,4000',
+            ];
+
+            $defaultOptions = [
+                'external_base_uri' => 'http://' . $this->container->getHost() . ':'
+                    . $this->container->getPort(80, $this->webService),
+                'browser' => 'chrome',
+            ];
+
+            $kernelOptions = []; # unused cause we do not extend class KernelTestCase
+
+            $managerOptions = [
+                'goog:chromeOptions' => $chromeArgs,
+                'goog:loggingPrefs' => [
+                    'browser' => 'ALL', // calls to console.* methods
+                ],
+            ];
+
+            $_SERVER['PANTHER_NO_SANDBOX'] = 1;
+            $_SERVER['PANTHER_CHROME_ARGUMENTS'] = implode(' ', $chromeArgs);
+
+            $driver = new PantherDriver($defaultOptions, $kernelOptions, $managerOptions);
+            $driver->start();
+        } catch (\Exception $e) {
+            throw new \Exception("Cannot instantiate panther driver : " . $e->getMessage(), (int) $e->getCode(), $e);
+        }
+
+        try {
+            $session = new Session($driver);
+            $mink = new Mink([
+                'panther' => $session,
+            ]);
+            $mink->setDefaultSessionName('panther');
+            $this->setMink($mink);
+        } catch (\Throwable $e) {
+            throw new \Exception("Cannot register mink session.\n" . $e->getMessage(), (int) $e->getCode(), $e);
+        }
     }
 
     /**
@@ -131,12 +208,29 @@ class CentreonContext extends UtilsContext
                 . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-' . $scenarioTitle . '.txt';
 
             // Container logs.
-            $logTitle = "\n"
+            $logTitle = ''
                 . "##################\n"
                 . "# Container logs #\n"
                 . "##################\n\n";
             file_put_contents($filename, $logTitle);
             file_put_contents($filename, $this->container->getLogs(), FILE_APPEND);
+
+            $driver = $this->getSession()->getDriver();
+            if ($driver instanceof \Behat\Mink\Driver\PantherDriver) {
+                $logTitle = "\n"
+                    . "########################\n"
+                    . "# Browser console logs #\n"
+                    . "########################\n\n";
+                file_put_contents($filename, $logTitle, FILE_APPEND);
+                file_put_contents(
+                    $filename,
+                    var_export(
+                        $driver->getClient()->getWebDriver()->manage()->getLog('browser'),
+                        true
+                    ),
+                    FILE_APPEND
+                );
+            }
 
             $logTitle = "\n\n"
                 . "################\n"
@@ -295,9 +389,6 @@ class CentreonContext extends UtilsContext
         // Mandatory with the new version of behat/mink
         // A call on the 'visit' method must be perform to start a session.
         $page = new LoginPage($this);
-
-        // Set Window Size
-        $this->getSession()->resizeWindow(1600, 4000);
 
         // Prepare credentials.
         $user = 'admin';
@@ -525,7 +616,8 @@ class CentreonContext extends UtilsContext
         // Set session parameters.
         $this->setMinkParameter(
             'base_url',
-            'http://' . $this->container->getContainerId($this->webService, false) . '/centreon'
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService)
+                . '/centreon'
         );
 
         /**
@@ -533,7 +625,8 @@ class CentreonContext extends UtilsContext
          */
         $this->setMinkParameter(
             'api_base',
-            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService) . '/centreon'
+            'http://' . $this->container->getHost() . ':' . $this->container->getPort(80, $this->webService)
+                . '/centreon'
         );
 
         // Real application test, create an API authentication token.
@@ -690,7 +783,7 @@ class CentreonContext extends UtilsContext
                return $context->getEngineReloadCount() > $reloadCount;
             },
             'centreon engine is not reloaded',
-            30
+            60
         );
     }
 
@@ -709,7 +802,7 @@ class CentreonContext extends UtilsContext
             true
         );
 
-        return (int) $output['output'];
+        return is_numeric($output['output']) ? (int) $output['output'] : 0;
     }
 
     /**
@@ -860,7 +953,7 @@ class CentreonContext extends UtilsContext
     private function checkRrdFilesAreAvalaible($rrdMetricFile)
     {
         $rrdFileExist = false;
-        $output = $this->container->execute('ls ' . $rrdMetricFile .' 2>/dev/null', 'web', false);
+        $output = $this->container->execute('ls ' . $rrdMetricFile .' 2>/dev/null', $this->webService, false);
 
         if ($output['output'] === $rrdMetricFile) {
             $rrdFileExist = true;
@@ -975,5 +1068,42 @@ class CentreonContext extends UtilsContext
         if (!fnmatch($result->getRaw(), $output)) {
             throw new \Exception("The result doesn't match: {$output}");
         }
+    }
+
+    /**
+     * check if expected properties match current page properties
+     *
+     * @param ConfigurationPage $currentPage
+     * @param array $expectedProperties
+     * @throws \Exception
+     */
+    protected function comparePageProperties(ConfigurationPage $currentPage, array $expectedProperties): void
+    {
+        $this->spin(
+            function () use ($currentPage, $expectedProperties)  {
+                $wrongProperties = [];
+                $currentProperties = $currentPage->getProperties();
+                foreach ($expectedProperties as $key => $value) {
+                    if ($value != $currentProperties[$key]) {
+                        if (is_array($value)) {
+                            $value = implode(' ', $value);
+                        }
+                        if ($value != $currentProperties[$key]) {
+                            $wrongProperties[] = $key;
+                        }
+                    }
+                }
+
+                if (!empty($wrongProperties)) {
+                    throw new \Exception(
+                        "Some properties are not being updated : " . implode(',', array_unique($wrongProperties))
+                    );
+                }
+
+                return true;
+            },
+            "Load Timeout",
+            60
+        );
     }
 }

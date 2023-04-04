@@ -428,7 +428,7 @@ class HostGroupServiceConfigurationPage extends \Centreon\Test\Behat\Configurati
                 $macros[$macroName] = $this->context->assertFind(
                     'css',
                     '#macroValue_' . $macroId
-                )->setValue($finalMacros[$macroNames[$i]]);
+                )->setValue((string) $finalMacros[$macroNames[$i]]);
             }
             $i++;
         }

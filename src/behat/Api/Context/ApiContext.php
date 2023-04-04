@@ -28,13 +28,14 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpClient\HttpClient;
 use Centreon\Test\Behat\Container;
+use Centreon\Test\Behat\SpinTrait;
 
 /**
  * This context class contains the main definitions of the steps used by contexts to validate API
  */
 class ApiContext implements Context
 {
-    use JsonContextTrait, RestContextTrait, CentreonClapiContextTrait, FileSystemContextTrait;
+    use SpinTrait, JsonContextTrait, RestContextTrait, CentreonClapiContextTrait, FileSystemContextTrait;
 
     public const ROOT_PATH = '/centreon';
 
@@ -512,40 +513,6 @@ class ApiContext implements Context
             'timeout',
             15
         );
-    }
-
-    /**
-     * Waiting an action
-     *
-     * @param \Closure $closure The function to execute for test the loading.
-     * @param string $timeoutMsg The custom message on timeout.
-     * @param int $wait The timeout in seconds.
-     * @return bool
-     * @throws \Exception
-     */
-    public function spin(\Closure $closure, string $timeoutMsg = 'Load timeout', int $wait = 60)
-    {
-        $limit = time() + $wait;
-        $lastException = null;
-        while (time() <= $limit) {
-            try {
-                if ($closure($this)) {
-                    return true;
-                }
-            } catch (\Exception $e) {
-                $lastException = $e;
-            }
-            sleep(1);
-        }
-        if (is_null($lastException)) {
-            throw new \Exception($timeoutMsg);
-        } else {
-            throw new \Exception(
-                $timeoutMsg . ': ' . $lastException->getMessage() . ' (code ' .
-                $lastException->getCode() . ', file ' . $lastException->getFile() .
-                ':' . $lastException->getLine() . ', trace : ' . $lastException->getTraceAsString() . ')'
-            );
-        }
     }
 
     /**
