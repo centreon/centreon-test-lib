@@ -58,7 +58,7 @@ class CustomViewsPage extends \Centreon\Test\Behat\Page
     {
         $this->context->spin(
             function ($context) use ($show) {
-                $context->toggleEditBar($show);
+                $this->toggleEditBar($show);
                 $barVisible = $context->assertFind('css', 'button.addView')->isVisible();
                 return $show == $barVisible;
             },
