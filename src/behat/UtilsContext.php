@@ -357,75 +357,25 @@ class UtilsContext extends RawMinkContext
      */
     public function selectToSelectTwo($cssId, $what)
     {
-        /*
-        $this->getSession()->evaluateScript(
-            <<<JS
-                (function() {
-                    $('{$cssId}').select2('close');
-                    //$('{$cssId}').select2('open');
-
-                    // Get the search box within the dropdown or the selection
-                    // Dropdown = single, Selection = multiple
-                    let \$search = $('{$cssId}').data('select2').dropdown.\$search || $('{$cssId}').data('select2').selection.\$search;
-                    // This is undocumented and may change in the future
-
-                    \$search.val('{$what}');
-                    \$search.trigger('input');
-
-                    //$('{$cssId}').val(['{$what}']);
-                    //$('{$cssId}').trigger('change');
-                })();
-            JS
-        );
-        */
-
-        /*
-        // Open select2.
-        $this->assertFind('css', $cssId)->getParent()->find('css', 'span.select2-selection')->click();
-
-        $this->spin(
-            function ($context) {
-                return $context->assertFind('css', '.select2-container--open .select2-search__field')->isVisible();
-            },
-            'Cannot set select2 ' . $cssId . ' active'
-        );
-
-        // Set search.
-        $this->getSession()->evaluateScript(
-            'jQuery(".select2-container--open .select2-search__field").val(`' . $what . '`).trigger("keyup")'
-        );
-        */
-
-        //sleep(3);
-
         $this->spin(
             function ($context) use ($what, $cssId) {
                 $context->getSession()->evaluateScript(
                     <<<JS
                         (function() {
-                            //$('{$cssId}').select2('close');
-                            //$('{$cssId}').select2('open');
-
-                            // Get the search box within the dropdown or the selection
-                            // Dropdown = single, Selection = multiple
                             let \$search = $('{$cssId}').data('select2').dropdown.\$search || $('{$cssId}').data('select2').selection.\$search;
-                            // This is undocumented and may change in the future
-
                             \$search.val('{$what}');
                             \$search.trigger('input');
-
-                            //$('{$cssId}').val(['{$what}']);
-                            //$('{$cssId}').trigger('change');
                         })();
                     JS
                 );
 
+                // close select2 if option is already selected
                 if (
                     $context->getSession()->getPage()->has(
                         'css',
                         'span.select2-results '
-                        . 'li.select2-results__option:not(.loading-results):not(.select2-results__message)'
-                        . '[aria-selected="true"] > div[title="' . $what . '"]'
+                            . 'li.select2-results__option:not(.loading-results):not(.select2-results__message)'
+                            . '[aria-selected="true"] > div[title="' . $what . '"]'
                     )
                 ) {
                     $this->getSession()->evaluateScript(
@@ -438,15 +388,14 @@ class UtilsContext extends RawMinkContext
 
                     return true;
                 }
-                //$select2Span = $context->assertFind('css', 'span.select2-results');
-                $option = $context->assertFind(
+
+                // focus select2 option
+                $context->assertFind(
                     'css',
                     'span.select2-results '
-                    . 'li.select2-results__option:not(.loading-results):not(.select2-results__message)'
-                    . '[aria-selected="false"] > div[title="' . $what . '"]'
-                );
-
-                $option->focus();
+                        . 'li.select2-results__option:not(.loading-results):not(.select2-results__message)'
+                        . '[aria-selected="false"] > div[title="' . $what . '"]'
+                )->focus();
 
                 $context->spin(
                     function ($context) {
@@ -459,48 +408,31 @@ class UtilsContext extends RawMinkContext
                 $context->getSession()->evaluateScript(
                     <<<JS
                         (function() {
-                            /*
-                            let e = $.Event("keypress");
-                            e.which = 13;
-                            e.keyCode = 13;
-                            $('li.select2-results__option--highlighted > div').focus();
-                            //$('li.select2-results__option--highlighted > div').trigger(e);
-                            $('li.select2-results__option--highlighted > div').click();
-                            $('{$cssId}').trigger('change');
-                            */
                             $('.select2-results__option > div[title="{$what}"]').trigger('mouseup');
                             let \$search = $('{$cssId}').data('select2').dropdown.\$search || $('{$cssId}').data('select2').selection.\$search;
                             \$search.val(null);
-                            //$('{$cssId}').select2('close');
                         })();
                     JS
                 );
 
-                //$option->click();
-
                 return true;
-                /*
-                $chosenResults = $select2Span->findAll(
-                    'css',
-                    'li.select2-results__option:not(.loading-results):not(.select2-results__message)[aria-selected="false"] > div[title="' . $what . '"]'
-                );
-                if (count($chosenResults) === 0) {
-                    return false;
-                }
-                foreach ($chosenResults as $result) {
-                    if (preg_match('/>(.+)</', $result->getHtml(), $matches) && $matches[1] == $what) {
-                        $result->click();
-                        $context->assertFind('css', $cssId)->blur();
-                        return true;
-                    }
-                }
-                return false;
-                */
             },
             'Cannot find results in select2 ' . $cssId,
             10
         );
 
+        $this->closeSelectTwo($cssId);
+    }
+
+    /**
+     * Close select2 input
+     *
+     * @param string $cssId
+     * @return void
+     * @throws \Exception
+     */
+    private function closeSelectTwo(string $cssId): void
+    {
         $this->spin(
             function ($context) use ($cssId) {
                 $isOpen = $context->assertFind('css', $cssId)->getParent()->has('css', '.select2-container--open');
