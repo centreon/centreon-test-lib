@@ -428,7 +428,7 @@ class UtilsContext extends RawMinkContext
                             $('{$cssId}').trigger('change');
                             */
                             $('.select2-results__option > div[title="{$what}"]').trigger('mouseup');
-                            $('{$cssId}').select2('close');
+                            //$('{$cssId}').select2('close');
                         })();
                     JS
                 );
