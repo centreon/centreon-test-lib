@@ -415,7 +415,6 @@ class UtilsContext extends RawMinkContext
                     5,
                 );
 
-                var_dump(
                 $context->getSession()->evaluateScript(
                     <<<JS
                         (function() {
@@ -432,7 +431,6 @@ class UtilsContext extends RawMinkContext
                             $('{$cssId}').select2('close');
                         })();
                     JS
-                )
                 );
 
                 //$option->click();
