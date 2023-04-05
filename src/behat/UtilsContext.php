@@ -403,7 +403,7 @@ class UtilsContext extends RawMinkContext
                 $context->getSession()->evaluateScript(
                     <<<JS
                         (function() {
-                            $('{$cssId}').select2('close');
+                            //$('{$cssId}').select2('close');
                             //$('{$cssId}').select2('open');
 
                             // Get the search box within the dropdown or the selection
