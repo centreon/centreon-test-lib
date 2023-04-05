@@ -409,7 +409,7 @@ class UtilsContext extends RawMinkContext
 
                 $context->spin(
                     function ($context) {
-                        $context->getSession()->getPage()->has('css', 'li.select2-results__option--highlighted');
+                        return $context->getSession()->getPage()->has('css', 'li.select2-results__option--highlighted');
                     },
                     'select2 option ' . $what . ' is not focused',
                     5,
