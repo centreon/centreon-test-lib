@@ -360,6 +360,7 @@ class UtilsContext extends RawMinkContext
         $this->getSession()->evaluateScript(
             <<<JS
                 (function() {
+                    $('{$cssId}').select2('close');
                     //$('{$cssId}').select2('open');
 
                     // Get the search box within the dropdown or the selection
@@ -397,6 +398,24 @@ class UtilsContext extends RawMinkContext
 
         $this->spin(
             function ($context) use ($what, $cssId) {
+                if (
+                    $context->getSession()->getPage()->has(
+                        'css',
+                        'span.select2-results '
+                        . 'li.select2-results__option:not(.loading-results):not(.select2-results__message)'
+                        . '[aria-selected="true"] > div[title="' . $what . '"]'
+                    )
+                ) {
+                    $this->getSession()->evaluateScript(
+                        <<<JS
+                            (function() {
+                                $('{$cssId}').select2('close');
+                            })();
+                        JS
+                    );
+
+                    return true;
+                }
                 //$select2Span = $context->assertFind('css', 'span.select2-results');
                 $option = $context->assertFind(
                     'css',
