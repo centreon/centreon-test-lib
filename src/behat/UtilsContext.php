@@ -357,6 +357,7 @@ class UtilsContext extends RawMinkContext
      */
     public function selectToSelectTwo($cssId, $what)
     {
+        /*
         $this->getSession()->evaluateScript(
             <<<JS
                 (function() {
@@ -376,6 +377,7 @@ class UtilsContext extends RawMinkContext
                 })();
             JS
         );
+        */
 
         /*
         // Open select2.
@@ -398,6 +400,26 @@ class UtilsContext extends RawMinkContext
 
         $this->spin(
             function ($context) use ($what, $cssId) {
+                $context->getSession()->evaluateScript(
+                    <<<JS
+                        (function() {
+                            $('{$cssId}').select2('close');
+                            //$('{$cssId}').select2('open');
+
+                            // Get the search box within the dropdown or the selection
+                            // Dropdown = single, Selection = multiple
+                            let \$search = $('{$cssId}').data('select2').dropdown.\$search || $('{$cssId}').data('select2').selection.\$search;
+                            // This is undocumented and may change in the future
+
+                            \$search.val('{$what}');
+                            \$search.trigger('input');
+
+                            //$('{$cssId}').val(['{$what}']);
+                            //$('{$cssId}').trigger('change');
+                        })();
+                    JS
+                );
+
                 if (
                     $context->getSession()->getPage()->has(
                         'css',
@@ -447,6 +469,8 @@ class UtilsContext extends RawMinkContext
                             $('{$cssId}').trigger('change');
                             */
                             $('.select2-results__option > div[title="{$what}"]').trigger('mouseup');
+                            let \$search = $('{$cssId}').data('select2').dropdown.\$search || $('{$cssId}').data('select2').selection.\$search;
+                            \$search.val(null);
                             //$('{$cssId}').select2('close');
                         })();
                     JS
@@ -479,8 +503,20 @@ class UtilsContext extends RawMinkContext
 
         $this->spin(
             function ($context) use ($cssId) {
-                return $context->assertFind('css', $cssId)->getParent()
-                    ->has('css', '.select2-container--open') === false;
+                $isOpen = $context->assertFind('css', $cssId)->getParent()->has('css', '.select2-container--open');
+                if (!$isOpen) {
+                    return true;
+                }
+
+                $context->getSession()->evaluateScript(
+                    <<<JS
+                        (function() {
+                            $('{$cssId}').select2('close');
+                        })();
+                    JS
+                );
+
+                return false;
             },
             'select2 ' . $cssId . ' is not closed'
         );
