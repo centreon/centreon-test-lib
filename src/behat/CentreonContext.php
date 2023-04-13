@@ -559,7 +559,7 @@ class CentreonContext extends UtilsContext
     {
         if (!isset($this->dbCentreon)) {
             $dsn = 'mysql:dbname=centreon;host=' . $this->container->getContainerIpAddress($this->webService)
-                . ';port=' . $this->container->getPort(3306, $this->webService);
+                . ';port=3306';
             $this->dbCentreon = new \PDO(
                 $dsn,
                 'root',
@@ -579,7 +579,7 @@ class CentreonContext extends UtilsContext
     {
         if (!isset($this->dbStorage)) {
             $dsn = 'mysql:dbname=centreon_storage;host=' . $this->container->getContainerIpAddress($this->webService)
-                . ';port=' . $this->container->getPort(3306, $this->webService);
+                . ';port=3306';
             $this->dbStorage = new \PDO(
                 $dsn,
                 'root',
