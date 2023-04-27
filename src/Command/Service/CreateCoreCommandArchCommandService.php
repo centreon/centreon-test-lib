@@ -104,7 +104,7 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
             );
             $output->writeln(
                 '<info>Using Existing Repository : ' . $this->writeRepositoryTemplate->namespace . '\\'
-                    . $this->repositoryInterfaceTemplate->name . '</info>'
+                    . $this->writeRepositoryTemplate->name . '</info>'
             );
         }
         $output->writeln('<comment>' . $filePath . '</comment>');
