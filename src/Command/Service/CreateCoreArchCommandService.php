@@ -15,6 +15,8 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class CreateCoreArchCommandService
 {
+    private const REPO_PREFIX = 'centreon/centreon';
+
     protected RepositoryInterfaceTemplate $repositoryInterfaceTemplate;
 
     /**
@@ -191,7 +193,7 @@ class CreateCoreArchCommandService
                     . $this->repositoryInterfaceTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $filePath . '</comment>');
+        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
     }
 
@@ -229,7 +231,16 @@ class CreateCoreArchCommandService
                 . $className . '</info>'
             );
         }
-        $output->writeln('<comment>' . $filePath . '</comment>');
+        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
+    }
+
+    /**
+     * @param string $filePath
+     * @return string
+     */
+    public function getRelativeFilePath(string $filePath): string
+    {
+        return substr($filePath, strpos($filePath, self::REPO_PREFIX));
     }
 }

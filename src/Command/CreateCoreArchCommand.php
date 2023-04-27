@@ -86,7 +86,7 @@ class CreateCoreArchCommand extends Command
                 '<info>Using Existing Model : ' . $this->modelTemplate->namespace . '\\' . $this->modelTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $this->modelTemplate->filePath . '</comment>');
+        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($this->modelTemplate->filePath) . '</comment>');
         $output->writeln("");
         if ($this->isACommandUseCase()) {
             $this->createCommandArch($output);

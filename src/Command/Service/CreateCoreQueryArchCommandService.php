@@ -66,7 +66,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                     . $this->repositoryInterfaceTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $filePath . '</comment>');
+        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
     }
 
@@ -119,7 +119,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                     . $this->writeRepositoryTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $filePath . '</comment>');
+        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
     }
 
@@ -174,7 +174,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                     . $this->responseDtoTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $filePath . '</comment>');
+        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
     }
 
@@ -221,7 +221,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                     . $this->commandPresenterInterfaceTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $filePath . '</comment>');
+        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
     }
 
@@ -270,7 +270,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                     . $this->CommandPresenterTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $filePath . '</comment>');
+        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
     }
 
@@ -324,7 +324,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                     . $this->queryUseCaseTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $filePath . '</comment>');
+        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
 
         $this->createUnitTestFileIfNotExists($output, $this->queryUseCaseTemplate);
@@ -377,7 +377,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                     . $this->queryControllerTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $filePath . '</comment>');
+        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
 
         $this->createUnitTestFileIfNotExists($output, $this->queryControllerTemplate);
@@ -431,7 +431,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                     . $this->factoryTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $filePath . '</comment>');
+        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
 
         $this->createUnitTestFileIfNotExists($output, $this->factoryTemplate);
