@@ -13,6 +13,7 @@ class PresenterTemplate extends FileTemplate
         public PresenterInterfaceTemplate $presenterInterface,
         public bool $exists = false
     ) {
+        parent::__construct();
     }
 
     public function generateModelContent(): string

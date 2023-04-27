@@ -20,7 +20,7 @@ class QueryUseCaseTemplate extends FileTemplate
         public bool $exists = false,
         public ModelTemplate $model
     ) {
-
+        parent::__construct();
     }
 
     public function generateModelContent(): string

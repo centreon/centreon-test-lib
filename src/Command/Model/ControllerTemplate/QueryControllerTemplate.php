@@ -16,6 +16,7 @@ class QueryControllerTemplate extends FileTemplate
         public PresenterInterfaceTemplate $presenter,
         public bool $exists = false
     ) {
+        parent::__construct();
     }
 
     public function generateModelContent(): string

@@ -6,6 +6,11 @@ use Centreon\Command\Model\FileTemplate;
 
 class UnitTestTemplate extends FileTemplate
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function generateContentForUnitTest(string $fileNamespace)
     {
         $namespace = $fileNamespace;

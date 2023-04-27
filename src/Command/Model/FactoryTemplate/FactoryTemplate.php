@@ -14,6 +14,7 @@ class FactoryTemplate extends FileTemplate
         public ModelTemplate $modelTemplate,
         public bool $exists = false
     ) {
+        parent::__construct();
     }
 
     public function generateModelContent(): string

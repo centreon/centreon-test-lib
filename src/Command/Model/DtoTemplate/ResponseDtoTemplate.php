@@ -12,6 +12,7 @@ class ResponseDtoTemplate extends FileTemplate
         public string $name,
         public bool $exists = false
     ) {
+        parent::__construct();
     }
 
     public function generateModelContent(): string

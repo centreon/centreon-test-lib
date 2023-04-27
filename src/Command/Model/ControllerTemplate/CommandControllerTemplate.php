@@ -18,6 +18,7 @@ class CommandControllerTemplate extends FileTemplate
         public RequestDtoTemplate $request,
         public bool $exists = false
     ) {
+        parent::__construct();
     }
 
     public function generateModelContent(): string

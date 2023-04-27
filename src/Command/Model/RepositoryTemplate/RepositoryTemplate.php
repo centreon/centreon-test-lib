@@ -14,6 +14,7 @@ class RepositoryTemplate extends FileTemplate
         public RepositoryInterfaceTemplate $writeRepositoryInterface,
         public bool $exists = false
     ) {
+        parent::__construct();
     }
 
     public function generateModelContent(): string

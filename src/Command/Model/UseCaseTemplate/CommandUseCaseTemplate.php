@@ -20,6 +20,7 @@ class CommandUseCaseTemplate extends FileTemplate
         public RepositoryInterfaceTemplate $repository,
         public bool $exists = false
     ) {
+        parent::__construct();
     }
 
     public function generateModelContent(): string
