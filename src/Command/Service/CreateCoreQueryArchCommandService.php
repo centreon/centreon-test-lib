@@ -232,9 +232,9 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
     ): void {
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'Presenter';
-        $filePath = $this->srcPath . '/Core/' . $modelName . '/Infrastructure/Api/' . $useCaseName . '\\'
+        $filePath = $this->srcPath . '/Core/' . $modelName . '/Infrastructure/API/' . $useCaseName . '\\'
             . $className . '.php';
-        $namespace = 'Core\\' . $modelName . '\\Infrastructure\\Api\\' . $useCaseName;
+        $namespace = 'Core\\' . $modelName . '\\Infrastructure\\API\\' . $useCaseName;
         if (!file_exists($filePath)) {
             $this->CommandPresenterTemplate = new PresenterTemplate(
                 $filePath,
