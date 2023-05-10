@@ -50,13 +50,6 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
     private FactoryTemplate $factoryTemplate;
 
     /**
-     * @param string $srcPath
-     */
-    public function __construct(protected string $srcPath)
-    {
-    }
-
-    /**
      * Create the Write Repository file if it doesn't exist.
      *
      * @param OutputInterface $output
