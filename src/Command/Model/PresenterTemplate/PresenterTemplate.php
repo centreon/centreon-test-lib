@@ -27,6 +27,13 @@ use Centreon\Command\Model\FileTemplate;
 
 class PresenterTemplate extends FileTemplate
 {
+    /**
+     * @param string $filePath
+     * @param string $namespace
+     * @param string $name
+     * @param PresenterInterfaceTemplate $presenterInterface
+     * @param boolean $exists
+     */
     public function __construct(
         public string $filePath,
         public string $namespace,
@@ -37,11 +44,13 @@ class PresenterTemplate extends FileTemplate
         parent::__construct();
     }
 
+    /**
+     * @return string
+     */
     public function generateModelContent(): string
     {
         $interfaceNamespace = $this->presenterInterface->namespace . '\\' . $this->presenterInterface->name;
         $interfaceName = $this->presenterInterface->name;
-        $dataVariable = '$data';
         $content = <<<EOF
         <?php
         $this->licenceHeader

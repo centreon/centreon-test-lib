@@ -28,6 +28,13 @@ use Centreon\Command\Model\RepositoryTemplate\RepositoryInterfaceTemplate;
 
 class RepositoryTemplate extends FileTemplate
 {
+    /**
+     * @param string $filePath
+     * @param string $namespace
+     * @param string $name
+     * @param RepositoryInterfaceTemplate $writeRepositoryInterface
+     * @param boolean $exists
+     */
     public function __construct(
         public string $filePath,
         public string $namespace,
@@ -38,6 +45,9 @@ class RepositoryTemplate extends FileTemplate
         parent::__construct();
     }
 
+    /**
+     * @return string
+     */
     public function generateModelContent(): string
     {
         $databaseVariable = 'db';

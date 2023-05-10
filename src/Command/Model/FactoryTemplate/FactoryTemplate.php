@@ -28,6 +28,13 @@ use Centreon\Command\Model\ModelTemplate\ModelTemplate;
 
 class FactoryTemplate extends FileTemplate
 {
+    /**
+     * @param string $filePath
+     * @param string $namespace
+     * @param string $name
+     * @param ModelTemplate $modelTemplate
+     * @param boolean $exists
+     */
     public function __construct(
         public string $filePath,
         public string $namespace,
@@ -38,6 +45,9 @@ class FactoryTemplate extends FileTemplate
         parent::__construct();
     }
 
+    /**
+     * @return string
+     */
     public function generateModelContent(): string
     {
         $modelName = $this->modelTemplate->name;

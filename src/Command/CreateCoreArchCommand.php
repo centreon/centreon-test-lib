@@ -128,8 +128,6 @@ class CreateCoreArchCommand extends Command
     }
 
     /**
-     * Create all the file for a Command.
-     *
      * @param OutputInterface $output
      */
     private function createCommandArch(OutputInterface $output): void
@@ -174,6 +172,9 @@ class CreateCoreArchCommand extends Command
         );
     }
 
+    /**
+     * @param OutputInterface $output
+     */
     private function createQueryArch(OutputInterface $output): void
     {
         $this->queryArchCommandService->createRepositoryInterfaceTemplateIfNotExist(

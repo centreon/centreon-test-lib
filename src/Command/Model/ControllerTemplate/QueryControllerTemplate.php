@@ -29,6 +29,14 @@ use Centreon\Command\Model\PresenterTemplate\PresenterInterfaceTemplate;
 
 class QueryControllerTemplate extends FileTemplate
 {
+    /**
+     * @param string $filePath
+     * @param string $namespace
+     * @param string $name
+     * @param QueryUseCaseTemplate $useCase
+     * @param PresenterInterfaceTemplate $presenter
+     * @param boolean $exists
+     */
     public function __construct(
         public string $filePath,
         public string $namespace,
@@ -40,6 +48,9 @@ class QueryControllerTemplate extends FileTemplate
         parent::__construct();
     }
 
+    /**
+     * @return string
+     */
     public function generateModelContent(): string
     {
         $useCaseNamespace = $this->useCase->namespace . '\\' . $this->useCase->name;
@@ -58,7 +69,7 @@ class QueryControllerTemplate extends FileTemplate
         use $useCaseNamespace;
         use $presenterNamespace;
 
-        class $this->name
+        final class $this->name
         {
             public function __invoke(
                 $this->useCase $$useCaseVariable,

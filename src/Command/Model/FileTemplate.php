@@ -25,6 +25,9 @@ namespace Centreon\Command\Model;
 
 abstract class FileTemplate
 {
+    /**
+     * @var string
+     */
     protected string $licenceHeader;
 
     public function __construct()

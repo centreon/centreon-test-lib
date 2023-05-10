@@ -27,6 +27,12 @@ use Centreon\Command\Model\FileTemplate;
 
 class RepositoryInterfaceTemplate extends FileTemplate
 {
+    /**
+     * @param string $filePath
+     * @param string $namespace
+     * @param string $name
+     * @param boolean $exists
+     */
     public function __construct(
         public string $filePath,
         public string $namespace,
@@ -36,6 +42,9 @@ class RepositoryInterfaceTemplate extends FileTemplate
         parent::__construct();
     }
 
+    /**
+     * @return string
+     */
     public function generateModelContent(): string
     {
         $content = <<<EOF

@@ -30,6 +30,15 @@ use Centreon\Command\Model\UseCaseTemplate\CommandUseCaseTemplate;
 
 class CommandControllerTemplate extends FileTemplate
 {
+    /**
+     * @param string $filePath
+     * @param string $namespace
+     * @param string $name
+     * @param CommandUseCaseTemplate $useCase
+     * @param PresenterInterfaceTemplate $presenter
+     * @param RequestDtoTemplate $request
+     * @param boolean $exists
+     */
     public function __construct(
         public string $filePath,
         public string $namespace,
@@ -42,6 +51,9 @@ class CommandControllerTemplate extends FileTemplate
         parent::__construct();
     }
 
+    /**
+     * @return string
+     */
     public function generateModelContent(): string
     {
         $useCaseNamespace = $this->useCase->namespace . '\\' . $this->useCase->name;
@@ -69,7 +81,7 @@ class CommandControllerTemplate extends FileTemplate
         use $presenterNamespace;
         use $requestNamespace;
 
-        class $this->name
+        final class $this->name
         {
             public function __invoke(
                 $this->useCase $$useCaseVariable,

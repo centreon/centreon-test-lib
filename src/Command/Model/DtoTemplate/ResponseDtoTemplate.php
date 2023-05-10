@@ -54,7 +54,7 @@ class ResponseDtoTemplate extends FileTemplate implements \Stringable
 
         namespace $this->namespace;
 
-        class $this->name
+        final class $this->name
         {
         }
 

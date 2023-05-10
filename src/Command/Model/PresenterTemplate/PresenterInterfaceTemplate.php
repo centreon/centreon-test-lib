@@ -47,6 +47,7 @@ class PresenterInterfaceTemplate extends FileTemplate implements \Stringable
      */
     public function generateModelContent(): string
     {
+        $useCase = substr($this->name, 0, strpos($this->name, 'PresenterInterface'));
         $content = <<<EOF
         <?php
         $this->licenceHeader
@@ -54,10 +55,14 @@ class PresenterInterfaceTemplate extends FileTemplate implements \Stringable
 
         namespace $this->namespace;
 
-        use Core\Application\Common\UseCase\PresenterInterface;
+        use Core\Application\Common\UseCase\ResponseStatusInterface;
 
-        interface $this->name extends PresenterInterface
+        interface $this->name
         {
+            /**
+             * @param {$useCase}Response|ResponseStatusInterface \$data
+             */
+            public function presentResponse({$useCase}Response|ResponseStatusInterface \$data): void;
         }
 
         EOF;
