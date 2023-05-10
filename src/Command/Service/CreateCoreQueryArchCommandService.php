@@ -15,9 +15,6 @@ use Centreon\Command\Model\RepositoryTemplate\RepositoryInterfaceTemplate;
 
 class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
 {
-    public function __construct(protected string $srcPath)
-    {
-    }
 
     /**
      * Create the Write Repository Interface file if it doesn't exist.
