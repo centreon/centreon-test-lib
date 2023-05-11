@@ -251,7 +251,7 @@ class PhpCsFixerRuleSet
      *
      * @return string
      */
-    private static function detectCentreonProjectLicense(string $directory): string
+    public static function detectCentreonProjectLicense(string $directory): string
     {
         // "end" conditions -> '', '.', '/'
         while (\mb_strlen($directory) > 1) {
@@ -294,5 +294,24 @@ class PhpCsFixerRuleSet
         }
 
         return null;
+    }
+
+    /**
+     * Get the license header as a php comment.
+     *
+     * @param string $projectLicense
+     *
+     * @return string
+     */
+    public static function getLicenseHeaderAsPhpComment(string $projectLicense): string
+    {
+        if ('' === ($header = self::getLicenseHeader($projectLicense))) {
+            return '';
+        }
+
+        $lines = explode("\n", $header);
+        $lines = array_map(static fn(string $line): string => rtrim(' * ' . $line), $lines);
+
+        return "/*\n" . implode("\n", $lines) . "\n */\n";
     }
 }

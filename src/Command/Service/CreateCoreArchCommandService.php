@@ -48,8 +48,6 @@ class CreateCoreArchCommandService
     }
 
     /**
-     * Ask for a useCase Type
-     *
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param mixed $questionHelper
@@ -70,8 +68,6 @@ class CreateCoreArchCommandService
     }
 
     /**
-     * ask for a Model Name.
-     *
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param mixed $questionHelper

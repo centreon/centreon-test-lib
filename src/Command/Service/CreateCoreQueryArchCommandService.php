@@ -37,59 +37,6 @@ use Centreon\Command\Model\RepositoryTemplate\RepositoryInterfaceTemplate;
 class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
 {
     /**
-     * Create the Write Repository Interface file if it doesn't exist.
-     *
-     * @param OutputInterface $output
-     * @param string $modelName
-     */
-    public function createReadRepositoryInterfaceTemplateIfNotExist(
-        OutputInterface $output,
-        string $modelName
-    ): void {
-        $filePath = $this->srcPath . '/Core/' . $modelName . '/Application/Repository/' . 'Read' .
-            $modelName . 'RepositoryInterface.php';
-        $namespace = 'Core\\' . $modelName . '\\Application\\Repository';
-        if (!file_exists($filePath)) {
-            $this->repositoryInterfaceTemplate = new RepositoryInterfaceTemplate(
-                $filePath,
-                $namespace,
-                'Read' . $modelName . 'RepositoryInterface',
-                false
-            );
-            preg_match('/^(.+).Read' . $modelName . 'RepositoryInterface\.php$/', $filePath, $matches);
-            $dirLocation = $matches[1];
-            //Create dir if not exists,
-            if (!is_dir($dirLocation)) {
-                mkdir($dirLocation, 0777, true);
-            }
-
-            file_put_contents(
-                $this->repositoryInterfaceTemplate->filePath,
-                $this->repositoryInterfaceTemplate->generateModelContent()
-            );
-            $output->writeln(
-                '<info>Creating Repository Interface : ' . $this->repositoryInterfaceTemplate->namespace . '\\'
-                    . $this->repositoryInterfaceTemplate->name . '</info>'
-            );
-        } else {
-            $this->repositoryInterfaceTemplate = new RepositoryInterfaceTemplate(
-                $filePath,
-                $namespace,
-                'Read' . $modelName . 'RepositoryInterface',
-                true
-            );
-            $output->writeln(
-                '<info>Using Existing Repository Interface : ' . $this->repositoryInterfaceTemplate->namespace . '\\'
-                    . $this->repositoryInterfaceTemplate->name . '</info>'
-            );
-        }
-        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
-        $output->writeln("");
-    }
-
-    /**
-     * Create the Write Repository file if it doesn't exist.
-     *
      * @param OutputInterface $output
      * @param string $modelName
      */
@@ -141,8 +88,6 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
     }
 
     /**
-     * Create the Request Dto file if it doesn't exist.
-     *
      * @param OutputInterface $output
      * @param string $modelName
      * @return void
@@ -195,6 +140,11 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
         $output->writeln("");
     }
 
+    /**
+     * @param OutputInterface $output
+     * @param string $modelName
+     * @param string $useCaseType
+     */
     public function createPresenterInterfaceIfNotExist(
         OutputInterface $output,
         string $modelName,
@@ -242,6 +192,11 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
         $output->writeln("");
     }
 
+    /**
+     * @param OutputInterface $output
+     * @param string $modelName
+     * @param string $useCaseType
+     */
     public function createPresenterIfNotExist(
         OutputInterface $output,
         string $modelName,
@@ -291,6 +246,11 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
         $output->writeln("");
     }
 
+    /**
+     * @param OutputInterface $output
+     * @param ModelTemplate $modelTemplate
+     * @param string $useCaseType
+     */
     public function createUseCaseIfNotExist(
         OutputInterface $output,
         ModelTemplate $modelTemplate,
@@ -347,6 +307,11 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
         $this->createUnitTestFileIfNotExists($output, $this->queryUseCaseTemplate);
     }
 
+    /**
+     * @param OutputInterface $output
+     * @param string $modelName
+     * @param string $useCaseType
+     */
     public function createControllerIfNotExist(
         OutputInterface $output,
         string $modelName,
@@ -401,8 +366,6 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
     }
 
     /**
-     * Create the Factory file if it doesn't exist
-     *
      * @param OutputInterface $output
      * @param ModelTemplate $modelTemplate
      */

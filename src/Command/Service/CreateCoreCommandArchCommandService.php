@@ -71,8 +71,6 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
     private FactoryTemplate $factoryTemplate;
 
     /**
-     * Create the Write Repository file if it doesn't exist.
-     *
      * @param OutputInterface $output
      * @param string $modelName
      */
@@ -126,10 +124,9 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
     }
 
     /**
-     * Create the Request Dto file if it doesn't exist.
-     *
      * @param OutputInterface $output
      * @param string $modelName
+     * @param string $useCaseType
      */
     public function createRequestDtoTemplateIfNotExist(
         OutputInterface $output,
@@ -181,8 +178,6 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
     }
 
     /**
-     * Create the Presenter Interface file if it doesn't exist
-     *
      * @param OutputInterface $output
      * @param string $modelName
      * @param string $useCaseType
@@ -236,8 +231,6 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
     }
 
     /**
-     * Create the Presenter Interface file if it doesn't exist
-     *
      * @param OutputInterface $output
      * @param string $modelName
      * @param string $useCaseType
@@ -293,8 +286,6 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
     }
 
     /**
-     * Create the UseCase file if it doesn't exist
-     *
      * @param OutputInterface $output
      * @param string $modelName
      * @param string $useCaseType
@@ -355,8 +346,6 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
     }
 
     /**
-     * Create the Controller file if it doesn't exist
-     *
      * @param OutputInterface $output
      * @param string $modelName
      * @param string $useCaseType
@@ -418,8 +407,6 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
     }
 
     /**
-     * Create the Factory file if it doesn't exist
-     *
      * @param OutputInterface $output
      * @param ModelTemplate $modelTemplate
      */
