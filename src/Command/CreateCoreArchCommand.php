@@ -23,13 +23,15 @@ declare(strict_types=1);
 
 namespace Centreon\Command;
 
+use Centreon\Command\Model\ModelTemplate\ModelTemplate;
+use Centreon\Command\Service\{
+    CreateCoreArchCommandService,
+    CreateCoreCommandArchCommandService,
+    CreateCoreQueryArchCommandService
+};
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Centreon\Command\Model\ModelTemplate\ModelTemplate;
-use Centreon\Command\Service\CreateCoreArchCommandService;
-use Centreon\Command\Service\CreateCoreCommandArchCommandService;
-use Centreon\Command\Service\CreateCoreQueryArchCommandService;
 
 class CreateCoreArchCommand extends Command
 {

@@ -25,9 +25,11 @@ declare(strict_types=1);
 require __DIR__ . '/../../vendor/autoload.php';
 
 use Centreon\Command\CreateCoreArchCommand;
-use Centreon\Command\Service\CreateCoreArchCommandService;
-use Centreon\Command\Service\CreateCoreCommandArchCommandService;
-use Centreon\Command\Service\CreateCoreQueryArchCommandService;
+use Centreon\Command\Service\{
+    CreateCoreArchCommandService,
+    CreateCoreCommandArchCommandService,
+    CreateCoreQueryArchCommandService
+};
 use Symfony\Component\Console\Application;
 
 $application = new Application();

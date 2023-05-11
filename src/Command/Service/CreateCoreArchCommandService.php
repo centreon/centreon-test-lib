@@ -23,16 +23,14 @@ declare(strict_types=1);
 
 namespace Centreon\Command\Service;
 
-use Symfony\Component\Console\Question\Question;
+use Centreon\Command\CreateCoreArchCommand;
+use Centreon\Command\Model\FileTemplate;
+use Centreon\Command\Model\ModelTemplate\ModelTemplate;
+use Centreon\Command\Model\RepositoryTemplate\RepositoryInterfaceTemplate;
+use Centreon\Command\Model\UnitTestTemplate\UnitTestTemplate;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
-use Centreon\Command\Model\FileTemplate;
-use Centreon\Command\CreateCoreArchCommand;
-use Centreon\Command\Model\ModelTemplate\ModelTemplate;
-use Centreon\Command\Model\UnitTestTemplate\UnitTestTemplate;
-use Centreon\Command\Model\RepositoryTemplate\RepositoryInterfaceTemplate;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\{Question, ChoiceQuestion, ConfirmationQuestion};
 
 class CreateCoreArchCommandService
 {

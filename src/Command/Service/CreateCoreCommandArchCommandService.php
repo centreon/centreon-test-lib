@@ -23,15 +23,14 @@ declare(strict_types=1);
 
 namespace Centreon\Command\Service;
 
-use Symfony\Component\Console\Output\OutputInterface;
-use Centreon\Command\Model\DtoTemplate\RequestDtoTemplate;
-use Centreon\Command\Model\UseCaseTemplate\CommandUseCaseTemplate;
-use Centreon\Command\Model\PresenterTemplate\PresenterTemplate;
-use Centreon\Command\Model\RepositoryTemplate\RepositoryTemplate;
 use Centreon\Command\Model\ControllerTemplate\CommandControllerTemplate;
+use Centreon\Command\Model\DtoTemplate\RequestDtoTemplate;
 use Centreon\Command\Model\FactoryTemplate\FactoryTemplate;
 use Centreon\Command\Model\ModelTemplate\ModelTemplate;
-use Centreon\Command\Model\PresenterTemplate\PresenterInterfaceTemplate;
+use Centreon\Command\Model\PresenterTemplate\{PresenterInterfaceTemplate, PresenterTemplate};
+use Centreon\Command\Model\RepositoryTemplate\RepositoryTemplate;
+use Centreon\Command\Model\UseCaseTemplate\CommandUseCaseTemplate;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateCoreCommandArchCommandService
 {
@@ -142,8 +141,8 @@ class CreateCoreCommandArchCommandService
     ): void {
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'Request';
-        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelName
-            . DIRECTORY_SEPARATOR .  'Application' . DIRECTORY_SEPARATOR .'UseCase' . DIRECTORY_SEPARATOR
+        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR
+            . $modelName . DIRECTORY_SEPARATOR .  'Application' . DIRECTORY_SEPARATOR .'UseCase' . DIRECTORY_SEPARATOR
             . $useCaseName . DIRECTORY_SEPARATOR . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Application\\UseCase\\' . $useCaseName;
         if (!file_exists($filePath)) {
@@ -196,8 +195,8 @@ class CreateCoreCommandArchCommandService
     ): void {
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'PresenterInterface';
-        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelName
-            . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
+        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR
+            . $modelName . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
             . $useCaseName . DIRECTORY_SEPARATOR . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Application\\UseCase\\' . $useCaseName;
         if (!file_exists($filePath)) {
@@ -229,8 +228,8 @@ class CreateCoreCommandArchCommandService
                 true
             );
             $output->writeln(
-                '<info>Using Existing Presenter Interface : ' . $this->commandPresenterInterfaceTemplate->namespace . '\\'
-                    . $this->commandPresenterInterfaceTemplate->name . '</info>'
+                '<info>Using Existing Presenter Interface : ' . $this->commandPresenterInterfaceTemplate->namespace
+                    . '\\' . $this->commandPresenterInterfaceTemplate->name . '</info>'
             );
         }
         $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
@@ -249,8 +248,8 @@ class CreateCoreCommandArchCommandService
     ): void {
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'Presenter';
-        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelName
-            . DIRECTORY_SEPARATOR . 'Infrastructure' . DIRECTORY_SEPARATOR . 'API' . DIRECTORY_SEPARATOR
+        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR
+            . $modelName . DIRECTORY_SEPARATOR . 'Infrastructure' . DIRECTORY_SEPARATOR . 'API' . DIRECTORY_SEPARATOR
             . $useCaseName . DIRECTORY_SEPARATOR . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Infrastructure\\API\\' . $useCaseName;
         if (!file_exists($filePath)) {
@@ -303,8 +302,8 @@ class CreateCoreCommandArchCommandService
         string $useCaseType
     ): void {
         $useCaseName = $useCaseType . $modelName;
-        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelName
-            . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
+        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR
+            . $modelName . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
             . $useCaseName . DIRECTORY_SEPARATOR . $useCaseName . '.php';
         $namespace = 'Core\\' . $modelName . '\\Application\\UseCase\\' . $useCaseName;
         if (!file_exists($filePath)) {
@@ -364,8 +363,8 @@ class CreateCoreCommandArchCommandService
     ): void {
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'Controller';
-        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelName
-            . DIRECTORY_SEPARATOR . 'Infrastructure' . DIRECTORY_SEPARATOR . 'API' . DIRECTORY_SEPARATOR
+        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR
+            . $modelName . DIRECTORY_SEPARATOR . 'Infrastructure' . DIRECTORY_SEPARATOR . 'API' . DIRECTORY_SEPARATOR
             . $useCaseName . DIRECTORY_SEPARATOR . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Infrastructure\\API\\' . $useCaseName;
         if (!file_exists($filePath)) {
@@ -422,9 +421,9 @@ class CreateCoreCommandArchCommandService
         ModelTemplate $modelTemplate,
     ): void {
         $className = $modelTemplate->name . 'Factory';
-        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelTemplate->name
-            . DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR
-            . $className . '.php';
+        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR
+            . $modelTemplate->name . DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR . 'Model'
+            . DIRECTORY_SEPARATOR . $className . '.php';
         $namespace = 'Core\\' . $modelTemplate->name . '\\Domain\\Model';
         if (!file_exists($filePath)) {
             $this->factoryTemplate = new FactoryTemplate(
