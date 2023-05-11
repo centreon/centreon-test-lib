@@ -91,7 +91,7 @@ class CreateCoreArchCommand extends Command
         $questionHelper = $this->getHelper('question');
 
         $this->useCaseType = $this->commandService->askForUseCaseType($input, $output, $questionHelper);
-        $this->modelTemplate = $this->commandService->askForModel($input, $output, $questionHelper);
+        $this->modelTemplate = $this->commandService->askForModel($input, $output, $questionHelper, $this->useCaseType);
     }
 
     /**
@@ -101,13 +101,16 @@ class CreateCoreArchCommand extends Command
     {
         if ($this->modelTemplate->exists === false) {
             $this->commandService->createModel($this->modelTemplate);
-            $output->writeln('<info>Creating Model : ' . $this->modelTemplate->namespace . '\\' . $this->modelTemplate->name . '</info>');
+            $output->writeln('<info>Creating Model : ' . $this->modelTemplate->namespace . '\\'
+                . $this->modelTemplate->name . '</info>');
         } else {
             $output->writeln(
-                '<info>Using Existing Model : ' . $this->modelTemplate->namespace . '\\' . $this->modelTemplate->name . '</info>'
+                '<info>Using Existing Model : ' . $this->modelTemplate->namespace . '\\' . $this->modelTemplate->name
+                    . '</info>'
             );
         }
-        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($this->modelTemplate->filePath) . '</comment>');
+        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($this->modelTemplate->filePath)
+            . '</comment>');
         $output->writeln("");
         if ($this->isACommandUseCase()) {
             $this->createCommandArch($output);
@@ -118,8 +121,6 @@ class CreateCoreArchCommand extends Command
     }
 
     /**
-     * Check if the use case is a type Command.
-     *
      * @return bool
      */
     public function isACommandUseCase(): bool

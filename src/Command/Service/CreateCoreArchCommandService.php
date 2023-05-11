@@ -71,12 +71,21 @@ class CreateCoreArchCommandService
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param mixed $questionHelper
-     * @return ModelTemplate return the model informations
+     * @param string $useCaseType
+     * @return ModelTemplate
      */
-    public function askForModel(InputInterface $input, OutputInterface $output, $questionHelper): ModelTemplate
-    {
+    public function askForModel(
+        InputInterface $input,
+        OutputInterface $output,
+        $questionHelper,
+        string $useCaseType
+    ): ModelTemplate {
         $questionModelName = new Question('For which model is this use case intended ? ');
         $modelName = $questionHelper->ask($input, $output, $questionModelName);
+        // if useCase type is 'Create' model name should start with 'New'
+        if ($useCaseType === CreateCoreArchCommand::COMMAND_CREATE) {
+            $modelName = 'New' . $modelName;
+        }
         $output->writeln('<info>You have selected: [' . $modelName . '] Model.</info>');
         $output->writeln("");
         //Search for already existing models.
