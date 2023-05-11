@@ -146,8 +146,6 @@ class CreateCoreArchCommandService
     }
 
     /**
-     * Create the Model file.
-     *
      * @param ModelTemplate $model
      */
     public function createModel(ModelTemplate $model): void
@@ -165,8 +163,6 @@ class CreateCoreArchCommandService
     }
 
     /**
-     * Undocumented function
-     *
      * @param OutputInterface $output
      * @param string $modelName
      * @param string $repositoryType
@@ -219,8 +215,6 @@ class CreateCoreArchCommandService
     }
 
     /**
-     * Create Unit Test File
-     *
      * @param OutputInterface $output
      * @param FileTemplate $fileTemplate
      * @return void

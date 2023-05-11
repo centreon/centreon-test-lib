@@ -31,7 +31,9 @@ use Centreon\Command\Service\CreateCoreQueryArchCommandService;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
-$config = yaml_parse_file(__DIR__ . '/config.yaml');
+$contents = file_get_contents(__DIR__ . '/config.yaml');
+$config = explode(": ", trim($contents));
+$config = [$config[0] => trim($config[1], '\'')];
 if (! array_key_exists('centreon', $config) || empty($config['centreon'])) {
     throw new \Exception('empty path, please provide a value into config.yaml');
 }
