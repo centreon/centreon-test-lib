@@ -33,7 +33,7 @@ use Centreon\Command\Model\FactoryTemplate\FactoryTemplate;
 use Centreon\Command\Model\ModelTemplate\ModelTemplate;
 use Centreon\Command\Model\PresenterTemplate\PresenterInterfaceTemplate;
 
-class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
+class CreateCoreCommandArchCommandService
 {
     /**
      * @var RepositoryTemplate
@@ -71,6 +71,13 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
     private FactoryTemplate $factoryTemplate;
 
     /**
+     * @param CreateCoreArchCommandService $commandService
+     */
+    public function __construct(private CreateCoreArchCommandService $commandService)
+    {
+    }
+
+    /**
      * @param OutputInterface $output
      * @param string $modelName
      */
@@ -78,7 +85,7 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
         OutputInterface $output,
         string $modelName
     ): void {
-        $filePath = $this->srcPath . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR
+        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR
             . $modelName . DIRECTORY_SEPARATOR . 'Infrastructure' . DIRECTORY_SEPARATOR
             . 'Repository' . DIRECTORY_SEPARATOR . 'DbWrite'
             . $modelName . 'Repository.php';
@@ -88,7 +95,7 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
                 $filePath,
                 $namespace,
                 'DbWrite' . $modelName . 'Repository',
-                $this->repositoryInterfaceTemplate,
+                $this->commandService->getRepositoryInterfaceTemplate(),
                 false
             );
             preg_match('/^(.+).DbWrite' . $modelName . 'Repository\.php$/', $filePath, $matches);
@@ -111,7 +118,7 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
                 $filePath,
                 $namespace,
                 'DbWrite' . $modelName . 'Repository',
-                $this->repositoryInterfaceTemplate,
+                $this->commandService->getRepositoryInterfaceTemplate(),
                 true
             );
             $output->writeln(
@@ -119,7 +126,7 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
                     . $this->writeRepositoryTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
+        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
     }
 
@@ -135,7 +142,7 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
     ): void {
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'Request';
-        $filePath = $this->srcPath . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelName
+        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelName
             . DIRECTORY_SEPARATOR .  'Application' . DIRECTORY_SEPARATOR .'UseCase' . DIRECTORY_SEPARATOR
             . $useCaseName . DIRECTORY_SEPARATOR . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Application\\UseCase\\' . $useCaseName;
@@ -173,7 +180,7 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
                     . $this->requestDtoTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
+        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
     }
 
@@ -189,7 +196,7 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
     ): void {
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'PresenterInterface';
-        $filePath = $this->srcPath . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelName
+        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelName
             . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
             . $useCaseName . DIRECTORY_SEPARATOR . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Application\\UseCase\\' . $useCaseName;
@@ -226,7 +233,7 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
                     . $this->commandPresenterInterfaceTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
+        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
     }
 
@@ -242,7 +249,7 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
     ): void {
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'Presenter';
-        $filePath = $this->srcPath . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelName
+        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelName
             . DIRECTORY_SEPARATOR . 'Infrastructure' . DIRECTORY_SEPARATOR . 'API' . DIRECTORY_SEPARATOR
             . $useCaseName . DIRECTORY_SEPARATOR . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Infrastructure\\API\\' . $useCaseName;
@@ -281,7 +288,7 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
                     . $this->commandPresenterTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
+        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
     }
 
@@ -296,7 +303,7 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
         string $useCaseType
     ): void {
         $useCaseName = $useCaseType . $modelName;
-        $filePath = $this->srcPath . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelName
+        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelName
             . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
             . $useCaseName . DIRECTORY_SEPARATOR . $useCaseName . '.php';
         $namespace = 'Core\\' . $modelName . '\\Application\\UseCase\\' . $useCaseName;
@@ -307,7 +314,7 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
                 $useCaseName,
                 $this->commandPresenterInterfaceTemplate,
                 $this->requestDtoTemplate,
-                $this->repositoryInterfaceTemplate,
+                $this->commandService->getRepositoryInterfaceTemplate(),
                 false
             );
             preg_match('/^(.+).' . $useCaseName . '\.php$/', $filePath, $matches);
@@ -331,7 +338,7 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
                 $useCaseName,
                 $this->commandPresenterInterfaceTemplate,
                 $this->requestDtoTemplate,
-                $this->repositoryInterfaceTemplate,
+                $this->commandService->getRepositoryInterfaceTemplate(),
                 true
             );
             $output->writeln(
@@ -339,10 +346,10 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
                     . $this->commandUseCaseTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
+        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
 
-        $this->createUnitTestFileIfNotExists($output, $this->commandUseCaseTemplate);
+        $this->commandService->createUnitTestFileIfNotExists($output, $this->commandUseCaseTemplate);
     }
 
     /**
@@ -357,7 +364,7 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
     ): void {
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'Controller';
-        $filePath = $this->srcPath . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelName
+        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelName
             . DIRECTORY_SEPARATOR . 'Infrastructure' . DIRECTORY_SEPARATOR . 'API' . DIRECTORY_SEPARATOR
             . $useCaseName . DIRECTORY_SEPARATOR . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Infrastructure\\API\\' . $useCaseName;
@@ -400,10 +407,10 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
                     . $this->commandControllerTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
+        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
 
-        $this->createUnitTestFileIfNotExists($output, $this->commandControllerTemplate);
+        $this->commandService->createUnitTestFileIfNotExists($output, $this->commandControllerTemplate);
     }
 
     /**
@@ -415,7 +422,7 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
         ModelTemplate $modelTemplate,
     ): void {
         $className = $modelTemplate->name . 'Factory';
-        $filePath = $this->srcPath . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelTemplate->name
+        $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . $modelTemplate->name
             . DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR
             . $className . '.php';
         $namespace = 'Core\\' . $modelTemplate->name . '\\Domain\\Model';
@@ -453,9 +460,9 @@ class CreateCoreCommandArchCommandService extends CreateCoreArchCommandService
                     . $this->factoryTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
+        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
 
-        $this->createUnitTestFileIfNotExists($output, $this->factoryTemplate);
+        $this->commandService->createUnitTestFileIfNotExists($output, $this->factoryTemplate);
     }
 }

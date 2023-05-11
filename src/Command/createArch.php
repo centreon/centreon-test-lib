@@ -42,8 +42,8 @@ if (! array_key_exists('centreon', $config) || empty($config['centreon'])) {
 
 $centreonSrcPath = __DIR__ . "/" . ltrim($config["centreon"], "/") . "/src";
 $commandService = new CreateCoreArchCommandService($centreonSrcPath);
-$queryArchCommandService = new CreateCoreQueryArchCommandService($centreonSrcPath);
-$commandArchCommandService = new CreateCoreCommandArchCommandService($centreonSrcPath);
+$queryArchCommandService = new CreateCoreQueryArchCommandService($commandService);
+$commandArchCommandService = new CreateCoreCommandArchCommandService($commandService);
 $singleCommand = new CreateCoreArchCommand($commandService, $queryArchCommandService, $commandArchCommandService);
 $application->add($singleCommand);
 $application->setDefaultCommand($singleCommand->getName(), true);

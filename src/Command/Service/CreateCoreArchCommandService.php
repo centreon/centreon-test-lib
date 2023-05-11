@@ -38,12 +38,12 @@ class CreateCoreArchCommandService
 {
     private const REPO_PREFIX = 'centreon/centreon';
 
-    protected RepositoryInterfaceTemplate $repositoryInterfaceTemplate;
+    private RepositoryInterfaceTemplate $repositoryInterfaceTemplate;
 
     /**
      * @param string $srcPath
      */
-    public function __construct(protected string $srcPath)
+    public function __construct(private string $srcPath)
     {
     }
 
@@ -82,10 +82,6 @@ class CreateCoreArchCommandService
     ): ModelTemplate {
         $questionModelName = new Question('For which model is this use case intended ? ');
         $modelName = $questionHelper->ask($input, $output, $questionModelName);
-        // if useCase type is 'Create' model name should start with 'New'
-        if ($useCaseType === CreateCoreArchCommand::COMMAND_CREATE) {
-            $modelName = 'New' . $modelName;
-        }
         $output->writeln('<info>You have selected: [' . $modelName . '] Model.</info>');
         $output->writeln("");
         //Search for already existing models.
@@ -103,7 +99,7 @@ class CreateCoreArchCommandService
         $confirmationQuestion = new ConfirmationQuestion("You're going to create a model : " . $modelName . " [Y/n]");
         $confirmation = $questionHelper->ask($input, $output, $confirmationQuestion);
         if ($confirmation === false) {
-            return $this->askForModel($input, $output, $questionHelper);
+            return $this->askForModel($input, $output, $questionHelper, $useCaseType);
         }
         $newNamespace = 'Core\\' . $modelName . '\\Domain\\Model';
         $filePath = $this->srcPath . DIRECTORY_SEPARATOR . preg_replace("/\\\\/", DIRECTORY_SEPARATOR, $newNamespace) .
@@ -224,7 +220,7 @@ class CreateCoreArchCommandService
      * @param FileTemplate $fileTemplate
      * @return void
      */
-    protected function createUnitTestFileIfNotExists(OutputInterface $output, FileTemplate $fileTemplate): void
+    public function createUnitTestFileIfNotExists(OutputInterface $output, FileTemplate $fileTemplate): void
     {
         $className = $fileTemplate->name . 'Test';
         $filePath = $this->srcPath . '/../tests/php' . DIRECTORY_SEPARATOR
@@ -262,5 +258,21 @@ class CreateCoreArchCommandService
     public function getRelativeFilePath(string $filePath): string
     {
         return substr($filePath, strpos($filePath, self::REPO_PREFIX));
+    }
+
+    /**
+     * @return string
+     */
+    public function getSrcPath(): string
+    {
+        return $this->srcPath;
+    }
+
+    /**
+     * @return RepositoryInterfaceTemplate
+     */
+    public function getRepositoryInterfaceTemplate(): RepositoryInterfaceTemplate
+    {
+        return $this->repositoryInterfaceTemplate;
     }
 }

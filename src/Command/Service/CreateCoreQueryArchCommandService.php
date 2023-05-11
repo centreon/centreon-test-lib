@@ -34,8 +34,15 @@ use Centreon\Command\Model\ControllerTemplate\QueryControllerTemplate;
 use Centreon\Command\Model\PresenterTemplate\PresenterInterfaceTemplate;
 use Centreon\Command\Model\RepositoryTemplate\RepositoryInterfaceTemplate;
 
-class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
+class CreateCoreQueryArchCommandService
 {
+    /**
+     * @param CreateCoreArchCommandService $commandService
+     */
+    public function __construct(private CreateCoreArchCommandService $commandService)
+    {
+    }
+
     /**
      * @param OutputInterface $output
      * @param string $modelName
@@ -44,7 +51,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
         OutputInterface $output,
         string $modelName
     ): void {
-        $filePath = $this->srcPath . '/Core/' . $modelName . '/Infrastructure/Repository/' . 'DbRead'
+        $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelName . '/Infrastructure/Repository/' . 'DbRead'
             . $modelName . 'Repository.php';
         $namespace = 'Core\\' . $modelName . '\\Infrastructure\\Repository';
         if (!file_exists($filePath)) {
@@ -52,7 +59,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                 $filePath,
                 $namespace,
                 'DbRead' . $modelName . 'Repository',
-                $this->repositoryInterfaceTemplate,
+                $this->commandService->getRepositoryInterfaceTemplate(),
                 false
             );
             preg_match('/^(.+).DbRead' . $modelName . 'Repository\.php$/', $filePath, $matches);
@@ -75,7 +82,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                 $filePath,
                 $namespace,
                 'DbRead' . $modelName . 'Repository',
-                $this->repositoryInterfaceTemplate,
+                $this->commandService->getRepositoryInterfaceTemplate(),
                 true
             );
             $output->writeln(
@@ -83,7 +90,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                     . $this->writeRepositoryTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
+        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
     }
 
@@ -99,7 +106,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
     ): void {
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'Response';
-        $filePath = $this->srcPath . '/Core/' . $modelName . '/Application/UseCase/' . $useCaseName . '\\'
+        $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelName . '/Application/UseCase/' . $useCaseName . '\\'
             . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Application\\UseCase\\' . $useCaseName;
         if (!file_exists($filePath)) {
@@ -136,7 +143,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                     . $this->responseDtoTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
+        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
     }
 
@@ -152,7 +159,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
     ): void {
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'PresenterInterface';
-        $filePath = $this->srcPath . '/Core/' . $modelName . '/Application/UseCase/' . $useCaseName . '\\'
+        $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelName . '/Application/UseCase/' . $useCaseName . '\\'
             . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Application\\UseCase\\' . $useCaseName;
         if (!file_exists($filePath)) {
@@ -188,7 +195,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                     . $this->commandPresenterInterfaceTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
+        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
     }
 
@@ -204,11 +211,11 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
     ): void {
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'Presenter';
-        $filePath = $this->srcPath . '/Core/' . $modelName . '/Infrastructure/API/' . $useCaseName . '\\'
+        $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelName . '/Infrastructure/API/' . $useCaseName . '\\'
             . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Infrastructure\\API\\' . $useCaseName;
         if (!file_exists($filePath)) {
-            $this->CommandPresenterTemplate = new PresenterTemplate(
+            $this->commandPresenterTemplate = new PresenterTemplate(
                 $filePath,
                 $namespace,
                 $className,
@@ -222,15 +229,15 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                 mkdir($dirLocation, 0777, true);
             }
             file_put_contents(
-                $this->CommandPresenterTemplate->filePath,
-                $this->CommandPresenterTemplate->generateModelContent()
+                $this->commandPresenterTemplate->filePath,
+                $this->commandPresenterTemplate->generateModelContent()
             );
             $output->writeln(
-                '<info>Creating Presenter : ' . $this->CommandPresenterTemplate->namespace . '\\'
-                    . $this->CommandPresenterTemplate->name . '</info>'
+                '<info>Creating Presenter : ' . $this->commandPresenterTemplate->namespace . '\\'
+                    . $this->commandPresenterTemplate->name . '</info>'
             );
         } else {
-            $this->CommandPresenterTemplate = new PresenterTemplate(
+            $this->commandPresenterTemplate = new PresenterTemplate(
                 $filePath,
                 $namespace,
                 $className,
@@ -238,11 +245,11 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                 true
             );
             $output->writeln(
-                '<info>Using Existing Presenter : ' . $this->CommandPresenterTemplate->namespace . '\\'
-                    . $this->CommandPresenterTemplate->name . '</info>'
+                '<info>Using Existing Presenter : ' . $this->commandPresenterTemplate->namespace . '\\'
+                    . $this->commandPresenterTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
+        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
     }
 
@@ -257,7 +264,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
         string $useCaseType
     ): void {
         $useCaseName = $useCaseType . $modelTemplate->name;
-        $filePath = $this->srcPath . '/Core/'  . $modelTemplate->name . '/Application/UseCase/' . $useCaseName . '\\'
+        $filePath = $this->commandService->getSrcPath() . '/Core/'  . $modelTemplate->name . '/Application/UseCase/' . $useCaseName . '\\'
             . $useCaseName . '.php';
         $namespace = 'Core\\' . $modelTemplate->name . '\\Application\\UseCase\\' . $useCaseName;
         if (!file_exists($filePath)) {
@@ -267,7 +274,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                 $useCaseName,
                 $this->commandPresenterInterfaceTemplate,
                 $this->responseDtoTemplate,
-                $this->repositoryInterfaceTemplate,
+                $this->commandService->getRepositoryInterfaceTemplate(),
                 false,
                 $modelTemplate
             );
@@ -292,7 +299,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                 $useCaseName,
                 $this->commandPresenterInterfaceTemplate,
                 $this->responseDtoTemplate,
-                $this->repositoryInterfaceTemplate,
+                $this->commandService->getRepositoryInterfaceTemplate(),
                 true,
                 $modelTemplate
             );
@@ -301,10 +308,10 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                     . $this->queryUseCaseTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
+        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
 
-        $this->createUnitTestFileIfNotExists($output, $this->queryUseCaseTemplate);
+        $this->commandService->createUnitTestFileIfNotExists($output, $this->queryUseCaseTemplate);
     }
 
     /**
@@ -319,7 +326,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
     ): void {
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'Controller';
-        $filePath = $this->srcPath . '/Core/' . $modelName . '/Infrastructure/Api/' . $useCaseName . '\\'
+        $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelName . '/Infrastructure/Api/' . $useCaseName . '\\'
             . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Infrastructure\\Api\\' . $useCaseName;
         if (!file_exists($filePath)) {
@@ -359,10 +366,10 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                     . $this->queryControllerTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
+        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
 
-        $this->createUnitTestFileIfNotExists($output, $this->queryControllerTemplate);
+        $this->commandService->createUnitTestFileIfNotExists($output, $this->queryControllerTemplate);
     }
 
     /**
@@ -374,7 +381,7 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
         ModelTemplate $modelTemplate,
     ): void {
         $className = 'Db' . $modelTemplate->name . 'Factory';
-        $filePath = $this->srcPath . '/Core/' . $modelTemplate->name . '/Infrastructure/Repository/'
+        $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelTemplate->name . '/Infrastructure/Repository/'
             . $className. '.php';
         $namespace = 'Core\\' . $modelTemplate->name . '\\Infrastructure\\Repository';
         if (!file_exists($filePath)) {
@@ -411,9 +418,9 @@ class CreateCoreQueryArchCommandService extends CreateCoreArchCommandService
                     . $this->factoryTemplate->name . '</info>'
             );
         }
-        $output->writeln('<comment>' . $this->getRelativeFilePath($filePath) . '</comment>');
+        $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
         $output->writeln("");
 
-        $this->createUnitTestFileIfNotExists($output, $this->factoryTemplate);
+        $this->commandService->createUnitTestFileIfNotExists($output, $this->factoryTemplate);
     }
 }

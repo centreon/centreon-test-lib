@@ -133,7 +133,7 @@ class CreateCoreArchCommand extends Command
      */
     private function createCommandArch(OutputInterface $output): void
     {
-        $this->commandArchCommandService->createRepositoryInterfaceTemplateIfNotExist(
+        $this->commandService->createRepositoryInterfaceTemplateIfNotExist(
             $output,
             $this->modelTemplate->name,
             self::WRITE_REPOSITORY_TYPE
@@ -178,7 +178,7 @@ class CreateCoreArchCommand extends Command
      */
     private function createQueryArch(OutputInterface $output): void
     {
-        $this->queryArchCommandService->createRepositoryInterfaceTemplateIfNotExist(
+        $this->commandService->createRepositoryInterfaceTemplateIfNotExist(
             $output,
             $this->modelTemplate->name,
             self::READ_REPOSITORY_TYPE
