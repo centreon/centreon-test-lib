@@ -23,14 +23,15 @@ declare(strict_types=1);
 
 namespace Centreon\Command\Service;
 
-use Centreon\Command\Model\ControllerTemplate\QueryControllerTemplate;
+use Symfony\Component\Console\Output\OutputInterface;
+use Centreon\Command\Model\ModelTemplate\ModelTemplate;
 use Centreon\Command\Model\DtoTemplate\ResponseDtoTemplate;
 use Centreon\Command\Model\FactoryTemplate\FactoryTemplate;
-use Centreon\Command\Model\ModelTemplate\ModelTemplate;
 use Centreon\Command\Model\PresenterTemplate\PresenterTemplate;
-use Centreon\Command\Model\PresenterTemplate\{PresenterInterfaceTemplate, RepositoryTemplate};
 use Centreon\Command\Model\UseCaseTemplate\QueryUseCaseTemplate;
-use Symfony\Component\Console\Output\OutputInterface;
+use Centreon\Command\Model\ControllerTemplate\QueryControllerTemplate;
+use Centreon\Command\Model\PresenterTemplate\PresenterInterfaceTemplate;
+use Centreon\Command\Model\RepositoryTemplate\RepositoryTemplate;
 
 class CreateCoreQueryArchCommandService
 {
