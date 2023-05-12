@@ -37,7 +37,7 @@ class CommandControllerTemplate extends FileTemplate
      * @param CommandUseCaseTemplate $useCase
      * @param PresenterInterfaceTemplate $presenter
      * @param RequestDtoTemplate $request
-     * @param boolean $exists
+     * @param bool $exists
      */
     public function __construct(
         public string $filePath,
@@ -69,42 +69,40 @@ class CommandControllerTemplate extends FileTemplate
         $createDto = 'this->create' . $this->request->name . '($request)';
         $requestDataVariable = 'requestData';
 
-        $content = <<<EOF
-        <?php
-        $this->licenceHeader
-        declare(strict_types=1);
+        return <<<EOF
+            <?php
+            {$this->licenceHeader}
+            declare(strict_types=1);
 
-        namespace $this->namespace;
+            namespace {$this->namespace};
 
-        use Symfony\Component\HttpFoundation\Request;
-        use $useCaseNamespace;
-        use $presenterNamespace;
-        use $requestNamespace;
+            use Symfony\Component\HttpFoundation\Request;
+            use {$useCaseNamespace};
+            use {$presenterNamespace};
+            use {$requestNamespace};
 
-        final class $this->name
-        {
-            public function __invoke(
-                $this->useCase $$useCaseVariable,
-                Request $$requestVariable,
-                $this->presenter $$presenterVariable
-            ): object {
-                $$requestDtoVariable = $$createDto;
-                $$useCaseVariable($$presenterVariable, $$requestDtoVariable);
-
-                return $$show;
-            }
-
-            public function create$this->request(Request $$requestVariable): $this->request
+            final class {$this->name}
             {
-                $$requestDataVariable = json_decode((string) $$requestGetContent, true);
-                $$requestDtoVariable = new $this->request($$requestDataVariable);
+                public function __invoke(
+                    {$this->useCase} $$useCaseVariable,
+                    Request $$requestVariable,
+                    {$this->presenter} $$presenterVariable
+                ): object {
+                    $$requestDtoVariable = $$createDto;
+                    $$useCaseVariable($$presenterVariable, $$requestDtoVariable);
 
-                return $$requestDtoVariable;
+                    return $$show;
+                }
+
+                public function create{$this->request}(Request $$requestVariable): {$this->request}
+                {
+                    $$requestDataVariable = json_decode((string) $$requestGetContent, true);
+                    $$requestDtoVariable = new {$this->request}($$requestDataVariable);
+
+                    return $$requestDtoVariable;
+                }
             }
-        }
 
-        EOF;
-
-        return $content;
+            EOF;
     }
 }

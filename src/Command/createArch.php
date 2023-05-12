@@ -35,19 +35,21 @@ use Symfony\Component\Console\Application;
 $application = new Application();
 if (! function_exists('yaml_parse_file')) {
     echo "Error: The php 'yaml' extension is missing.\n";
+
     exit(1);
 }
+/** @var array<string, string> */
 $config = yaml_parse_file(__DIR__ . '/config.yaml');
 if (! array_key_exists('centreon', $config) || empty($config['centreon'])) {
     throw new \Exception('empty path, please provide a value into config.yaml');
 }
 
-$centreonSrcPath = __DIR__ . "/" . ltrim($config["centreon"], "/") . "/src";
+$centreonSrcPath = __DIR__ . '/' . ltrim($config['centreon'], '/') . '/src';
 $commandService = new CreateCoreArchCommandService($centreonSrcPath);
 $queryArchCommandService = new CreateCoreQueryArchCommandService($commandService);
 $commandArchCommandService = new CreateCoreCommandArchCommandService($commandService);
 $singleCommand = new CreateCoreArchCommand($commandService, $queryArchCommandService, $commandArchCommandService);
 $application->add($singleCommand);
-$application->setDefaultCommand($singleCommand->getName(), true);
+$application->setDefaultCommand((string) $singleCommand->getName(), true);
 
 $application->run();

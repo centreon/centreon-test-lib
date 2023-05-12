@@ -27,9 +27,7 @@ use Centreon\PhpCsFixer\PhpCsFixerRuleSet;
 
 abstract class FileTemplate
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected string $licenceHeader;
 
     public function __construct()

@@ -32,7 +32,7 @@ class PresenterTemplate extends FileTemplate
      * @param string $namespace
      * @param string $name
      * @param PresenterInterfaceTemplate $presenterInterface
-     * @param boolean $exists
+     * @param bool $exists
      */
     public function __construct(
         public string $filePath,
@@ -51,22 +51,21 @@ class PresenterTemplate extends FileTemplate
     {
         $interfaceNamespace = $this->presenterInterface->namespace . '\\' . $this->presenterInterface->name;
         $interfaceName = $this->presenterInterface->name;
-        $content = <<<EOF
-        <?php
-        $this->licenceHeader
-        declare(strict_types=1);
 
-        namespace $this->namespace;
+        return <<<EOF
+            <?php
+            {$this->licenceHeader}
+            declare(strict_types=1);
 
-        use $interfaceNamespace;
-        use Core\Application\Common\UseCase\AbstractPresenter;
+            namespace {$this->namespace};
 
-        class $this->name extends AbstractPresenter implements $interfaceName
-        {
-        }
+            use {$interfaceNamespace};
+            use Core\Application\Common\UseCase\AbstractPresenter;
 
-        EOF;
+            class {$this->name} extends AbstractPresenter implements {$interfaceName}
+            {
+            }
 
-        return $content;
+            EOF;
     }
 }

@@ -39,7 +39,7 @@ class CommandUseCaseTemplate extends FileTemplate implements \Stringable
      * @param PresenterInterfaceTemplate $presenter
      * @param RequestDtoTemplate $request
      * @param RepositoryInterfaceTemplate $repository
-     * @param boolean $exists
+     * @param bool $exists
      */
     public function __construct(
         public string $filePath,
@@ -51,6 +51,14 @@ class CommandUseCaseTemplate extends FileTemplate implements \Stringable
         public bool $exists = false
     ) {
         parent::__construct();
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->name;
     }
 
     /**
@@ -68,48 +76,37 @@ class CommandUseCaseTemplate extends FileTemplate implements \Stringable
         $presenterVariable = 'presenter';
         $requestVariable = 'request';
 
+        return <<<EOF
+            <?php
+            {$this->licenceHeader}
+            declare(strict_types=1);
 
-        $content = <<<EOF
-        <?php
-        $this->licenceHeader
-        declare(strict_types=1);
+            namespace {$this->namespace};
 
-        namespace $this->namespace;
+            use {$presenterInterfaceNamespace};
+            use {$requestNamespace};
+            use {$repositoryNamespace};
 
-        use $presenterInterfaceNamespace;
-        use $requestNamespace;
-        use $repositoryNamespace;
-
-        class $this->name
-        {
-            /**
-             * @param $repositoryName $$repositoryVariable
-             */
-            public function __construct(private $repositoryName $$repositoryVariable)
+            class {$this->name}
             {
+                /**
+                 * @param {$repositoryName} $$repositoryVariable
+                 */
+                public function __construct(private {$repositoryName} $$repositoryVariable)
+                {
+                }
+
+                /**
+                 * @param {$presenterInterfaceName} $$presenterVariable
+                 * @param {$requestName} $$requestVariable
+                 */
+                public function __invoke(
+                    {$presenterInterfaceName} $$presenterVariable,
+                    {$requestName} $$requestVariable
+                ): void {
+                }
             }
 
-            /**
-             * @param $presenterInterfaceName $$presenterVariable
-             * @param $requestName $$requestVariable
-             */
-            public function __invoke(
-                $presenterInterfaceName $$presenterVariable,
-                $requestName $$requestVariable
-            ): void {
-            }
-        }
-
-        EOF;
-
-        return $content;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->name;
+            EOF;
     }
 }

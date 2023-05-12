@@ -23,18 +23,38 @@ declare(strict_types=1);
 
 namespace Centreon\Command\Service;
 
-use Symfony\Component\Console\Output\OutputInterface;
-use Centreon\Command\Model\ModelTemplate\ModelTemplate;
+use Centreon\Command\Model\ControllerTemplate\QueryControllerTemplate;
 use Centreon\Command\Model\DtoTemplate\ResponseDtoTemplate;
 use Centreon\Command\Model\FactoryTemplate\FactoryTemplate;
-use Centreon\Command\Model\PresenterTemplate\PresenterTemplate;
-use Centreon\Command\Model\UseCaseTemplate\QueryUseCaseTemplate;
-use Centreon\Command\Model\ControllerTemplate\QueryControllerTemplate;
-use Centreon\Command\Model\PresenterTemplate\PresenterInterfaceTemplate;
+use Centreon\Command\Model\ModelTemplate\ModelTemplate;
+use Centreon\Command\Model\PresenterTemplate\{PresenterInterfaceTemplate, PresenterTemplate};
 use Centreon\Command\Model\RepositoryTemplate\RepositoryTemplate;
+use Centreon\Command\Model\UseCaseTemplate\QueryUseCaseTemplate;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateCoreQueryArchCommandService
 {
+    /** @var RepositoryTemplate */
+    private RepositoryTemplate $repositoryTemplate;
+
+    /** @var ResponseDtoTemplate */
+    private ResponseDtoTemplate $responseDtoTemplate;
+
+    /** @var PresenterInterfaceTemplate */
+    private PresenterInterfaceTemplate $presenterInterfaceTemplate;
+
+    /** @var QueryUseCaseTemplate */
+    private QueryUseCaseTemplate $queryUseCaseTemplate;
+
+    /** @var PresenterTemplate */
+    private PresenterTemplate $commandPresenterTemplate;
+
+    /** @var QueryControllerTemplate */
+    private QueryControllerTemplate $queryControllerTemplate;
+
+    /** @var FactoryTemplate */
+    private FactoryTemplate $factoryTemplate;
+
     /**
      * @param CreateCoreArchCommandService $commandService
      */
@@ -53,8 +73,8 @@ class CreateCoreQueryArchCommandService
         $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelName . '/Infrastructure/Repository/'
             . 'DbRead' . $modelName . 'Repository.php';
         $namespace = 'Core\\' . $modelName . '\\Infrastructure\\Repository';
-        if (!file_exists($filePath)) {
-            $this->writeRepositoryTemplate = new RepositoryTemplate(
+        if (! file_exists($filePath)) {
+            $this->repositoryTemplate = new RepositoryTemplate(
                 $filePath,
                 $namespace,
                 'DbRead' . $modelName . 'Repository',
@@ -63,21 +83,21 @@ class CreateCoreQueryArchCommandService
             );
             preg_match('/^(.+).DbRead' . $modelName . 'Repository\.php$/', $filePath, $matches);
             $dirLocation = $matches[1];
-            //Create dir if not exists,
-            if (!is_dir($dirLocation)) {
+            // Create dir if not exists,
+            if (! is_dir($dirLocation)) {
                 mkdir($dirLocation, 0777, true);
             }
 
             file_put_contents(
-                $this->writeRepositoryTemplate->filePath,
-                $this->writeRepositoryTemplate->generateModelContent()
+                $this->repositoryTemplate->filePath,
+                $this->repositoryTemplate->generateModelContent()
             );
             $output->writeln(
-                '<info>Creating Repository : ' . $this->writeRepositoryTemplate->namespace . '\\'
-                    . $this->writeRepositoryTemplate->name . '</info>'
+                '<info>Creating Repository : ' . $this->repositoryTemplate->namespace . '\\'
+                    . $this->repositoryTemplate->name . '</info>'
             );
         } else {
-            $this->writeRepositoryTemplate = new RepositoryTemplate(
+            $this->repositoryTemplate = new RepositoryTemplate(
                 $filePath,
                 $namespace,
                 'DbRead' . $modelName . 'Repository',
@@ -85,18 +105,18 @@ class CreateCoreQueryArchCommandService
                 true
             );
             $output->writeln(
-                '<info>Using Existing Repository : ' . $this->writeRepositoryTemplate->namespace . '\\'
-                    . $this->writeRepositoryTemplate->name . '</info>'
+                '<info>Using Existing Repository : ' . $this->repositoryTemplate->namespace . '\\'
+                    . $this->repositoryTemplate->name . '</info>'
             );
         }
         $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
-        $output->writeln("");
+        $output->writeln('');
     }
 
     /**
      * @param OutputInterface $output
      * @param string $modelName
-     * @return void
+     * @param string $useCaseType
      */
     public function createResponseDtoTemplateIfNotExist(
         OutputInterface $output,
@@ -108,7 +128,7 @@ class CreateCoreQueryArchCommandService
         $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelName . '/Application/UseCase/' . $useCaseName
             . '\\' . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Application\\UseCase\\' . $useCaseName;
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             $this->responseDtoTemplate = new ResponseDtoTemplate(
                 $filePath,
                 $namespace,
@@ -117,8 +137,8 @@ class CreateCoreQueryArchCommandService
             );
             preg_match('/^(.+).' . $className . '\.php$/', $filePath, $matches);
             $dirLocation = $matches[1];
-            //Create dir if not exists,
-            if (!is_dir($dirLocation)) {
+            // Create dir if not exists,
+            if (! is_dir($dirLocation)) {
                 mkdir($dirLocation, 0777, true);
             }
 
@@ -143,7 +163,7 @@ class CreateCoreQueryArchCommandService
             );
         }
         $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
-        $output->writeln("");
+        $output->writeln('');
     }
 
     /**
@@ -161,8 +181,8 @@ class CreateCoreQueryArchCommandService
         $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelName . '/Application/UseCase/' . $useCaseName
             . '\\' . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Application\\UseCase\\' . $useCaseName;
-        if (!file_exists($filePath)) {
-            $this->commandPresenterInterfaceTemplate = new PresenterInterfaceTemplate(
+        if (! file_exists($filePath)) {
+            $this->presenterInterfaceTemplate = new PresenterInterfaceTemplate(
                 $filePath,
                 $namespace,
                 $className,
@@ -170,32 +190,32 @@ class CreateCoreQueryArchCommandService
             );
             preg_match('/^(.+).' . $className . '\.php$/', $filePath, $matches);
             $dirLocation = $matches[1];
-            //Create dir if not exists,
-            if (!is_dir($dirLocation)) {
+            // Create dir if not exists,
+            if (! is_dir($dirLocation)) {
                 mkdir($dirLocation, 0777, true);
             }
             file_put_contents(
-                $this->commandPresenterInterfaceTemplate->filePath,
-                $this->commandPresenterInterfaceTemplate->generateModelContent()
+                $this->presenterInterfaceTemplate->filePath,
+                $this->presenterInterfaceTemplate->generateModelContent()
             );
             $output->writeln(
-                '<info>Creating Presenter Interface : ' . $this->commandPresenterInterfaceTemplate->namespace . '\\'
-                    . $this->commandPresenterInterfaceTemplate->name . '</info>'
+                '<info>Creating Presenter Interface : ' . $this->presenterInterfaceTemplate->namespace . '\\'
+                    . $this->presenterInterfaceTemplate->name . '</info>'
             );
         } else {
-            $this->commandPresenterInterfaceTemplate = new PresenterInterfaceTemplate(
+            $this->presenterInterfaceTemplate = new PresenterInterfaceTemplate(
                 $filePath,
                 $namespace,
                 $className,
                 true
             );
             $output->writeln(
-                '<info>Using Existing Presenter Interface : ' . $this->commandPresenterInterfaceTemplate->namespace
-                    . '\\' . $this->commandPresenterInterfaceTemplate->name . '</info>'
+                '<info>Using Existing Presenter Interface : ' . $this->presenterInterfaceTemplate->namespace
+                    . '\\' . $this->presenterInterfaceTemplate->name . '</info>'
             );
         }
         $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
-        $output->writeln("");
+        $output->writeln('');
     }
 
     /**
@@ -213,18 +233,18 @@ class CreateCoreQueryArchCommandService
         $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelName . '/Infrastructure/API/' . $useCaseName
             . '\\' . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Infrastructure\\API\\' . $useCaseName;
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             $this->commandPresenterTemplate = new PresenterTemplate(
                 $filePath,
                 $namespace,
                 $className,
-                $this->commandPresenterInterfaceTemplate,
+                $this->presenterInterfaceTemplate,
                 false
             );
             preg_match('/^(.+).' . $className . '\.php$/', $filePath, $matches);
             $dirLocation = $matches[1];
-            //Create dir if not exists,
-            if (!is_dir($dirLocation)) {
+            // Create dir if not exists,
+            if (! is_dir($dirLocation)) {
                 mkdir($dirLocation, 0777, true);
             }
             file_put_contents(
@@ -240,7 +260,7 @@ class CreateCoreQueryArchCommandService
                 $filePath,
                 $namespace,
                 $className,
-                $this->commandPresenterInterfaceTemplate,
+                $this->presenterInterfaceTemplate,
                 true
             );
             $output->writeln(
@@ -249,7 +269,7 @@ class CreateCoreQueryArchCommandService
             );
         }
         $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
-        $output->writeln("");
+        $output->writeln('');
     }
 
     /**
@@ -266,21 +286,21 @@ class CreateCoreQueryArchCommandService
         $filePath = $this->commandService->getSrcPath() . '/Core/'  . $modelTemplate->name . '/Application/UseCase/'
             . $useCaseName . '\\' . $useCaseName . '.php';
         $namespace = 'Core\\' . $modelTemplate->name . '\\Application\\UseCase\\' . $useCaseName;
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             $this->queryUseCaseTemplate = new QueryUseCaseTemplate(
                 $filePath,
                 $namespace,
                 $useCaseName,
-                $this->commandPresenterInterfaceTemplate,
+                $this->presenterInterfaceTemplate,
                 $this->responseDtoTemplate,
                 $this->commandService->getRepositoryInterfaceTemplate(),
-                false,
-                $modelTemplate
+                $modelTemplate,
+                false
             );
             preg_match('/^(.+).' . $useCaseName . '\.php$/', $filePath, $matches);
             $dirLocation = $matches[1];
-            //Create dir if not exists,
-            if (!is_dir($dirLocation)) {
+            // Create dir if not exists,
+            if (! is_dir($dirLocation)) {
                 mkdir($dirLocation, 0777, true);
             }
             file_put_contents(
@@ -296,11 +316,11 @@ class CreateCoreQueryArchCommandService
                 $filePath,
                 $namespace,
                 $useCaseName,
-                $this->commandPresenterInterfaceTemplate,
+                $this->presenterInterfaceTemplate,
                 $this->responseDtoTemplate,
                 $this->commandService->getRepositoryInterfaceTemplate(),
-                true,
-                $modelTemplate
+                $modelTemplate,
+                true
             );
             $output->writeln(
                 '<info>Using Existing Use Case : ' . $this->queryUseCaseTemplate->namespace . '\\'
@@ -308,7 +328,7 @@ class CreateCoreQueryArchCommandService
             );
         }
         $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
-        $output->writeln("");
+        $output->writeln('');
 
         $this->commandService->createUnitTestFileIfNotExists($output, $this->queryUseCaseTemplate);
     }
@@ -328,19 +348,19 @@ class CreateCoreQueryArchCommandService
         $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelName . '/Infrastructure/Api/' . $useCaseName
             . '\\' . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Infrastructure\\Api\\' . $useCaseName;
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             $this->queryControllerTemplate = new QueryControllerTemplate(
                 $filePath,
                 $namespace,
                 $className,
                 $this->queryUseCaseTemplate,
-                $this->commandPresenterInterfaceTemplate,
+                $this->presenterInterfaceTemplate,
                 false
             );
             preg_match('/^(.+).' . $className . '\.php$/', $filePath, $matches);
             $dirLocation = $matches[1];
-            //Create dir if not exists,
-            if (!is_dir($dirLocation)) {
+            // Create dir if not exists,
+            if (! is_dir($dirLocation)) {
                 mkdir($dirLocation, 0777, true);
             }
             file_put_contents(
@@ -357,7 +377,7 @@ class CreateCoreQueryArchCommandService
                 $namespace,
                 $className,
                 $this->queryUseCaseTemplate,
-                $this->commandPresenterInterfaceTemplate,
+                $this->presenterInterfaceTemplate,
                 true
             );
             $output->writeln(
@@ -366,7 +386,7 @@ class CreateCoreQueryArchCommandService
             );
         }
         $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
-        $output->writeln("");
+        $output->writeln('');
 
         $this->commandService->createUnitTestFileIfNotExists($output, $this->queryControllerTemplate);
     }
@@ -383,7 +403,7 @@ class CreateCoreQueryArchCommandService
         $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelTemplate->name
             . '/Infrastructure/Repository/' . $className. '.php';
         $namespace = 'Core\\' . $modelTemplate->name . '\\Infrastructure\\Repository';
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             $this->factoryTemplate = new FactoryTemplate(
                 $filePath,
                 $namespace,
@@ -392,8 +412,8 @@ class CreateCoreQueryArchCommandService
             );
             preg_match('/^(.+).' . $className . '\.php$/', $filePath, $matches);
             $dirLocation = $matches[1];
-            //Create dir if not exists,
-            if (!is_dir($dirLocation)) {
+            // Create dir if not exists,
+            if (! is_dir($dirLocation)) {
                 mkdir($dirLocation, 0777, true);
             }
             file_put_contents(
@@ -418,7 +438,7 @@ class CreateCoreQueryArchCommandService
             );
         }
         $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
-        $output->writeln("");
+        $output->writeln('');
 
         $this->commandService->createUnitTestFileIfNotExists($output, $this->factoryTemplate);
     }

@@ -30,23 +30,21 @@ class UnitTestTemplate extends FileTemplate
     /**
      * @param string $fileNamespace
      */
-    public function generateContentForUnitTest(string $fileNamespace)
+    public function generateContentForUnitTest(string $fileNamespace): string
     {
         $namespace = $fileNamespace;
 
-        $content = <<<EOF
-        <?php
-        $this->licenceHeader
-        declare(strict_types=1);
+        return <<<EOF
+            <?php
+            {$this->licenceHeader}
+            declare(strict_types=1);
 
-        namespace $namespace;
+            namespace {$namespace};
 
-        it('should be erased or throw an error', function () {
-            expect(false)->toBeTrue();
-        });
+            it('should be erased or throw an error', function () {
+                expect(false)->toBeTrue();
+            });
 
-        EOF;
-
-        return $content;
+            EOF;
     }
 }

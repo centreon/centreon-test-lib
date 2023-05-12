@@ -34,39 +34,25 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateCoreCommandArchCommandService
 {
-    /**
-     * @var RepositoryTemplate
-     */
+    /** @var RepositoryTemplate */
     private RepositoryTemplate $writeRepositoryTemplate;
 
-    /**
-     * @var RequestDtoTemplate
-     */
+    /** @var RequestDtoTemplate */
     private RequestDtoTemplate $requestDtoTemplate;
 
-    /**
-     * @var PresenterInterfaceTemplate
-     */
+    /** @var PresenterInterfaceTemplate */
     private PresenterInterfaceTemplate $commandPresenterInterfaceTemplate;
 
-    /**
-     * @var CommandUseCaseTemplate
-     */
+    /** @var CommandUseCaseTemplate */
     private CommandUseCaseTemplate $commandUseCaseTemplate;
 
-    /**
-     * @var PresenterTemplate
-     */
+    /** @var PresenterTemplate */
     private PresenterTemplate $commandPresenterTemplate;
 
-    /**
-     * @var CommandControllerTemplate
-     */
+    /** @var CommandControllerTemplate */
     private CommandControllerTemplate $commandControllerTemplate;
 
-    /**
-     * @var FactoryTemplate
-     */
+    /** @var FactoryTemplate */
     private FactoryTemplate $factoryTemplate;
 
     /**
@@ -89,7 +75,7 @@ class CreateCoreCommandArchCommandService
             . 'Repository' . DIRECTORY_SEPARATOR . 'DbWrite'
             . $modelName . 'Repository.php';
         $namespace = 'Core\\' . $modelName . '\\Infrastructure\\Repository';
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             $this->writeRepositoryTemplate = new RepositoryTemplate(
                 $filePath,
                 $namespace,
@@ -99,8 +85,8 @@ class CreateCoreCommandArchCommandService
             );
             preg_match('/^(.+).DbWrite' . $modelName . 'Repository\.php$/', $filePath, $matches);
             $dirLocation = $matches[1];
-            //Create dir if not exists,
-            if (!is_dir($dirLocation)) {
+            // Create dir if not exists,
+            if (! is_dir($dirLocation)) {
                 mkdir($dirLocation, 0777, true);
             }
 
@@ -126,7 +112,7 @@ class CreateCoreCommandArchCommandService
             );
         }
         $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
-        $output->writeln("");
+        $output->writeln('');
     }
 
     /**
@@ -145,7 +131,7 @@ class CreateCoreCommandArchCommandService
             . $modelName . DIRECTORY_SEPARATOR .  'Application' . DIRECTORY_SEPARATOR .'UseCase' . DIRECTORY_SEPARATOR
             . $useCaseName . DIRECTORY_SEPARATOR . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Application\\UseCase\\' . $useCaseName;
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             $this->requestDtoTemplate = new RequestDtoTemplate(
                 $filePath,
                 $namespace,
@@ -154,8 +140,8 @@ class CreateCoreCommandArchCommandService
             );
             preg_match('/^(.+).' . $className . '\.php$/', $filePath, $matches);
             $dirLocation = $matches[1];
-            //Create dir if not exists,
-            if (!is_dir($dirLocation)) {
+            // Create dir if not exists,
+            if (! is_dir($dirLocation)) {
                 mkdir($dirLocation, 0777, true);
             }
 
@@ -180,7 +166,7 @@ class CreateCoreCommandArchCommandService
             );
         }
         $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
-        $output->writeln("");
+        $output->writeln('');
     }
 
     /**
@@ -199,7 +185,7 @@ class CreateCoreCommandArchCommandService
             . $modelName . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
             . $useCaseName . DIRECTORY_SEPARATOR . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Application\\UseCase\\' . $useCaseName;
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             $this->commandPresenterInterfaceTemplate = new PresenterInterfaceTemplate(
                 $filePath,
                 $namespace,
@@ -208,8 +194,8 @@ class CreateCoreCommandArchCommandService
             );
             preg_match('/^(.+).' . $className . '\.php$/', $filePath, $matches);
             $dirLocation = $matches[1];
-            //Create dir if not exists,
-            if (!is_dir($dirLocation)) {
+            // Create dir if not exists,
+            if (! is_dir($dirLocation)) {
                 mkdir($dirLocation, 0777, true);
             }
             file_put_contents(
@@ -233,7 +219,7 @@ class CreateCoreCommandArchCommandService
             );
         }
         $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
-        $output->writeln("");
+        $output->writeln('');
     }
 
     /**
@@ -252,7 +238,7 @@ class CreateCoreCommandArchCommandService
             . $modelName . DIRECTORY_SEPARATOR . 'Infrastructure' . DIRECTORY_SEPARATOR . 'API' . DIRECTORY_SEPARATOR
             . $useCaseName . DIRECTORY_SEPARATOR . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Infrastructure\\API\\' . $useCaseName;
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             $this->commandPresenterTemplate = new PresenterTemplate(
                 $filePath,
                 $namespace,
@@ -262,8 +248,8 @@ class CreateCoreCommandArchCommandService
             );
             preg_match('/^(.+).' . $className . '\.php$/', $filePath, $matches);
             $dirLocation = $matches[1];
-            //Create dir if not exists,
-            if (!is_dir($dirLocation)) {
+            // Create dir if not exists,
+            if (! is_dir($dirLocation)) {
                 mkdir($dirLocation, 0777, true);
             }
             file_put_contents(
@@ -288,7 +274,7 @@ class CreateCoreCommandArchCommandService
             );
         }
         $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
-        $output->writeln("");
+        $output->writeln('');
     }
 
     /**
@@ -306,7 +292,7 @@ class CreateCoreCommandArchCommandService
             . $modelName . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
             . $useCaseName . DIRECTORY_SEPARATOR . $useCaseName . '.php';
         $namespace = 'Core\\' . $modelName . '\\Application\\UseCase\\' . $useCaseName;
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             $this->commandUseCaseTemplate = new CommandUseCaseTemplate(
                 $filePath,
                 $namespace,
@@ -318,8 +304,8 @@ class CreateCoreCommandArchCommandService
             );
             preg_match('/^(.+).' . $useCaseName . '\.php$/', $filePath, $matches);
             $dirLocation = $matches[1];
-            //Create dir if not exists,
-            if (!is_dir($dirLocation)) {
+            // Create dir if not exists,
+            if (! is_dir($dirLocation)) {
                 mkdir($dirLocation, 0777, true);
             }
             file_put_contents(
@@ -346,7 +332,7 @@ class CreateCoreCommandArchCommandService
             );
         }
         $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
-        $output->writeln("");
+        $output->writeln('');
 
         $this->commandService->createUnitTestFileIfNotExists($output, $this->commandUseCaseTemplate);
     }
@@ -367,7 +353,7 @@ class CreateCoreCommandArchCommandService
             . $modelName . DIRECTORY_SEPARATOR . 'Infrastructure' . DIRECTORY_SEPARATOR . 'API' . DIRECTORY_SEPARATOR
             . $useCaseName . DIRECTORY_SEPARATOR . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Infrastructure\\API\\' . $useCaseName;
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             $this->commandControllerTemplate = new CommandControllerTemplate(
                 $filePath,
                 $namespace,
@@ -379,8 +365,8 @@ class CreateCoreCommandArchCommandService
             );
             preg_match('/^(.+).' . $className . '\.php$/', $filePath, $matches);
             $dirLocation = $matches[1];
-            //Create dir if not exists,
-            if (!is_dir($dirLocation)) {
+            // Create dir if not exists,
+            if (! is_dir($dirLocation)) {
                 mkdir($dirLocation, 0777, true);
             }
             file_put_contents(
@@ -407,7 +393,7 @@ class CreateCoreCommandArchCommandService
             );
         }
         $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
-        $output->writeln("");
+        $output->writeln('');
 
         $this->commandService->createUnitTestFileIfNotExists($output, $this->commandControllerTemplate);
     }
@@ -425,7 +411,7 @@ class CreateCoreCommandArchCommandService
             . $modelTemplate->name . DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR . 'Model'
             . DIRECTORY_SEPARATOR . $className . '.php';
         $namespace = 'Core\\' . $modelTemplate->name . '\\Domain\\Model';
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             $this->factoryTemplate = new FactoryTemplate(
                 $filePath,
                 $namespace,
@@ -434,8 +420,8 @@ class CreateCoreCommandArchCommandService
             );
             preg_match('/^(.+).' . $className . '\.php$/', $filePath, $matches);
             $dirLocation = $matches[1];
-            //Create dir if not exists,
-            if (!is_dir($dirLocation)) {
+            // Create dir if not exists,
+            if (! is_dir($dirLocation)) {
                 mkdir($dirLocation, 0777, true);
             }
             file_put_contents(
@@ -460,7 +446,7 @@ class CreateCoreCommandArchCommandService
             );
         }
         $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($filePath) . '</comment>');
-        $output->writeln("");
+        $output->writeln('');
 
         $this->commandService->createUnitTestFileIfNotExists($output, $this->factoryTemplate);
     }

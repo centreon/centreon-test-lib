@@ -31,7 +31,7 @@ class ModelTemplate extends FileTemplate
      * @param string $filePath
      * @param string $namespace
      * @param string $name
-     * @param boolean $exists
+     * @param bool $exists
      */
     public function __construct(
         public string $filePath,
@@ -47,19 +47,17 @@ class ModelTemplate extends FileTemplate
      */
     public function generateModelContent(): string
     {
-        $content = <<<EOF
-        <?php
-        $this->licenceHeader
-        declare(strict_types=1);
+        return <<<EOF
+            <?php
+            {$this->licenceHeader}
+            declare(strict_types=1);
 
-        namespace $this->namespace;
+            namespace {$this->namespace};
 
-        class $this->name
-        {
-        }
+            class {$this->name}
+            {
+            }
 
-        EOF;
-
-        return $content;
+            EOF;
     }
 }

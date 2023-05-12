@@ -36,19 +36,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CreateCoreArchCommand extends Command
 {
     public const COMMAND_NAME = 'centreon:create-core-arch';
-    public const COMMAND_CREATE  = 'Create';
-    public const COMMAND_UPDATE  = 'Update';
-    public const COMMAND_DELETE  = 'Delete';
+    public const COMMAND_CREATE = 'Create';
+    public const COMMAND_UPDATE = 'Update';
+    public const COMMAND_DELETE = 'Delete';
     public const COMMAND_FIND = 'Find';
     public const COMMAND_ACTION = [
         self::COMMAND_CREATE,
         self::COMMAND_UPDATE,
         self::COMMAND_DELETE,
-        self::COMMAND_FIND
+        self::COMMAND_FIND,
     ];
     public const READ_REPOSITORY_TYPE = 'Read';
     public const WRITE_REPOSITORY_TYPE = 'Write';
-
     public const COMMAND_USECASES = [self::COMMAND_CREATE, self::COMMAND_UPDATE, self::COMMAND_DELETE];
     public const QUERY_USECASES = [self::COMMAND_FIND];
 
@@ -85,15 +84,15 @@ class CreateCoreArchCommand extends Command
      */
     public function interact(InputInterface $input, OutputInterface $output): void
     {
-        $output->writeln("");
+        $output->writeln('');
         $output->writeln('You are going to create a use case architecture.');
         $output->writeln("Let's answer few questions first !");
-        $output->writeln("");
+        $output->writeln('');
 
         $questionHelper = $this->getHelper('question');
 
         $this->useCaseType = $this->commandService->askForUseCaseType($input, $output, $questionHelper);
-        $this->modelTemplate = $this->commandService->askForModel($input, $output, $questionHelper, $this->useCaseType);
+        $this->modelTemplate = $this->commandService->askForModel($input, $output, $questionHelper);
     }
 
     /**
@@ -113,12 +112,13 @@ class CreateCoreArchCommand extends Command
         }
         $output->writeln('<comment>' . $this->commandService->getRelativeFilePath($this->modelTemplate->filePath)
             . '</comment>');
-        $output->writeln("");
+        $output->writeln('');
         if ($this->isACommandUseCase()) {
             $this->createCommandArch($output);
         } else {
             $this->createQueryArch($output);
         }
+
         return Command::SUCCESS;
     }
 
@@ -127,7 +127,7 @@ class CreateCoreArchCommand extends Command
      */
     public function isACommandUseCase(): bool
     {
-        return in_array($this->useCaseType, self::COMMAND_USECASES);
+        return in_array($this->useCaseType, self::COMMAND_USECASES, true);
     }
 
     /**

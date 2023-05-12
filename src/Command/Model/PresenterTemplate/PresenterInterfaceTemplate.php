@@ -31,7 +31,7 @@ class PresenterInterfaceTemplate extends FileTemplate implements \Stringable
      * @param string $filePath
      * @param string $namespace
      * @param string $name
-     * @param boolean $exists
+     * @param bool $exists
      */
     public function __construct(
         public string $filePath,
@@ -45,36 +45,36 @@ class PresenterInterfaceTemplate extends FileTemplate implements \Stringable
     /**
      * @return string
      */
-    public function generateModelContent(): string
+    public function __toString(): string
     {
-        $useCase = substr($this->name, 0, strpos($this->name, 'PresenterInterface'));
-        $content = <<<EOF
-        <?php
-        $this->licenceHeader
-        declare(strict_types=1);
-
-        namespace $this->namespace;
-
-        use Core\Application\Common\UseCase\ResponseStatusInterface;
-
-        interface $this->name
-        {
-            /**
-             * @param {$useCase}Response|ResponseStatusInterface \$data
-             */
-            public function presentResponse({$useCase}Response|ResponseStatusInterface \$data): void;
-        }
-
-        EOF;
-
-        return $content;
+        return $this->name;
     }
 
     /**
      * @return string
      */
-    public function __toString(): string
+    public function generateModelContent(): string
     {
-        return $this->name;
+        preg_match('/^(.+)PresenterInterface/', $this->name, $matches);
+        $useCase = $matches[1];
+
+        return <<<EOF
+            <?php
+            {$this->licenceHeader}
+            declare(strict_types=1);
+
+            namespace {$this->namespace};
+
+            use Core\Application\Common\UseCase\ResponseStatusInterface;
+
+            interface {$this->name}
+            {
+                /**
+                 * @param {$useCase}Response|ResponseStatusInterface \$data
+                 */
+                public function presentResponse({$useCase}Response|ResponseStatusInterface \$data): void;
+            }
+
+            EOF;
     }
 }

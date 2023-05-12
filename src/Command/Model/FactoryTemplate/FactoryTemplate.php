@@ -33,7 +33,7 @@ class FactoryTemplate extends FileTemplate
      * @param string $namespace
      * @param string $name
      * @param ModelTemplate $modelTemplate
-     * @param boolean $exists
+     * @param bool $exists
      */
     public function __construct(
         public string $filePath,
@@ -53,25 +53,23 @@ class FactoryTemplate extends FileTemplate
         $modelName = $this->modelTemplate->name;
         $modelNamespace = $this->modelTemplate->namespace . '\\' . $this->modelTemplate->name;
 
-        $content = <<<EOF
-        <?php
-        $this->licenceHeader
-        declare(strict_types=1);
+        return <<<EOF
+            <?php
+            {$this->licenceHeader}
+            declare(strict_types=1);
 
-        namespace $this->namespace;
+            namespace {$this->namespace};
 
-        use $modelNamespace;
+            use {$modelNamespace};
 
-        class $this->name
-        {
-            public static function create(): $modelName
+            class {$this->name}
             {
-                return new $modelName();
+                public static function create(): {$modelName}
+                {
+                    return new {$modelName}();
+                }
             }
-        }
 
-        EOF;
-
-        return $content;
+            EOF;
     }
 }

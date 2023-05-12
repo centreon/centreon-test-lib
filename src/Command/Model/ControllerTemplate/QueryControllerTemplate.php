@@ -35,7 +35,7 @@ class QueryControllerTemplate extends FileTemplate
      * @param string $name
      * @param QueryUseCaseTemplate $useCase
      * @param PresenterInterfaceTemplate $presenter
-     * @param boolean $exists
+     * @param bool $exists
      */
     public function __construct(
         public string $filePath,
@@ -59,30 +59,28 @@ class QueryControllerTemplate extends FileTemplate
         $presenterVariable = 'presenter';
         $show = 'presenter->show()';
 
-        $content = <<<EOF
-        <?php
-        $this->licenceHeader
-        declare(strict_types=1);
+        return <<<EOF
+            <?php
+            {$this->licenceHeader}
+            declare(strict_types=1);
 
-        namespace $this->namespace;
+            namespace {$this->namespace};
 
-        use $useCaseNamespace;
-        use $presenterNamespace;
+            use {$useCaseNamespace};
+            use {$presenterNamespace};
 
-        final class $this->name
-        {
-            public function __invoke(
-                $this->useCase $$useCaseVariable,
-                $this->presenter $$presenterVariable
-            ): object {
-                $$useCaseVariable($$presenterVariable);
+            final class {$this->name}
+            {
+                public function __invoke(
+                    {$this->useCase} $$useCaseVariable,
+                    {$this->presenter} $$presenterVariable
+                ): object {
+                    $$useCaseVariable($$presenterVariable);
 
-                return $$show;
+                    return $$show;
+                }
             }
-        }
 
-        EOF;
-
-        return $content;
+            EOF;
     }
 }

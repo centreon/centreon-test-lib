@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Centreon\Command\Model\UseCaseTemplate;
 
-use Centreon\Command\Model\FileTemplate;
 use Centreon\Command\Model\DtoTemplate\ResponseDtoTemplate;
+use Centreon\Command\Model\FileTemplate;
 use Centreon\Command\Model\ModelTemplate\ModelTemplate;
 use Centreon\Command\Model\PresenterTemplate\PresenterInterfaceTemplate;
 use Centreon\Command\Model\RepositoryTemplate\RepositoryInterfaceTemplate;
@@ -38,7 +38,7 @@ class QueryUseCaseTemplate extends FileTemplate implements \Stringable
      * @param PresenterInterfaceTemplate $presenter
      * @param ResponseDtoTemplate $response
      * @param RepositoryInterfaceTemplate $repository
-     * @param boolean $exists
+     * @param bool $exists
      * @param ModelTemplate $model
      */
     public function __construct(
@@ -48,10 +48,18 @@ class QueryUseCaseTemplate extends FileTemplate implements \Stringable
         public PresenterInterfaceTemplate $presenter,
         public ResponseDtoTemplate $response,
         public RepositoryInterfaceTemplate $repository,
-        public bool $exists = false,
-        public ModelTemplate $model
+        public ModelTemplate $model,
+        public bool $exists = false
     ) {
         parent::__construct();
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->name;
     }
 
     /**
@@ -72,53 +80,43 @@ class QueryUseCaseTemplate extends FileTemplate implements \Stringable
         $modelNamespace = $this->model->namespace . '\\' . $this->model->name;
         $modelName = $this->model->name;
 
-        $content = <<<EOF
-        <?php
-        $this->licenceHeader
-        declare(strict_types=1);
+        return <<<EOF
+            <?php
+            {$this->licenceHeader}
+            declare(strict_types=1);
 
-        namespace $this->namespace;
+            namespace {$this->namespace};
 
-        use $presenterInterfaceNamespace;
-        use $repositoryNamespace;
-        use $responseNamespace;
-        use $modelNamespace;
+            use {$presenterInterfaceNamespace};
+            use {$repositoryNamespace};
+            use {$responseNamespace};
+            use {$modelNamespace};
 
-        class $this->name
-        {
-            /**
-             * @param $repositoryName $$repositoryVariable
-             */
-            public function __construct(private $repositoryName $$repositoryVariable)
+            class {$this->name}
             {
+                /**
+                 * @param {$repositoryName} $$repositoryVariable
+                 */
+                public function __construct(private {$repositoryName} $$repositoryVariable)
+                {
+                }
+
+                /**
+                 * @param {$presenterInterfaceName} $$presenterVariable
+                 */
+                public function __invoke(
+                    {$presenterInterfaceName} $$presenterVariable
+                ): void {
+                }
+
+                public function createResponse({$modelName} $$modelNameVariable): {$responseName}
+                {
+                    $$responseVariable = new {$responseName}();
+
+                    return $$responseVariable;
+                }
             }
 
-            /**
-             * @param $presenterInterfaceName $$presenterVariable
-             */
-            public function __invoke(
-                $presenterInterfaceName $$presenterVariable
-            ): void {
-            }
-
-            public function createResponse($modelName $$modelNameVariable): $responseName
-            {
-                $$responseVariable = new $responseName();
-
-                return $$responseVariable;
-            }
-        }
-
-        EOF;
-
-        return $content;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->name;
+            EOF;
     }
 }

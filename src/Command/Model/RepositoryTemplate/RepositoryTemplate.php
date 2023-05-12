@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Centreon\Command\Model\RepositoryTemplate;
 
 use Centreon\Command\Model\FileTemplate;
-use Centreon\Command\Model\RepositoryTemplate\RepositoryInterfaceTemplate;
 
 class RepositoryTemplate extends FileTemplate
 {
@@ -33,7 +32,7 @@ class RepositoryTemplate extends FileTemplate
      * @param string $namespace
      * @param string $name
      * @param RepositoryInterfaceTemplate $writeRepositoryInterface
-     * @param boolean $exists
+     * @param bool $exists
      */
     public function __construct(
         public string $filePath,
@@ -54,30 +53,29 @@ class RepositoryTemplate extends FileTemplate
         $thisDb = 'this->db';
         $interfaceNamespace = $this->writeRepositoryInterface->namespace . '\\' . $this->writeRepositoryInterface->name;
         $interfaceName = $this->writeRepositoryInterface->name;
-        $content = <<<EOF
-        <?php
-        $this->licenceHeader
-        declare(strict_types=1);
 
-        namespace $this->namespace;
+        return <<<EOF
+            <?php
+            {$this->licenceHeader}
+            declare(strict_types=1);
 
-        use Centreon\Infrastructure\DatabaseConnection;
-        use Centreon\Infrastructure\Repository\AbstractRepositoryDRB;
-        use $interfaceNamespace;
+            namespace {$this->namespace};
 
-        class $this->name extends AbstractRepositoryDRB implements $interfaceName
-        {
-            /**
-             * @param DatabaseConnection $$databaseVariable
-             */
-            public function __construct(DatabaseConnection $$databaseVariable)
+            use Centreon\Infrastructure\DatabaseConnection;
+            use Centreon\Infrastructure\Repository\AbstractRepositoryDRB;
+            use {$interfaceNamespace};
+
+            class {$this->name} extends AbstractRepositoryDRB implements {$interfaceName}
             {
-                $$thisDb = $$databaseVariable;
+                /**
+                 * @param DatabaseConnection $$databaseVariable
+                 */
+                public function __construct(DatabaseConnection $$databaseVariable)
+                {
+                    $$thisDb = $$databaseVariable;
+                }
             }
-        }
 
-        EOF;
-
-        return $content;
+            EOF;
     }
 }

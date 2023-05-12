@@ -31,7 +31,7 @@ class ResponseDtoTemplate extends FileTemplate implements \Stringable
      * @param string $filePath
      * @param string $namespace
      * @param string $name
-     * @param boolean $exists
+     * @param bool $exists
      */
     public function __construct(
         public string $filePath,
@@ -45,29 +45,27 @@ class ResponseDtoTemplate extends FileTemplate implements \Stringable
     /**
      * @return string
      */
-    public function generateModelContent(): string
+    public function __toString(): string
     {
-        $content = <<<EOF
-        <?php
-        $this->licenceHeader
-        declare(strict_types=1);
-
-        namespace $this->namespace;
-
-        final class $this->name
-        {
-        }
-
-        EOF;
-
-        return $content;
+        return $this->name;
     }
 
     /**
      * @return string
      */
-    public function __toString(): string
+    public function generateModelContent(): string
     {
-        return $this->name;
+        return <<<EOF
+            <?php
+            {$this->licenceHeader}
+            declare(strict_types=1);
+
+            namespace {$this->namespace};
+
+            final class {$this->name}
+            {
+            }
+
+            EOF;
     }
 }
