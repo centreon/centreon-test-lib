@@ -50,8 +50,12 @@ class FactoryTemplate extends FileTemplate
      */
     public function generateModelContent(): string
     {
-        $modelName = $this->modelTemplate->name;
-        $modelNamespace = $this->modelTemplate->namespace . '\\' . $this->modelTemplate->name;
+        if ($this->modelTemplate->isNewFlag === true) {
+            $modelName = 'New' . $this->modelTemplate->name;
+        } else {
+            $modelName = $this->modelTemplate->name;
+        }
+        $modelNamespace = $this->modelTemplate->namespace . '\\' . $modelName;
 
         return <<<EOF
             <?php

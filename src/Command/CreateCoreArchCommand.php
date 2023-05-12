@@ -92,7 +92,7 @@ class CreateCoreArchCommand extends Command
         $questionHelper = $this->getHelper('question');
 
         $this->useCaseType = $this->commandService->askForUseCaseType($input, $output, $questionHelper);
-        $this->modelTemplate = $this->commandService->askForModel($input, $output, $questionHelper);
+        $this->modelTemplate = $this->commandService->askForModel($input, $output, $questionHelper, $this->useCaseType);
     }
 
     /**
@@ -100,10 +100,19 @@ class CreateCoreArchCommand extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        if ($this->modelTemplate->exists === false) {
+        if ($this->modelTemplate->exists === false && $this->modelTemplate->isNewFlag === false) {
             $this->commandService->createModel($this->modelTemplate);
             $output->writeln('<info>Creating Model : ' . $this->modelTemplate->namespace . '\\'
                 . $this->modelTemplate->name . '</info>');
+        } else if ($this->modelTemplate->exists === false && $this->modelTemplate->isNewFlag === true) {
+            $this->commandService->createModel($this->modelTemplate);
+            $output->writeln('<info>Creating Model : ' . $this->modelTemplate->namespace . '\\New'
+                . $this->modelTemplate->name . '</info>');
+        } else if ($this->modelTemplate->exists === true && $this->modelTemplate->isNewFlag === true) {
+            $output->writeln(
+                '<info>Using Existing Model : ' . $this->modelTemplate->namespace . '\\New' . $this->modelTemplate->name
+                    . '</info>'
+            );
         } else {
             $output->writeln(
                 '<info>Using Existing Model : ' . $this->modelTemplate->namespace . '\\' . $this->modelTemplate->name

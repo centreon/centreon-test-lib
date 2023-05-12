@@ -71,6 +71,7 @@ class CreateCoreArchCommandService
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param mixed $questionHelper
+     * @param string $useCaseType
      *
      * @return ModelTemplate
      */
@@ -78,18 +79,49 @@ class CreateCoreArchCommandService
         InputInterface $input,
         OutputInterface $output,
         $questionHelper,
+        string $useCaseType,
     ): ModelTemplate {
         $questionModelName = new Question('For which model is this use case intended ? ');
         $modelName = $questionHelper->ask($input, $output, $questionModelName);
         $output->writeln('<info>You have selected: [' . $modelName . '] Model.</info>');
         $output->writeln('');
         // Search for already existing models.
-        $foundModels = $this->searchExistingModel($modelName);
+        if ($useCaseType === 'Create') {
+            $modelNameToSearch = 'New' . $modelName;
+        } else {
+            $modelNameToSearch = $modelName;
+        }
+        $foundModels = $this->searchExistingModel($modelNameToSearch);
+
+        if ($useCaseType === 'Create' && empty($foundModels)) {
+            $confirmationQuestion = new ConfirmationQuestion("You're going to create a model : New" . $modelName . ' [Y/n]');
+            $confirmation = $questionHelper->ask($input, $output, $confirmationQuestion);
+            if ($confirmation === false) {
+                return $this->askForModel($input, $output, $questionHelper, $useCaseType);
+            }
+            $newNamespace = 'Core\\' . $modelName . '\\Domain\\Model';
+            $filePath = $this->srcPath . DIRECTORY_SEPARATOR . preg_replace('/\\\\/', DIRECTORY_SEPARATOR, $newNamespace)
+                . DIRECTORY_SEPARATOR . 'New' . $modelName . '.php';
+
+            return new ModelTemplate($filePath, $newNamespace, $modelName, true);
+        }
+
+        if ($useCaseType === 'Create' && ! empty($foundModels)) {
+            return new ModelTemplate(
+                $foundModels['path'],
+                $foundModels['namespace'],
+                $modelName,
+                true,
+                true
+            );
+        }
+
         if (! empty($foundModels)) {
             return new ModelTemplate(
                 $foundModels['path'],
                 $foundModels['namespace'],
                 $modelName,
+                false,
                 true
             );
         }
@@ -98,13 +130,13 @@ class CreateCoreArchCommandService
         $confirmationQuestion = new ConfirmationQuestion("You're going to create a model : " . $modelName . ' [Y/n]');
         $confirmation = $questionHelper->ask($input, $output, $confirmationQuestion);
         if ($confirmation === false) {
-            return $this->askForModel($input, $output, $questionHelper);
+            return $this->askForModel($input, $output, $questionHelper, $useCaseType);
         }
         $newNamespace = 'Core\\' . $modelName . '\\Domain\\Model';
         $filePath = $this->srcPath . DIRECTORY_SEPARATOR . preg_replace('/\\\\/', DIRECTORY_SEPARATOR, $newNamespace)
             . DIRECTORY_SEPARATOR . $modelName . '.php';
 
-        return new ModelTemplate($filePath, $newNamespace, $modelName);
+        return new ModelTemplate($filePath, $newNamespace, $modelName, false);
     }
 
     /**

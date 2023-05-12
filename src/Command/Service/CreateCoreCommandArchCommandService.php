@@ -406,7 +406,7 @@ class CreateCoreCommandArchCommandService
         OutputInterface $output,
         ModelTemplate $modelTemplate,
     ): void {
-        $className = $modelTemplate->name . 'Factory';
+        $className = 'New' . $modelTemplate->name . 'Factory';
         $filePath = $this->commandService->getSrcPath() . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR
             . $modelTemplate->name . DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR . 'Model'
             . DIRECTORY_SEPARATOR . $className . '.php';

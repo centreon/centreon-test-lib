@@ -32,11 +32,13 @@ class ModelTemplate extends FileTemplate
      * @param string $namespace
      * @param string $name
      * @param bool $exists
+     * @param bool $isNewFlag
      */
     public function __construct(
         public string $filePath,
         public string $namespace,
         public string $name,
+        public bool $isNewFlag,
         public bool $exists = false
     ) {
         parent::__construct();
@@ -47,6 +49,21 @@ class ModelTemplate extends FileTemplate
      */
     public function generateModelContent(): string
     {
+        if ($this->isNewFlag === true) {
+            return <<<EOF
+                <?php
+                {$this->licenceHeader}
+                declare(strict_types=1);
+
+                namespace {$this->namespace};
+
+                class New{$this->name}
+                {
+                }
+
+                EOF;
+        }
+
         return <<<EOF
             <?php
             {$this->licenceHeader}
