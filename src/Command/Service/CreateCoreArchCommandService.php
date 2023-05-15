@@ -48,11 +48,11 @@ class CreateCoreArchCommandService
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @param mixed $questionHelper
+     * @param QuestionHelper $questionHelper
      *
      * @return string
      */
-    public function askForUseCaseType(InputInterface $input, OutputInterface $output, $questionHelper): string
+    public function askForUseCaseType(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper): string
     {
         $questionUseCaseType = new ChoiceQuestion(
             'What kind of use case would you like to create ? ',
