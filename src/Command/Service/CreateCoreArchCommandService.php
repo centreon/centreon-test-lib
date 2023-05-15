@@ -253,10 +253,12 @@ class CreateCoreArchCommandService
      */
     public function getRelativeFilePath(string $filePath): string
     {
-        /** @var int */
         $offset = strpos($filePath, self::REPO_PREFIX);
+        if ($offset !== false) {
+            return substr($filePath, $offset);
+        }
 
-        return substr($filePath, $offset);
+        return $filePath;
     }
 
     /**
