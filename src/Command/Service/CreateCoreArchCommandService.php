@@ -282,8 +282,8 @@ class CreateCoreArchCommandService
         $modelsInfos = iterator_to_array(
             new \GlobIterator(
                 $this->srcPath . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR
-                    . preg_replace('/New/', '', $modelName) . DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR
-                    . 'Model' . DIRECTORY_SEPARATOR . $modelName . '.php'
+                . str_replace('New', '', $modelName) . DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR
+                . 'Model' . DIRECTORY_SEPARATOR . $modelName . '.php'
             )
         );
         $modelInfo = [];
