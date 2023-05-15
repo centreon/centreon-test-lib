@@ -28,6 +28,7 @@ use Centreon\Command\Model\FileTemplate;
 use Centreon\Command\Model\ModelTemplate\ModelTemplate;
 use Centreon\Command\Model\RepositoryTemplate\RepositoryInterfaceTemplate;
 use Centreon\Command\Model\UnitTestTemplate\UnitTestTemplate;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\{ChoiceQuestion, ConfirmationQuestion, Question};
@@ -60,6 +61,7 @@ class CreateCoreArchCommandService
         );
 
         $questionUseCaseType->setErrorMessage('Type %s is invalid.');
+        /** @var string */
         $useCaseType = $questionHelper->ask($input, $output, $questionUseCaseType);
         $output->writeln('<info>You have selected: [' . $useCaseType . '] Use Case Type.</info>');
         $output->writeln('');
@@ -70,7 +72,7 @@ class CreateCoreArchCommandService
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @param mixed $questionHelper
+     * @param QuestionHelper $questionHelper
      * @param string $useCaseType
      *
      * @return ModelTemplate
@@ -78,10 +80,11 @@ class CreateCoreArchCommandService
     public function askForModel(
         InputInterface $input,
         OutputInterface $output,
-        $questionHelper,
+        QuestionHelper $questionHelper,
         string $useCaseType,
     ): ModelTemplate {
         $questionModelName = new Question('For which model is this use case intended ? ');
+        /** @var string */
         $modelName = $questionHelper->ask($input, $output, $questionModelName);
         $output->writeln('<info>You have selected: [' . $modelName . '] Model.</info>');
         $output->writeln('');
@@ -93,20 +96,20 @@ class CreateCoreArchCommandService
         }
         $foundModels = $this->searchExistingModel($modelNameToSearch);
 
-        if ($useCaseType === 'Create' && empty($foundModels)) {
-            $confirmationQuestion = new ConfirmationQuestion("You're going to create a model : New" . $modelName . ' [Y/n]');
-            $confirmation = $questionHelper->ask($input, $output, $confirmationQuestion);
-            if ($confirmation === false) {
-                return $this->askForModel($input, $output, $questionHelper, $useCaseType);
+        if ($useCaseType === 'Create') {
+            if (empty($foundModels)) {
+                $confirmationQuestion = new ConfirmationQuestion("You're going to create a model : New" . $modelName . ' [Y/n]');
+                $confirmation = $questionHelper->ask($input, $output, $confirmationQuestion);
+                if ($confirmation === false) {
+                    return $this->askForModel($input, $output, $questionHelper, $useCaseType);
+                }
+                $newNamespace = 'Core\\' . $modelName . '\\Domain\\Model';
+                $filePath = $this->srcPath . DIRECTORY_SEPARATOR . preg_replace('/\\\\/', DIRECTORY_SEPARATOR, $newNamespace)
+                    . DIRECTORY_SEPARATOR . 'New' . $modelName . '.php';
+
+                return new ModelTemplate($filePath, $newNamespace, $modelName, true);
             }
-            $newNamespace = 'Core\\' . $modelName . '\\Domain\\Model';
-            $filePath = $this->srcPath . DIRECTORY_SEPARATOR . preg_replace('/\\\\/', DIRECTORY_SEPARATOR, $newNamespace)
-                . DIRECTORY_SEPARATOR . 'New' . $modelName . '.php';
 
-            return new ModelTemplate($filePath, $newNamespace, $modelName, true);
-        }
-
-        if ($useCaseType === 'Create' && ! empty($foundModels)) {
             return new ModelTemplate(
                 $foundModels['path'],
                 $foundModels['namespace'],
@@ -250,7 +253,10 @@ class CreateCoreArchCommandService
      */
     public function getRelativeFilePath(string $filePath): string
     {
-        return substr($filePath, strpos($filePath, self::REPO_PREFIX));
+        /** @var int */
+        $offset = strpos($filePath, self::REPO_PREFIX);
+
+        return substr($filePath, $offset);
     }
 
     /**
@@ -288,10 +294,12 @@ class CreateCoreArchCommandService
         );
         $modelInfo = [];
         if (! empty($modelsInfos)) {
+            /** @var \SplFileInfo */
             $foundModel = array_shift($modelsInfos);
 
             // Set file informations
             $modelInfo['path'] = $foundModel->getRealPath();
+            /** @var array<string,string> */
             $fileContent = file($foundModel->getRealPath());
 
             // extract namespace

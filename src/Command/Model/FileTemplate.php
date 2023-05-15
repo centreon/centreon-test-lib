@@ -30,6 +30,12 @@ abstract class FileTemplate
     /** @var string */
     protected string $licenceHeader;
 
+    /** @var string */
+    public string $name;
+
+    /** @var string */
+    public string $namespace;
+
     public function __construct()
     {
         $licence = PhpCsFixerRuleSet::detectCentreonProjectLicense(__DIR__);

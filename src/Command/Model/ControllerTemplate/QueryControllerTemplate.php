@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Centreon\Command\Model\ControllerTemplate;
 
 use Centreon\Command\Model\FileTemplate;
-use Centreon\Command\Model\UseCaseTemplate\QueryUseCaseTemplate;
 use Centreon\Command\Model\PresenterTemplate\PresenterInterfaceTemplate;
+use Centreon\Command\Model\UseCaseTemplate\QueryUseCaseTemplate;
 
 class QueryControllerTemplate extends FileTemplate
 {
