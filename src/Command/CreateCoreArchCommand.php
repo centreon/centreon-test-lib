@@ -37,19 +37,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CreateCoreArchCommand extends Command
 {
     public const COMMAND_NAME = 'centreon:create-core-arch';
-    public const COMMAND_CREATE = 'Create';
+    public const COMMAND_ADD = 'Add';
     public const COMMAND_UPDATE = 'Update';
     public const COMMAND_DELETE = 'Delete';
     public const COMMAND_FIND = 'Find';
     public const COMMAND_ACTION = [
-        self::COMMAND_CREATE,
+        self::COMMAND_ADD,
         self::COMMAND_UPDATE,
         self::COMMAND_DELETE,
         self::COMMAND_FIND,
     ];
     public const READ_REPOSITORY_TYPE = 'Read';
     public const WRITE_REPOSITORY_TYPE = 'Write';
-    public const COMMAND_USECASES = [self::COMMAND_CREATE, self::COMMAND_UPDATE, self::COMMAND_DELETE];
+    public const COMMAND_USECASES = [self::COMMAND_ADD, self::COMMAND_UPDATE, self::COMMAND_DELETE];
     public const QUERY_USECASES = [self::COMMAND_FIND];
 
     private string $useCaseType;

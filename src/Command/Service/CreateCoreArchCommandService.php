@@ -89,14 +89,14 @@ class CreateCoreArchCommandService
         $output->writeln('<info>You have selected: [' . $modelName . '] Model.</info>');
         $output->writeln('');
         // Search for already existing models.
-        if ($useCaseType === 'Create') {
+        if ($useCaseType === CreateCoreArchCommand::COMMAND_ADD) {
             $modelNameToSearch = 'New' . $modelName;
         } else {
             $modelNameToSearch = $modelName;
         }
         $foundModels = $this->searchExistingModel($modelNameToSearch);
 
-        if ($useCaseType === 'Create') {
+        if ($useCaseType === CreateCoreArchCommand::COMMAND_ADD) {
             if (empty($foundModels)) {
                 $confirmationQuestion = new ConfirmationQuestion("You're going to create a model : New" . $modelName . ' [Y/n]');
                 $confirmation = $questionHelper->ask($input, $output, $confirmationQuestion);
@@ -147,7 +147,12 @@ class CreateCoreArchCommandService
      */
     public function createModel(ModelTemplate $model): void
     {
-        preg_match('/^(.+).' . $model->name . '\.php$/', $model->filePath, $matches);
+        if ($model->isNewFlag === true) {
+            $className = 'New' . $model->name;
+        } else {
+            $className = $model->name;
+        }
+        preg_match('/^(.+).' . $className . '\.php$/', $model->filePath, $matches);
         $dirLocation = $matches[1];
 
         // Create dir if not exists,

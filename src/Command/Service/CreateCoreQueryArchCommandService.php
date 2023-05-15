@@ -126,7 +126,7 @@ class CreateCoreQueryArchCommandService
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'Response';
         $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelName . '/Application/UseCase/' . $useCaseName
-            . '\\' . $className . '.php';
+            . '/' . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Application\\UseCase\\' . $useCaseName;
         if (! file_exists($filePath)) {
             $this->responseDtoTemplate = new ResponseDtoTemplate(
@@ -179,7 +179,7 @@ class CreateCoreQueryArchCommandService
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'PresenterInterface';
         $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelName . '/Application/UseCase/' . $useCaseName
-            . '\\' . $className . '.php';
+            . '/' . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Application\\UseCase\\' . $useCaseName;
         if (! file_exists($filePath)) {
             $this->presenterInterfaceTemplate = new PresenterInterfaceTemplate(
@@ -231,7 +231,7 @@ class CreateCoreQueryArchCommandService
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'Presenter';
         $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelName . '/Infrastructure/API/' . $useCaseName
-            . '\\' . $className . '.php';
+            . '/' . $className . '.php';
         $namespace = 'Core\\' . $modelName . '\\Infrastructure\\API\\' . $useCaseName;
         if (! file_exists($filePath)) {
             $this->commandPresenterTemplate = new PresenterTemplate(
@@ -284,7 +284,7 @@ class CreateCoreQueryArchCommandService
     ): void {
         $useCaseName = $useCaseType . $modelTemplate->name;
         $filePath = $this->commandService->getSrcPath() . '/Core/'  . $modelTemplate->name . '/Application/UseCase/'
-            . $useCaseName . '\\' . $useCaseName . '.php';
+            . $useCaseName . '/' . $useCaseName . '.php';
         $namespace = 'Core\\' . $modelTemplate->name . '\\Application\\UseCase\\' . $useCaseName;
         if (! file_exists($filePath)) {
             $this->queryUseCaseTemplate = new QueryUseCaseTemplate(
@@ -345,9 +345,9 @@ class CreateCoreQueryArchCommandService
     ): void {
         $useCaseName = $useCaseType . $modelName;
         $className = $useCaseName . 'Controller';
-        $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelName . '/Infrastructure/Api/' . $useCaseName
-            . '\\' . $className . '.php';
-        $namespace = 'Core\\' . $modelName . '\\Infrastructure\\Api\\' . $useCaseName;
+        $filePath = $this->commandService->getSrcPath() . '/Core/' . $modelName . '/Infrastructure/API/' . $useCaseName
+            . '/' . $className . '.php';
+        $namespace = 'Core\\' . $modelName . '\\Infrastructure\\API\\' . $useCaseName;
         if (! file_exists($filePath)) {
             $this->queryControllerTemplate = new QueryControllerTemplate(
                 $filePath,
