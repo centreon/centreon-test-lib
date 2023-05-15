@@ -89,6 +89,7 @@ class CreateCoreArchCommand extends Command
         $output->writeln("Let's answer few questions first !");
         $output->writeln('');
 
+        /** @var QuestionHelper $questionHelper */
         $questionHelper = $this->getHelper('question');
 
         $this->useCaseType = $this->commandService->askForUseCaseType($input, $output, $questionHelper);
