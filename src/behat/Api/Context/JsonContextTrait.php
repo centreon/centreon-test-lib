@@ -1,13 +1,13 @@
 <?php
 
 /*
- * Copyright 2005 - 2020 Centreon (https://www.centreon.com/)
+ * Copyright 2005 - 2023 Centreon (https://www.centreon.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,6 +35,8 @@ Trait JsonContextTrait
      * @var JsonInspector
      */
     protected $inspector;
+
+    private int $evaluateJsonPathExceptionCode = 1000;
 
     /**
      * @return ResponseInterface
@@ -345,12 +347,20 @@ Trait JsonContextTrait
      *
      * @Then the JSON node :name should not exist
      */
-    public function theJsonNodeShouldNotExist($name)
+    public function theJsonNodeShouldNotExist($name): void
     {
-        Assert::false(
-            $this->theJsonNodeShouldExist($name),
-            "The node '$name' exists."
-        );
+        try {
+            Assert::false(
+                $this->theJsonNodeShouldExist($name),
+                "The node '{$name}' exists."
+            );
+        } catch (\Exception $ex) {
+            if ($this->evaluateJsonPathExceptionCode === $ex->getCode()) {
+                return;
+            }
+
+            throw $ex;
+        }
     }
 
     /**
@@ -559,9 +569,9 @@ Trait JsonContextTrait
         } catch (\Exception $e) {
             throw new \Exception(
                 $e->getMessage() . "\n"
-                    . "Content is :\n"
-                    . $this->getHttpResponse()->getBody()->__toString(),
-                0,
+                . "Content is :\n"
+                . $this->getHttpResponse()->getBody()->__toString(),
+                $this->evaluateJsonPathExceptionCode,
                 $e
             );
         }
