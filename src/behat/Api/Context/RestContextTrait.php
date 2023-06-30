@@ -301,10 +301,12 @@ Trait RestContextTrait
     {
         $this->theHeaderShouldExist($name);
 
+        $value = $this->replaceCustomVariables($value);
+
         /**
          * @var string
          */
-        $actual = $this->getHttpResponse()->getHeader($name);
+        $actual = $this->getHttpResponse()->getHeader($name)[0];
 
         Assert::eq(
             strtolower($value),
@@ -321,10 +323,12 @@ Trait RestContextTrait
     public function theHeaderShouldNotBeEqualTo($name, $value) {
         $this->theHeaderShouldExist($name);
 
+        $value = $this->replaceCustomVariables($value);
+
         /**
          * @var string
          */
-        $actual = $this->getHttpResponse()->getHeader($name);
+        $actual = $this->getHttpResponse()->getHeader($name)[0];
 
         Assert::notEq(
             strtolower($value),
