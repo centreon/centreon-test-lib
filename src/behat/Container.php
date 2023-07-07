@@ -32,6 +32,9 @@ class Container
     private $containerIds = [];
     private $containerPorts = [];
 
+    /** @var list<string> */
+    private $profiles;
+
     /**
      * Container constructor.
      * @param string $composeFilePath Docker Compose file used to run the services.
@@ -41,6 +44,7 @@ class Container
     public function __construct(string $composeFilePath, array $profiles = [])
     {
         $this->composeFile = $composeFilePath;
+        $this->profiles = $profiles;
         $this->id = uniqid() . rand(1, 1000000);
 
         $command =
@@ -130,8 +134,21 @@ class Container
         try {
             $this->spin(
                 function ($context) {
-                    $context->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' kill');
-                    $context->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' down -v');
+                    $command = sprintf(
+                        'docker-compose -f %s -p %s %s',
+                            $this->composeFile,
+                            $this->id,
+                            implode(
+                                ' ',
+                                array_map(
+                                    fn (string $profile) => '--profile ' . escapeshellarg($profile),
+                                    $this->profiles
+                                )
+                            )
+                    );
+                    $context->exec($command . ' kill');
+                    $context->exec($command . ' down -v');
+
                     return true;
                 },
                 'Cannot stop docker containers',
