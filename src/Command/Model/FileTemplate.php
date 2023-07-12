@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Centreon\Command\Model;
 
+use Centreon\PhpCsFixer\PhpCsFixerLicense;
 use Centreon\PhpCsFixer\PhpCsFixerRuleSet;
 
 abstract class FileTemplate
@@ -38,9 +39,9 @@ abstract class FileTemplate
 
     public function __construct()
     {
-        $licence = PhpCsFixerRuleSet::detectCentreonProjectLicense(__DIR__);
+        $licence = PhpCsFixerLicense::detectCentreonProjectLicense(__DIR__);
         if ('' !== $licence) {
-            $this->licenceHeader = PhpCsFixerRuleSet::getLicenseHeaderAsPhpComment($licence);
+            $this->licenceHeader = PhpCsFixerLicense::getLicenseHeaderAsPhpComment($licence);
         } else {
             $this->licenceHeader = '';
         }

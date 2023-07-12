@@ -25,24 +25,6 @@ namespace Centreon\PhpCsFixer;
 
 class PhpCsFixerRuleSet
 {
-    private const YEAR = 2023;
-    private const LICENSE_APACHE = 'apache';
-    private const LICENSE_PRIVATE = 'private';
-    private const LICENSES = [
-        'centreon/centreon-test-lib' => self::LICENSE_APACHE,
-        'centreon/centreon' => self::LICENSE_APACHE,
-        'centreon/centreon-anomaly-detection' => self::LICENSE_PRIVATE,
-        'centreon/centreon-autodiscovery' => self::LICENSE_PRIVATE,
-        'centreon/centreon-bam' => self::LICENSE_PRIVATE,
-        'centreon/centreon-cloud-business-extensions' => self::LICENSE_PRIVATE,
-        'centreon/centreon-cloud-extensions' => self::LICENSE_PRIVATE,
-        'centreon/centreon-it-edition-extensions' => self::LICENSE_PRIVATE,
-        'centreon/centreon-license-manager' => self::LICENSE_PRIVATE,
-        'centreon/centreon-map' => self::LICENSE_PRIVATE,
-        'centreon/centreon-mbi' => self::LICENSE_PRIVATE,
-        'centreon/centreon-pp-manager' => self::LICENSE_PRIVATE,
-    ];
-
     /**
      * This method returns an array of defined rules Php-Cs-Fixer.
      *
@@ -215,8 +197,8 @@ class PhpCsFixerRuleSet
         ];
 
         // Set the header dynamically based on the current detected project name.
-        $projectLicense = self::detectCentreonProjectLicense(__DIR__);
-        if ($phpLicenseHeader = self::getLicenseHeader($projectLicense)) {
+        $projectLicense = PhpCsFixerLicense::detectCentreonProjectLicense(__DIR__);
+        if ($phpLicenseHeader = PhpCsFixerLicense::getLicenseHeaderAsText($projectLicense)) {
             $rules += [
                 'header_comment' => [
                     'location' => 'after_open',
@@ -226,92 +208,5 @@ class PhpCsFixerRuleSet
         }
 
         return $rules;
-    }
-
-    /**
-     * Return the header based on the project license type.
-     *
-     * @param string $projectLicense
-     */
-    private static function getLicenseHeader(string $projectLicense): string
-    {
-        $content = match ($projectLicense) {
-            self::LICENSE_APACHE => (string) file_get_contents(__DIR__ . '/license.apache.txt'),
-            self::LICENSE_PRIVATE => (string) file_get_contents(__DIR__ . '/license.private.txt'),
-            default => '',
-        };
-
-        return str_replace('{YEAR}', (string) self::YEAR, $content);
-    }
-
-    /**
-     * Recursively find the root main project which uses this project in its vendor.
-     *
-     * @param string $directory
-     *
-     * @return string
-     */
-    public static function detectCentreonProjectLicense(string $directory): string
-    {
-        // "end" conditions -> '', '.', '/'
-        while (\mb_strlen($directory) > 1) {
-            if (
-                // A composer.json file is mandatory.
-                is_file($composerFile = $directory . '/composer.json')
-
-                // Avoid a composer.json from inside the Centreon vendor directory.
-                && ! str_ends_with(dirname($directory), '/vendor/centreon')
-
-                // There should have a defined license.
-                && ($license = self::getCentreonProjectLicense($composerFile))
-            ) {
-                return $license;
-            }
-
-            $directory = dirname($directory);
-        }
-
-        return '';
-    }
-
-    /**
-     * Extract the project name from the composer json file
-     * and then return the related license if defined.
-     *
-     * @param string $composerFile
-     */
-    private static function getCentreonProjectLicense(string $composerFile): ?string
-    {
-        try {
-            $composerContent = (string) file_get_contents($composerFile);
-            $composerData = json_decode($composerContent, true, 512, JSON_THROW_ON_ERROR);
-            $projectName = $composerData['name'] ?? null;
-
-            if ($projectName && isset(self::LICENSES[$projectName])) {
-                return self::LICENSES[$projectName];
-            }
-        } catch (\JsonException) {
-        }
-
-        return null;
-    }
-
-    /**
-     * Get the license header as a php comment.
-     *
-     * @param string $projectLicense
-     *
-     * @return string
-     */
-    public static function getLicenseHeaderAsPhpComment(string $projectLicense): string
-    {
-        if ('' === ($header = self::getLicenseHeader($projectLicense))) {
-            return '';
-        }
-
-        $lines = explode("\n", $header);
-        $lines = array_map(static fn(string $line): string => rtrim(' * ' . $line), $lines);
-
-        return "/*\n" . implode("\n", $lines) . "\n */\n";
     }
 }
