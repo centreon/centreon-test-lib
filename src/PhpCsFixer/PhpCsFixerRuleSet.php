@@ -178,6 +178,8 @@ class PhpCsFixerRuleSet
             'single_line_comment_spacing' => true,
             'single_line_comment_style' => true,
             'single_quote' => true,
+            // deprecation: the next rule will be renamed in the next major version
+            // single_space_after_construct -> single_space_around_construct
             'single_space_after_construct' => true,
             'space_after_semicolon' => true,
             'standardize_increment' => true,
