@@ -154,8 +154,10 @@ class PhpCsFixerRuleSet
             'phpdoc_summary' => true,
             // phpdoc_to_comment is error-prone for inline type-hinting (ex: phpstan, psalm, ...)
             'phpdoc_to_comment' => false,
-            'phpdoc_to_property_type' => true,
-            'phpdoc_to_return_type' => true,
+            // phpdoc_to_property_type is Experimental and *too much* risky
+            // 'phpdoc_to_property_type' => true,
+            // phpdoc_to_return_type is Experimental and *too much* risky
+            // 'phpdoc_to_return_type' => true,
             'phpdoc_trim' => true,
             'phpdoc_trim_consecutive_blank_line_separation' => true,
             'phpdoc_types' => true,
