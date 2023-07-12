@@ -313,11 +313,6 @@ class ServiceTemplateConfigurationPage extends \Centreon\Test\Behat\Configuratio
             'select[name="criticality_id"]',
             self::EXTENDED_TAB
         ),
-        'status' => array(
-            'radio',
-            'input[name="service_activate[service_activate]"]',
-            self::EXTENDED_TAB
-        ),
         'comments' => array(
             'input',
             'textarea',
