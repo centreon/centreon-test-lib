@@ -240,24 +240,33 @@ class Container
     }
 
     /**
-     *  Get the container(s) logs.
+     * Get the container(s) logs.
      *
-     *  @param $service Service name.
-     *
-     *  @return string The logs as a string.
+     * @return string The logs as a string.
      */
-    public function getLogs($service = '')
+    public function getLogs()
     {
-        $cmd = 'docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' logs -t --no-color';
-        if (!empty($service)) {
-            $cmd .= ' ' . $service;
-        }
+        $command = sprintf(
+            'docker-compose -f %s -p %s %s logs -t --no-color',
+                $this->composeFile,
+                $this->id,
+                implode(
+                    ' ',
+                    array_map(
+                        fn (string $profile) => '--profile ' . escapeshellarg($profile),
+                        $this->profiles
+                    )
+                )
+        );
+
         unset($output);
-        exec($cmd, $output, $returnVar);
+        exec($command, $output, $returnVar);
+
         $logs = '';
         foreach ($output as $logline) {
             $logs .= $logline . "\n";
         }
+
         return $logs;
     }
 
