@@ -248,8 +248,8 @@ class Container
     {
         $command = sprintf(
             'docker-compose -f %s -p %s %s logs -t --no-color',
-                $this->composeFile,
-                $this->id,
+                escapeshellarg($this->composeFile),
+                escapeshellarg($this->id),
                 implode(
                     ' ',
                     array_map(
