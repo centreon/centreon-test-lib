@@ -63,5 +63,12 @@ Trait CentreonClapiContextTrait
             '/usr/share/centreon/bin/centreon -u admin -p Centreon!2021 -a APPLYCFG -v "central"',
             $this->webService
         );
+
+        //Reload ACL
+        $this->container->execute(
+            'su -s /bin/sh apache -c "/usr/bin/env php -q /usr/share/centreon/cron/centAcl.php"',
+            $this->webService,
+            false
+        );
     }
 }
