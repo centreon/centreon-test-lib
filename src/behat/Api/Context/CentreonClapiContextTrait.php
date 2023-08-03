@@ -64,11 +64,21 @@ Trait CentreonClapiContextTrait
             $this->webService
         );
 
-        //Reload ACL
+        $this->reloadAcl();
+    }
+
+    /**
+     * Reload resources acl
+     */
+    private function reloadAcl(): void
+    {
+        $apacheUserCommand = 'getent passwd www-data 2>&1 > /dev/null && echo "www-data" || echo "apache"';
+        $reloadAclCommand = 'su -s /bin/sh $APACHE_USER -c "/usr/bin/env php -q /usr/share/centreon/cron/centAcl.php"';
+
+        // Reload ACL
         $this->container->execute(
-            'su -s /bin/sh apache -c "/usr/bin/env php -q /usr/share/centreon/cron/centAcl.php"',
-            $this->webService,
-            false
+            "bash -c 'APACHE_USER=$($apacheUserCommand) $reloadAclCommand'",
+            $this->webService
         );
     }
 }
