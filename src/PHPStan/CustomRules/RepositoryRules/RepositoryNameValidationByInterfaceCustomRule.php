@@ -62,7 +62,7 @@ class RepositoryNameValidationByInterfaceCustomRule implements Rule
             $repositoryName = $this->getRepositoryName($node->name->name ?? '');
             $interfaceName = $this->getRepositoryInterfaceName($implementation->toString());
 
-            if (str_contains($repositoryName, $interfaceName)) {
+            if ($repositoryName && $interfaceName && str_contains($repositoryName, $interfaceName)) {
                 return [];
             }
         }
