@@ -42,8 +42,7 @@ it('should return an error if UseCase class in not final.', function (): void {
         ->expects($this->any())
         ->method('getFile')
         ->willReturn(
-            DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-            . 'FindInstallationStatus' . DIRECTORY_SEPARATOR . 'FindInstallationStatus.php'
+            '/Application/UseCase/FindInstallationStatus/FindInstallationStatus.php'
         );
 
     $this->node
@@ -125,8 +124,7 @@ it('should return no error if UseCase class is final.', function (): void {
         ->expects($this->any())
         ->method('getFile')
         ->willReturn(
-            DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-            . 'FindInstallationStatus' . DIRECTORY_SEPARATOR . 'FindInstallationStatus.php'
+            '/Application/UseCase/FindInstallationStatus/FindInstallationStatus.php'
         );
 
     $this->node
@@ -191,8 +189,7 @@ it(
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR . 'Configuration' . DIRECTORY_SEPARATOR . 'User'
-                . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'User.php'
+                '/Domain/Configuration/User/Model/User.php'
             );
 
         $this->node

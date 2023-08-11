@@ -24,14 +24,12 @@ declare(strict_types=1);
 namespace Centreon\PHPStan\CustomRules\LoggerRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
+use Centreon\PHPStan\CustomRules\CentreonRuleTrait;
 use Centreon\PHPStan\CustomRules\Collectors\MethodCallCollector;
-use Centreon\PHPStan\CustomRules\Traits\GetLoggerMethodsTrait;
-use Centreon\PHPStan\CustomRules\Traits\UseCaseTrait;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
-use PHPStan\Rules\RuleError;
 
 /**
  * This class implements a custom rule for PHPStan to check if a UseCase use LoggerTrait
@@ -41,8 +39,7 @@ use PHPStan\Rules\RuleError;
  */
 class LoggerUseCaseCustomRule implements Rule
 {
-    use UseCaseTrait;
-    use GetLoggerMethodsTrait;
+    use CentreonRuleTrait;
 
     public function getNodeType(): string
     {
@@ -51,12 +48,15 @@ class LoggerUseCaseCustomRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-        $errors = [];
         $loggerMethods = $this->getLoggerTraitMethods();
+        $methodCallsByFile = $node->get(MethodCallCollector::class);
 
-        $methodCallData = $node->get(MethodCallCollector::class);
-        foreach ($methodCallData as $file => $methodCalls) {
-            if ($this->fileInUseCase($file) && empty(array_intersect($loggerMethods, $methodCalls))) {
+        $errors = [];
+        foreach ($methodCallsByFile as $file => $methodCalls) {
+            if (
+                $this->fileIsUseCase($file)
+                && empty(array_intersect($loggerMethods, $methodCalls))
+            ) {
                 $errors[] = CentreonRuleErrorBuilder::message(
                     'Class must contain a Logger trait and call at least one of its methods.'
                 )->file($file)->line(0)->build();

@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Centreon\PHPStan\CustomRules\ArchitectureRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
-use Centreon\PHPStan\CustomRules\Traits\UseCaseTrait;
+use Centreon\PHPStan\CustomRules\CentreonRuleTrait;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
@@ -42,7 +42,7 @@ use PHPStan\Rules\RuleError;
  */
 class ExceptionInUseCaseCustomRule implements Rule
 {
-    use UseCaseTrait;
+    use CentreonRuleTrait;
 
     public function getNodeType(): string
     {
@@ -51,9 +51,9 @@ class ExceptionInUseCaseCustomRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-        // check if file is UseCase
+        // Check if file is UseCase
         if (
-            ! $this->fileInUseCase($scope->getFile())
+            ! $this->fileIsUseCase($scope->getFile())
             || $this->getParentClassMethod($node)->name->name === '__construct'
             || $this->getParentClassMethod($node)->isPrivate() === true
         ) {

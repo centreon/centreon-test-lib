@@ -24,11 +24,10 @@ declare(strict_types=1);
 namespace Centreon\PHPStan\CustomRules\LoggerRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
-use Centreon\PHPStan\CustomRules\Traits\GetLoggerMethodsTrait;
+use Centreon\PHPStan\CustomRules\CentreonRuleTrait;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
-use PHPStan\Rules\RuleError;
 
 /**
  * This class implements a custom rule for PHPStan to check if a catch block contains
@@ -38,7 +37,7 @@ use PHPStan\Rules\RuleError;
  */
 class LogMethodInCatchCustomRule implements Rule
 {
-    use GetLoggerMethodsTrait;
+    use CentreonRuleTrait;
 
     public function getNodeType(): string
     {

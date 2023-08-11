@@ -70,8 +70,7 @@ it(
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                'Core' . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-                . 'FindInstallationStatus' . DIRECTORY_SEPARATOR . 'FindInstallationStatus.php'
+                'Core/Application/UseCase/FindInstallationStatus/FindInstallationStatus.php'
             );
 
         $this->instanceNameNode
@@ -111,8 +110,7 @@ it(
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                'Core' . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-                . 'FindInstallationStatus' . DIRECTORY_SEPARATOR . 'FindInstallationStatus.php'
+                'Core/Application/UseCase/FindInstallationStatus/FindInstallationStatus.php'
             );
 
         $this->instanceNameNode
@@ -187,8 +185,7 @@ it(
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                'Core' . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-                . 'FindInstallationStatus' . DIRECTORY_SEPARATOR . 'FindInstallationStatus.php'
+                'Core/Application/UseCase/FindInstallationStatus/FindInstallationStatus.php'
             );
 
         $this->instanceNameNode
@@ -258,8 +255,7 @@ it(
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                'Core' . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-                . 'FindInstallationStatus' . DIRECTORY_SEPARATOR . 'FindInstallationStatus.php'
+                'Core/Application/UseCase/FindInstallationStatus/FindInstallationStatus.php'
             );
 
         $this->instanceNameNode
@@ -318,8 +314,7 @@ it(
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                'Core' . DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR . 'Configuration' . DIRECTORY_SEPARATOR
-                . 'User' . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'NewUser.php'
+                'Core/Domain/Configuration/User/Model/NewUser.php'
             );
 
         $this->instanceNameNode
@@ -354,8 +349,7 @@ it(
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                'Core' . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-                . 'FindInstallationStatus' . DIRECTORY_SEPARATOR . 'FindInstallationStatus.php'
+                'Core/Application/UseCase/FindInstallationStatus/FindInstallationStatus.php'
             );
 
         $this->instanceNameNode

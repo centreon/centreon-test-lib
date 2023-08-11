@@ -34,12 +34,11 @@ beforeEach(function (): void {
 });
 
 it('should return an error if Domain class calls Application and Infrastructure layer namespaces.', function (): void {
-    $file = 'Core' . DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR . 'Configuration' . DIRECTORY_SEPARATOR
-        . 'User' . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'NewUser.php';
+    $file = 'Core/Domain/Configuration/User/Model/NewUser.php';
 
     $useUse = [
-        [8, 'Core\\Application\\Configuration\\User\\UseCase\\FindUsers\\FindUsers'],
-        [9, 'Core\\Infrastructure\\Configuration\\User\\Model\\DbReadUserRepository'],
+        [8, \Core\Application\Configuration\User\UseCase\FindUsers\FindUsers::class],
+        [9, \Core\Infrastructure\Configuration\User\Model\DbReadUserRepository::class],
     ];
 
     $useUseData = [$file => $useUse];
@@ -67,12 +66,11 @@ it('should return an error if Domain class calls Application and Infrastructure 
 it(
     'should return no error if Domain class does not call Application and Infrastructure layer namespaces.',
     function (): void {
-        $file = 'Core' . DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR . 'Configuration' . DIRECTORY_SEPARATOR
-            . 'User' . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'NewUser.php';
+        $file = 'Core/Domain/Configuration/User/Model/NewUser.php';
 
         $useUse = [
-            [8, 'Core\\Domain\\Traits\\LoggerTrait'],
-            [9, 'Core\\Domain\\Configuration\\User\\Model\\User'],
+            [8, \Core\Domain\Traits\LoggerTrait::class],
+            [9, \Core\Domain\Configuration\User\Model\User::class],
         ];
 
         $useUseData = [$file => $useUse];
@@ -92,12 +90,11 @@ it(
 it(
     'should return no error if scanned class is not in Domain and it calls Application and Infrastructure namespaces.',
     function (): void {
-        $file = 'Core' . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'Configuration'
-            . DIRECTORY_SEPARATOR . 'User' . DIRECTORY_SEPARATOR . 'Exception' . DIRECTORY_SEPARATOR . 'UserException';
+        $file = 'Core/Application/Configuration/User/Exception/UserException';
 
         $useUse = [
-            [8, 'Core\\Application\\Configuration\\User\\UseCase\\FindUsers\\FindUsers'],
-            [9, 'Core\\Infrastructure\\Configuration\\User\\Model\\DbReadUserRepository'],
+            [8, \Core\Application\Configuration\User\UseCase\FindUsers\FindUsers::class],
+            [9, \Core\Infrastructure\Configuration\User\Model\DbReadUserRepository::class],
         ];
 
         $useUseData = [$file => $useUse];

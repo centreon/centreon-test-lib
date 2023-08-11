@@ -29,7 +29,6 @@ use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
-use PHPStan\Rules\RuleError;
 
 /**
  * This class implements a custom rule for PHPStan to check that classes in Domain layer
@@ -46,19 +45,24 @@ class DomainCallNamespacesCustomRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
+        $useUseByFile = $node->get(UseUseCollector::class);
+
         $errors = [];
-        $useUseData = $node->get(UseUseCollector::class);
-        foreach ($useUseData as $file => $useUse) {
-            if (str_contains((string) $file, DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR)) {
-                foreach ($useUse as [$line, $useNamespace]) {
-                    if (
-                        str_contains((string) $useNamespace, '\\Application\\')
-                        || str_contains((string) $useNamespace, '\\Infrastructure\\')
-                    ) {
-                        $errors[] = CentreonRuleErrorBuilder::message(
-                            'Domain must not call Application or Infrastructure namespaces.'
-                        )->line($line)->file($file)->build();
-                    }
+        foreach ($useUseByFile as $file => $useUse) {
+            // This rule does not apply.
+            if (! str_contains((string) $file, '/Domain/')) {
+                continue;
+            }
+
+            // Check rule.
+            foreach ($useUse as [$line, $useNamespace]) {
+                if (
+                    str_contains($useNamespace, '\\Application\\')
+                    || str_contains($useNamespace, '\\Infrastructure\\')
+                ) {
+                    $errors[] = CentreonRuleErrorBuilder::message(
+                        'Domain must not call Application or Infrastructure namespaces.'
+                    )->line($line)->file($file)->build();
                 }
             }
         }

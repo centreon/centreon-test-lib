@@ -24,11 +24,10 @@ declare(strict_types=1);
 namespace Centreon\PHPStan\CustomRules\ArchitectureRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
-use Centreon\PHPStan\CustomRules\Traits\UseCaseTrait;
+use Centreon\PHPStan\CustomRules\CentreonRuleTrait;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
-use PHPStan\Rules\RuleError;
 
 /**
  * This class implements a custom rule for PHPStan to check if UseCase, Request, Response
@@ -38,7 +37,7 @@ use PHPStan\Rules\RuleError;
  */
 class FinalClassCustomRule implements Rule
 {
-    use UseCaseTrait;
+    use CentreonRuleTrait;
 
     public function getNodeType(): string
     {
@@ -47,19 +46,21 @@ class FinalClassCustomRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
+        // This rule does not apply.
+        if ($node->isFinal()) {
+            return [];
+        }
+
+        $className = $node->name->name ?? '';
+
         if (
-            (
-                str_ends_with($node->name->name ?? '', 'Request')
-                || str_ends_with($node->name->name ?? '', 'Response')
-                || str_ends_with($node->name->name ?? '', 'Controller')
-                || $this->fileInUseCase($scope->getFile())
-            )
-            && ! $node->isFinal()
+            $this->fileIsUseCase($scope->getFile())
+            || str_ends_with($className, 'Request')
+            || str_ends_with($className, 'Response')
+            || str_ends_with($className, 'Controller')
         ) {
             return [
-                CentreonRuleErrorBuilder::message(
-                    'Class ' . ($node->name->name ?? '') . ' must be final.'
-                )->build(),
+                CentreonRuleErrorBuilder::message("Class {$className} must be final.")->build(),
             ];
         }
 

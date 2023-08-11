@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace Centreon\PHPStan\CustomRules\RepositoryRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
+use Centreon\PHPStan\CustomRules\CentreonRuleTrait;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
-use PHPStan\Rules\RuleError;
 
 /**
  * This class implements a custom rule for PHPStan to check Repository naming requirement.
@@ -38,6 +38,8 @@ use PHPStan\Rules\RuleError;
  */
 class RepositoryNameValidationByInterfaceCustomRule implements Rule
 {
+    use CentreonRuleTrait;
+
     public function getNodeType(): string
     {
         return Node\Stmt\Class_::class;
@@ -45,39 +47,34 @@ class RepositoryNameValidationByInterfaceCustomRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-        // if there's no implementation of Repository Interface it's RepositoryImplementsInterfaceCustomRule
-        // that will return an error.
+        // This rule does not apply.
         if (
-            ! empty($node->implements)
-            && str_contains($node->name->name ?? '', 'Repository')
+            ! str_contains($node->name->name ?? '', 'Repository')
+            || empty($node->implements)
         ) {
-            foreach ($node->implements as $implementation) {
-                $arrayInterfaceName = explode('\\', $implementation->toString());
-                $interfaceName = end($arrayInterfaceName);
-                if (
-                    preg_match(
-                        '/^((Read|Write)([a-zA-Z]{1,})Repository)Interface$/',
-                        $interfaceName,
-                        $matches
-                    )
-                    // $matches[1] = i.e. 'ReadSessionRepository'
-                    && str_contains($node->name->name, $matches[1])
-                ) {
-                    return [];
-                }
-            }
-
-            return [
-                CentreonRuleErrorBuilder::message(
-                    'Repository name should match the implemented Interface name with exception of data storage prefix '
-                    . 'and \'Interface\' mention.'
-                )->tip(
-                    'For example, Repository name: \'DbReadSessionRepository\' and implemented Interface name: '
-                    . '\'ReadSessionRepositoryInterface\'.'
-                )->build(),
-            ];
+            return [];
         }
 
-        return [];
+        // Rule check.
+        // If there's no implementation of RepositoryInterface,
+        // it's RepositoryImplementsInterfaceCustomRule that will return an error.
+        foreach ($node->implements as $implementation) {
+            $repositoryName = $this->getRepositoryName($node->name->name ?? '');
+            $interfaceName = $this->getRepositoryInterfaceName($implementation->toString());
+
+            if (str_contains($repositoryName, $interfaceName)) {
+                return [];
+            }
+        }
+
+        return [
+            CentreonRuleErrorBuilder::message(
+                'Repository name should match the implemented Interface name with exception of data storage prefix '
+                . "and 'Interface' mention."
+            )->tip(
+                "For example, Repository name: 'DbReadSessionRepository' and implemented Interface name: "
+                . "'ReadSessionRepositoryInterface'."
+            )->build(),
+        ];
     }
 }

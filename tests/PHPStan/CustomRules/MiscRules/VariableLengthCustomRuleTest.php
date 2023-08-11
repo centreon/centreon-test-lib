@@ -58,7 +58,7 @@ it('should return an error if the object property length is less than 3 characte
 
     $expectedResult = [
         CentreonRuleErrorBuilder::message(
-            "${$this->invalidVariableName} must contain 3 or more characters."
+            "{$this->invalidVariableName} must contain 3 or more characters."
         )->build(),
     ];
 
@@ -79,7 +79,7 @@ it('should return an error if the object fetched property length is less than 3 
 
     $expectedResult = [
         CentreonRuleErrorBuilder::message(
-            "${$this->invalidVariableName} must contain 3 or more characters."
+            "{$this->invalidVariableName} must contain 3 or more characters."
         )->build(),
     ];
 
@@ -97,7 +97,7 @@ it('should return an error if a variable length is less than 3 characters.', fun
 
     $expectedResult = [
         CentreonRuleErrorBuilder::message(
-            "${$this->invalidVariableName} must contain 3 or more characters."
+            "{$this->invalidVariableName} must contain 3 or more characters."
         )->build(),
     ];
 
@@ -115,7 +115,7 @@ it('should return an error if a method parameter length is less than 3 character
 
     $expectedResult = [
         CentreonRuleErrorBuilder::message(
-            "${$this->invalidVariableName} must contain 3 or more characters."
+            "{$this->invalidVariableName} must contain 3 or more characters."
         )->build(),
     ];
 

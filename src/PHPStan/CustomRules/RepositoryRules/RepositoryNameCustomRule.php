@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace Centreon\PHPStan\CustomRules\RepositoryRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
+use Centreon\PHPStan\CustomRules\CentreonRuleTrait;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
-use PHPStan\Rules\RuleError;
 
 /**
  * This class implements a custom rule for PHPStan to check Repository naming requirement
@@ -38,6 +38,8 @@ use PHPStan\Rules\RuleError;
  */
 class RepositoryNameCustomRule implements Rule
 {
+    use CentreonRuleTrait;
+
     public function getNodeType(): string
     {
         return Node\Stmt\Class_::class;
@@ -45,16 +47,20 @@ class RepositoryNameCustomRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
+        // This rule does not apply.
         if (
-            str_contains($node->name->name, 'Repository')
-            && ! preg_match('/^[a-zA-Z]{2,}(?:Read|Write)[a-zA-Z]+Repository$/', $node->name->name)
-            // check if class is not a Repository Exception
-            && ! is_a($node->namespacedName->toCodeString(), \Exception::class, true)
+            ! str_contains($node->name->name ?? '', 'Repository')
+            || $this->extendsAnException($node->namespacedName?->toCodeString())
         ) {
+            return [];
+        }
+
+        // Rule check.
+        if (! $this->getRepositoryName($node->name->name ?? '')) {
             return [
                 CentreonRuleErrorBuilder::message(
-                    'Repository name must start with data storage prefix(i.e. \'Db\', \'Redis\', etc.), '
-                    . 'followed by \'Read\' or \'Write\' and context mention.'
+                    "Repository name must start with data storage prefix (i.e. 'Db', 'Redis', etc.), "
+                    . "which may be followed by 'Read' or 'Write' and context mention."
                 )->build(),
             ];
         }

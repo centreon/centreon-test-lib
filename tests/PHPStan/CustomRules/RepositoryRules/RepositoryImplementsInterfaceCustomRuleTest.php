@@ -44,7 +44,7 @@ beforeEach(function (): void {
 });
 
 it('should return an error if Repository does not implement an Interface defined in Application layer.', function (): void {
-    $invalidInterfaceImplementations = 'Core\Domain\Configuration\Notification\Model\NotificationInterface';
+    $invalidInterfaceImplementations = \Core\Domain\Configuration\Notification\Model\NotificationInterface::class;
 
     $this->nameNodeInstanceInterface
         ->expects($this->any())
@@ -61,7 +61,7 @@ it('should return an error if Repository does not implement an Interface defined
     $this->nameNodeInstanceForNamespacedName
         ->expects($this->any())
         ->method('toCodeString')
-        ->willReturn('Core\Infrastructure\RealTime\Repository\HostGroup\DbReadHostGroupRepository');
+        ->willReturn(\Core\Infrastructure\RealTime\Repository\HostGroup\DbReadHostGroupRepository::class);
 
     $expectedResult = [
         CentreonRuleErrorBuilder::message(
@@ -75,7 +75,7 @@ it('should return an error if Repository does not implement an Interface defined
 });
 
 it('should not return an error if Repository does implement an Interface defined in Application layer.', function (): void {
-    $validInterfaceImplementations = 'Core\Application\Common\Session\Repository\ReadSessionRepositoryInterface';
+    $validInterfaceImplementations = \Core\Application\Common\Session\Repository\ReadSessionRepositoryInterface::class;
 
     $this->nameNodeInstanceInterface
         ->expects($this->any())
@@ -92,7 +92,7 @@ it('should not return an error if Repository does implement an Interface defined
     $this->nameNodeInstanceForNamespacedName
         ->expects($this->any())
         ->method('toCodeString')
-        ->willReturn('Core\Infrastructure\Common\Repository\DbReadSessionRepository');
+        ->willReturn(\Core\Infrastructure\Common\Repository\DbReadSessionRepository::class);
 
     $rule = new RepositoryImplementsInterfaceCustomRule();
     $result = $rule->processNode($this->node, $this->scope);
@@ -118,7 +118,7 @@ it('should not return an error if scanned class is not a Repository.', function 
     $this->nameNodeInstanceForNamespacedName
         ->expects($this->any())
         ->method('toCodeString')
-        ->willReturn('Namespaced\Name\Of\SomeClassName');
+        ->willReturn(\Namespaced\Name\Of\SomeClassName::class);
 
     $rule = new RepositoryImplementsInterfaceCustomRule();
     $result = $rule->processNode($this->node, $this->scope);
@@ -145,7 +145,7 @@ it('should return no error if Repository is an abstract class.', function (): vo
         ->expects($this->any())
         ->method('toCodeString')
         ->willReturn(
-            'Core\Infrastructure\Configuration\NotificationPolicy\Repository\AbstractDbReadNotificationRepository'
+            \Core\Infrastructure\Configuration\NotificationPolicy\Repository\AbstractDbReadNotificationRepository::class
         );
 
     $rule = new RepositoryImplementsInterfaceCustomRule();
@@ -172,7 +172,7 @@ it('should return no error if Repository is an Exception.', function (): void {
     $this->nameNodeInstanceForNamespacedName
         ->expects($this->any())
         ->method('toCodeString')
-        ->willReturn('Core\Infrastructure\Common\Repository\RepositoryException');
+        ->willReturn(\Core\Infrastructure\Common\Repository\RepositoryException::class);
 
     $rule = new RepositoryImplementsInterfaceCustomRule();
     $result = $rule->processNode($this->node, $this->scope);

@@ -71,7 +71,7 @@ it(
     'should not return an error if Repository Interface name does start with \'Read\' or \'Write\' and end with '
     . '\'RepositoryInterface\'.',
     function (): void {
-        $validInterfaceImplementations = 'Core\Application\Common\Session\Repository\ReadSessionRepositoryInterface';
+        $validInterfaceImplementations = \Core\Application\Common\Session\Repository\ReadSessionRepositoryInterface::class;
 
         $this->nameNodeInstanceInterface
             ->expects($this->any())

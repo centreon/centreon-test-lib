@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace Centreon\PHPStan\CustomRules\RepositoryRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
+use Centreon\PHPStan\CustomRules\CentreonRuleTrait;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
-use PHPStan\Rules\RuleError;
 
 /**
  * This class implements a custom rule for PHPStan to check if a Repository implements
@@ -37,6 +37,8 @@ use PHPStan\Rules\RuleError;
  */
 class RepositoryImplementsInterfaceCustomRule implements Rule
 {
+    use CentreonRuleTrait;
+
     public function getNodeType(): string
     {
         return Node\Stmt\Class_::class;
@@ -44,24 +46,27 @@ class RepositoryImplementsInterfaceCustomRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
+        // This rule does not apply.
         if (
-            str_contains($node->name->name, 'Repository')
-            && ! $node->isAbstract()
-            && ! is_a($node->namespacedName->toCodeString(), \Exception::class, true)
+            ! str_contains($node->name->name ?? '', 'Repository')
+            || empty($node->implements)
+            || $node->isAbstract()
+            || $this->extendsAnException($node->namespacedName?->toCodeString())
         ) {
-            foreach ($node->implements as $implementation) {
-                if (str_contains($implementation->toString(), '\\Application\\')) {
-                    return [];
-                }
-            }
-
-            return [
-                CentreonRuleErrorBuilder::message(
-                    'Repositories must implement an Interface defined in Application layer.'
-                )->build(),
-            ];
+            return [];
         }
 
-        return [];
+        // Check rule.
+        foreach ($node->implements as $implementation) {
+            if (str_contains($implementation->toString(), '\\Application\\')) {
+                return [];
+            }
+        }
+
+        return [
+            CentreonRuleErrorBuilder::message(
+                'Repositories must implement an Interface defined in Application layer.'
+            )->build(),
+        ];
     }
 }

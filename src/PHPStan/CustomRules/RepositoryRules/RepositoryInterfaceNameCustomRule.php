@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace Centreon\PHPStan\CustomRules\RepositoryRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
+use Centreon\PHPStan\CustomRules\CentreonRuleTrait;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
-use PHPStan\Rules\RuleError;
 
 /**
  * This class implements a custom rule for PHPStan to check Interface naming requirement.
@@ -37,6 +37,8 @@ use PHPStan\Rules\RuleError;
  */
 class RepositoryInterfaceNameCustomRule implements Rule
 {
+    use CentreonRuleTrait;
+
     public function getNodeType(): string
     {
         return Node\Stmt\Class_::class;
@@ -44,27 +46,27 @@ class RepositoryInterfaceNameCustomRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-        // If there's no implementation of Repository Interface,
-        // it's RepositoryImplementsInterfaceCustomRule that will return an error.
+        // This rule does not apply.
         if (
-            ! empty($node->implements)
-            && str_contains($node->name->name ?? '', 'Repository')
+            ! str_contains($node->name->name ?? '', 'Repository')
+            || empty($node->implements)
         ) {
-            foreach ($node->implements as $implementation) {
-                $arrayInterfaceName = explode('\\', $implementation->toString());
-                $interfaceName = end($arrayInterfaceName);
-                if (preg_match('/^(?:Read|Write)[a-zA-Z]+RepositoryInterface$/', $interfaceName)) {
-                    return [];
-                }
-            }
-
-            return [
-                CentreonRuleErrorBuilder::message(
-                    "At least one Interface name must start with 'Read' or 'Write' and end with 'RepositoryInterface'."
-                )->build(),
-            ];
+            return [];
         }
 
-        return [];
+        // Rule check.
+        // If there's no implementation of RepositoryInterface,
+        // it's RepositoryImplementsInterfaceCustomRule that will return an error.
+        foreach ($node->implements as $implementation) {
+            if ($this->getRepositoryInterfaceName($implementation->toString())) {
+                return [];
+            }
+        }
+
+        return [
+            CentreonRuleErrorBuilder::message(
+                "At least one Interface name must start with 'Read' or 'Write' and end with 'RepositoryInterface'."
+            )->build(),
+        ];
     }
 }

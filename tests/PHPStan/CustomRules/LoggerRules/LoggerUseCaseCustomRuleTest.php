@@ -34,9 +34,7 @@ beforeEach(function (): void {
 });
 
 it('should return an error if a Use Case does not contain a call to Logger method.', function (): void {
-    $file = 'centreon' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR
-        . 'Application' . DIRECTORY_SEPARATOR . 'RealTime' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-        . 'FindHost' . DIRECTORY_SEPARATOR . 'FindHost.php';
+    $file = 'centreon/src/Core/Application/RealTime/UseCase/FindHost/FindHost.php';
     $methodCalls = [
         'methodOne',
         'methodTwo',
@@ -61,9 +59,7 @@ it('should return an error if a Use Case does not contain a call to Logger metho
 });
 
 it('should not return an error if a Use Case contain a call to Logger method.', function (): void {
-    $file = 'centreon' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR
-        . 'Application' . DIRECTORY_SEPARATOR . 'RealTime' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-        . 'FindHost' . DIRECTORY_SEPARATOR . 'FindHost.php';
+    $file = 'centreon/src/Core/Application/RealTime/UseCase/FindHost/FindHost.php';
     $methodCalls = [
         'methodOne',
         'methodTwo',
@@ -86,9 +82,7 @@ it('should not return an error if a Use Case contain a call to Logger method.', 
 it(
     'should not return an error if scanned file is not a Use case and does not contain a call to Logger method.',
     function (): void {
-        $file = 'centreon' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR
-            . 'Application' . DIRECTORY_SEPARATOR . 'RealTime' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-            . 'FindHost' . DIRECTORY_SEPARATOR . 'FindHostResponse.php';
+        $file = 'centreon/src/Core/Application/RealTime/UseCase/FindHost/FindHostResponse.php';
         $methodCalls = [
             'methodOne',
             'methodTwo',

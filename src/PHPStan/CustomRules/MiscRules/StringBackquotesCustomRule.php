@@ -27,7 +27,6 @@ use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
-use PHPStan\Rules\RuleError;
 
 /**
  * This class implements custom rule for PHPStan to check if variable :db or :dbstg
@@ -39,6 +38,7 @@ class StringBackquotesCustomRule implements Rule
 {
     public const CENTREON_CONFIG_DATABASE = ':db';
     public const CENTREON_REALTIME_DATABASE = ':dbstg';
+    private const REGEX = '/(' . self::CENTREON_REALTIME_DATABASE . '|' . self::CENTREON_CONFIG_DATABASE . ')\./';
 
     public function getNodeType(): string
     {
@@ -47,23 +47,20 @@ class StringBackquotesCustomRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
+        // This rule does not apply.
+        if (
+            ! preg_match_all(self::REGEX, $node->value, $matches)
+            || empty($matches[1])
+        ) {
+            return [];
+        }
+
+        // Check rule.
+        // $matches[0] = [':dbstg.',':db.']
+        // $matches[1] = [':dbstg',':db']
         $errors = [];
-        if (preg_match_all(
-            '/(' . self::CENTREON_REALTIME_DATABASE . '|' . self::CENTREON_CONFIG_DATABASE . ')\./',
-            $node->value,
-            $matches
-        )) {
-            /**
-             * $matches[0] = [':dbstg.',':db.']
-             * $matches[1] = [':dbstg',':db'].
-             */
-            if (! empty($matches[1])) {
-                foreach ($matches[1] as $matchSubGroup) {
-                    $errors[] = CentreonRuleErrorBuilder::message(
-                        $matchSubGroup . ' must be enclosed in backquotes.'
-                    )->build();
-                }
-            }
+        foreach ($matches[1] as $match) {
+            $errors[] = CentreonRuleErrorBuilder::message($match . ' must be enclosed in backquotes.')->build();
         }
 
         return $errors;

@@ -42,7 +42,7 @@ beforeEach(function (): void {
 });
 
 it('should return an error if Repository name does not match implemented Interface name.', function (): void {
-    $interfaceImplementationName = 'Core\Application\Common\Session\Repository\ReadSessionRepositoryInterface';
+    $interfaceImplementationName = \Core\Application\Common\Session\Repository\ReadSessionRepositoryInterface::class;
 
     $this->nameNodeInstanceInterface
         ->expects($this->any())
@@ -67,7 +67,7 @@ it('should return an error if Repository name does not match implemented Interfa
 });
 
 it('should return an error if Repository name does match Interface name, but the latter is invalid.', function (): void {
-    $interfaceImplementationName = 'Core\Application\Common\Session\Repository\DbReadSessionRepositoryInterface';
+    $interfaceImplementationName = \Core\Application\Common\Session\Repository\DbReadSessionRepositoryInterface::class;
 
     $this->nameNodeInstanceInterface
         ->expects($this->any())
@@ -92,7 +92,7 @@ it('should return an error if Repository name does match Interface name, but the
 });
 
 it('should not return an error if Repository name does match implemented Interface.', function (): void {
-    $interfaceImplementationName = 'Core\Application\Common\Session\Repository\ReadSessionRepositoryInterface';
+    $interfaceImplementationName = \Core\Application\Common\Session\Repository\ReadSessionRepositoryInterface::class;
 
     $this->nameNodeInstanceInterface
         ->expects($this->any())
@@ -108,7 +108,7 @@ it('should not return an error if Repository name does match implemented Interfa
 });
 
 it('should not return an error if scanned class is not a Repository and Interface name is invalid.', function (): void {
-    $interfaceImplementationName = 'Core\Application\Common\Session\Repository\DbReadSessionRepositoryInterface';
+    $interfaceImplementationName = \Core\Application\Common\Session\Repository\DbReadSessionRepositoryInterface::class;
 
     $this->nameNodeInstanceInterface
         ->expects($this->any())

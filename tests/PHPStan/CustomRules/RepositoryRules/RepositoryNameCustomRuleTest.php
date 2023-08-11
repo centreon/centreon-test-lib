@@ -44,15 +44,15 @@ it('should return an error if Repository name does not correspont to naming requ
 
     $expectedResult = [
         CentreonRuleErrorBuilder::message(
-            'Repository name must start with data storage prefix(i.e. \'Db\', \'Redis\', etc.),'
-            . ' followed by \'Read\' or \'Write\' and context mention.'
+            "Repository name must start with data storage prefix(i.e. 'Db', 'Redis', etc.),"
+            . " followed by 'Read' or 'Write' and context mention."
         )->build(),
     ];
 
     $this->nameNodeInstanceForNamespacedName
         ->expects($this->any())
         ->method('toCodeString')
-        ->willReturn('Core\Infrastructure\RealTime\Repository\HostGroup\DbHostIdRepository');
+        ->willReturn(\Core\Infrastructure\RealTime\Repository\HostGroup\DbHostIdRepository::class);
 
     $rule = new RepositoryNameCustomRule();
     $result = $rule->processNode($this->node, $this->scope);
@@ -65,7 +65,7 @@ it('should not return an error if Repository name does correspond to naming requ
     $this->nameNodeInstanceForNamespacedName
         ->expects($this->any())
         ->method('toCodeString')
-        ->willReturn('Core\Infrastructure\Common\Repository\DbReadSessionRepository');
+        ->willReturn(\Core\Infrastructure\Common\Repository\DbReadSessionRepository::class);
 
     $rule = new RepositoryNameCustomRule();
     $result = $rule->processNode($this->node, $this->scope);
@@ -79,7 +79,7 @@ it('should not return an error if scanned class is not a Repository.', function 
     $this->nameNodeInstanceForNamespacedName
         ->expects($this->any())
         ->method('toCodeString')
-        ->willReturn('Namespaced\Name\Of\SomeClassName');
+        ->willReturn(\Namespaced\Name\Of\SomeClassName::class);
 
     $rule = new RepositoryNameCustomRule();
     $result = $rule->processNode($this->node, $this->scope);
@@ -93,7 +93,7 @@ it('should return no error if Repository is an Exception.', function (): void {
     $this->nameNodeInstanceForNamespacedName
         ->expects($this->any())
         ->method('toCodeString')
-        ->willReturn('Core\Infrastructure\Common\Repository\RepositoryException');
+        ->willReturn(\Core\Infrastructure\Common\Repository\RepositoryException::class);
 
     $rule = new RepositoryNameCustomRule();
     $result = $rule->processNode($this->node, $this->scope);

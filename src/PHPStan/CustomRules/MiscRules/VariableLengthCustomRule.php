@@ -27,7 +27,6 @@ use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
-use PHPStan\Rules\RuleError;
 
 /**
  * This class implements custom rule for PHPStan to check if variable name contains more
@@ -40,7 +39,7 @@ class VariableLengthCustomRule implements Rule
     /**
      * This constant contains an array of variable names to whitelist by custom rule.
      */
-    public const WHITELIST_VARIABLE_NAME = [
+    private const EXEMPTION_LIST = [
         'db',
         'ex',
         'id',
@@ -54,9 +53,16 @@ class VariableLengthCustomRule implements Rule
     public function processNode(Node $node, Scope $scope): array
     {
         $varName = $this->getVariableNameFromNode($node);
-        if ($varName !== null && mb_strlen($varName) < 3 && ! in_array($varName, self::WHITELIST_VARIABLE_NAME, true)) {
+
+        // This rule does not apply.
+        if (null === $varName || in_array($varName, self::EXEMPTION_LIST, true)) {
+            return [];
+        }
+
+        // Check rule.
+        if (mb_strlen($varName) < 3) {
             return [
-                CentreonRuleErrorBuilder::message("${$varName} must contain 3 or more characters.")->build(),
+                CentreonRuleErrorBuilder::message("{$varName} must contain 3 or more characters.")->build(),
             ];
         }
 

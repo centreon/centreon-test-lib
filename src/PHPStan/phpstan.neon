@@ -6,7 +6,6 @@ rules:
     - Centreon\PHPStan\CustomRules\RepositoryRules\RepositoryImplementsInterfaceCustomRule
     - Centreon\PHPStan\CustomRules\RepositoryRules\RepositoryNameCustomRule
     - Centreon\PHPStan\CustomRules\RepositoryRules\RepositoryInterfaceNameCustomRule
-    - Centreon\PHPStan\CustomRules\RepositoryRules\RepositoryMethodReturnCustomRule
     - Centreon\PHPStan\CustomRules\RepositoryRules\RepositoryNameValidationByInterfaceCustomRule
     - Centreon\PHPStan\CustomRules\ArchitectureRules\DomainCallNamespacesCustomRule
     - Centreon\PHPStan\CustomRules\ArchitectureRules\FinalClassCustomRule
