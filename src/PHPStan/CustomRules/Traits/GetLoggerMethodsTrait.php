@@ -30,6 +30,9 @@ use Centreon\Domain\Log\LoggerTrait;
  */
 trait GetLoggerMethodsTrait
 {
+    /** @var array<string>|null */
+    private ?array $loggerTraitMethods = null;
+
     /**
      * This method creates a Reflection of Logger Trait, extract the list of its methods
      * and stores them as array of strings.
@@ -38,13 +41,15 @@ trait GetLoggerMethodsTrait
      */
     public function getLoggerTraitMethods(): array
     {
-        $loggerMethods = [];
-        $loggerTraitReflectionClass = new \ReflectionClass(LoggerTrait::class);
-        $loggerTraitReflectionMethods = $loggerTraitReflectionClass->getMethods();
-        foreach ($loggerTraitReflectionMethods as $loggerTraitReflectionMethod) {
-            $loggerMethods[] = $loggerTraitReflectionMethod->name;
+        if (null === $this->loggerTraitMethods) {
+            $this->loggerTraitMethods = [];
+
+            $methods = (new \ReflectionClass(LoggerTrait::class))->getMethods();
+            foreach ($methods as $method) {
+                $this->loggerTraitMethods[] = $method->name;
+            }
         }
 
-        return $loggerMethods;
+        return $this->loggerTraitMethods;
     }
 }

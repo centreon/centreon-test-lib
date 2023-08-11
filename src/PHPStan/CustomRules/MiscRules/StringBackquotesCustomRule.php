@@ -27,27 +27,24 @@ use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
+use PHPStan\Rules\RuleError;
 
 /**
  * This class implements custom rule for PHPStan to check if variable :db or :dbstg
  * are enclosed in backquotes.
+ *
+ * @implements Rule<Node\Scalar\String_>
  */
 class StringBackquotesCustomRule implements Rule
 {
     public const CENTREON_CONFIG_DATABASE = ':db';
     public const CENTREON_REALTIME_DATABASE = ':dbstg';
 
-    /**
-     * @inheritDoc
-     */
     public function getNodeType(): string
     {
-        return \PhpParser\Node\Scalar\String_::class;
+        return Node\Scalar\String_::class;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function processNode(Node $node, Scope $scope): array
     {
         $errors = [];

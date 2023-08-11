@@ -30,29 +30,18 @@ use PHPStan\Collectors\Collector;
 /**
  * This class implements Collector interface to collect the information about
  * method calls in UseCases.
+ *
+ * @implements Collector<Node\Expr\MethodCall, string>
  */
 class MethodCallCollector implements Collector
 {
-    /**
-     * @inheritDoc
-     *
-     * @return string
-     */
     public function getNodeType(): string
     {
-        return \PhpParser\Node\Expr\MethodCall::class;
+        return Node\Expr\MethodCall::class;
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @param Node $node
-     * @param Scope $scope
-     *
-     * @return array|null
-     */
-    public function processNode(Node $node, Scope $scope): string
+    public function processNode(Node $node, Scope $scope): ?string
     {
-        return $node->name->name;
+        return $node->name->name ?? null;
     }
 }

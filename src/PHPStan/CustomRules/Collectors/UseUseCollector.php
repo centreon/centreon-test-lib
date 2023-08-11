@@ -30,22 +30,18 @@ use PHPStan\Collectors\Collector;
 /**
  * This class implements Collector interface to collect the information about
  * 'uses' in codebase.
+ *
+ * @implements Collector<Node\Stmt\UseUse, array{int, string}>
  */
 class UseUseCollector implements Collector
 {
-    /**
-     * @inheritDoc
-     */
     public function getNodeType(): string
     {
         return Node\Stmt\UseUse::class;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function processNode(Node $node, Scope $scope): array
+    public function processNode(Node $node, Scope $scope): ?array
     {
-        return [$node->getLine(), $node->name->toString()];
+        return [$node->getLine(), (string) $node->name];
     }
 }

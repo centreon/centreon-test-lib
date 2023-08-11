@@ -27,10 +27,13 @@ use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
+use PHPStan\Rules\RuleError;
 
 /**
  * This class implements custom rule for PHPStan to check if variable name contains more
  * than 3 characters.
+ *
+ * @implements Rule<Node>
  */
 class VariableLengthCustomRule implements Rule
 {
@@ -43,17 +46,11 @@ class VariableLengthCustomRule implements Rule
         'id',
     ];
 
-    /**
-     * @inheritDoc
-     */
     public function getNodeType(): string
     {
         return Node::class;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function processNode(Node $node, Scope $scope): array
     {
         $varName = $this->getVariableNameFromNode($node);
@@ -78,9 +75,9 @@ class VariableLengthCustomRule implements Rule
     {
         return match (true) {
             $node instanceof \PHPStan\Node\ClassPropertyNode => $node->getName(),
-            $node instanceof Node\Expr\PropertyFetch => $node->name->name,
-            $node instanceof Node\Expr\Variable => $node->name,
-            $node instanceof Node\Param => $node->var->name,
+            $node instanceof Node\Expr\PropertyFetch => $node->name->name ?? null,
+            $node instanceof Node\Expr\Variable => is_string($node->name) ? $node->name : ($node->name->name ?? null),
+            $node instanceof Node\Param => $node->var->name ?? null,
             default => null
         };
     }

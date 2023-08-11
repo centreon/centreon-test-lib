@@ -37,22 +37,18 @@ use PHPStan\Rules\RuleError;
 /**
  * This class implements a custom rule for PHPStan to check if thrown Exception is in
  * try/catch block and if it is caught.
+ *
+ * @implements Rule<Node\Stmt\Throw_>
  */
 class ExceptionInUseCaseCustomRule implements Rule
 {
     use UseCaseTrait;
 
-    /**
-     * @inheritDoc
-     */
     public function getNodeType(): string
     {
         return Node\Stmt\Throw_::class;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function processNode(Node $node, Scope $scope): array
     {
         // check if file is UseCase
@@ -65,7 +61,7 @@ class ExceptionInUseCaseCustomRule implements Rule
         }
 
         // check if Exception class is not null and get string representation of Exception class
-        $exceptionThrown = $node->expr->class !== null ? $node->expr->class->toCodeString() : '';
+        $exceptionThrown = ($node->expr->class ?? null) ? $node->expr->class->toCodeString() : '';
         $parentTryCatchNodes = $this->getAllParentTryCatchNodes($node);
         $caughtExceptionTypes = $this->getCaughtExceptionTypes($parentTryCatchNodes);
 

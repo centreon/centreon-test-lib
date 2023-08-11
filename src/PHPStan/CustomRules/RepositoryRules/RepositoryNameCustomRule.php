@@ -27,25 +27,22 @@ use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
+use PHPStan\Rules\RuleError;
 
 /**
  * This class implements a custom rule for PHPStan to check Repository naming requirement
  * it must start with data storage prefix, followed by action and context mentions, and finish
  * by 'Repository' mention.
+ *
+ * @implements Rule<Node\Stmt\Class_>
  */
 class RepositoryNameCustomRule implements Rule
 {
-    /**
-     * @inheritDoc
-     */
     public function getNodeType(): string
     {
         return Node\Stmt\Class_::class;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function processNode(Node $node, Scope $scope): array
     {
         if (

@@ -31,27 +31,24 @@ use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
+use PHPStan\Rules\RuleError;
 
 /**
  * This class implements a custom rule for PHPStan to check if a UseCase use LoggerTrait
  * and call its methods.
+ *
+ * @implements Rule<CollectedDataNode>
  */
 class LoggerUseCaseCustomRule implements Rule
 {
     use UseCaseTrait;
     use GetLoggerMethodsTrait;
 
-    /**
-     * @inheritDoc
-     */
     public function getNodeType(): string
     {
         return CollectedDataNode::class;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function processNode(Node $node, Scope $scope): array
     {
         $errors = [];

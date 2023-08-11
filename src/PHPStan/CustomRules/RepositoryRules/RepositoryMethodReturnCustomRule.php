@@ -35,20 +35,16 @@ use PHPStan\Rules\RuleError;
  * This class implements a custom rule for PHPStan to check if a Repository method find
  * returns null, an object or an array of objects and if method get returns an object or
  * an array of objects.
+ *
+ * @implements Rule<Node\Stmt\Class_>
  */
 class RepositoryMethodReturnCustomRule implements Rule
 {
-    /**
-     * @inheritDoc
-     */
     public function getNodeType(): string
     {
         return Node\Stmt\Class_::class;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function processNode(Node $node, Scope $scope): array
     {
         $errors = [];
@@ -67,7 +63,7 @@ class RepositoryMethodReturnCustomRule implements Rule
 
     /**
      * This method checks if return statement in find method signature returns null,
-     * an object or an array. Otherwise it returns an array of PHPStan RuleErrors.
+     * an object or an array. Otherwise, it returns an array of PHPStan RuleErrors.
      *
      * @param ClassMethod $classMethod
      *
@@ -104,7 +100,7 @@ class RepositoryMethodReturnCustomRule implements Rule
 
     /**
      * This method checks if return statement in get method signature returns an object or an array.
-     * Otherwise it returns an array of PHPStan RuleErrors.
+     * Otherwise, it returns an array of PHPStan RuleErrors.
      *
      * @param ClassMethod $classMethod
      *

@@ -28,40 +28,37 @@ use Centreon\PHPStan\CustomRules\Traits\UseCaseTrait;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
+use PHPStan\Rules\RuleError;
 
 /**
  * This class implements a custom rule for PHPStan to check if UseCase, Request, Response
  * or Controller classes are final.
+ *
+ * @implements Rule<Node\Stmt\Class_>
  */
 class FinalClassCustomRule implements Rule
 {
     use UseCaseTrait;
 
-    /**
-     * @inheritDoc
-     */
     public function getNodeType(): string
     {
         return Node\Stmt\Class_::class;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function processNode(Node $node, Scope $scope): array
     {
         if (
             (
-                str_ends_with($node->name->name, 'Request')
-                || str_ends_with($node->name->name, 'Response')
-                || str_ends_with($node->name->name, 'Controller')
+                str_ends_with($node->name->name ?? '', 'Request')
+                || str_ends_with($node->name->name ?? '', 'Response')
+                || str_ends_with($node->name->name ?? '', 'Controller')
                 || $this->fileInUseCase($scope->getFile())
             )
             && ! $node->isFinal()
         ) {
             return [
                 CentreonRuleErrorBuilder::message(
-                    'Class ' . $node->name->name . ' must be final.'
+                    'Class ' . ($node->name->name ?? '') . ' must be final.'
                 )->build(),
             ];
         }

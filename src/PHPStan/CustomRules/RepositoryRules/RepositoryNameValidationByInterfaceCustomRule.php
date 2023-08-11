@@ -27,30 +27,30 @@ use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
+use PHPStan\Rules\RuleError;
 
 /**
  * This class implements a custom rule for PHPStan to check Repository naming requirement.
- * It must match the implemented Interface name with exception of data storage prefix
+ * It must match the implemented Interface name except for data storage prefix
  * (in Repository name) and Interface mention (in Interface name).
+ *
+ * @implements Rule<Node\Stmt\Class_>
  */
 class RepositoryNameValidationByInterfaceCustomRule implements Rule
 {
-    /**
-     * @inheritDoc
-     */
     public function getNodeType(): string
     {
         return Node\Stmt\Class_::class;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function processNode(Node $node, Scope $scope): array
     {
         // if there's no implementation of Repository Interface it's RepositoryImplementsInterfaceCustomRule
         // that will return an error.
-        if (str_contains($node->name->name, 'Repository') && ! empty($node->implements)) {
+        if (
+            ! empty($node->implements)
+            && str_contains($node->name->name ?? '', 'Repository')
+        ) {
             foreach ($node->implements as $implementation) {
                 $arrayInterfaceName = explode('\\', $implementation->toString());
                 $interfaceName = end($arrayInterfaceName);

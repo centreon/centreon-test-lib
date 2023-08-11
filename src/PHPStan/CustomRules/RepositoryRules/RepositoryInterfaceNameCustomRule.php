@@ -27,29 +27,29 @@ use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
+use PHPStan\Rules\RuleError;
 
 /**
  * This class implements a custom rule for PHPStan to check Interface naming requirement.
  * It must start with 'Read' or 'Write' mentions and end with 'RepositoryInterface'.
+ *
+ * @implements Rule<Node\Stmt\Class_>
  */
 class RepositoryInterfaceNameCustomRule implements Rule
 {
-    /**
-     * @inheritDoc
-     */
     public function getNodeType(): string
     {
         return Node\Stmt\Class_::class;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function processNode(Node $node, Scope $scope): array
     {
-        // if there's no implementation of Repository Interface it's RepositoryImplementsInterfaceCustomRule
-        // that will return an error.
-        if (str_contains($node->name->name, 'Repository') && ! empty($node->implements)) {
+        // If there's no implementation of Repository Interface,
+        // it's RepositoryImplementsInterfaceCustomRule that will return an error.
+        if (
+            ! empty($node->implements)
+            && str_contains($node->name->name ?? '', 'Repository')
+        ) {
             foreach ($node->implements as $implementation) {
                 $arrayInterfaceName = explode('\\', $implementation->toString());
                 $interfaceName = end($arrayInterfaceName);

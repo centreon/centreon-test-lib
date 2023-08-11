@@ -23,9 +23,10 @@ declare(strict_types=1);
 
 namespace Centreon\PHPStan;
 
-use \PHPStan\Command\AnalysisResult;
-use \PHPStan\Command\ErrorFormatter\ErrorFormatter;
-use \PHPStan\Command\Output;
+use PHPStan\Analyser\Error;
+use PHPStan\Command\AnalysisResult;
+use PHPStan\Command\ErrorFormatter\ErrorFormatter;
+use PHPStan\Command\Output;
 
 /**
  * This class is used to set a custom formatter to phpstan exporting absolute paths.
@@ -128,14 +129,14 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
      *
      * @param AnalysisResult $analysisResult
      *
-     * @return array<string, array> array that have as key the absolute path of file
-     *                              and as value an array with occured errors
+     * @return array<string, array<Error>> array that have as key the absolute path of file
+     *                                     and as value an array with occurred errors
      */
     private function groupByFile(AnalysisResult $analysisResult): array
     {
         $files = [];
 
-        /** @var \PHPStan\Analyser\Error $fileSpecificError */
+        /** @var Error $fileSpecificError */
         foreach ($analysisResult->getFileSpecificErrors() as $fileSpecificError) {
             $files[$fileSpecificError->getFile()][] = $fileSpecificError;
         }

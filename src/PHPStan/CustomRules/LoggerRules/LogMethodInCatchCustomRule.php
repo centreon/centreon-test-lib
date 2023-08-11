@@ -28,31 +28,32 @@ use Centreon\PHPStan\CustomRules\Traits\GetLoggerMethodsTrait;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
+use PHPStan\Rules\RuleError;
 
 /**
  * This class implements a custom rule for PHPStan to check if a catch block contains
  * Logger trait method call.
+ *
+ * @implements Rule<Node\Stmt\Catch_>
  */
 class LogMethodInCatchCustomRule implements Rule
 {
     use GetLoggerMethodsTrait;
 
-    /**
-     * @inheritDoc
-     */
     public function getNodeType(): string
     {
         return Node\Stmt\Catch_::class;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function processNode(Node $node, Scope $scope): array
     {
         $loggerMethods = $this->getLoggerTraitMethods();
 
         foreach ($node->stmts as $stmt) {
+            if (! isset($stmt->expr)) {
+                continue;
+            }
+
             // $stmt->expr corresponds to MethodCall node;
             // ->name->name gets method name string;
             // in case of other statement or expression null is passed to in_array()
