@@ -1,13 +1,13 @@
 <?php
 
 /*
- * Copyright 2005 - 2022 Centreon (https://www.centreon.com/)
+ * Copyright 2005 - 2023 Centreon (https://www.centreon.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
  * limitations under the License.
  *
  * For more information : contact@centreon.com
+ *
  */
 
 declare(strict_types=1);
@@ -69,6 +70,7 @@ class RepositoryMethodReturnCustomRule implements Rule
      * an object or an array. Otherwise it returns an array of PHPStan RuleErrors.
      *
      * @param ClassMethod $classMethod
+     *
      * @return RuleError[]
      */
     private function getErrorsForReturnTypeInFindMethod(ClassMethod $classMethod): array
@@ -78,8 +80,8 @@ class RepositoryMethodReturnCustomRule implements Rule
             preg_match('/^find/', $classMethod->name->name)
             && ! (
                 (
-                    $returnType instanceof NullableType &&
-                    (
+                    $returnType instanceof NullableType
+                    && (
                         // $classMethod->getReturnType()->type->toString() get a string of a class name (i.e. "Host")
                         // in case of a nullable object return statement in method signature.
                         class_exists($returnType->type->toString())
@@ -92,7 +94,7 @@ class RepositoryMethodReturnCustomRule implements Rule
         ) {
             return [
                 CentreonRuleErrorBuilder::message(
-                    $classMethod->name->name . " must return null, an object, an iterable or an array of objects."
+                    $classMethod->name->name . ' must return null, an object, an iterable or an array of objects.'
                 )->line($classMethod->getLine())->build(),
             ];
         }
@@ -105,14 +107,15 @@ class RepositoryMethodReturnCustomRule implements Rule
      * Otherwise it returns an array of PHPStan RuleErrors.
      *
      * @param ClassMethod $classMethod
+     *
      * @return RuleError[]
      */
     private function getErrorsForReturnTypeInGetMethod(ClassMethod $classMethod): array
     {
         $returnType = $classMethod->getReturnType();
         if (
-            preg_match('/^get/', $classMethod->name->name) &&
-            ! (
+            preg_match('/^get/', $classMethod->name->name)
+            && ! (
                 (
                     // $classMethod->getReturnType()->toString() get a string of a class name (i.e. "Host")
                     // in case of a non-nullable object return statement in method signature.
@@ -124,7 +127,7 @@ class RepositoryMethodReturnCustomRule implements Rule
         ) {
             return [
                 CentreonRuleErrorBuilder::message(
-                    $classMethod->name->name . " must return an object or an array of objects."
+                    $classMethod->name->name . ' must return an object or an array of objects.'
                 )->line($classMethod->getLine())->build(),
             ];
         }

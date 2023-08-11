@@ -1,13 +1,13 @@
 <?php
 
 /*
- * Copyright 2005 - 2022 Centreon (https://www.centreon.com/)
+ * Copyright 2005 - 2023 Centreon (https://www.centreon.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
  * limitations under the License.
  *
  * For more information : contact@centreon.com
+ *
  */
 
 declare(strict_types=1);
@@ -24,13 +25,13 @@ namespace Centreon\PHPStan\CustomRules\ArchitectureRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use Centreon\PHPStan\CustomRules\Traits\UseCaseTrait;
-use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Throw_;
 use PhpParser\Node\Stmt\TryCatch;
-use PHPStan\Rules\Rule;
 use PHPStan\Analyser\Scope;
+use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
 
 /**
@@ -90,6 +91,7 @@ class ExceptionInUseCaseCustomRule implements Rule
      * stores then in array.
      *
      * @param Node $node
+     *
      * @return TryCatch[]
      */
     private function getAllParentTryCatchNodes(Node $node): array
@@ -109,6 +111,7 @@ class ExceptionInUseCaseCustomRule implements Rule
      * This method return an array of Exception types caught in all TryCatch nodes.
      *
      * @param TryCatch[] $parentTryCatchNodes
+     *
      * @return string[]
      */
     private function getCaughtExceptionTypes(array $parentTryCatchNodes): array
@@ -141,6 +144,7 @@ class ExceptionInUseCaseCustomRule implements Rule
      * This method returns the parent ClassMethod node.
      *
      * @param Throw_ $node
+     *
      * @return ClassMethod
      */
     private function getParentClassMethod(Throw_ $node): ClassMethod

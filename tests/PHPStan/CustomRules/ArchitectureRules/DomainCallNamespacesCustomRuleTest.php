@@ -1,13 +1,13 @@
 <?php
 
 /*
- * Copyright 2005 - 2022 Centreon (https://www.centreon.com/)
+ * Copyright 2005 - 2023 Centreon (https://www.centreon.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
  * limitations under the License.
  *
  * For more information : contact@centreon.com
+ *
  */
 
 declare(strict_types=1);
@@ -27,12 +28,12 @@ use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->scope = $this->createMock(Scope::class);
     $this->collectedDataNode = $this->createMock(CollectedDataNode::class);
 });
 
-it('should return an error if Domain class calls Application and Infrastructure layer namespaces.', function () {
+it('should return an error if Domain class calls Application and Infrastructure layer namespaces.', function (): void {
     $file = 'Core' . DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR . 'Configuration' . DIRECTORY_SEPARATOR
         . 'User' . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'NewUser.php';
 
@@ -65,9 +66,9 @@ it('should return an error if Domain class calls Application and Infrastructure 
 
 it(
     'should return no error if Domain class does not call Application and Infrastructure layer namespaces.',
-    function () {
+    function (): void {
         $file = 'Core' . DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR . 'Configuration' . DIRECTORY_SEPARATOR
-        . 'User' . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'NewUser.php';
+            . 'User' . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'NewUser.php';
 
         $useUse = [
             [8, 'Core\\Domain\\Traits\\LoggerTrait'],
@@ -90,7 +91,7 @@ it(
 
 it(
     'should return no error if scanned class is not in Domain and it calls Application and Infrastructure namespaces.',
-    function () {
+    function (): void {
         $file = 'Core' . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'Configuration'
             . DIRECTORY_SEPARATOR . 'User' . DIRECTORY_SEPARATOR . 'Exception' . DIRECTORY_SEPARATOR . 'UserException';
 

@@ -1,13 +1,13 @@
 <?php
 
 /*
- * Copyright 2005 - 2022 Centreon (https://www.centreon.com/)
+ * Copyright 2005 - 2023 Centreon (https://www.centreon.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
  * limitations under the License.
  *
  * For more information : contact@centreon.com
+ *
  */
 
 declare(strict_types=1);
@@ -27,14 +28,14 @@ use Centreon\PHPStan\CustomRules\MiscRules\StringBackquotesCustomRule;
 use PhpParser\Node\Scalar\String_;
 use PHPStan\Analyser\Scope;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->instanceNodeString = $this->createMock(String_::class);
     $this->scope = $this->createMock(Scope::class);
 });
 
-it('should return an error if :db is enclosed in backquotes and :dbstg is not.', function () {
-    $this->scannedStringWithError =
-        'INNER JOIN :dbstg.`centreon_acl` acl
+it('should return an error if :db is enclosed in backquotes and :dbstg is not.', function (): void {
+    $this->scannedStringWithError
+        = 'INNER JOIN :dbstg.`centreon_acl` acl
             ON acl.host_id = ack.host_id
         INNER JOIN :`db`.`acl_groups` acg
             ON acg.acl_group_id = acl.group_id
@@ -53,9 +54,9 @@ it('should return an error if :db is enclosed in backquotes and :dbstg is not.',
     expect($result[0]->message)->toBe($expectedResult[0]->message);
 });
 
-it('should return an error if :dbstg is enclosed in backquotes and :db is not.', function () {
-    $this->scannedStringWithError =
-        'INNER JOIN `:dbstg`.`centreon_acl` acl
+it('should return an error if :dbstg is enclosed in backquotes and :db is not.', function (): void {
+    $this->scannedStringWithError
+        = 'INNER JOIN `:dbstg`.`centreon_acl` acl
             ON acl.host_id = ack.host_id
         INNER JOIN :db.`acl_groups` acg
             ON acg.acl_group_id = acl.group_id
@@ -74,9 +75,9 @@ it('should return an error if :dbstg is enclosed in backquotes and :db is not.',
     expect($result[0]->message)->toBe($expectedResult[0]->message);
 });
 
-it('should return two errors if both :db and :dbstg is not enclosed in backquotes.', function () {
-    $this->scannedStringWithError =
-        'INNER JOIN :dbstg.`centreon_acl` acl
+it('should return two errors if both :db and :dbstg is not enclosed in backquotes.', function (): void {
+    $this->scannedStringWithError
+        = 'INNER JOIN :dbstg.`centreon_acl` acl
             ON acl.host_id = ack.host_id
         INNER JOIN :db.`acl_groups` acg
             ON acg.acl_group_id = acl.group_id
@@ -100,9 +101,9 @@ it('should return two errors if both :db and :dbstg is not enclosed in backquote
     expect($result[1]->message)->toBe($expectedResult[1]->message);
 });
 
-it('should not return an error if both :db and :dbstg is enclosed in backquotes.', function () {
-    $this->scannedStringWithoutError =
-        'INNER JOIN `:dbstg`.`centreon_acl` acl
+it('should not return an error if both :db and :dbstg is enclosed in backquotes.', function (): void {
+    $this->scannedStringWithoutError
+        = 'INNER JOIN `:dbstg`.`centreon_acl` acl
             ON acl.host_id = ack.host_id
         INNER JOIN `:db`.`acl_groups` acg
             ON acg.acl_group_id = acl.group_id
@@ -116,7 +117,7 @@ it('should not return an error if both :db and :dbstg is enclosed in backquotes.
     expect($result)->toBeEmpty();
 });
 
-it('should not return an error if a scanned string does not contain neither :db nor :dbstg.', function () {
+it('should not return an error if a scanned string does not contain neither :db nor :dbstg.', function (): void {
     $this->scannedStringNeutral = 'SELECT * FROM `topology` WHERE `topology_page` = :id';
 
     $this->instanceNodeString->value = $this->scannedStringNeutral;

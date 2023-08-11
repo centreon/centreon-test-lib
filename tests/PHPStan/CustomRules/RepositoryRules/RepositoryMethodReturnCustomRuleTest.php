@@ -1,13 +1,13 @@
 <?php
 
 /*
- * Copyright 2005 - 2022 Centreon (https://www.centreon.com/)
+ * Copyright 2005 - 2023 Centreon (https://www.centreon.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
  * limitations under the License.
  *
  * For more information : contact@centreon.com
+ *
  */
 
 declare(strict_types=1);
@@ -30,7 +31,7 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Analyser\Scope;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->node = $this->createMock(Class_::class);
     $this->scope = $this->createMock(Scope::class);
     $this->classMethodNodeInstance = $this->createMock(ClassMethod::class);
@@ -41,7 +42,7 @@ beforeEach(function () {
     $this->node->name = $this->identifierNodeInstanceForClass;
     $this->classMethodNodeInstance->name = $this->identifierNodeInstanceForClassMethod;
     $this->arrayOfClassMethods = [
-        $this->classMethodNodeInstance
+        $this->classMethodNodeInstance,
     ];
     $this->node
         ->expects($this->any())
@@ -51,8 +52,8 @@ beforeEach(function () {
 
 it(
     'should return an error if Repository\'s find method does not return neither null, an object nor '
-        . 'an array of objects.',
-    function () {
+    . 'an array of objects.',
+    function (): void {
         $this->identifierNodeInstanceForClassMethod->name = 'findHostId';
 
         $this->classMethodNodeInstance
@@ -69,8 +70,8 @@ it(
 
         $expectedResult = [
             CentreonRuleErrorBuilder::message(
-                $this->identifierNodeInstanceForClassMethod->name .
-                " must return null, an object, an iterable or an array of objects."
+                $this->identifierNodeInstanceForClassMethod->name
+                . ' must return null, an object, an iterable or an array of objects.'
             )->line($this->classMethodNodeInstance->getLine())->build(),
         ];
 
@@ -82,7 +83,7 @@ it(
 
 it(
     'should return an error if Repository\'s get method does not return neither an object nor an array of objects.',
-    function () {
+    function (): void {
         $this->identifierNodeInstanceForClassMethod->name = 'getHostId';
 
         $this->classMethodNodeInstance
@@ -99,8 +100,8 @@ it(
 
         $expectedResult = [
             CentreonRuleErrorBuilder::message(
-                $this->identifierNodeInstanceForClassMethod->name .
-                " must return an object or an array of objects."
+                $this->identifierNodeInstanceForClassMethod->name
+                . ' must return an object or an array of objects.'
             )->line($this->classMethodNodeInstance->getLine())->build(),
         ];
 
@@ -110,7 +111,7 @@ it(
     }
 );
 
-it('should not return an error if Repository\'s find method returns an object.', function () {
+it('should not return an error if Repository\'s find method returns an object.', function (): void {
     $this->identifierNodeInstanceForClassMethod->name = 'findHost';
 
     $this->classMethodNodeInstance
@@ -133,7 +134,7 @@ it('should not return an error if Repository\'s find method returns an object.',
     expect($resultForObject)->toBeEmpty();
 });
 
-it('should not return an error if Repository\'s find method returns an array.', function () {
+it('should not return an error if Repository\'s find method returns an array.', function (): void {
     $this->identifierNodeInstanceForClassMethod->name = 'findHost';
 
     $this->classMethodNodeInstance
@@ -154,7 +155,7 @@ it('should not return an error if Repository\'s find method returns an array.', 
     expect($resultForObject)->toBeEmpty();
 });
 
-it('should return no error if Repository\'s find method returns an iterable', function () {
+it('should return no error if Repository\'s find method returns an iterable', function (): void {
     $this->identifierNodeInstanceForClassMethod->name = 'findHost';
 
     $this->classMethodNodeInstance
@@ -175,7 +176,7 @@ it('should return no error if Repository\'s find method returns an iterable', fu
     expect($resultForObject)->toBeEmpty();
 });
 
-it('should not return an error if Repository\'s method get returns an object.', function () {
+it('should not return an error if Repository\'s method get returns an object.', function (): void {
     $this->identifierNodeInstanceForClassMethod->name = 'getHost';
 
     $this->classMethodNodeInstance
@@ -196,7 +197,7 @@ it('should not return an error if Repository\'s method get returns an object.', 
     expect($result)->toBeEmpty();
 });
 
-it('should not return an error if Repository\'s method get returns an array.', function () {
+it('should not return an error if Repository\'s method get returns an array.', function (): void {
     $this->identifierNodeInstanceForClassMethod->name = 'getHost';
 
     $this->classMethodNodeInstance
@@ -217,7 +218,7 @@ it('should not return an error if Repository\'s method get returns an array.', f
     expect($result)->toBeEmpty();
 });
 
-it('should not return an error if scanned Repository\'s method is neither find nor get.', function () {
+it('should not return an error if scanned Repository\'s method is neither find nor get.', function (): void {
     $this->identifierNodeInstanceForClassMethod->name = 'myPrecious';
 
     $this->classMethodNodeInstance
@@ -238,8 +239,7 @@ it('should not return an error if scanned Repository\'s method is neither find n
     expect($result)->toBeEmpty();
 });
 
-it('should not return an error if scanned class is not a Repository.', function () {
-
+it('should not return an error if scanned class is not a Repository.', function (): void {
     $this->identifierNodeInstanceForClassMethod->name = 'getPrecious';
 
     $this->classMethodNodeInstance
