@@ -430,7 +430,7 @@ Trait JsonContextTrait
         Assert::same(
             (string) $expected,
             (string) $actual,
-            "The json is equal to:\n". $actual->encode()
+            "The json is equal to:\n" . str_replace('%', '%%', $actual->encode())
         );
     }
 
