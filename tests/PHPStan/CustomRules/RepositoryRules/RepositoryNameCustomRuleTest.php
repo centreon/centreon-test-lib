@@ -39,20 +39,20 @@ beforeEach(function (): void {
     $this->node->namespacedName = $this->nameNodeInstanceForNamespacedName;
 });
 
-it('should return an error if Repository name does not correspont to naming requirement.', function (): void {
-    $this->identifierNodeInstance->name = 'DbHostIdRepository';
+it('should return an error if Repository name does not correspond to naming requirement.', function (): void {
+    $this->identifierNodeInstance->name = 'abcRepository';
 
     $expectedResult = [
         CentreonRuleErrorBuilder::message(
-            "Repository name must start with data storage prefix(i.e. 'Db', 'Redis', etc.),"
-            . " followed by 'Read' or 'Write' and context mention."
+            "Repository name must start with data storage prefix (i.e. 'Db', 'Redis', etc.), "
+            . "which may be followed by 'Read' or 'Write' and context mention."
         )->build(),
     ];
 
     $this->nameNodeInstanceForNamespacedName
         ->expects($this->any())
         ->method('toCodeString')
-        ->willReturn(\Core\Infrastructure\RealTime\Repository\HostGroup\DbHostIdRepository::class);
+        ->willReturn(\Whatever\abcRepository::class);
 
     $rule = new RepositoryNameCustomRule();
     $result = $rule->processNode($this->node, $this->scope);

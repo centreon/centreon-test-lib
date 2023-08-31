@@ -67,14 +67,14 @@ it('should return an error if Repository name does not match implemented Interfa
 });
 
 it('should return an error if Repository name does match Interface name, but the latter is invalid.', function (): void {
-    $interfaceImplementationName = \Core\Application\Common\Session\Repository\DbReadSessionRepositoryInterface::class;
+    $interfaceImplementationName = \Whatever\DbReadSessionRepositoryInterface::class;
 
     $this->nameNodeInstanceInterface
         ->expects($this->any())
         ->method('toString')
         ->willReturn($interfaceImplementationName);
 
-    $this->identifierNodeInstance->name = 'DbReadSessionRepository';
+    $this->identifierNodeInstance->name = 'NoMatchRepository';
 
     $expectedResult = [
         CentreonRuleErrorBuilder::message(
