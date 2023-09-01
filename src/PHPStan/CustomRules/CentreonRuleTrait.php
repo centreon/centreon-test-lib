@@ -101,8 +101,14 @@ trait CentreonRuleTrait
      */
     private function fileIsUseCase(string $filename): bool
     {
-        $useCase = preg_quote(basename($filename, '.php'), '!');
+        $slash = '[/\\\\]';
+        $useCase = preg_replace("#^.*{$slash}(\w+)\.php$#", '$1', $filename);
+        $pattern = '#'
+            . "{$slash}UseCase"
+            . "{$slash}(\w+{$slash})*{$useCase}"
+            . "{$slash}{$useCase}\.php"
+            . '$#';
 
-        return (bool) preg_match("!/UseCase/([^/]+/)*{$useCase}/{$useCase}\.php$!", $filename);
+        return (bool) preg_match($pattern, $filename);
     }
 }

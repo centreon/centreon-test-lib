@@ -60,10 +60,15 @@ it(
     }
 )->with([
     [false, 'Foo/Bar/WithAFile.php'],
+    [false, 'Foo\\Bar\\WithAFile.php'],
     [false, 'Foo/UseCase/WithAFile.php'],
+    [false, 'Foo\\UseCase\\WithAFile.php'],
     [false, 'Foo/UseCaseBar/WithAFile/WithAFile.php'],
+    [false, 'Foo\\UseCaseBar\\WithAFile\\WithAFile.php'],
     [true, 'Foo/UseCase/WithAFile/WithAFile.php'],
+    [true, 'Foo\\UseCase\\WithAFile\\WithAFile.php'],
     [true, 'Foo/UseCase/Bar/WithAFile/WithAFile.php'],
+    [true, 'Foo\\UseCase\\Bar\\WithAFile\\WithAFile.php'],
 ]);
 
 it(

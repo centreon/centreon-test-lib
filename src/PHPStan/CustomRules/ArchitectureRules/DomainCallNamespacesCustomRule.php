@@ -50,7 +50,7 @@ class DomainCallNamespacesCustomRule implements Rule
         $errors = [];
         foreach ($useUseByFile as $file => $useUse) {
             // This rule does not apply.
-            if (! str_contains((string) $file, '/Domain/')) {
+            if (! str_contains((string) $file, DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR)) {
                 continue;
             }
 

@@ -70,7 +70,7 @@ it(
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                'Core/Application/UseCase/FindInstallationStatus/FindInstallationStatus.php'
+                implode(DIRECTORY_SEPARATOR, ['Core', 'Application', 'UseCase', 'FindInstallationStatus', 'FindInstallationStatus.php'])
             );
 
         $this->instanceNameNode
@@ -110,7 +110,7 @@ it(
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                'Core/Application/UseCase/FindInstallationStatus/FindInstallationStatus.php'
+                implode(DIRECTORY_SEPARATOR, ['Core', 'Application', 'UseCase', 'FindInstallationStatus', 'FindInstallationStatus.php'])
             );
 
         $this->instanceNameNode
@@ -185,7 +185,7 @@ it(
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                'Core/Application/UseCase/FindInstallationStatus/FindInstallationStatus.php'
+                implode(DIRECTORY_SEPARATOR, ['Core', 'Application', 'UseCase', 'FindInstallationStatus', 'FindInstallationStatus.php'])
             );
 
         $this->instanceNameNode
@@ -255,7 +255,7 @@ it(
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                'Core/Application/UseCase/FindInstallationStatus/FindInstallationStatus.php'
+                implode(DIRECTORY_SEPARATOR, ['Core', 'Application', 'UseCase', 'FindInstallationStatus', 'FindInstallationStatus.php'])
             );
 
         $this->instanceNameNode
@@ -314,7 +314,7 @@ it(
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                'Core/Domain/Configuration/User/Model/NewUser.php'
+                implode(DIRECTORY_SEPARATOR, ['Core', 'Domain', 'Configuration', 'User', 'Model', 'NewUser.php'])
             );
 
         $this->instanceNameNode
@@ -349,7 +349,7 @@ it(
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                'Core/Application/UseCase/FindInstallationStatus/FindInstallationStatus.php'
+                implode(DIRECTORY_SEPARATOR, ['Core', 'Application', 'UseCase', 'FindInstallationStatus', 'FindInstallationStatus.php'])
             );
 
         $this->instanceNameNode

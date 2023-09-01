@@ -83,6 +83,22 @@ class ExceptionInUseCaseCustomRule implements Rule
     }
 
     /**
+     * This method returns the parent ClassMethod node.
+     *
+     * @param Throw_ $node
+     *
+     * @return ClassMethod
+     */
+    private function getParentClassMethod(Throw_ $node): ClassMethod
+    {
+        while (! $node->getAttribute('parent') instanceof Class_) {
+            $node = $node->getAttribute('parent');
+        }
+
+        return $node;
+    }
+
+    /**
      * This method gets all the parent TryCatch nodes of a give node and
      * stores then in array.
      *
@@ -134,21 +150,5 @@ class ExceptionInUseCaseCustomRule implements Rule
         return CentreonRuleErrorBuilder::message(
             'Exception thrown in UseCase should be in a try catch block, and must be caught.'
         )->build();
-    }
-
-    /**
-     * This method returns the parent ClassMethod node.
-     *
-     * @param Throw_ $node
-     *
-     * @return ClassMethod
-     */
-    private function getParentClassMethod(Throw_ $node): ClassMethod
-    {
-        while (! $node->getAttribute('parent') instanceof Class_) {
-            $node = $node->getAttribute('parent');
-        }
-
-        return $node;
     }
 }

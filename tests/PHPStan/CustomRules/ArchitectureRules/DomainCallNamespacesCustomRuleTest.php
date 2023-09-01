@@ -34,7 +34,7 @@ beforeEach(function (): void {
 });
 
 it('should return an error if Domain class calls Application and Infrastructure layer namespaces.', function (): void {
-    $file = 'Core/Domain/Configuration/User/Model/NewUser.php';
+    $file = implode(DIRECTORY_SEPARATOR, ['Core', 'Domain', 'Configuration', 'User', 'Model', 'NewUser.php']);
 
     $useUse = [
         [8, \Core\Application\Configuration\User\UseCase\FindUsers\FindUsers::class],
@@ -66,7 +66,7 @@ it('should return an error if Domain class calls Application and Infrastructure 
 it(
     'should return no error if Domain class does not call Application and Infrastructure layer namespaces.',
     function (): void {
-        $file = 'Core/Domain/Configuration/User/Model/NewUser.php';
+        $file = implode(DIRECTORY_SEPARATOR, ['Core', 'Domain', 'Configuration', 'User', 'Model', 'NewUser.php']);
 
         $useUse = [
             [8, \Core\Domain\Traits\LoggerTrait::class],
@@ -90,7 +90,7 @@ it(
 it(
     'should return no error if scanned class is not in Domain and it calls Application and Infrastructure namespaces.',
     function (): void {
-        $file = 'Core/Application/Configuration/User/Exception/UserException';
+        $file = implode(DIRECTORY_SEPARATOR, ['Core', 'Application', 'Configuration', 'User', 'Exception', 'UserException']);
 
         $useUse = [
             [8, \Core\Application\Configuration\User\UseCase\FindUsers\FindUsers::class],

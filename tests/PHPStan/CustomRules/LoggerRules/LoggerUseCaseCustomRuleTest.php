@@ -34,7 +34,7 @@ beforeEach(function (): void {
 });
 
 it('should return an error if a Use Case does not contain a call to Logger method.', function (): void {
-    $file = 'centreon/src/Core/Application/RealTime/UseCase/FindHost/FindHost.php';
+    $file = implode(DIRECTORY_SEPARATOR, ['centreon', 'src', 'Core', 'Application', 'RealTime', 'UseCase', 'FindHost', 'FindHost.php']);
     $methodCalls = [
         'methodOne',
         'methodTwo',
@@ -59,7 +59,7 @@ it('should return an error if a Use Case does not contain a call to Logger metho
 });
 
 it('should not return an error if a Use Case contain a call to Logger method.', function (): void {
-    $file = 'centreon/src/Core/Application/RealTime/UseCase/FindHost/FindHost.php';
+    $file = implode(DIRECTORY_SEPARATOR, ['centreon', 'src', 'Core', 'Application', 'RealTime', 'UseCase', 'FindHost', 'FindHost.php']);
     $methodCalls = [
         'methodOne',
         'methodTwo',
@@ -82,7 +82,7 @@ it('should not return an error if a Use Case contain a call to Logger method.', 
 it(
     'should not return an error if scanned file is not a Use case and does not contain a call to Logger method.',
     function (): void {
-        $file = 'centreon/src/Core/Application/RealTime/UseCase/FindHost/FindHostResponse.php';
+        $file = implode(DIRECTORY_SEPARATOR, ['centreon', 'src', 'Core', 'Application', 'RealTime', 'UseCase', 'FindHost', 'FindHostResponse.php']);
         $methodCalls = [
             'methodOne',
             'methodTwo',
