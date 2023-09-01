@@ -1,13 +1,13 @@
 <?php
 
 /*
- * Copyright 2005 - 2022 Centreon (https://www.centreon.com/)
+ * Copyright 2005 - 2023 Centreon (https://www.centreon.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
  * limitations under the License.
  *
  * For more information : contact@centreon.com
+ *
  */
 
 declare(strict_types=1);
@@ -32,7 +33,7 @@ use PhpParser\Node\Stmt\If_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\ClassPropertyNode;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->nodeInstanceClassProperty = $this->createMock(ClassPropertyNode::class);
     $this->nodeInstancePropertyFetch = $this->createMock(PropertyFetch::class);
     $this->nodeInstancePropertyFetchName = $this->createMock(Expr::class);
@@ -45,7 +46,7 @@ beforeEach(function () {
     $this->invalidVariableName = 'sv';
 });
 
-it('should return an error if the object property length is less than 3 characters.', function () {
+it('should return an error if the object property length is less than 3 characters.', function (): void {
     $this->nodeInstanceClassProperty
         ->expects($this->any())
         ->method('getType')
@@ -57,7 +58,7 @@ it('should return an error if the object property length is less than 3 characte
 
     $expectedResult = [
         CentreonRuleErrorBuilder::message(
-            "$$this->invalidVariableName must contain 3 or more characters."
+            "{$this->invalidVariableName} must contain 3 or more characters."
         )->build(),
     ];
 
@@ -67,9 +68,9 @@ it('should return an error if the object property length is less than 3 characte
 });
 
 /**
- * Fetched Property are properties like : $this->myVar
+ * Fetched Property are properties like : $this->myVar.
  */
-it('should return an error if the object fetched property length is less than 3 characters.', function () {
+it('should return an error if the object fetched property length is less than 3 characters.', function (): void {
     $this->nodeInstancePropertyFetch
         ->expects($this->any())
         ->method('getType')
@@ -78,7 +79,7 @@ it('should return an error if the object fetched property length is less than 3 
 
     $expectedResult = [
         CentreonRuleErrorBuilder::message(
-            "$$this->invalidVariableName must contain 3 or more characters."
+            "{$this->invalidVariableName} must contain 3 or more characters."
         )->build(),
     ];
 
@@ -87,7 +88,7 @@ it('should return an error if the object fetched property length is less than 3 
     expect($resultPropertyFetch[0]->message)->toBe($expectedResult[0]->message);
 });
 
-it('should return an error if a variable length is less than 3 characters.', function () {
+it('should return an error if a variable length is less than 3 characters.', function (): void {
     $this->nodeInstanceVariable
         ->expects($this->any())
         ->method('getType')
@@ -96,7 +97,7 @@ it('should return an error if a variable length is less than 3 characters.', fun
 
     $expectedResult = [
         CentreonRuleErrorBuilder::message(
-            "$$this->invalidVariableName must contain 3 or more characters."
+            "{$this->invalidVariableName} must contain 3 or more characters."
         )->build(),
     ];
 
@@ -105,7 +106,7 @@ it('should return an error if a variable length is less than 3 characters.', fun
     expect($resultVariable[0]->message)->toBe($expectedResult[0]->message);
 });
 
-it('should return an error if a method parameter length is less than 3 characters.', function () {
+it('should return an error if a method parameter length is less than 3 characters.', function (): void {
     $this->nodeInstanceParam
         ->expects($this->any())
         ->method('getType')
@@ -114,7 +115,7 @@ it('should return an error if a method parameter length is less than 3 character
 
     $expectedResult = [
         CentreonRuleErrorBuilder::message(
-            "$$this->invalidVariableName must contain 3 or more characters."
+            "{$this->invalidVariableName} must contain 3 or more characters."
         )->build(),
     ];
 
@@ -123,7 +124,7 @@ it('should return an error if a method parameter length is less than 3 character
     expect($resultParam[0]->message)->toBe($expectedResult[0]->message);
 });
 
-it("should return no error if the variable name is 'ex'.", function () {
+it("should return no error if the variable name is 'ex'.", function (): void {
     $variableName = 'ex';
     $this->nodeInstanceClassProperty
         ->expects($this->any())
@@ -141,7 +142,7 @@ it("should return no error if the variable name is 'ex'.", function () {
     expect($result)->toBeEmpty();
 });
 
-it("should return no error if scanned node doesn't refer to a property/variable/parameter", function () {
+it("should return no error if scanned node doesn't refer to a property/variable/parameter", function (): void {
     $this->nodeInstanceIfKeyword
         ->expects($this->any())
         ->method('getType')

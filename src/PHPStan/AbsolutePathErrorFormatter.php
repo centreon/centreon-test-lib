@@ -1,13 +1,13 @@
 <?php
 
 /*
- * Copyright 2005 - 2022 Centreon (https://www.centreon.com/)
+ * Copyright 2005 - 2023 Centreon (https://www.centreon.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,29 +16,30 @@
  * limitations under the License.
  *
  * For more information : contact@centreon.com
+ *
  */
 
 declare(strict_types=1);
 
 namespace Centreon\PHPStan;
 
-use \PHPStan\Command\ErrorFormatter\ErrorFormatter;
-use \PHPStan\Command\AnalysisResult;
-use \PHPStan\Command\Output;
+use PHPStan\Analyser\Error;
+use PHPStan\Command\AnalysisResult;
+use PHPStan\Command\ErrorFormatter\ErrorFormatter;
+use PHPStan\Command\Output;
 
 /**
- * This class is used to set a custom formatter to phpstan exporting absolute paths
- *
- * @package Centreon\PHPStan\ErrorFormatter
+ * This class is used to set a custom formatter to phpstan exporting absolute paths.
  */
 class AbsolutePathErrorFormatter implements ErrorFormatter
 {
     /**
-     * Format errors output
+     * Format errors output.
      *
      * @param AnalysisResult $analysisResult Result of check style
      * @param Output $output Output stream to write
-     * @return integer If there are some errors
+     *
+     * @return int If there are some errors
      */
     public function formatErrors(
         AnalysisResult $analysisResult,
@@ -51,18 +52,22 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
 
         foreach ($this->groupByFile($analysisResult) as $filePath => $errors) {
             $filePath = $this->parseFilePath($filePath);
-            $output->writeRaw(sprintf(
-                '<file name="%s">',
-                $filePath
-            ));
+            $output->writeRaw(
+                sprintf(
+                    '<file name="%s">',
+                    $filePath
+                )
+            );
             $output->writeLineFormatted('');
 
             foreach ($errors as $error) {
-                $output->writeRaw(sprintf(
-                    '  <error line="%d" column="1" severity="error" message="%s" source="PHPStan" />',
-                    $this->escape((string) $error->getLine()),
-                    $this->escape((string) $error->getMessage())
-                ));
+                $output->writeRaw(
+                    sprintf(
+                        '  <error line="%d" column="1" severity="error" message="%s" source="PHPStan" />',
+                        $this->escape((string) $error->getLine()),
+                        $this->escape((string) $error->getMessage())
+                    )
+                );
                 $output->writeLineFormatted('');
             }
             $output->writeRaw('</file>');
@@ -108,9 +113,10 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
     }
 
     /**
-     * Escapes values for using in XML
+     * Escapes values for using in XML.
      *
      * @param string $string
+     *
      * @return string
      */
     protected function escape(string $string): string
@@ -119,17 +125,18 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
     }
 
     /**
-     * Group errors by file
+     * Group errors by file.
      *
      * @param AnalysisResult $analysisResult
-     * @return array<string, array> Array that have as key the absolute path of file
-     *                              and as value an array with occured errors.
+     *
+     * @return array<string, array<Error>> array that have as key the absolute path of file
+     *                                     and as value an array with occurred errors
      */
     private function groupByFile(AnalysisResult $analysisResult): array
     {
         $files = [];
 
-        /** @var \PHPStan\Analyser\Error $fileSpecificError */
+        /** @var Error $fileSpecificError */
         foreach ($analysisResult->getFileSpecificErrors() as $fileSpecificError) {
             $files[$fileSpecificError->getFile()][] = $fileSpecificError;
         }
@@ -138,9 +145,10 @@ class AbsolutePathErrorFormatter implements ErrorFormatter
     }
 
     /**
-     * Remove useless information like trait context
+     * Remove useless information like trait context.
      *
      * @param string $filePath Absolute file path
+     *
      * @return string File path with removed useless information
      */
     private function parseFilePath(string $filePath): string

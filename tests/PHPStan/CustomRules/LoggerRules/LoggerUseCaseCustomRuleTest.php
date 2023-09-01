@@ -1,13 +1,13 @@
 <?php
 
 /*
- * Copyright 2005 - 2022 Centreon (https://www.centreon.com/)
+ * Copyright 2005 - 2023 Centreon (https://www.centreon.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
  * limitations under the License.
  *
  * For more information : contact@centreon.com
+ *
  */
 
 declare(strict_types=1);
@@ -27,19 +28,17 @@ use Centreon\PHPStan\CustomRules\LoggerRules\LoggerUseCaseCustomRule;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->scope = $this->createMock(Scope::class);
     $this->collectedDataNode = $this->createMock(CollectedDataNode::class);
 });
 
-it('should return an error if a Use Case does not contain a call to Logger method.', function () {
-    $file = 'centreon' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR
-        . 'Application' . DIRECTORY_SEPARATOR . 'RealTime' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-        . 'FindHost' . DIRECTORY_SEPARATOR . 'FindHost.php';
+it('should return an error if a Use Case does not contain a call to Logger method.', function (): void {
+    $file = implode(DIRECTORY_SEPARATOR, ['centreon', 'src', 'Core', 'Application', 'RealTime', 'UseCase', 'FindHost', 'FindHost.php']);
     $methodCalls = [
         'methodOne',
         'methodTwo',
-        'methodThree'
+        'methodThree',
     ];
 
     $methodCallData = [$file => $methodCalls];
@@ -59,15 +58,13 @@ it('should return an error if a Use Case does not contain a call to Logger metho
     expect($result[0]->message)->toBe($expectedResult[0]->message);
 });
 
-it('should not return an error if a Use Case contain a call to Logger method.', function () {
-    $file = 'centreon' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR
-        . 'Application' . DIRECTORY_SEPARATOR . 'RealTime' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-        . 'FindHost' . DIRECTORY_SEPARATOR . 'FindHost.php';
+it('should not return an error if a Use Case contain a call to Logger method.', function (): void {
+    $file = implode(DIRECTORY_SEPARATOR, ['centreon', 'src', 'Core', 'Application', 'RealTime', 'UseCase', 'FindHost', 'FindHost.php']);
     $methodCalls = [
         'methodOne',
         'methodTwo',
         'methodThree',
-        'critical'
+        'critical',
     ];
 
     $methodCallData = [$file => $methodCalls];
@@ -84,14 +81,12 @@ it('should not return an error if a Use Case contain a call to Logger method.', 
 
 it(
     'should not return an error if scanned file is not a Use case and does not contain a call to Logger method.',
-    function () {
-        $file = 'centreon' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR
-            . 'Application'. DIRECTORY_SEPARATOR . 'RealTime' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-            . 'FindHost' . DIRECTORY_SEPARATOR . 'FindHostResponse.php';
+    function (): void {
+        $file = implode(DIRECTORY_SEPARATOR, ['centreon', 'src', 'Core', 'Application', 'RealTime', 'UseCase', 'FindHost', 'FindHostResponse.php']);
         $methodCalls = [
             'methodOne',
             'methodTwo',
-            'methodThree'
+            'methodThree',
         ];
 
         $methodCallData = [$file => $methodCalls];
@@ -104,4 +99,5 @@ it(
         $result = $rule->processNode($this->collectedDataNode, $this->scope);
         expect($result)->toBeArray();
         expect($result)->toBeEmpty();
-});
+    }
+);

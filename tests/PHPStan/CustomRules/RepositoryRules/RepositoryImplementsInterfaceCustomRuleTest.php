@@ -1,13 +1,13 @@
 <?php
 
 /*
- * Copyright 2005 - 2022 Centreon (https://www.centreon.com/)
+ * Copyright 2005 - 2023 Centreon (https://www.centreon.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
  * limitations under the License.
  *
  * For more information : contact@centreon.com
+ *
  */
 
 declare(strict_types=1);
@@ -29,7 +30,7 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Class_;
 use PHPStan\Analyser\Scope;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->scope = $this->createMock(Scope::class);
     $this->node = $this->createMock(Class_::class);
     $this->identifierNodeInstance = $this->createMock(Identifier::class);
@@ -42,8 +43,8 @@ beforeEach(function () {
     ];
 });
 
-it('should return an error if Repository does not implement an Interface defined in Application layer.', function () {
-    $invalidInterfaceImplementations = 'Core\Domain\Configuration\Notification\Model\NotificationInterface';
+it('should return an error if Repository does not implement an Interface defined in Application layer.', function (): void {
+    $invalidInterfaceImplementations = \Core\Domain\Configuration\Notification\Model\NotificationInterface::class;
 
     $this->nameNodeInstanceInterface
         ->expects($this->any())
@@ -60,7 +61,7 @@ it('should return an error if Repository does not implement an Interface defined
     $this->nameNodeInstanceForNamespacedName
         ->expects($this->any())
         ->method('toCodeString')
-        ->willReturn('Core\Infrastructure\RealTime\Repository\HostGroup\DbReadHostGroupRepository');
+        ->willReturn(\Core\Infrastructure\RealTime\Repository\HostGroup\DbReadHostGroupRepository::class);
 
     $expectedResult = [
         CentreonRuleErrorBuilder::message(
@@ -73,8 +74,8 @@ it('should return an error if Repository does not implement an Interface defined
     expect($result[0]->message)->toBe($expectedResult[0]->message);
 });
 
-it('should not return an error if Repository does implement an Interface defined in Application layer.', function () {
-    $validInterfaceImplementations = 'Core\Application\Common\Session\Repository\ReadSessionRepositoryInterface';
+it('should not return an error if Repository does implement an Interface defined in Application layer.', function (): void {
+    $validInterfaceImplementations = \Core\Application\Common\Session\Repository\ReadSessionRepositoryInterface::class;
 
     $this->nameNodeInstanceInterface
         ->expects($this->any())
@@ -91,7 +92,7 @@ it('should not return an error if Repository does implement an Interface defined
     $this->nameNodeInstanceForNamespacedName
         ->expects($this->any())
         ->method('toCodeString')
-        ->willReturn('Core\Infrastructure\Common\Repository\DbReadSessionRepository');
+        ->willReturn(\Core\Infrastructure\Common\Repository\DbReadSessionRepository::class);
 
     $rule = new RepositoryImplementsInterfaceCustomRule();
     $result = $rule->processNode($this->node, $this->scope);
@@ -99,7 +100,7 @@ it('should not return an error if Repository does implement an Interface defined
     expect($result)->toBeEmpty();
 });
 
-it('should not return an error if scanned class is not a Repository.', function () {
+it('should not return an error if scanned class is not a Repository.', function (): void {
     $invalidInterfaceImplementations = 'Path\To\Some\Interface';
 
     $this->nameNodeInstanceInterface
@@ -117,7 +118,7 @@ it('should not return an error if scanned class is not a Repository.', function 
     $this->nameNodeInstanceForNamespacedName
         ->expects($this->any())
         ->method('toCodeString')
-        ->willReturn('Namespaced\Name\Of\SomeClassName');
+        ->willReturn(\Namespaced\Name\Of\SomeClassName::class);
 
     $rule = new RepositoryImplementsInterfaceCustomRule();
     $result = $rule->processNode($this->node, $this->scope);
@@ -125,7 +126,7 @@ it('should not return an error if scanned class is not a Repository.', function 
     expect($result)->toBeEmpty();
 });
 
-it('should return no error if Repository is an abstract class.', function () {
+it('should return no error if Repository is an abstract class.', function (): void {
     $invalidInterfaceImplementations = '';
 
     $this->nameNodeInstanceInterface
@@ -144,7 +145,7 @@ it('should return no error if Repository is an abstract class.', function () {
         ->expects($this->any())
         ->method('toCodeString')
         ->willReturn(
-            'Core\Infrastructure\Configuration\NotificationPolicy\Repository\AbstractDbReadNotificationRepository'
+            \Core\Infrastructure\Configuration\NotificationPolicy\Repository\AbstractDbReadNotificationRepository::class
         );
 
     $rule = new RepositoryImplementsInterfaceCustomRule();
@@ -153,7 +154,7 @@ it('should return no error if Repository is an abstract class.', function () {
     expect($result)->toBeEmpty();
 });
 
-it('should return no error if Repository is an Exception.', function () {
+it('should return no error if Repository is an Exception.', function (): void {
     $invalidInterfaceImplementations = '';
 
     $this->nameNodeInstanceInterface
@@ -171,7 +172,7 @@ it('should return no error if Repository is an Exception.', function () {
     $this->nameNodeInstanceForNamespacedName
         ->expects($this->any())
         ->method('toCodeString')
-        ->willReturn('Core\Infrastructure\Common\Repository\RepositoryException');
+        ->willReturn(\Core\Infrastructure\Common\Repository\RepositoryException::class);
 
     $rule = new RepositoryImplementsInterfaceCustomRule();
     $result = $rule->processNode($this->node, $this->scope);

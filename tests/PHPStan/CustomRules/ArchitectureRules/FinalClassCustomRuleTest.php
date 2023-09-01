@@ -1,13 +1,13 @@
 <?php
 
 /*
- * Copyright 2005 - 2022 Centreon (https://www.centreon.com/)
+ * Copyright 2005 - 2023 Centreon (https://www.centreon.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
  * limitations under the License.
  *
  * For more information : contact@centreon.com
+ *
  */
 
 declare(strict_types=1);
@@ -28,21 +29,20 @@ use PhpParser\Node\Identifier;
 use PhpParser\Node\Stmt\Class_;
 use PHPStan\Analyser\Scope;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->node = $this->createMock(Class_::class);
     $this->scope = $this->createMock(Scope::class);
     $this->instanceIdentifierNode = $this->createMock(Identifier::class);
     $this->node->name = $this->instanceIdentifierNode;
 });
 
-it('should return an error if UseCase class in not final.', function () {
+it('should return an error if UseCase class in not final.', function (): void {
     $this->instanceIdentifierNode->name = 'FindInstallationStatus';
     $this->scope
         ->expects($this->any())
         ->method('getFile')
         ->willReturn(
-            DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-                . 'FindInstallationStatus' . DIRECTORY_SEPARATOR . 'FindInstallationStatus.php'
+            implode(DIRECTORY_SEPARATOR, ['', 'Application', 'UseCase', 'FindInstallationStatus', 'FindInstallationStatus.php'])
         );
 
     $this->node
@@ -61,7 +61,7 @@ it('should return an error if UseCase class in not final.', function () {
     expect($result[0]->message)->toBe($expectedResult[0]->message);
 });
 
-it('should return an error if Request class is not final.', function () {
+it('should return an error if Request class is not final.', function (): void {
     $this->instanceIdentifierNode->name = 'FindInstallationStatusRequest';
 
     $this->node
@@ -80,7 +80,7 @@ it('should return an error if Request class is not final.', function () {
     expect($result[0]->message)->toBe($expectedResult[0]->message);
 });
 
-it('should return an error if Response class is not final.', function () {
+it('should return an error if Response class is not final.', function (): void {
     $this->instanceIdentifierNode->name = 'FindInstallationStatusResponse';
 
     $this->node
@@ -99,7 +99,7 @@ it('should return an error if Response class is not final.', function () {
     expect($result[0]->message)->toBe($expectedResult[0]->message);
 });
 
-it('should return an error if Controller class is not final.', function () {
+it('should return an error if Controller class is not final.', function (): void {
     $this->instanceIdentifierNode->name = 'FindInstallationStatusController';
 
     $this->node
@@ -118,14 +118,13 @@ it('should return an error if Controller class is not final.', function () {
     expect($result[0]->message)->toBe($expectedResult[0]->message);
 });
 
-it('should return no error if UseCase class is final.', function () {
+it('should return no error if UseCase class is final.', function (): void {
     $this->instanceIdentifierNode->name = 'FindInstallationStatus';
     $this->scope
         ->expects($this->any())
         ->method('getFile')
         ->willReturn(
-            DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-                . 'FindInstallationStatus' . DIRECTORY_SEPARATOR . 'FindInstallationStatus.php'
+            implode(DIRECTORY_SEPARATOR, ['', 'Application', 'UseCase', 'FindInstallationStatus', 'FindInstallationStatus.php'])
         );
 
     $this->node
@@ -139,7 +138,7 @@ it('should return no error if UseCase class is final.', function () {
     expect($result)->toBeEmpty();
 });
 
-it('should return no error if Request class is final.', function () {
+it('should return no error if Request class is final.', function (): void {
     $this->instanceIdentifierNode->name = 'FindInstallationStatusRequest';
 
     $this->node
@@ -153,7 +152,7 @@ it('should return no error if Request class is final.', function () {
     expect($result)->toBeEmpty();
 });
 
-it('should return no error if Response class is final.', function () {
+it('should return no error if Response class is final.', function (): void {
     $this->instanceIdentifierNode->name = 'FindInstallationStatusResponse';
 
     $this->node
@@ -167,7 +166,7 @@ it('should return no error if Response class is final.', function () {
     expect($result)->toBeEmpty();
 });
 
-it('should return no error if Controller class is final.', function () {
+it('should return no error if Controller class is final.', function (): void {
     $this->instanceIdentifierNode->name = 'FindInstallationStatusController';
 
     $this->node
@@ -183,16 +182,15 @@ it('should return no error if Controller class is final.', function () {
 
 it(
     'should return no error if scanned class is not final and is neither UseCase, Controller, Response no Request',
-    function () {
+    function (): void {
         $this->instanceIdentifierNode->name = 'User';
 
         $this->scope
-        ->expects($this->any())
-        ->method('getFile')
-        ->willReturn(
-            DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR . 'Configuration' . DIRECTORY_SEPARATOR . 'User'
-                . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'User.php'
-        );
+            ->expects($this->any())
+            ->method('getFile')
+            ->willReturn(
+                implode(DIRECTORY_SEPARATOR, ['', 'Domain', 'Configuration', 'User', 'Model', 'User.php'])
+            );
 
         $this->node
             ->expects($this->any())

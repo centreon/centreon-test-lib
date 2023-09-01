@@ -1,13 +1,13 @@
 <?php
 
 /*
- * Copyright 2005 - 2022 Centreon (https://www.centreon.com/)
+ * Copyright 2005 - 2023 Centreon (https://www.centreon.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
  * limitations under the License.
  *
  * For more information : contact@centreon.com
+ *
  */
 
 declare(strict_types=1);
@@ -23,40 +24,36 @@ declare(strict_types=1);
 namespace Centreon\PHPStan\CustomRules\ArchitectureRules;
 
 use Centreon\PHPStan\CustomRules\CentreonRuleErrorBuilder;
-use Centreon\PHPStan\CustomRules\Traits\UseCaseTrait;
-use PhpParser\Node\Stmt\ClassMethod;
+use Centreon\PHPStan\CustomRules\CentreonRuleTrait;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Throw_;
 use PhpParser\Node\Stmt\TryCatch;
-use PHPStan\Rules\Rule;
 use PHPStan\Analyser\Scope;
+use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
 
 /**
  * This class implements a custom rule for PHPStan to check if thrown Exception is in
  * try/catch block and if it is caught.
+ *
+ * @implements Rule<Node\Stmt\Throw_>
  */
 class ExceptionInUseCaseCustomRule implements Rule
 {
-    use UseCaseTrait;
+    use CentreonRuleTrait;
 
-    /**
-     * @inheritDoc
-     */
     public function getNodeType(): string
     {
         return Node\Stmt\Throw_::class;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function processNode(Node $node, Scope $scope): array
     {
-        // check if file is UseCase
+        // Check if file is UseCase
         if (
-            ! $this->fileInUseCase($scope->getFile())
+            ! $this->fileIsUseCase($scope->getFile())
             || $this->getParentClassMethod($node)->name->name === '__construct'
             || $this->getParentClassMethod($node)->isPrivate() === true
         ) {
@@ -64,7 +61,7 @@ class ExceptionInUseCaseCustomRule implements Rule
         }
 
         // check if Exception class is not null and get string representation of Exception class
-        $exceptionThrown = $node->expr->class !== null ? $node->expr->class->toCodeString() : '';
+        $exceptionThrown = ($node->expr->class ?? null) ? $node->expr->class->toCodeString() : '';
         $parentTryCatchNodes = $this->getAllParentTryCatchNodes($node);
         $caughtExceptionTypes = $this->getCaughtExceptionTypes($parentTryCatchNodes);
 
@@ -86,10 +83,27 @@ class ExceptionInUseCaseCustomRule implements Rule
     }
 
     /**
+     * This method returns the parent ClassMethod node.
+     *
+     * @param Throw_ $node
+     *
+     * @return ClassMethod
+     */
+    private function getParentClassMethod(Throw_ $node): ClassMethod
+    {
+        while (! $node->getAttribute('parent') instanceof Class_) {
+            $node = $node->getAttribute('parent');
+        }
+
+        return $node;
+    }
+
+    /**
      * This method gets all the parent TryCatch nodes of a give node and
      * stores then in array.
      *
      * @param Node $node
+     *
      * @return TryCatch[]
      */
     private function getAllParentTryCatchNodes(Node $node): array
@@ -109,6 +123,7 @@ class ExceptionInUseCaseCustomRule implements Rule
      * This method return an array of Exception types caught in all TryCatch nodes.
      *
      * @param TryCatch[] $parentTryCatchNodes
+     *
      * @return string[]
      */
     private function getCaughtExceptionTypes(array $parentTryCatchNodes): array
@@ -135,20 +150,5 @@ class ExceptionInUseCaseCustomRule implements Rule
         return CentreonRuleErrorBuilder::message(
             'Exception thrown in UseCase should be in a try catch block, and must be caught.'
         )->build();
-    }
-
-    /**
-     * This method returns the parent ClassMethod node.
-     *
-     * @param Throw_ $node
-     * @return ClassMethod
-     */
-    private function getParentClassMethod(Throw_ $node): ClassMethod
-    {
-        while (! $node->getAttribute('parent') instanceof Class_) {
-            $node = $node->getAttribute('parent');
-        }
-
-        return $node;
     }
 }

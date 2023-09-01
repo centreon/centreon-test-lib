@@ -1,13 +1,13 @@
 <?php
 
 /*
- * Copyright 2005 - 2022 Centreon (https://www.centreon.com/)
+ * Copyright 2005 - 2023 Centreon (https://www.centreon.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
  * limitations under the License.
  *
  * For more information : contact@centreon.com
+ *
  */
 
 declare(strict_types=1);
@@ -35,7 +36,7 @@ use PhpParser\Node\Stmt\Throw_;
 use PhpParser\Node\Stmt\TryCatch;
 use PHPStan\Analyser\Scope;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->node = $this->createMock(Throw_::class);
     $this->scope = $this->createMock(Scope::class);
     $this->instanceIf_Node = $this->createMock(If_::class);
@@ -55,22 +56,21 @@ beforeEach(function () {
     $this->instanceIdentifierNode = $this->createMock(Identifier::class);
     $this->instanceClassMethodNode->name = $this->instanceIdentifierNode;
     $this->instanceClassMethodNode
-            ->expects($this->any())
-            ->method('getAttribute')
-            ->with($this->equalTo('parent'))
-            ->willReturn($this->instanceClass_Node);
+        ->expects($this->any())
+        ->method('getAttribute')
+        ->with($this->equalTo('parent'))
+        ->willReturn($this->instanceClass_Node);
 });
 
 it(
     'should return an error if scanned class is UseCase and an Exception is thrown outside of try/catch block.',
-    function () {
+    function (): void {
 
         $this->scope
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                'Core' . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-                    . 'FindInstallationStatus' . DIRECTORY_SEPARATOR . 'FindInstallationStatus.php'
+                implode(DIRECTORY_SEPARATOR, ['Core', 'Application', 'UseCase', 'FindInstallationStatus', 'FindInstallationStatus.php'])
             );
 
         $this->instanceNameNode
@@ -104,14 +104,13 @@ it(
 
 it(
     'should return an error if scanned class is UseCase and an Exception is thrown inside try/catch (with multiple '
-        . 'catches) block, but it is not caught by either catch.',
-    function () {
+    . 'catches) block, but it is not caught by either catch.',
+    function (): void {
         $this->scope
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                'Core' . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-                    . 'FindInstallationStatus' . DIRECTORY_SEPARATOR . 'FindInstallationStatus.php'
+                implode(DIRECTORY_SEPARATOR, ['Core', 'Application', 'UseCase', 'FindInstallationStatus', 'FindInstallationStatus.php'])
             );
 
         $this->instanceNameNode
@@ -138,7 +137,7 @@ it(
 
         $this->instanceCatch_Node01->types = [
             $this->instanceNameNode01,
-            $this->instanceNameNode02
+            $this->instanceNameNode02,
         ];
 
         $this->instanceCatch_Node02->types = [
@@ -180,14 +179,13 @@ it(
 
 it(
     'should return no error if scanned class is UseCase, an Exception is thrown inside try/catch (with multiple '
-        . 'catches) block and it is caught by one of the catches.',
-    function () {
+    . 'catches) block and it is caught by one of the catches.',
+    function (): void {
         $this->scope
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                'Core' . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-                    . 'FindInstallationStatus' . DIRECTORY_SEPARATOR . 'FindInstallationStatus.php'
+                implode(DIRECTORY_SEPARATOR, ['Core', 'Application', 'UseCase', 'FindInstallationStatus', 'FindInstallationStatus.php'])
             );
 
         $this->instanceNameNode
@@ -214,7 +212,7 @@ it(
 
         $this->instanceCatch_Node01->types = [
             $this->instanceNameNode01,
-            $this->instanceNameNode02
+            $this->instanceNameNode02,
         ];
 
         $this->instanceCatch_Node02->types = [
@@ -251,15 +249,14 @@ it(
 
 it(
     'should return no error if scanned class is UseCase and an Exception is thrown (and caught) inside try/catch block,'
-        . 'but try/catch block is not a direct parent of a thrown Exception.',
-    function () {
+    . 'but try/catch block is not a direct parent of a thrown Exception.',
+    function (): void {
         $this->scope
-        ->expects($this->any())
-        ->method('getFile')
-        ->willReturn(
-            'Core' . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-                . 'FindInstallationStatus' . DIRECTORY_SEPARATOR . 'FindInstallationStatus.php'
-        );
+            ->expects($this->any())
+            ->method('getFile')
+            ->willReturn(
+                implode(DIRECTORY_SEPARATOR, ['Core', 'Application', 'UseCase', 'FindInstallationStatus', 'FindInstallationStatus.php'])
+            );
 
         $this->instanceNameNode
             ->expects($this->any())
@@ -290,7 +287,7 @@ it(
 
         $this->instanceCatch_Node01->types = [
             $this->instanceNameNode01,
-            $this->instanceNameNode02
+            $this->instanceNameNode02,
         ];
 
         $this->instanceNameNode01
@@ -312,13 +309,12 @@ it(
 
 it(
     'should return no error if scanned class is not UseCase and an Exception is thrown outside try/catch block.',
-    function () {
+    function (): void {
         $this->scope
             ->expects($this->any())
             ->method('getFile')
             ->willReturn(
-                'Core' . DIRECTORY_SEPARATOR . 'Domain' . DIRECTORY_SEPARATOR . 'Configuration' . DIRECTORY_SEPARATOR
-                    . 'User' . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR . 'NewUser.php'
+                implode(DIRECTORY_SEPARATOR, ['Core', 'Domain', 'Configuration', 'User', 'Model', 'NewUser.php'])
             );
 
         $this->instanceNameNode
@@ -347,15 +343,14 @@ it(
 
 it(
     'should return no error if scanned class is UseCase and an Exception is thrown outside try/catch block in '
-        . 'constructor method',
-    function () {
+    . 'constructor method',
+    function (): void {
         $this->scope
-        ->expects($this->any())
-        ->method('getFile')
-        ->willReturn(
-            'Core' . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR . 'UseCase' . DIRECTORY_SEPARATOR
-                . 'FindInstallationStatus' . DIRECTORY_SEPARATOR . 'FindInstallationStatus.php'
-        );
+            ->expects($this->any())
+            ->method('getFile')
+            ->willReturn(
+                implode(DIRECTORY_SEPARATOR, ['Core', 'Application', 'UseCase', 'FindInstallationStatus', 'FindInstallationStatus.php'])
+            );
 
         $this->instanceNameNode
             ->expects($this->any())

@@ -1,13 +1,13 @@
 <?php
 
 /*
- * Copyright 2005 - 2022 Centreon (https://www.centreon.com/)
+ * Copyright 2005 - 2023 Centreon (https://www.centreon.com/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
  * limitations under the License.
  *
  * For more information : contact@centreon.com
+ *
  */
 
 declare(strict_types=1);
@@ -29,7 +30,7 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Class_;
 use PHPStan\Analyser\Scope;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->scope = $this->createMock(Scope::class);
     $this->node = $this->createMock(Class_::class);
     $this->nameNodeInstanceInterface = $this->createMock(Name::class);
@@ -38,9 +39,9 @@ beforeEach(function () {
 });
 
 it(
-    'should return an error if Repository Interface name does not start with \'Read\' or \'Write\' and end with ' .
-    '\'RepositoryInterface\'.',
-    function () {
+    'should return an error if Repository Interface name does not start with \'Read\' or \'Write\' and end with '
+    . '\'RepositoryInterface\'.',
+    function (): void {
         $invalidInterfaceImplementations = 'Path\To\Some\Interface';
 
         $this->nameNodeInstanceInterface
@@ -67,19 +68,19 @@ it(
 );
 
 it(
-    'should not return an error if Repository Interface name does start with \'Read\' or \'Write\' and end with ' .
-    '\'RepositoryInterface\'.',
-    function () {
-        $validInterfaceImplementations = 'Core\Application\Common\Session\Repository\ReadSessionRepositoryInterface';
+    'should not return an error if Repository Interface name does start with \'Read\' or \'Write\' and end with '
+    . '\'RepositoryInterface\'.',
+    function (): void {
+        $validInterfaceImplementations = \Core\Application\Common\Session\Repository\ReadSessionRepositoryInterface::class;
 
         $this->nameNodeInstanceInterface
             ->expects($this->any())
             ->method('toString')
             ->willReturn($validInterfaceImplementations);
 
-    $this->node->implements = [
-        $this->nameNodeInstanceInterface,
-    ];
+        $this->node->implements = [
+            $this->nameNodeInstanceInterface,
+        ];
 
         $this->identifierNodeInstance->name = 'DbReadSessionRepository';
 
@@ -90,7 +91,7 @@ it(
     }
 );
 
-it('should not return an error if Repository Interface is not implemented by Repository.', function () {
+it('should not return an error if Repository Interface is not implemented by Repository.', function (): void {
     $this->node->implements = [];
 
     $this->identifierNodeInstance->name = 'DbReadHostgroupRepository';
@@ -101,7 +102,7 @@ it('should not return an error if Repository Interface is not implemented by Rep
     expect($result)->toBeEmpty();
 });
 
-it('should not return an error if scanned class is not Repository.', function () {
+it('should not return an error if scanned class is not Repository.', function (): void {
     $invalidInterfaceImplementations = 'Path\To\Some\Interface';
 
     $this->nameNodeInstanceInterface
