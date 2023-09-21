@@ -32,10 +32,19 @@ class PhpCsFixerRuleSet
      */
     public static function getRules(): array
     {
+        return self::getRulesSafe() + self::getRulesRisky();
+    }
+
+    /**
+     * This method returns an array of defined Php-Cs-Fixer rules which MUST NOT be risky.
+     *
+     * @return array
+     */
+    public static function getRulesSafe(): array
+    {
         $rules = [
             'align_multiline_comment' => true,
             'array_indentation' => true,
-            'array_push' => true, // risky
             'array_syntax' => true,
             'assign_null_coalescing_to_coalesce_equal' => true,
             'backtick_to_shell_exec' => true,
@@ -54,32 +63,21 @@ class PhpCsFixerRuleSet
             'clean_namespace' => true,
             'combine_consecutive_issets' => true,
             'combine_consecutive_unsets' => true,
-            'combine_nested_dirname' => true, // risky
             'declare_parentheses' => true,
-            'dir_constant' => true, // risky
             'explicit_indirect_variable' => true,
             'explicit_string_variable' => true,
-            'fopen_flag_order' => true, // risky
             'fully_qualified_strict_types' => true,
-            'function_to_constant' => true, // risky
-            'function_typehint_space' => true,
+            'function_typehint_space' => true, // deprecated
             'general_phpdoc_annotation_remove' => ['annotations' => ['author', 'package', 'subpackage']],
             'general_phpdoc_tag_rename' => ['case_sensitive' => true, 'replacements' => ['inheritdoc' => 'inheritDoc']],
-            'get_class_to_class_keyword' => true, // risky
             'heredoc_indentation' => true,
             'heredoc_to_nowdoc' => true,
-            'implode_call' => true, // risky
             'include' => true,
             'lambda_not_used_import' => true,
             'list_syntax' => true,
-            'logical_operators' => true, // risky
             'lowercase_cast' => true,
-            'mb_str_functions' => true,
             'method_chaining_indentation' => true,
-            'modernize_strpos' => true, // risky
-            'modernize_types_casting' => true, // risky
             'multiline_whitespace_before_semicolons' => true,
-            'no_alias_functions' => true, // risky
             'no_alias_language_construct_call' => true,
             'no_alternative_syntax' => true,
             'no_binary_string' => true,
@@ -102,7 +100,6 @@ class PhpCsFixerRuleSet
                     'use',
                 ],
             ],
-            'no_homoglyph_names' => true, // risky
             'no_leading_namespace_whitespace' => true,
             'no_mixed_echo_print' => true,
             'no_multiline_whitespace_around_double_arrow' => true,
@@ -118,15 +115,11 @@ class PhpCsFixerRuleSet
                     'group_import',
                 ],
             ],
-            'no_trailing_whitespace_in_string' => true, // risky
             'no_unneeded_control_parentheses' => true,
             'no_unneeded_curly_braces' => true,
             'no_unneeded_import_alias' => true,
-            'no_unreachable_default_argument_value' => true,
-            'no_unset_on_property' => true, // risky
             'no_unused_imports' => true,
             'no_useless_else' => true,
-            'no_useless_sprintf' => true, // risky
             'no_whitespace_before_comma_in_array' => true,
             'normalize_index_brace' => true,
             'not_operator_with_successor_space' => true,
@@ -154,23 +147,14 @@ class PhpCsFixerRuleSet
             'phpdoc_summary' => true,
             // phpdoc_to_comment is error-prone for inline type-hinting (ex: phpstan, psalm, ...)
             'phpdoc_to_comment' => false,
-            // phpdoc_to_property_type is Experimental and *too much* risky
-            // 'phpdoc_to_property_type' => true,
-            // phpdoc_to_return_type is Experimental and *too much* risky
-            // 'phpdoc_to_return_type' => true,
             'phpdoc_trim' => true,
             'phpdoc_trim_consecutive_blank_line_separation' => true,
             'phpdoc_types' => true,
             'phpdoc_var_annotation_correct_order' => true,
             'phpdoc_var_without_name' => true,
-            'psr_autoloading' => ['dir' => './src'], // risky
-            'random_api_migration' => true, // risky
-            'regular_callable_call' => true, // risky
             'return_assignment' => true,
-            'self_accessor' => true, // risky
             'self_static_accessor' => true,
             'semicolon_after_instruction' => true,
-            'set_type_to_cast' => true, // risky
             'short_scalar_cast' => true,
             'simple_to_complex_string_variable' => true,
             'simplified_if_return' => true,
@@ -184,20 +168,14 @@ class PhpCsFixerRuleSet
             'space_after_semicolon' => true,
             'standardize_increment' => true,
             'standardize_not_equals' => true,
-            'strict_comparison' => true, // risky
-            'strict_param' => true,
-            'string_line_ending' => true, // risky
             'switch_continue_to_break' => true,
             'ternary_to_null_coalescing' => true,
             'trailing_comma_in_multiline' => true,
             'trim_array_spaces' => true,
             'types_spaces' => true,
             'unary_operator_spaces' => true,
-            'use_arrow_functions' => true, // risky
             'visibility_required' => true,
-            'void_return' => true,
             'whitespace_after_comma_in_array' => true,
-            'declare_strict_types' => true, // risky
         ];
 
         // Set the header dynamically based on the current detected project name.
@@ -212,5 +190,48 @@ class PhpCsFixerRuleSet
         }
 
         return $rules;
+    }
+
+    /**
+     * This method returns an array of defined Php-Cs-Fixer rules which are considered risky.
+     *
+     * @return array
+     */
+    public static function getRulesRisky(): array
+    {
+        return [
+            'array_push' => true,
+            'combine_nested_dirname' => true,
+            'dir_constant' => true,
+            'fopen_flag_order' => true,
+            'function_to_constant' => true,
+            'get_class_to_class_keyword' => true,
+            'implode_call' => true,
+            'logical_operators' => true,
+            'mb_str_functions' => true,
+            'modernize_strpos' => true,
+            'modernize_types_casting' => true,
+            'no_alias_functions' => true,
+            'no_homoglyph_names' => true,
+            'no_trailing_whitespace_in_string' => true,
+            'no_unreachable_default_argument_value' => true,
+            'no_unset_on_property' => true,
+            'no_useless_sprintf' => true,
+            // phpdoc_to_property_type is Experimental and *too much* risky
+            // 'phpdoc_to_property_type' => true,
+            // phpdoc_to_return_type is Experimental and *too much* risky
+            // 'phpdoc_to_return_type' => true,
+            'psr_autoloading' => ['dir' => './src'],
+            'random_api_migration' => true,
+            'regular_callable_call' => true,
+            'self_accessor' => true,
+            'set_type_to_cast' => true,
+            'strict_comparison' => true,
+            'strict_param' => true,
+            'string_line_ending' => true,
+            'use_arrow_functions' => true,
+            'declare_strict_types' => true,
+            'void_return' => true,
+        ];
     }
 }
