@@ -108,7 +108,7 @@ class CentreonContext extends UtilsContext
 
             $managerOptions = [
                 'capabilities' => [
-                    'goog:chromeOptions' => $chromeArgs,
+                    //'goog:chromeOptions' => $chromeArgs,
                     'goog:loggingPrefs' => [
                         'browser' => 'ALL', // calls to console.* methods
                     ],
