@@ -96,6 +96,7 @@ class CentreonContext extends UtilsContext
                 '--start-maximized',
                 '--ignore-certificate-errors',
                 '--window-size=1600,4000',
+                '--remote-debugging-port=9222',
             ];
 
             $defaultOptions = [
@@ -116,7 +117,7 @@ class CentreonContext extends UtilsContext
             ];
 
             $_SERVER['PANTHER_NO_SANDBOX'] = 1;
-            $_SERVER['PANTHER_CHROME_BINARY'] = 'chrome';
+            //$_SERVER['PANTHER_CHROME_BINARY'] = 'chrome';
             $_SERVER['PANTHER_CHROME_ARGUMENTS'] = implode(' ', $chromeArgs);
 
             $driver = new PantherDriver($defaultOptions, $kernelOptions, $managerOptions);
