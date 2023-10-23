@@ -96,6 +96,7 @@ class CentreonContext extends UtilsContext
                 '--start-maximized',
                 '--ignore-certificate-errors',
                 '--window-size=1600,4000',
+                '--remote-debugging-port=9222',
             ];
 
             $defaultOptions = [
@@ -107,9 +108,10 @@ class CentreonContext extends UtilsContext
             $kernelOptions = []; # unused cause we do not extend class KernelTestCase
 
             $managerOptions = [
-                'goog:chromeOptions' => $chromeArgs,
-                'goog:loggingPrefs' => [
-                    'browser' => 'ALL', // calls to console.* methods
+                'capabilities' => [
+                    'goog:loggingPrefs' => [
+                        'browser' => 'ALL', // calls to console.* methods
+                    ],
                 ],
             ];
 
