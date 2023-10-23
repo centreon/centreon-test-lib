@@ -107,13 +107,16 @@ class CentreonContext extends UtilsContext
             $kernelOptions = []; # unused cause we do not extend class KernelTestCase
 
             $managerOptions = [
-                'goog:chromeOptions' => $chromeArgs,
-                'goog:loggingPrefs' => [
-                    'browser' => 'ALL', // calls to console.* methods
+                'capabilities' => [
+                    'goog:chromeOptions' => $chromeArgs,
+                    'goog:loggingPrefs' => [
+                        'browser' => 'ALL', // calls to console.* methods
+                    ],
                 ],
             ];
 
             $_SERVER['PANTHER_NO_SANDBOX'] = 1;
+            $_SERVER['PANTHER_CHROME_BINARY'] = 'chrome';
             $_SERVER['PANTHER_CHROME_ARGUMENTS'] = implode(' ', $chromeArgs);
 
             $driver = new PantherDriver($defaultOptions, $kernelOptions, $managerOptions);
