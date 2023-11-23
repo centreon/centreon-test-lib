@@ -1,16 +1,15 @@
 *.php                   @centreon/owners-php
-*.xml                            @centreon/owners-php
-**/composer.*                       @centreon/owners-php
+*.xml                   @centreon/owners-php
+**/composer.*           @centreon/owners-php
 
-**/phpstan.neon                     @centreon/owners-php
-**/src/                             @centreon/owners-php
-**/config/                          @centreon/owners-php
-**/tests/php/                       @centreon/owners-php
+**/phpstan.neon         @centreon/owners-php
+**/src/                 @centreon/owners-php
+**/config/              @centreon/owners-php
+**/tests/php/           @centreon/owners-php
 
 *.sh                    @centreon/owners-bash
 
 **/.github/             @centreon/owners-pipelines
-
 
 *.feature               @centreon/owners-gherkin
 
