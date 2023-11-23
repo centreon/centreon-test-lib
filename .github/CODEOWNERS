@@ -7,6 +7,4 @@
 
 **/.github/             @centreon/owners-pipelines
 
-*.feature               @centreon/owners-gherkin
-
 *.py                    @centreon/owners-python
