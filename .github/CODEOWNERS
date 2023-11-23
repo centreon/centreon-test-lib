@@ -1,0 +1,10 @@
+*.php                   @centreon/owners-php
+*.xml                   @centreon/owners-php
+composer.*              @centreon/owners-php
+**/phpstan.neon         @centreon/owners-php
+
+*.sh                    @centreon/owners-bash
+
+.github/**              @centreon/owners-pipelines
+
+*.py                    @centreon/owners-python
