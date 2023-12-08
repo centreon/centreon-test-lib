@@ -323,6 +323,11 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
             'select[name="criticality_id"]',
             self::EXTENDED_TAB
         ),
+        'enabled' => array(
+            'radio',
+            'input[name="host_activate[host_activate]"]',
+            self::EXTENDED_TAB
+        ),
         'comments' => array(
             'input',
             'textarea[name="host_comment"]',
