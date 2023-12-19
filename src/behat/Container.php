@@ -48,7 +48,7 @@ class Container
         $this->id = uniqid() . rand(1, 1000000);
 
         $command =
-            'docker-compose -f ' . $this->composeFile . ' '
+            'docker compose -f ' . $this->composeFile . ' '
             . implode(
                 ' ',
                 array_map(
@@ -56,7 +56,7 @@ class Container
                     $profiles
                 )
             )
-            . ' -p ' . $this->id . ' up -d --quiet-pull';
+            . ' -p ' . $this->id . ' up -d --wait --quiet-pull';
 
         $this->spin(
             function ($context) use ($command) {
@@ -135,7 +135,7 @@ class Container
             $this->spin(
                 function ($context) {
                     $command = sprintf(
-                        'docker-compose -f %s -p %s %s',
+                        'docker compose -f %s -p %s %s',
                             $this->composeFile,
                             $this->id,
                             implode(
@@ -247,7 +247,7 @@ class Container
     public function getLogs()
     {
         $command = sprintf(
-            'docker-compose -f %s -p %s %s logs -t --no-color',
+            'docker compose -f %s -p %s %s logs -t --no-color',
                 escapeshellarg($this->composeFile),
                 escapeshellarg($this->id),
                 implode(
@@ -313,7 +313,7 @@ class Container
      */
     public function stop($service)
     {
-        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' stop ' . $service);
+        $this->exec('docker compose -f ' . $this->composeFile . ' -p ' . $this->id . ' stop ' . $service);
     }
 
     /**
