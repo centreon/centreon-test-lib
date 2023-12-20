@@ -39,9 +39,10 @@ class Container
      * Container constructor.
      * @param string $composeFilePath Docker Compose file used to run the services.
      * @param string[] $profiles docker-compose profiles to activate
+     * @param array<string,string|int|boolean> $envVars docker composer environment variables
      * @throws \Exception
      */
-    public function __construct(string $composeFilePath, array $profiles = [])
+    public function __construct(string $composeFilePath, array $profiles = [], array $envVars = [])
     {
         $this->composeFile = $composeFilePath;
         $this->profiles = $profiles;
@@ -56,7 +57,17 @@ class Container
                     $profiles
                 )
             )
-            . ' -p ' . $this->id . ' up -d --wait --quiet-pull';
+            . ' -p ' . $this->id . ' up -d --wait --quiet-pull '
+            . implode(
+                ' ',
+                array_map(
+                    function (string $envVarName, string $envVarValue) {
+                        return ' -e ' . escapeshellarg($envVarName) . '=' . escapeshellarg($envVarValue) . ' ';
+                    },
+                    array_keys($envVars),
+                    array_values($envVars),
+                )
+            );
 
         $this->spin(
             function ($context) use ($command) {

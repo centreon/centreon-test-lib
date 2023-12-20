@@ -597,10 +597,14 @@ class CentreonContext extends UtilsContext
      *
      * @param string $composeBehatProperty Bind property to docker-compose.yml path
      * @param string[] $profiles docker-compose profiles to activate
+     * @param array<string,string|int|boolean> $envVars docker composer environment variables
      * @throws \Exception
      */
-    public function launchCentreonWebContainer(string $composeBehatProperty, array $profiles = []): void
-    {
+    public function launchCentreonWebContainer(
+        string $composeBehatProperty,
+        array $profiles = [],
+        array $envVars = []
+    ): void {
         foreach ($profiles as $profile) {
             if (preg_match('/^web(?!driver)/', $profile)) {
                 $this->webService = $profile;
@@ -611,7 +615,7 @@ class CentreonContext extends UtilsContext
             throw new \Exception('Property "' . $composeBehatProperty . '" does not exist in behat.yml');
         }
 
-        $this->container = new Container($this->composeFiles[$composeBehatProperty], $profiles);
+        $this->container = new Container($this->composeFiles[$composeBehatProperty], $profiles, $envVars);
 
         $this->setContainerWebDriver();
 
