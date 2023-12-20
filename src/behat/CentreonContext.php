@@ -370,7 +370,7 @@ class CentreonContext extends UtilsContext
      */
     public function aCentreonServer()
     {
-        $this->launchCentreonWebContainer('docker_compose_web', ['web', 'webdriver']);
+        $this->launchCentreonWebContainer('docker_compose_web', ['web']);
     }
 
     /**
@@ -378,7 +378,7 @@ class CentreonContext extends UtilsContext
      */
     public function aFreshlyInstalledCentreonServer()
     {
-        $this->launchCentreonWebContainer('docker_compose_web', ['web-fresh', 'webdriver']);
+        $this->launchCentreonWebContainer('docker_compose_web', ['web'], ['CENTREON_DATASET' => '1']);
     }
 
     /**
