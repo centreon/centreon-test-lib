@@ -47,6 +47,11 @@ class CentreonContext extends UtilsContext
     protected $webService = 'web';
 
     /**
+     * @var string the service name of db container in docker compose file
+     */
+    protected $dbService = 'db';
+
+    /**
      * @var \Centreon\Test\Behat\Configuration\PollerConfigurationExportPage
      */
     protected $pollerConfigurationPage;
@@ -561,7 +566,7 @@ class CentreonContext extends UtilsContext
     {
         if (!isset($this->dbCentreon)) {
             $dsn = 'mysql:dbname=centreon;host=' . $this->container->getHost() . ';port=' .
-                $this->container->getPort(3306, $this->webService);
+                $this->container->getPort(3306, $this->dbService);
             $this->dbCentreon = new \PDO(
                 $dsn,
                 'root',
@@ -581,7 +586,7 @@ class CentreonContext extends UtilsContext
     {
         if (!isset($this->dbStorage)) {
             $dsn = 'mysql:dbname=centreon_storage;host=' . $this->container->getHost() . ';port=' .
-                $this->container->getPort(3306, $this->webService);
+                $this->container->getPort(3306, $this->dbService);
             $this->dbStorage = new \PDO(
                 $dsn,
                 'root',
