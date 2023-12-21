@@ -49,7 +49,17 @@ class Container
         $this->id = uniqid() . rand(1, 1000000);
 
         $command =
-            'docker compose -f ' . $this->composeFile . ' '
+            implode(
+                ' ',
+                array_map(
+                    function (string $envVarName, string $envVarValue) {
+                        return escapeshellarg($envVarName) . '=' . escapeshellarg($envVarValue) . ' ';
+                    },
+                    array_keys($envVars),
+                    array_values($envVars),
+                )
+            )
+            . ' docker compose -f ' . $this->composeFile . ' '
             . implode(
                 ' ',
                 array_map(
@@ -57,17 +67,7 @@ class Container
                     $profiles
                 )
             )
-            . ' -p ' . $this->id . ' up -d --wait --quiet-pull '
-            . implode(
-                ' ',
-                array_map(
-                    function (string $envVarName, string $envVarValue) {
-                        return ' -e ' . escapeshellarg($envVarName) . '=' . escapeshellarg($envVarValue) . ' ';
-                    },
-                    array_keys($envVars),
-                    array_values($envVars),
-                )
-            );
+            . ' -p ' . $this->id . ' up -d --wait --quiet-pull';
 
         $this->spin(
             function ($context) use ($command) {

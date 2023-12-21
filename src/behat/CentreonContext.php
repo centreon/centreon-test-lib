@@ -383,7 +383,7 @@ class CentreonContext extends UtilsContext
      */
     public function aFreshlyInstalledCentreonServer()
     {
-        $this->launchCentreonWebContainer('docker_compose_web', ['web'], ['CENTREON_DATASET' => '1']);
+        $this->launchCentreonWebContainer('docker_compose_web', ['web'], ['CENTREON_DATASET' => '0']);
     }
 
     /**
