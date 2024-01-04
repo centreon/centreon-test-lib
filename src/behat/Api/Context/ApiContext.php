@@ -526,7 +526,7 @@ class ApiContext implements Context
      */
     public function aRunningInstanceOfCentreonApi()
     {
-        $this->launchCentreonWebContainer('docker_compose_web', ['web']);
+        $this->launchCentreonWebContainer('docker_compose_web');
     }
 
     /**
