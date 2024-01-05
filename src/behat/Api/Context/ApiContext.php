@@ -478,7 +478,7 @@ class ApiContext implements Context
      */
     public function launchCentreonWebContainer(
         string $composeBehatProperty,
-        array $profiles,
+        array $profiles = [],
         array $envVars = []
     ): void {
         foreach ($profiles as $profile) {
