@@ -53,7 +53,7 @@ class Container
                 ' ',
                 array_map(
                     function (string $envVarName, string $envVarValue) {
-                        return escapeshellarg($envVarName) . '=' . escapeshellarg($envVarValue) . ' ';
+                        return escapeshellcmd($envVarName) . '=' . escapeshellarg($envVarValue);
                     },
                     array_keys($envVars),
                     array_values($envVars),
