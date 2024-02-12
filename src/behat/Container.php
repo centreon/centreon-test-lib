@@ -39,16 +39,27 @@ class Container
      * Container constructor.
      * @param string $composeFilePath Docker Compose file used to run the services.
      * @param string[] $profiles docker-compose profiles to activate
+     * @param array<string,string|int|boolean> $envVars docker composer environment variables
      * @throws \Exception
      */
-    public function __construct(string $composeFilePath, array $profiles = [])
+    public function __construct(string $composeFilePath, array $profiles = [], array $envVars = [])
     {
         $this->composeFile = $composeFilePath;
         $this->profiles = $profiles;
         $this->id = uniqid() . rand(1, 1000000);
 
         $command =
-            'docker-compose -f ' . $this->composeFile . ' '
+            implode(
+                ' ',
+                array_map(
+                    function (string $envVarName, string $envVarValue) {
+                        return escapeshellcmd($envVarName) . '=' . escapeshellarg($envVarValue);
+                    },
+                    array_keys($envVars),
+                    array_values($envVars),
+                )
+            )
+            . ' docker compose -f ' . $this->composeFile . ' '
             . implode(
                 ' ',
                 array_map(
@@ -56,7 +67,7 @@ class Container
                     $profiles
                 )
             )
-            . ' -p ' . $this->id . ' up -d --quiet-pull';
+            . ' -p ' . $this->id . ' up -d --wait --quiet-pull';
 
         $this->spin(
             function ($context) use ($command) {
@@ -135,7 +146,7 @@ class Container
             $this->spin(
                 function ($context) {
                     $command = sprintf(
-                        'docker-compose -f %s -p %s %s',
+                        'docker compose -f %s -p %s %s',
                             $this->composeFile,
                             $this->id,
                             implode(
@@ -247,7 +258,7 @@ class Container
     public function getLogs()
     {
         $command = sprintf(
-            'docker-compose -f %s -p %s %s logs -t --no-color',
+            'docker compose -f %s -p %s %s logs -t --no-color',
                 escapeshellarg($this->composeFile),
                 escapeshellarg($this->id),
                 implode(
@@ -313,7 +324,7 @@ class Container
      */
     public function stop($service)
     {
-        $this->exec('docker-compose -f ' . $this->composeFile . ' -p ' . $this->id . ' stop ' . $service);
+        $this->exec('docker compose -f ' . $this->composeFile . ' -p ' . $this->id . ' stop ' . $service);
     }
 
     /**

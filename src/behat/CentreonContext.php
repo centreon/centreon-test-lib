@@ -47,6 +47,11 @@ class CentreonContext extends UtilsContext
     protected $webService = 'web';
 
     /**
+     * @var string the service name of db container in docker compose file
+     */
+    protected $dbService = 'db';
+
+    /**
      * @var \Centreon\Test\Behat\Configuration\PollerConfigurationExportPage
      */
     protected $pollerConfigurationPage;
@@ -370,7 +375,7 @@ class CentreonContext extends UtilsContext
      */
     public function aCentreonServer()
     {
-        $this->launchCentreonWebContainer('docker_compose_web', ['web', 'webdriver']);
+        $this->launchCentreonWebContainer('docker_compose_web');
     }
 
     /**
@@ -378,7 +383,7 @@ class CentreonContext extends UtilsContext
      */
     public function aFreshlyInstalledCentreonServer()
     {
-        $this->launchCentreonWebContainer('docker_compose_web', ['web-fresh', 'webdriver']);
+        $this->launchCentreonWebContainer('docker_compose_web', [], ['CENTREON_DATASET' => '0']);
     }
 
     /**
@@ -479,7 +484,7 @@ class CentreonContext extends UtilsContext
     */
     public function iAmLoggedInACentreonServerWithAConfiguredProxy()
     {
-        $this->launchCentreonWebContainer('docker_compose_web', ['web', 'webdriver', 'squid-simple']);
+        $this->launchCentreonWebContainer('docker_compose_web', ['squid-simple']);
         $this->iAmLoggedIn();
         $this->setConfiguredProxy();
     }
@@ -490,7 +495,7 @@ class CentreonContext extends UtilsContext
     public function iAmLoggedInACentreonServerWithAConfiguredLdap()
     {
         // Launch container.
-        $this->launchCentreonWebContainer('docker_compose_web', ['web', 'webdriver', 'openldap']);
+        $this->launchCentreonWebContainer('docker_compose_web', ['openldap']);
         $this->iAmLoggedIn();
 
         // Configure LDAP parameters.
@@ -561,7 +566,7 @@ class CentreonContext extends UtilsContext
     {
         if (!isset($this->dbCentreon)) {
             $dsn = 'mysql:dbname=centreon;host=' . $this->container->getHost() . ';port=' .
-                $this->container->getPort(3306, $this->webService);
+                $this->container->getPort(3306, $this->dbService);
             $this->dbCentreon = new \PDO(
                 $dsn,
                 'root',
@@ -581,7 +586,7 @@ class CentreonContext extends UtilsContext
     {
         if (!isset($this->dbStorage)) {
             $dsn = 'mysql:dbname=centreon_storage;host=' . $this->container->getHost() . ';port=' .
-                $this->container->getPort(3306, $this->webService);
+                $this->container->getPort(3306, $this->dbService);
             $this->dbStorage = new \PDO(
                 $dsn,
                 'root',
@@ -597,10 +602,14 @@ class CentreonContext extends UtilsContext
      *
      * @param string $composeBehatProperty Bind property to docker-compose.yml path
      * @param string[] $profiles docker-compose profiles to activate
+     * @param array<string,string|int|boolean> $envVars docker composer environment variables
      * @throws \Exception
      */
-    public function launchCentreonWebContainer(string $composeBehatProperty, array $profiles = []): void
-    {
+    public function launchCentreonWebContainer(
+        string $composeBehatProperty,
+        array $profiles = [],
+        array $envVars = []
+    ): void {
         foreach ($profiles as $profile) {
             if (preg_match('/^web(?!driver)/', $profile)) {
                 $this->webService = $profile;
@@ -611,7 +620,7 @@ class CentreonContext extends UtilsContext
             throw new \Exception('Property "' . $composeBehatProperty . '" does not exist in behat.yml');
         }
 
-        $this->container = new Container($this->composeFiles[$composeBehatProperty], $profiles);
+        $this->container = new Container($this->composeFiles[$composeBehatProperty], $profiles, $envVars);
 
         $this->setContainerWebDriver();
 
