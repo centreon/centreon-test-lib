@@ -160,7 +160,7 @@ class ServiceConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      *
      * @param $host  Host name.
      */
-    public function setHostFilter($host)
+    public function setHostFilter($host): void
     {
         $this->context->assertFindField('searchH')->setValue($host);
     }
@@ -170,7 +170,7 @@ class ServiceConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      *
      * @param $service  Service description.
      */
-    public function setServiceFilter($service)
+    public function setServiceFilter($service): void
     {
         $this->context->assertFindField('searchS')->setValue($service);
     }
@@ -178,7 +178,7 @@ class ServiceConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Launch search.
      */
-    public function search()
+    public function search(): void
     {
         $this->context->assertFindButton('Search')->click();
     }

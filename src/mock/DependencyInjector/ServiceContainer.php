@@ -21,13 +21,13 @@ class ServiceContainer extends \Pimple\Container
 {
     private $providers = array();
 
-    public function registerProvider(ServiceProviderInterface $provider)
+    public function registerProvider(ServiceProviderInterface $provider): void
     {
         $this->providers[] = $provider;
         $provider->register($this);
     }
 
-    public function terminate()
+    public function terminate(): void
     {
         foreach ($this->providers as $provider) {
             $provider->terminate($this);

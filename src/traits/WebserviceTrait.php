@@ -44,13 +44,13 @@ trait WebserviceTrait
      *
      * @param \Pimple\Container $container
      */
-    public function setUpWebservice(Container $container)
+    public function setUpWebservice(Container $container): void
     {
         $this->container[ServiceProvider::CENTREON_WEBSERVICE] = new class {
 
             protected $services = [];
 
-            public function add($class)
+            public function add($class): void
             {
                 $this->services[$class] = $class;
             }
@@ -73,7 +73,7 @@ trait WebserviceTrait
      *
      * @param array $checkList
      */
-    public function checkWebservices(array $checkList)
+    public function checkWebservices(array $checkList): void
     {
         // check webservices
         $webservices = $this->container[ServiceProvider::CENTREON_WEBSERVICE]->getServices();

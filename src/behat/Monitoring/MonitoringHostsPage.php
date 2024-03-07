@@ -35,7 +35,7 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
      *
      * @param string hostname Hostame to select.
      */
-    public function setFilterbyHostname($hostname)
+    public function setFilterbyHostname($hostname): void
     {
         $this->ctx->assertFind('named', array('id', 'host_search'))->setValue(trim($hostname));
     }
@@ -45,7 +45,7 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
      *
      * @param string limit The value of limit in page limit dropdown
      */
-    public function setPageLimitTo($limit)
+    public function setPageLimitTo($limit): void
     {
         $page = $this->ctx->getSession()->getPage();
 
@@ -56,7 +56,7 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
     /**
      * Wait host(s) list page
      */
-    public function waitForHostListPage()
+    public function waitForHostListPage(): void
     {
         $this->ctx->spin(
             function ($context) {
@@ -65,7 +65,7 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
         );
     }
 
-    public function listHosts()
+    public function listHosts(): void
     {
         // Go to : Monitoring > Status Details > Hosts
         $this->ctx->visit('/main.php?p=20202');
@@ -123,7 +123,7 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
      * @param string hostname Hostname to select.
      * @param string action_label Label of action to select. Action by default is do no action.
      */
-    public function doActionOn($hostname, $action_label = 'More actions...')
+    public function doActionOn($hostname, $action_label = 'More actions...'): void
     {
         // Go to : Monitoring > Status Details > Hosts
         $this->listHosts();
@@ -170,7 +170,7 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
         $doAckServicesAttached,
         $doForceCheck,
         $url
-    ) {
+    ): void {
         // The code below cannot work right now in the context of the
         // hosts monitoring page as PhantomJS does not support XSLT.
         // As a workaround will we use direct Ajax call to add the
@@ -209,7 +209,7 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
      *
      * @param string hostname Hostname to select.
      */
-    public function disacknowledgeOnHost($hostname)
+    public function disacknowledgeOnHost($hostname): void
     {
         $this->doActionOn($hostname, 'Hosts : Disacknowledge');
     }
@@ -219,7 +219,7 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
      *
      * @param string hostname Hostname to select.
      */
-    public function enableNotificationOnHost($hostname)
+    public function enableNotificationOnHost($hostname): void
     {
         $this->doActionOn($hostname, 'Hosts : Enable Notification');
     }
@@ -229,7 +229,7 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
      *
      * @param string hostname Hostname to select.
      */
-    public function disableNotificationOnHost($hostname)
+    public function disableNotificationOnHost($hostname): void
     {
         $this->doActionOn($hostname, 'Hosts : Disable Notification');
     }
@@ -239,7 +239,7 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
      *
      * @param string hostname Hostname to select.
      */
-    public function enableCheckOnHost($hostname)
+    public function enableCheckOnHost($hostname): void
     {
         $this->doActionOn($hostname, 'Hosts : Enable Check');
     }
@@ -249,7 +249,7 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
      *
      * @param string hostname Hostname to select.
      */
-    public function disableCheckOnHost($hostname)
+    public function disableCheckOnHost($hostname): void
     {
         $this->doActionOn($hostname, 'Hosts : Disable Check');
     }
@@ -279,7 +279,7 @@ class MonitoringHostsPage extends \Centreon\Test\Behat\Page
         $duration_scale,
         $comment,
         $setDowntimesOnServicesAttached
-    ) {
+    ): void {
 
         // Prepare the downtime of the host
         $this->doActionOn($hostname, 'Hosts : Set Downtime');

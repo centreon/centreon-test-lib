@@ -45,7 +45,7 @@ class RestApiContext extends CentreonContext
     /**
      * @Given a Centreon server with REST API testing data
      */
-    public function aCentreonServerWithRestApiTestingData()
+    public function aCentreonServerWithRestApiTestingData(): void
     {
         // Launch container.
         $this->launchCentreonWebContainer('docker_compose_web', [], ['CENTREON_DATASET' => '0']);
@@ -79,7 +79,7 @@ class RestApiContext extends CentreonContext
     /**
      * @When the REST API :collection is called
      */
-    public function theRestApiIsCalled($collection)
+    public function theRestApiIsCalled($collection): void
     {
         $this->logfile = tempnam('/tmp', $this->apiLogfilePrefix . $collection);
         $cmd = 'docker run --rm' .
@@ -98,7 +98,7 @@ class RestApiContext extends CentreonContext
     /**
      * @Then it replies as per specifications
      */
-    public function theyItRepliesAsPerSpecifications()
+    public function theyItRepliesAsPerSpecifications(): void
     {
         if (!($this->apiReturnValue == 0)) {
             copy(

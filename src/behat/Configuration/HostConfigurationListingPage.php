@@ -112,7 +112,7 @@ class HostConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Get a search.
      */
-    public function setSearch($search)
+    public function setSearch($search): void
     {
         $this->context->assertFind('css', 'input[name="searchH"]')->setValue($search);
         $this->context->assertFind('css', 'tbody tr td input.btc.bt_success')->click();
@@ -134,7 +134,7 @@ class HostConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Del an host.
      */
-    public function delHost($hostId)
+    public function delHost($hostId): void
     {
         $this->context->setConfirmBox(true);
         $this->context->assertFind('css', 'input[name="select[' . $hostId . ']"]')->click();

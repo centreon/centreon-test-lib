@@ -80,7 +80,7 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
      * @param $properties
      * @throws \Exception
      */
-    public function setProperties($properties)
+    public function setProperties($properties): void
     {
         $tab = '';
 
@@ -259,7 +259,7 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
      *
      * @param $tab  Tab ID.
      */
-    public function switchTab($tab)
+    public function switchTab($tab): void
     {
         $this->context->assertFind('css', 'li#c' . $tab . ' a')->click();
     }

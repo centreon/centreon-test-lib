@@ -32,7 +32,7 @@ class RestExtension implements ExtensionInterface
 {
     const REST_ID = 'rest';
     
-    public function load(ContainerBuilder $container, array $config)
+    public function load(ContainerBuilder $container, array $config): void
     {
         $definition = new Definition(
             'Centreon\Test\Behat\Initializer\RestInitializer',
@@ -47,7 +47,7 @@ class RestExtension implements ExtensionInterface
         $container->setParameter('rest.base_url', $config['base_url']);
     }
     
-    public function configure(ArrayNodeDefinition $builder)
+    public function configure(ArrayNodeDefinition $builder): void
     {
         $renamedKeys = array('base_url');
         

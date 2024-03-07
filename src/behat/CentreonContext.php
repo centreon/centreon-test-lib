@@ -207,7 +207,7 @@ class CentreonContext extends UtilsContext
      *
      * @AfterScenario
      */
-    public function unsetContainer(AfterScenarioScope $scope)
+    public function unsetContainer(AfterScenarioScope $scope): void
     {
         if (isset($this->container) && !$scope->getTestResult()->isPassed()) {
             $scenarioTitle = preg_replace('/(\s|\/)+/', '_', $scope->getScenario()->getTitle());
@@ -373,7 +373,7 @@ class CentreonContext extends UtilsContext
     /**
      * @Given a Centreon server
      */
-    public function aCentreonServer()
+    public function aCentreonServer(): void
     {
         $this->launchCentreonWebContainer('docker_compose_web');
     }
@@ -381,7 +381,7 @@ class CentreonContext extends UtilsContext
     /**
      * @Given a freshly installed Centreon server
      */
-    public function aFreshlyInstalledCentreonServer()
+    public function aFreshlyInstalledCentreonServer(): void
     {
         $this->launchCentreonWebContainer('docker_compose_web', [], ['CENTREON_DATASET' => '0']);
     }
@@ -391,7 +391,7 @@ class CentreonContext extends UtilsContext
      *
      * @Given I am logged in
      */
-    public function iAmLoggedIn()
+    public function iAmLoggedIn(): void
     {
         // Mandatory with the new version of behat/mink
         // A call on the 'visit' method must be perform to start a session.
@@ -417,7 +417,7 @@ class CentreonContext extends UtilsContext
     /**
      * @param bool $confirm
      */
-    public function enableNewFeature($confirm = true)
+    public function enableNewFeature($confirm = true): void
     {
         if ($this->getSession()->getPage()->has('css', '#btcActivateFf')) {
             if ($confirm) {
@@ -455,7 +455,7 @@ class CentreonContext extends UtilsContext
      *
      * @Given I am logged in a Centreon server
      */
-    public function iAmLoggedInACentreonServer()
+    public function iAmLoggedInACentreonServer(): void
     {
         $this->aCentreonServer();
         $this->iAmLoggedIn();
@@ -466,7 +466,7 @@ class CentreonContext extends UtilsContext
      *
      * @Given /^I am logged in a Centreon server located at "(.+)"$/
      */
-    public function iAmLoggedInACentreonServerLocatedAt($timezone)
+    public function iAmLoggedInACentreonServerLocatedAt($timezone): void
     {
         $this->iAmLoggedInACentreonServer();
         $this->container->execute(
@@ -482,7 +482,7 @@ class CentreonContext extends UtilsContext
     /**
     * @Given I am logged in a Centreon server with a configured proxy
     */
-    public function iAmLoggedInACentreonServerWithAConfiguredProxy()
+    public function iAmLoggedInACentreonServerWithAConfiguredProxy(): void
     {
         $this->launchCentreonWebContainer('docker_compose_web', ['squid-simple']);
         $this->iAmLoggedIn();
@@ -492,7 +492,7 @@ class CentreonContext extends UtilsContext
     /**
      * @Given I am logged in a Centreon server with a configured ldap
      */
-    public function iAmLoggedInACentreonServerWithAConfiguredLdap()
+    public function iAmLoggedInACentreonServerWithAConfiguredLdap(): void
     {
         // Launch container.
         $this->launchCentreonWebContainer('docker_compose_web', ['openldap']);
@@ -521,7 +521,7 @@ class CentreonContext extends UtilsContext
     /**
      * @Given I am logged in a Centreon server with configured metrics
      */
-    public function iAmLoggedInACentreonServerWithConfiguredMetrics()
+    public function iAmLoggedInACentreonServerWithConfiguredMetrics(): void
     {
         $this->aCentreonServer();
         $this->iAmLoggedIn();
@@ -533,7 +533,7 @@ class CentreonContext extends UtilsContext
      *
      * @Given I am logged in a freshly installed Centreon server
      */
-    public function iAmLoggedInAFreshlyInstalledCentreonServer()
+    public function iAmLoggedInAFreshlyInstalledCentreonServer(): void
     {
         $this->aFreshlyInstalledCentreonServer();
         $this->iAmLoggedIn();
@@ -669,7 +669,7 @@ class CentreonContext extends UtilsContext
     /**
      * Set a proxy URL and port
      */
-    public function setConfiguredProxy()
+    public function setConfiguredProxy(): void
     {
         $proxyConfig = new ParametersCentreonUiPage($this);
         $proxyConfig->setProperties(array(
@@ -687,7 +687,7 @@ class CentreonContext extends UtilsContext
      * @param string checkOutput
      * @param string performanceData
      */
-    public function submitHostResult($hostname, $checkResult, $checkOutput = '', $performanceData = '')
+    public function submitHostResult($hostname, $checkResult, $checkOutput = '', $performanceData = ''): void
     {
         // Page in : Monitoring > Status Details > Hosts
         $this->visit('/main.php?p=20202&o=hpc&cmd=16&host_name=' . $hostname);
@@ -727,7 +727,7 @@ class CentreonContext extends UtilsContext
         $checkResult,
         $checkOutput = '',
         $performanceData = ''
-    ) {
+    ): void {
         // Page in : Monitoring > Status Details > Services
         $this->visit(
             '/main.php?p=20201&o=svcpc&cmd=16&host_name=' . $hostname .
@@ -757,7 +757,7 @@ class CentreonContext extends UtilsContext
     /**
      *  Restart all pollers.
      */
-    public function restartAllPollers()
+    public function restartAllPollers(): void
     {
         $page = new PollerConfigurationExportPage($this);
         $page->setProperties(array(
@@ -774,7 +774,7 @@ class CentreonContext extends UtilsContext
     /**
      *  Reload all pollers.
      */
-    public function reloadAllPollers()
+    public function reloadAllPollers(): void
     {
         $reloadCount = $this->getEngineReloadCount();
 
@@ -819,7 +819,7 @@ class CentreonContext extends UtilsContext
     /**
      *  Run yum update centreon-web in the container.
      */
-    public function yumUpdateCentreonWeb()
+    public function yumUpdateCentreonWeb(): void
     {
         $this->context->container->execute(
             'yum clean all',
@@ -846,7 +846,7 @@ class CentreonContext extends UtilsContext
     /**
      * Reload ACL with command line
      */
-    public function reloadACL()
+    public function reloadACL(): void
     {
         $this->container->execute(
             'su -s /bin/sh apache -c "/usr/bin/env php -q /usr/share/centreon/cron/centAcl.php"',
@@ -858,7 +858,7 @@ class CentreonContext extends UtilsContext
     /**
      *
      */
-    public function getServiceWithSeveralMetrics()
+    public function getServiceWithSeveralMetrics(): void
     {
         // Create host.
         $hostConfig = new HostConfigurationPage($this);
@@ -925,7 +925,7 @@ class CentreonContext extends UtilsContext
      * @param string $hostname
      * @param string $serviceDescription
      */
-    public function checkForMetricAvaibility($hostname, $serviceDescription, $metricName)
+    public function checkForMetricAvaibility($hostname, $serviceDescription, $metricName): void
     {
         $metricId = $this->getMetricId($hostname, $serviceDescription, $metricName);
         $rrdMetricFile = $this->getRrdPath() . $metricId . '.rrd';
@@ -1007,7 +1007,7 @@ class CentreonContext extends UtilsContext
     /**
      * @When I generate configuration files without export
      */
-    public function exportConfigurationFiles()
+    public function exportConfigurationFiles(): void
     {
         $page = new PollerConfigurationExportPage($this);
         $page->setProperties([
@@ -1021,7 +1021,7 @@ class CentreonContext extends UtilsContext
     /**
      * @Then use the page object :pageObject and set the properties below
      */
-    public function usePageObjectAndSetProperties(string $pageObject, TableNode $table)
+    public function usePageObjectAndSetProperties(string $pageObject, TableNode $table): void
     {
         if (!class_exists($pageObject)) {
             throw new \Exception("Page object didn't exists {$pageObject}");
@@ -1052,7 +1052,7 @@ class CentreonContext extends UtilsContext
     /**
      * @When execute in console of service :service
      */
-    public function executeInConsole(string $service, PyStringNode $command)
+    public function executeInConsole(string $service, PyStringNode $command): void
     {
         $this->output = $this->execute($command->getRaw(), $service);
     }
@@ -1060,7 +1060,7 @@ class CentreonContext extends UtilsContext
     /**
      * @Then the expected result have to be
      */
-    public function theExpectedResultHaveToBe(PyStringNode $result)
+    public function theExpectedResultHaveToBe(PyStringNode $result): void
     {
         $output = $this->output['output'] ?? '';
 
@@ -1072,7 +1072,7 @@ class CentreonContext extends UtilsContext
     /**
      * @Then the expected result matched to the pattern
      */
-    public function theExpectedResultMatchedToThePattern(PyStringNode $result)
+    public function theExpectedResultMatchedToThePattern(PyStringNode $result): void
     {
         $output = $this->output['output'] ?? '';
 

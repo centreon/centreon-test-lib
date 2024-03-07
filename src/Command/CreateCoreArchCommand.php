@@ -36,6 +36,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateCoreArchCommand extends Command
 {
+    protected static $defaultName = self::COMMAND_NAME;
     public const COMMAND_NAME = 'centreon:create-core-arch';
     public const COMMAND_ADD = 'Add';
     public const COMMAND_UPDATE = 'Update';
@@ -75,7 +76,6 @@ class CreateCoreArchCommand extends Command
     public function configure(): void
     {
         $this
-            ->setName(self::COMMAND_NAME)
             ->setDescription('Create architecture for a useCase')
             ->setHelp('This command allows you to create classes for a useCase');
     }

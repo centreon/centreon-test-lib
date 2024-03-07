@@ -32,7 +32,7 @@ class DatabaseExtension implements ExtensionInterface
 {
     const DATABASE_ID = 'database';
     
-    public function load(ContainerBuilder $container, array $config)
+    public function load(ContainerBuilder $container, array $config): void
     {
         $definition = new Definition(
             'Centreon\Test\Behat\Initializer\DatabaseInitializer',
@@ -46,7 +46,7 @@ class DatabaseExtension implements ExtensionInterface
         $container->setParameter('database.parameters', $config);
     }
     
-    public function configure(ArrayNodeDefinition $builder)
+    public function configure(ArrayNodeDefinition $builder): void
     {
         $builder
             ->addDefaultsIfNotSet()

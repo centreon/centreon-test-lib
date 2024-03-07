@@ -31,7 +31,7 @@ class ContainerExtension implements ExtensionInterface
 {
     const CONTAINER_ID = 'container';
 
-    public function load(ContainerBuilder $container, array $config)
+    public function load(ContainerBuilder $container, array $config): void
     {
         $definition = new Definition(
             'Centreon\Test\Behat\Initializer\ContainerInitializer',
@@ -44,7 +44,7 @@ class ContainerExtension implements ExtensionInterface
         $container->setParameter('container.parameters', $config);
     }
 
-    public function configure(ArrayNodeDefinition $builder)
+    public function configure(ArrayNodeDefinition $builder): void
     {
         $builder
             ->addDefaultsIfNotSet()

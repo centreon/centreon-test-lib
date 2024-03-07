@@ -186,7 +186,7 @@ class CentreonDBStatement extends \CentreonDBStatement
     /**
      * Reset the position of resultset
      */
-    public function resetResultSet()
+    public function resetResultSet(): void
     {
         if (!is_null($this->currentResultSet)) {
             $this->currentResultset->fetchRow();

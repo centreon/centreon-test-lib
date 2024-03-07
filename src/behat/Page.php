@@ -51,7 +51,7 @@ abstract class Page
      * @param NodeElement $checkbox checkbox to check
      * @return void
      */
-    public function checkCheckbox(NodeElement $checkbox)
+    public function checkCheckbox(NodeElement $checkbox): void
     {
         if ($checkbox->getParent()->hasClass('md-checkbox') && !$checkbox->getValue()) {
             $checkbox->getParent()->click();
@@ -66,7 +66,7 @@ abstract class Page
      * @param NodeElement $checkbox checkbox to uncheck
      * @return void
      */
-    public function uncheckCheckbox(NodeElement $checkbox)
+    public function uncheckCheckbox(NodeElement $checkbox): void
     {
         if ($checkbox->getParent()->hasClass('md-checkbox') && $checkbox->getValue()) {
             $checkbox->getParent()->click();
@@ -81,7 +81,7 @@ abstract class Page
      * @param NodeElement $radio radio button to check
      * @return void
      */
-    public function checkRadio(NodeElement $radio)
+    public function checkRadio(NodeElement $radio): void
     {
         if ($radio->getParent()->hasClass('md-radio')) {
             $radio->getParent()->click(); // material design radio

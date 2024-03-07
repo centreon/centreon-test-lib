@@ -63,7 +63,7 @@ class GraphMonitoringPage implements \Centreon\Test\Behat\Interfaces\Page
      * @param string hostname Host to select.
      * @param string servicename Service to select.
      */
-    public function setFilterbyChart($hostname, $servicename)
+    public function setFilterbyChart($hostname, $servicename): void
     {
         $this->setFilterbyHost($hostname);
         $this->context->selectToSelectTwo('#select-chart', $hostname . ' - ' . $servicename);
@@ -74,7 +74,7 @@ class GraphMonitoringPage implements \Centreon\Test\Behat\Interfaces\Page
       *
       * @param string hostname Hostame to select.
       */
-    public function setFilterbyHost($hostname)
+    public function setFilterbyHost($hostname): void
     {
         $this->context->selectToSelectTwo('#host_filter', $hostname);
     }

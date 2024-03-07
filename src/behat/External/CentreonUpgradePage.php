@@ -59,7 +59,7 @@ class CentreonUpgradePage implements \Centreon\Test\Behat\Interfaces\Page
     /**
      *  Run the web upgrade and browse all steps.
      */
-    public function upgrade()
+    public function upgrade(): void
     {
         $mythis = $this;
         // Step 1

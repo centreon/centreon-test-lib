@@ -367,7 +367,7 @@ class ServiceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
      * @param $properties
      * @throws \Exception
      */
-    public function setProperties($properties)
+    public function setProperties($properties): void
     {
         if (isset($properties['macros'])) {
             $macros['macros'] = $properties['macros'];

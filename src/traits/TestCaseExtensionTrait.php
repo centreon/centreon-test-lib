@@ -52,7 +52,7 @@ trait TestCaseExtensionTrait
      *
      * @return void
      */
-    public function setProtectedProperty($object, $property, $value)
+    public function setProtectedProperty($object, $property, $value): void
     {
         $reflection = new \ReflectionClass($object);
         $reflection_property = $reflection->getProperty($property);

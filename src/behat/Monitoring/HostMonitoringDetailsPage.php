@@ -105,7 +105,7 @@ class HostMonitoringDetailsPage implements \Centreon\Test\Behat\Interfaces\Page
      *
      * @param $tab  Tab ID / Tab name.
      */
-    public function switchTab($tab)
+    public function switchTab($tab): void
     {
         $this->context->assertFind('css', 'li#c' . $tab . ' a')->click();
     }

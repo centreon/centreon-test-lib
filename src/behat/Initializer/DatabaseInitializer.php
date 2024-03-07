@@ -31,7 +31,7 @@ class DatabaseInitializer implements ContextInitializer
         $this->parameters = $parameters;
     }
 
-    public function initializeContext(Context $context)
+    public function initializeContext(Context $context): void
     {
         if (method_exists($context, 'setDatabaseParameters')) {
             $context->setDatabaseParameters($this->parameters);

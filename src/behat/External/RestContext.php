@@ -60,7 +60,7 @@ class RestContext implements Context
      *
      * @param array $parameters The extension parameters
      */
-    public function setRestParameters($parameters)
+    public function setRestParameters($parameters): void
     {
         $this->restParameters = $parameters;
     }

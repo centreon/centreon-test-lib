@@ -79,7 +79,7 @@ Trait JsonContextTrait
      *
      * @Then the response should be in JSON
      */
-    public function theResponseShouldBeInJson()
+    public function theResponseShouldBeInJson(): void
     {
         $this->getJson();
     }
@@ -89,7 +89,7 @@ Trait JsonContextTrait
      *
      * @Then the response should not be in JSON
      */
-    public function theResponseShouldNotBeInJson()
+    public function theResponseShouldNotBeInJson(): void
     {
         Assert::throws(
             function () {
@@ -105,7 +105,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON node :node should be equal to :text
      */
-    public function theJsonNodeShouldBeEqualTo($node, $text)
+    public function theJsonNodeShouldBeEqualTo($node, $text): void
     {
         $json = $this->getJson();
 
@@ -123,7 +123,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON nodes should be equal to:
      */
-    public function theJsonNodesShouldBeEqualTo(TableNode $nodes)
+    public function theJsonNodesShouldBeEqualTo(TableNode $nodes): void
     {
         foreach ($nodes->getRowsHash() as $node => $text) {
             $this->theJsonNodeShouldBeEqualTo($node, $text);
@@ -135,7 +135,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON node :node should match :pattern
      */
-    public function theJsonNodeShouldMatch($node, $pattern)
+    public function theJsonNodeShouldMatch($node, $pattern): void
     {
         $json = $this->getJson();
 
@@ -153,7 +153,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON node :node should be null
      */
-    public function theJsonNodeShouldBeNull($node)
+    public function theJsonNodeShouldBeNull($node): void
     {
         $json = $this->getJson();
 
@@ -170,7 +170,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON node :node should not be null
      */
-    public function theJsonNodeShouldNotBeNull($node)
+    public function theJsonNodeShouldNotBeNull($node): void
     {
         Assert::false(
             $this->theJsonNodeShouldBeNull($node),
@@ -183,7 +183,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON node :node should be true
      */
-    public function theJsonNodeShouldBeTrue($node)
+    public function theJsonNodeShouldBeTrue($node): void
     {
         $json = $this->getJson();
 
@@ -200,7 +200,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON node :node should be false
      */
-    public function theJsonNodeShouldBeFalse($node)
+    public function theJsonNodeShouldBeFalse($node): void
     {
         $json = $this->getJson();
 
@@ -217,7 +217,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON node :node should be equal to the string :text
      */
-    public function theJsonNodeShouldBeEqualToTheString($node, $text)
+    public function theJsonNodeShouldBeEqualToTheString($node, $text): void
     {
         $json = $this->getJson();
 
@@ -235,7 +235,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON node :node should be equal to the number :number
      */
-    public function theJsonNodeShouldBeEqualToTheNumber($node, $number)
+    public function theJsonNodeShouldBeEqualToTheNumber($node, $number): void
     {
         $json = $this->getJson();
 
@@ -253,7 +253,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON node :node should have :count element(s)
      */
-    public function theJsonNodeShouldHaveElements($node, int $count)
+    public function theJsonNodeShouldHaveElements($node, int $count): void
     {
         $json = $this->getJson();
 
@@ -267,7 +267,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON node :node should have at least :count element(s)
      */
-    public function theJsonNodeShouldHaveAtLeastElements($node, int $count)
+    public function theJsonNodeShouldHaveAtLeastElements($node, int $count): void
     {
         $json = $this->getJson();
 
@@ -281,7 +281,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON node :node should contain :text
      */
-    public function theJsonNodeShouldContain($node, $text)
+    public function theJsonNodeShouldContain($node, $text): void
     {
         $json = $this->getJson();
 
@@ -295,7 +295,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON nodes should contain:
      */
-    public function theJsonNodesShouldContain(TableNode $nodes)
+    public function theJsonNodesShouldContain(TableNode $nodes): void
     {
         foreach ($nodes->getRowsHash() as $node => $text) {
             $this->theJsonNodeShouldContain($node, $text);
@@ -307,7 +307,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON node :node should not contain :text
      */
-    public function theJsonNodeShouldNotContain($node, $text)
+    public function theJsonNodeShouldNotContain($node, $text): void
     {
         $json = $this->getJson();
 
@@ -321,7 +321,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON nodes should not contain:
      */
-    public function theJsonNodesShouldNotContain(TableNode $nodes)
+    public function theJsonNodesShouldNotContain(TableNode $nodes): void
     {
         foreach ($nodes->getRowsHash() as $node => $text) {
             $this->theJsonNodeShouldNotContain($node, $text);
@@ -366,7 +366,7 @@ Trait JsonContextTrait
     /**
      * @Then the JSON should be valid according to this schema:
      */
-    public function theJsonShouldBeValidAccordingToThisSchema(PyStringNode $schema)
+    public function theJsonShouldBeValidAccordingToThisSchema(PyStringNode $schema): void
     {
         $this->getInspector()->validate(
             $this->getJson(),
@@ -377,7 +377,7 @@ Trait JsonContextTrait
     /**
      * @Then the JSON should be invalid according to this schema:
      */
-    public function theJsonShouldBeInvalidAccordingToThisSchema(PyStringNode $schema)
+    public function theJsonShouldBeInvalidAccordingToThisSchema(PyStringNode $schema): void
     {
         Assert::false(
             $this->theJsonShouldBeValidAccordingToThisSchema($schema),
@@ -388,7 +388,7 @@ Trait JsonContextTrait
     /**
      * @Then the JSON should be valid according to the schema :filename
      */
-    public function theJsonShouldBeValidAccordingToTheSchema($filename)
+    public function theJsonShouldBeValidAccordingToTheSchema($filename): void
     {
         $this->checkSchemaFile($filename);
 
@@ -404,7 +404,7 @@ Trait JsonContextTrait
     /**
      * @Then the JSON should be invalid according to the schema :filename
      */
-    public function theJsonShouldBeInvalidAccordingToTheSchema($filename)
+    public function theJsonShouldBeInvalidAccordingToTheSchema($filename): void
     {
         $this->checkSchemaFile($filename);
 
@@ -417,7 +417,7 @@ Trait JsonContextTrait
     /**
      * @Then the JSON should be equal to:
      */
-    public function theJsonShouldBeEqualTo(PyStringNode $content)
+    public function theJsonShouldBeEqualTo(PyStringNode $content): void
     {
         $actual = $this->getJson();
 
@@ -437,7 +437,7 @@ Trait JsonContextTrait
     /**
      * @Then print last JSON response
      */
-    public function printLastJsonResponse()
+    public function printLastJsonResponse(): void
     {
         echo $this->getJson()
             ->encode();
@@ -448,7 +448,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON should be valid according to swagger :dumpPath dump schema :schemaName
      */
-    public function theJsonShouldBeValidAccordingToTheSwaggerSchema($dumpPath, $schemaName)
+    public function theJsonShouldBeValidAccordingToTheSwaggerSchema($dumpPath, $schemaName): void
     {
         $this->checkSchemaFile($dumpPath);
 
@@ -470,7 +470,7 @@ Trait JsonContextTrait
      *
      * @Then the JSON should not be valid according to swagger :dumpPath dump schema :schemaName
      */
-    public function theJsonShouldNotBeValidAccordingToTheSwaggerSchema($dumpPath, $schemaName)
+    public function theJsonShouldNotBeValidAccordingToTheSwaggerSchema($dumpPath, $schemaName): void
     {
         Assert::false(
             $this->theJsonShouldBeValidAccordingToTheSwaggerSchema($dumpPath, $schemaName),
@@ -483,7 +483,7 @@ Trait JsonContextTrait
         return new Json($this->getHttpResponse()->getBody()->__toString());
     }
 
-    private function checkSchemaFile($filename)
+    private function checkSchemaFile($filename): void
     {
         if (false === is_file($filename)) {
             throw new \RuntimeException(
@@ -497,7 +497,7 @@ Trait JsonContextTrait
      *
      * @Given the response use ":type" standard JSON format
      */
-    public function theResponseUseStandardJsonFormat(string $type)
+    public function theResponseUseStandardJsonFormat(string $type): void
     {
         $this->theResponseShouldBeFormattedLikeJsonFormat('standard/' . $type . '.json');
     }
@@ -507,7 +507,7 @@ Trait JsonContextTrait
      *
      * @Given the response should be formatted like JSON format ":path"
      */
-    public function theResponseShouldBeFormattedLikeJsonFormat(string $path)
+    public function theResponseShouldBeFormattedLikeJsonFormat(string $path): void
     {
         $possiblePaths = [
             getcwd() . '/tests/api/fixtures/validation/' . $path,
@@ -543,7 +543,7 @@ Trait JsonContextTrait
      *
      * @Given I store response values in:
      */
-    public function iStoreResponseValuesIn(TableNode $table)
+    public function iStoreResponseValuesIn(TableNode $table): void
     {
         $json = $this->getJson();
 

@@ -54,7 +54,7 @@ class CustomViewsPage extends \Centreon\Test\Behat\Page
      *  Show edit bar that is not currently visible or hide edit bar
      *  that is currently visible.
      */
-    public function showEditBar($show = true)
+    public function showEditBar($show = true): void
     {
         $this->context->spin(
             function ($context) use ($show) {
@@ -89,7 +89,7 @@ class CustomViewsPage extends \Centreon\Test\Behat\Page
      * @param $columns  Column number.
      * @param $public   True for a public view, false otherwise.
      */
-    public function createNewView($name, $columns = 1, $public = false)
+    public function createNewView($name, $columns = 1, $public = false): void
     {
         // Find number of existing tabs.
         $tabs = count($this->context->getSession()->getPage()->findAll('css', '#tabs .tabs_header li'));
@@ -127,7 +127,7 @@ class CustomViewsPage extends \Centreon\Test\Behat\Page
      * @param $publicView
      * @param $shareView  Column number.
      */
-    public function loadView($view)
+    public function loadView($view): void
     {
         $this->context->spin(
             function ($context) {
@@ -179,7 +179,7 @@ class CustomViewsPage extends \Centreon\Test\Behat\Page
      * @param $columns  Column number.
      * @param $public   True for a public view, false otherwise.
      */
-    public function editView($name, $columns = 1, $public = false)
+    public function editView($name, $columns = 1, $public = false): void
     {
         $this->context->spin(
             function ($context) {
@@ -231,7 +231,7 @@ class CustomViewsPage extends \Centreon\Test\Behat\Page
      *  Delete a view.
      *
      */
-    public function deleteView()
+    public function deleteView(): void
     {
         $this->context->spin(
             function ($context) {
@@ -255,7 +255,7 @@ class CustomViewsPage extends \Centreon\Test\Behat\Page
      * @param $title   Widget title.
      * @param $widget  Widget type.
      */
-    public function addWidget($title, $widget)
+    public function addWidget($title, $widget): void
     {
         // Find number of existing widgets.
         $widgets = count($this->context->getSession()->getPage()->findAll('css', '.widgetTitle'));
@@ -299,7 +299,7 @@ class CustomViewsPage extends \Centreon\Test\Behat\Page
      * @param $userGroup  user group type.
      * @param $lock  for a locked view
      */
-    public function shareView($userLock = null, $userUnlock = null, $userGroupLock = null, $userGroupUnlock = null)
+    public function shareView($userLock = null, $userUnlock = null, $userGroupLock = null, $userGroupUnlock = null): void
     {
         // Click on sharing button.
         $this->context->spin(
@@ -341,7 +341,7 @@ class CustomViewsPage extends \Centreon\Test\Behat\Page
     /**
      *  Toggle edit bar.
      */
-    private function toggleEditBar($show)
+    private function toggleEditBar($show): void
     {
         $visible = $this->context->assertFind('css', 'button.addView')->isVisible();
         $toggleButton = $this->context->assertFind('css', '.toggleEdit a');

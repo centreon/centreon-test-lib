@@ -109,7 +109,7 @@ class HostTemplateConfigurationListingPage extends \Centreon\Test\Behat\ListingP
     /**
      *  Get a search.
      */
-    public function setSearch($search)
+    public function setSearch($search): void
     {
         $this->context->assertFind('css', 'input[name="searchHT"]')->setValue($search);
         $this->context->assertFind('css', 'tbody tr td input.btc.bt_success')->click();
@@ -143,7 +143,7 @@ class HostTemplateConfigurationListingPage extends \Centreon\Test\Behat\ListingP
     /**
      *  Del an host.
      */
-    public function delHostTemplate($hostTemplateName)
+    public function delHostTemplate($hostTemplateName): void
     {
         $this->context->setConfirmBox(true);
 

@@ -264,7 +264,7 @@ class ACLActionConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
     /**
      * Select all actions access
      */
-    public function selectAll()
+    public function selectAll(): void
     {
         $properties = array();
         foreach ($this->properties as $name => $parameters) {

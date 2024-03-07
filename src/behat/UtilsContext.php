@@ -55,7 +55,7 @@ class UtilsContext extends RawMinkContext
     /**
      *  Set containers Compose files.
      */
-    public function setContainersComposeFiles($files)
+    public function setContainersComposeFiles($files): void
     {
         $this->composeFiles = $files;
     }
@@ -74,7 +74,7 @@ class UtilsContext extends RawMinkContext
     /**
      *  Set the value returned by the confirmbox.
      */
-    public function setConfirmBox($bool)
+    public function setConfirmBox($bool): void
     {
         if ($bool == true) {
             $this->getSession()->getDriver()->executeScript('window.confirm = function(){return true;}');
@@ -232,7 +232,7 @@ class UtilsContext extends RawMinkContext
      * @param $value   The requested value.
      * @throws \Exception
      */
-    public function selectInList($cssId, $value)
+    public function selectInList($cssId, $value): void
     {
         $found = false;
         $elements = $this->getSession()->getPage()->findAll('css', $cssId . ' option');
@@ -255,7 +255,7 @@ class UtilsContext extends RawMinkContext
      * @param array $values
      * @throws \Exception
      */
-    public function selectInAdvMultiSelect($css_id, $values = array())
+    public function selectInAdvMultiSelect($css_id, $values = array()): void
     {
         if (!is_array($values)) {
             $values = array($values);
@@ -299,7 +299,7 @@ class UtilsContext extends RawMinkContext
      * @param array $values
      * @throws \Exception
      */
-    public function deleteInAdvMultiSelect($css_id, $values = array())
+    public function deleteInAdvMultiSelect($css_id, $values = array()): void
     {
         if (!is_array($values)) {
             $values = array($values);
@@ -341,7 +341,7 @@ class UtilsContext extends RawMinkContext
      *
      * @param $cssId the css locator
      */
-    public function emptySelectTwo($cssId)
+    public function emptySelectTwo($cssId): void
     {
         $object = $this->assertFind('css', $cssId);
         $parent = $object->getParent();
@@ -355,7 +355,7 @@ class UtilsContext extends RawMinkContext
      * @param $what
      * @throws \Exception
      */
-    public function selectToSelectTwo($cssId, $what)
+    public function selectToSelectTwo($cssId, $what): void
     {
         $this->spin(
             function ($context) use ($what, $cssId) {
@@ -460,7 +460,7 @@ class UtilsContext extends RawMinkContext
      * @param string $page The url page to visit
      * @param boolean $iframeCheck If it's an iframe
      */
-    public function visit($page, $iframeCheck = true)
+    public function visit($page, $iframeCheck = true): void
     {
         //checking if the page is an iFrame or not
         if ($iframeCheck && $page && $page != "/") {
@@ -492,7 +492,7 @@ class UtilsContext extends RawMinkContext
     /**
      * Used to wait until the chosen iFrame is launched
      */
-    public function switchToIframe()
+    public function switchToIframe(): void
     {
         try {
             $this->spin(
@@ -534,7 +534,7 @@ class UtilsContext extends RawMinkContext
      * @return empty
      * @throws \Exception
      */
-    public function checkRadioButton($labelText, $type, $pattern, $msg = '')
+    public function checkRadioButton($labelText, $type, $pattern, $msg = ''): void
     {
         $page = $this->getSession()->getPage();
 
@@ -568,7 +568,7 @@ class UtilsContext extends RawMinkContext
      * @return empty
      * @throws \Exception
      */
-    public function checkRadioButtonByValue($value, $type, $pattern, $msg = '')
+    public function checkRadioButtonByValue($value, $type, $pattern, $msg = ''): void
     {
         $page = $this->getSession()->getPage();
 

@@ -36,7 +36,7 @@ Trait CentreonClapiContextTrait
      *
      * @Given the following CLAPI import data:
      */
-    public function theFollowingClapiImportData(PyStringNode $data)
+    public function theFollowingClapiImportData(PyStringNode $data): void
     {
         $file = tmpfile();
         $path = stream_get_meta_data($file)['uri'];
@@ -57,7 +57,7 @@ Trait CentreonClapiContextTrait
      *
      * @Given the configuration is generated and exported
      */
-    public function theConfigurationIsGeneratedAndExported()
+    public function theConfigurationIsGeneratedAndExported(): void
     {
         $this->getContainer()->execute(
             '/usr/share/centreon/bin/centreon -u admin -p Centreon!2021 -a APPLYCFG -v "central"',

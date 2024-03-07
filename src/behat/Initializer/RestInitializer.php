@@ -33,7 +33,7 @@ class RestInitializer implements ContextInitializer
         $this->parameters = $parameters;
     }
     
-    public function initializeContext(Context $context)
+    public function initializeContext(Context $context): void
     {
         if (!$context instanceof RestContext) {
             return;

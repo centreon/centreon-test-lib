@@ -121,7 +121,7 @@ class RecurrentDowntimeConfigurationPage extends \Centreon\Test\Behat\Configurat
     /**
      *  Save service template.
      */
-    public function addPeriode()
+    public function addPeriode(): void
     {
         $this->context->assertFind(
             'css',
@@ -135,7 +135,7 @@ class RecurrentDowntimeConfigurationPage extends \Centreon\Test\Behat\Configurat
      *
      * @param $tab  Tab periode ID.
      */
-    public function switchPeriode($tab)
+    public function switchPeriode($tab): void
     {
         $this->context->assertFind('css', 'ul#ul_tabs li:nth-child(' . $tab . ') a:nth-child(1)')->click();
     }

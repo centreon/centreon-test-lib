@@ -50,7 +50,7 @@ Trait FileSystemContextTrait
      *
      * @Then /^the content of file "(\S+)" should match "(\S+)"(?: \(tries: (\d+)\))?$/
      */
-    public function theContentOfFileShouldMatch(string $filePath, string $regexp, int $tries = 10)
+    public function theContentOfFileShouldMatch(string $filePath, string $regexp, int $tries = 10): void
     {
         $this->spin(
             function() use ($filePath, $regexp) {

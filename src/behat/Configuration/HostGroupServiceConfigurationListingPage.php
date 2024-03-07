@@ -161,7 +161,7 @@ class HostGroupServiceConfigurationListingPage extends \Centreon\Test\Behat\List
      *
      * @param $hostgroup  Hostgroup name.
      */
-    public function setHostGroupFilter($host)
+    public function setHostGroupFilter($host): void
     {
         $this->context->assertFindField('hostgroups')->setValue($hostgroup);
     }
@@ -171,7 +171,7 @@ class HostGroupServiceConfigurationListingPage extends \Centreon\Test\Behat\List
      *
      * @param $service  Service description.
      */
-    public function setServiceFilter($service)
+    public function setServiceFilter($service): void
     {
         $this->context->assertFindField('searchS')->setValue($service);
     }
@@ -179,7 +179,7 @@ class HostGroupServiceConfigurationListingPage extends \Centreon\Test\Behat\List
     /**
      *  Launch search.
      */
-    public function search()
+    public function search(): void
     {
         $this->context->assertFindButton('Search')->click();
     }
