@@ -16,7 +16,8 @@
         "webmozart/assert": "^1.9",
         "phpstan/phpstan": "~1.10.0",
         "friendsofphp/php-cs-fixer": "^3.10",
-        "symfony/console": "^5.4"
+        "symfony/console": "^6.4",
+        "pestphp/pest": "^2.34"
     },
     "suggest": {
         "behat/mink": "Browser controller/emulator abstraction for PHP",
@@ -44,8 +45,5 @@
         "psr-4": {
             "Tests\\PHPStan\\": "tests/PHPStan"
         }
-    },
-    "require-dev": {
-        "pestphp/pest": "^1.21"
     }
 }
