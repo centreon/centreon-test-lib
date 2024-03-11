@@ -17,7 +17,7 @@
         "phpstan/phpstan": "~1.10.0",
         "friendsofphp/php-cs-fixer": "^3.10",
         "symfony/console": "^6.4",
-        "pestphp/pest": "^2.34"
+        "pestphp/pest": "^1.9"
     },
     "suggest": {
         "behat/mink": "Browser controller/emulator abstraction for PHP",
