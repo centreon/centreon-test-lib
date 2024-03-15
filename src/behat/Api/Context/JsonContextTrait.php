@@ -333,13 +333,20 @@ Trait JsonContextTrait
      *
      * @Then the JSON node :name should exist
      */
-    public function theJsonNodeShouldExist($name)
+    public function theJsonNodeShouldExist($name): void
     {
         $json = $this->getJson();
-
-        $node = $this->evaluateJsonPath($json, $name);
-
-        return $node;
+        if (str_contains($name, '.')) {
+            $node = $this->evaluateJsonPath($json, $name);
+            if (json_decode($node, true) === null) {
+                throw new \InvalidArgumentException(\sprintf("The node '%s' does not exists.", $name));
+            }
+        } else {
+            $data = json_decode($json, true);
+            if (! array_key_exists($name, $data)) {
+                throw new \InvalidArgumentException(\sprintf("The node '%s' does not exists.", $name));
+            }
+        }
     }
 
     /**
@@ -349,17 +356,17 @@ Trait JsonContextTrait
      */
     public function theJsonNodeShouldNotExist($name): void
     {
-        try {
-            Assert::false(
-                $this->theJsonNodeShouldExist($name),
-                "The node '{$name}' exists."
-            );
-        } catch (\Exception $ex) {
-            if ($this->evaluateJsonPathExceptionCode === $ex->getCode()) {
-                return;
+        $json = $this->getJson();
+        if (str_contains($name, '.')) {
+            $node = $this->evaluateJsonPath($json, $name);
+            if(json_decode($node, true) !== null) {
+                throw new \InvalidArgumentException(\sprintf("The node '%s' exists.", $name));
             }
-
-            throw $ex;
+        } else {
+            $data = json_decode($json, true);
+            if (array_key_exists($name, $data)) {
+                throw new \InvalidArgumentException(\sprintf("The node '%s' does not exists.", $name));
+            }
         }
     }
 
