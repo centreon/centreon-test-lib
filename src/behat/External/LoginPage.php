@@ -60,7 +60,7 @@ class LoginPage extends \Centreon\Test\Behat\Page
     /**
      *  Login.
      */
-    public function login($user, $password)
+    public function login($user, $password): void
     {
         // Send login form.
         try {

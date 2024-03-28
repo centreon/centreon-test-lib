@@ -54,7 +54,7 @@ class KBServiceListingPage extends \Centreon\Test\Behat\ListingPage
      * @param $hostservice
      * @throws \Exception
      */
-    public function createWikiPage($hostservice)
+    public function createWikiPage($hostservice): void
     {
         $entries = $this->context->getSession()->getPage()->findAll(
             'css',

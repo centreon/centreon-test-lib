@@ -103,7 +103,7 @@ class ExtensionsPage
      * @throws \Exception
      * @return void
      */
-    public function install($type, $name)
+    public function install($type, $name): void
     {
         $extension = $this->getEntry($type, $name);
         if ($extension['actions']['install']) {
@@ -131,7 +131,7 @@ class ExtensionsPage
      * @throws \Exception
      * @return void
      */
-    public function upgrade($type, $name)
+    public function upgrade($type, $name): void
     {
         $extension = $this->getEntry($type, $name);
         if ($extension['actions']['upgrade']) {
@@ -158,7 +158,7 @@ class ExtensionsPage
      * @throws \Exception
      * @return void
      */
-    public function remove($type, $name)
+    public function remove($type, $name): void
     {
         $extension = $this->getEntry($type, $name);
         if ($extension['actions']['remove']) {

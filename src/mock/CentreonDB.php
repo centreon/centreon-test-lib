@@ -104,7 +104,7 @@ class CentreonDB extends \CentreonDB
     /**
      * Reset result sets
      */
-    public function resetResultSet()
+    public function resetResultSet(): void
     {
         $this->queries = [];
         $this->commitCallback = null;
@@ -201,7 +201,7 @@ class CentreonDB extends \CentreonDB
      * @param type $enable
      * @return type
      */
-    public function autoCommit($enable)
+    public function autoCommit($enable): void
     {
         return;
     }
@@ -244,7 +244,7 @@ class CentreonDB extends \CentreonDB
     /**
      * @param string|false $id
      */
-    public function setLastInsertId($id = false)
+    public function setLastInsertId($id = false): void
     {
         $this->lastInsertId = $id;
     }
@@ -264,7 +264,7 @@ class CentreonDB extends \CentreonDB
      * @param array $values
      * @param array $matching
      */
-    public function transactionLogQuery(string $query, array $values = null, $matching)
+    public function transactionLogQuery(string $query, array $values = null, $matching): void
     {
         if ($this->transactionQueries !== null) {
             $this->transactionQueries[] = [

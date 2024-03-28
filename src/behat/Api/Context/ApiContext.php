@@ -277,7 +277,7 @@ class ApiContext implements Context
     /**
      *  Set containers Compose files.
      */
-    public function setContainersComposeFiles($files)
+    public function setContainersComposeFiles($files): void
     {
         $this->composeFiles = $files;
     }
@@ -318,7 +318,7 @@ class ApiContext implements Context
      *
      * @AfterScenario
      */
-    public function unsetContainer(AfterScenarioScope $scope)
+    public function unsetContainer(AfterScenarioScope $scope): void
     {
         // Failure logs.
         if (isset($this->container) && !$scope->getTestResult()->isPassed()) {
@@ -524,7 +524,7 @@ class ApiContext implements Context
      *
      * @Given a running instance of Centreon Web API
      */
-    public function aRunningInstanceOfCentreonApi()
+    public function aRunningInstanceOfCentreonApi(): void
     {
         $this->launchCentreonWebContainer('docker_compose_web');
     }
@@ -534,7 +534,7 @@ class ApiContext implements Context
      *
      * @Given I am logged in
      */
-    public function iAmLoggedIn()
+    public function iAmLoggedIn(): void
     {
         $this->setHttpHeaders(['Content-Type' => 'application/json']);
         $response = $this->iSendARequestToWithBody(
@@ -559,7 +559,7 @@ class ApiContext implements Context
      *
      * @Given I am logged in with local provider
      */
-    public function iAmLoggedInWithLocalProvider()
+    public function iAmLoggedInWithLocalProvider(): void
     {
         $this->setHttpHeaders(['Content-Type' => 'application/json']);
         $this->iSendARequestToWithBody(
@@ -717,7 +717,7 @@ class ApiContext implements Context
      * @Then I wait for :time seconds
      * @param int $time
      */
-    public function iWaitForNSeconds(int $time)
+    public function iWaitForNSeconds(int $time): void
     {
         sleep($time);
     }
@@ -726,7 +726,7 @@ class ApiContext implements Context
      *
      * @Given /^I want to generate the monitoring server configuration #(\d+)$/
      */
-    public function iWantToGenerateTheMonitoringServerConfiguration(int $monitoringServerId)
+    public function iWantToGenerateTheMonitoringServerConfiguration(int $monitoringServerId): void
     {
         $this->spin(
             function() use ($monitoringServerId) {
@@ -745,7 +745,7 @@ class ApiContext implements Context
      *
      * @Given /^I want to reload the monitoring server configuration #(\d+)$/
      */
-    public function iWantToReloadTheMonitoringServerConfiguration(int $monitoringServerId)
+    public function iWantToReloadTheMonitoringServerConfiguration(int $monitoringServerId): void
     {
         $this->spin(
             function() use ($monitoringServerId) {
@@ -763,7 +763,7 @@ class ApiContext implements Context
     /**
      * @Given I am logged in with :username\/:password
      */
-    public function iAmLoggedInWith(string $username, string $password)
+    public function iAmLoggedInWith(string $username, string $password): void
     {
         $this->setHttpHeaders(['Content-Type' => 'application/json']);
         $response = $this->iSendARequestToWithBody(

@@ -93,7 +93,7 @@ class Container
     /**
      * Init container infos (ids, ports, services)
      */
-    private function initContainersInfos()
+    private function initContainersInfos(): void
     {
         exec('docker ps --no-trunc | grep ' . $this->id, $output, $returnVar);
         foreach ($output as $line) {
@@ -122,7 +122,7 @@ class Container
     /**
      *  Execute a command on local host.
      */
-    private function exec($cmd)
+    private function exec($cmd): void
     {
         exec($cmd . ' 2>&1', $output, $returnVar);
         if ($returnVar != 0) {
@@ -177,7 +177,7 @@ class Container
      *  @param $destination Destination path.
      *  @param $service Service name.
      */
-    public function copyFromContainer($source, $destination, $service)
+    public function copyFromContainer($source, $destination, $service): void
     {
         $this->exec('docker cp ' . $this->getContainerId($service) . ':' . $source . ' ' . $destination);
     }
@@ -189,7 +189,7 @@ class Container
      *  @param $destination Destination path.
      *  @param $service Service name.
      */
-    public function copyToContainer($source, $destination, $service)
+    public function copyToContainer($source, $destination, $service): void
     {
         $this->exec('docker cp ' . $source . ' ' . $this->getContainerId($service) . ':' . $destination);
     }
@@ -322,7 +322,7 @@ class Container
      *
      *  @param $service  Service to stop.
      */
-    public function stop($service)
+    public function stop($service): void
     {
         $this->exec('docker compose -f ' . $this->composeFile . ' -p ' . $this->id . ' stop ' . $service);
     }
@@ -330,7 +330,7 @@ class Container
     /**
      *  Wait for available URL.
      */
-    public function waitForAvailableUrl($url)
+    public function waitForAvailableUrl($url): void
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);

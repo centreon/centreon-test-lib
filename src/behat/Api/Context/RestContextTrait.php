@@ -111,7 +111,7 @@ Trait RestContextTrait
      *
      * @Given /^the endpoints are described in Centreon Web API documentation(?: \(version: (\S+)\))?$/
      */
-    public function theCentreonApiDocumentation(string $version = null)
+    public function theCentreonApiDocumentation(string $version = null): void
     {
         $docDirectory = getcwd() . '/doc/API';
 
@@ -272,7 +272,7 @@ Trait RestContextTrait
      * @Then the response should be equal to
      * @Then the response should be equal to:
      */
-    public function theResponseShouldBeEqualTo(PyStringNode $expected)
+    public function theResponseShouldBeEqualTo(PyStringNode $expected): void
     {
         $expected = str_replace('\\"', '"', $expected);
         $actual   = $this->getHttpResponse()->getBody()->__toString();
@@ -285,7 +285,7 @@ Trait RestContextTrait
      *
      * @Then the response should be empty
      */
-    public function theResponseShouldBeEmpty()
+    public function theResponseShouldBeEmpty(): void
     {
         $actual = $this->getHttpResponse()->getBody()->__toString();
         $message = "The response of the current page is not empty, it is: $actual";
@@ -297,7 +297,7 @@ Trait RestContextTrait
      *
      * @Then the header :name should be equal to :value
      */
-    public function theHeaderShouldBeEqualTo(string $name, string $value)
+    public function theHeaderShouldBeEqualTo(string $name, string $value): void
     {
         $this->theHeaderShouldExist($name);
 
@@ -320,7 +320,7 @@ Trait RestContextTrait
     *
     * @Then the header :name should not be equal to :value
     */
-    public function theHeaderShouldNotBeEqualTo($name, $value) {
+    public function theHeaderShouldNotBeEqualTo($name, $value): void {
         $this->theHeaderShouldExist($name);
 
         $value = $this->replaceCustomVariables($value);
@@ -342,7 +342,7 @@ Trait RestContextTrait
      *
      * @Then the header :name should contain :value
      */
-    public function theHeaderShouldContain($name, $value)
+    public function theHeaderShouldContain($name, $value): void
     {
         $this->theHeaderShouldExist($name);
 
@@ -363,7 +363,7 @@ Trait RestContextTrait
      *
      * @Then the header :name should not contain :value
      */
-    public function theHeaderShouldNotContain(string $name, string $value)
+    public function theHeaderShouldNotContain(string $name, string $value): void
     {
         $this->theHeaderShouldExist($name);
 
@@ -384,7 +384,7 @@ Trait RestContextTrait
      *
      * @Then the header :name should not exist
      */
-    public function theHeaderShouldNotExist(string $name)
+    public function theHeaderShouldNotExist(string $name): void
     {
         $headers = $this->getHttpResponse()->getHeaders();
         Assert::keyNotExists(
@@ -399,7 +399,7 @@ Trait RestContextTrait
      *
      * @Then the header :name should exist
      */
-    public function theHeaderShouldExist(string $name)
+    public function theHeaderShouldExist(string $name): void
     {
         $headers = $this->getHttpResponse()->getHeaders();
 
@@ -414,7 +414,7 @@ Trait RestContextTrait
     /**
      * @Then the header :name should match :regex
      */
-    public function theHeaderShouldMatch(string $name, string $regex)
+    public function theHeaderShouldMatch(string $name, string $regex): void
     {
         $this->theHeaderShouldExist($name);
 
@@ -433,7 +433,7 @@ Trait RestContextTrait
     /**
      * @Then the header :name should not match :regex
      */
-    public function theHeaderShouldNotMatch($name, $regex)
+    public function theHeaderShouldNotMatch($name, $regex): void
     {
         Assert::false(
             $this->theHeaderShouldMatch($name, $regex),
@@ -446,7 +446,7 @@ Trait RestContextTrait
      *
      * @Then the response should expire in the future
      */
-    public function theResponseShouldExpireInTheFuture()
+    public function theResponseShouldExpireInTheFuture(): void
     {
         $date = new \DateTime($this->getHttpResponse()->getHeader('Date')[0]);
         $expires = new \DateTime($this->getHttpResponse()->getHeader('Expires')[0]);
@@ -463,7 +463,7 @@ Trait RestContextTrait
      *
      * @Then I add :name header equal to :value
      */
-    public function iAddHeaderEqualTo($name, $value)
+    public function iAddHeaderEqualTo($name, $value): void
     {
         $this->addHttpHeader($name, $value);
     }
@@ -471,7 +471,7 @@ Trait RestContextTrait
     /**
      * @Then the response should be encoded in :encoding
      */
-    public function theResponseShouldBeEncodedIn($encoding)
+    public function theResponseShouldBeEncodedIn($encoding): void
     {
         $content = $this->getHttpResponse()->getBody()->__toString();
         if (!mb_check_encoding($content, $encoding)) {
@@ -484,7 +484,7 @@ Trait RestContextTrait
     /**
      * @Then the response code should be :code
      */
-    public function theResponseCodeShouldBe(int $expectedCode)
+    public function theResponseCodeShouldBe(int $expectedCode): void
     {
         $actualCode = $this->getHttpResponse()->getStatusCode();
         $message = "Actual response is '$actualCode', but expected '$expectedCode'\n"

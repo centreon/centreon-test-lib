@@ -70,7 +70,7 @@ class SnmpTrapsConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Set a search.
      */
-    public function setSearch($search)
+    public function setSearch($search): void
     {
         $this->context->assertFind('css', 'input[name="searchT"]')->setValue($search);
         $this->context->assertFind('css', 'tbody tr td input.btc.bt_success')->click();

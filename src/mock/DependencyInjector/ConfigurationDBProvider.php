@@ -26,12 +26,12 @@ class ConfigurationDBProvider implements ServiceProviderInterface
         $this->db = $db;
     }
 
-    public function register(\Pimple\Container $container)
+    public function register(\Pimple\Container $container): void
     {
         $container['configuration_db'] = $this->db;
     }
 
-    public function terminate(\Pimple\Container $container)
+    public function terminate(\Pimple\Container $container): void
     {
         $container['configuration_db'] = null;
     }

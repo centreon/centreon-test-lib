@@ -58,7 +58,7 @@ class EscalationConfigurationListingPage extends \Centreon\Test\Behat\ListingPag
     /**
      *  Wait until page is valid or timeout occurs.
      */
-    public function waitForValidPage()
+    public function waitForValidPage(): void
     {
         $mythis = $this;
         $this->context->spin(
@@ -84,7 +84,7 @@ class EscalationConfigurationListingPage extends \Centreon\Test\Behat\ListingPag
      *
      * @param string $escalationName Escalation name to select.
      */
-    public function setEscalationFilter($escalationName)
+    public function setEscalationFilter($escalationName): void
     {
         $filterField = $this->context->assertFind('named', array('id_or_name', 'searchC'));
         $filterField->setValue($escalationName);
@@ -93,7 +93,7 @@ class EscalationConfigurationListingPage extends \Centreon\Test\Behat\ListingPag
     /**
      *  Search with the escalation filter.
      */
-    public function search()
+    public function search(): void
     {
         $this->context->assertFindButton('Search', 'Button Search not found')->click();
     }
@@ -103,7 +103,7 @@ class EscalationConfigurationListingPage extends \Centreon\Test\Behat\ListingPag
      *
      * @param string $limit The value of limit in page limit dropdown.
      */
-    public function setListingLimit($limit)
+    public function setListingLimit($limit): void
     {
         $page = $this->context->getSession()->getPage();
         $toolbar_pagelimit = $page->find('css', '.Toolbar_pagelimit');

@@ -367,7 +367,7 @@ class HostGroupServiceConfigurationPage extends \Centreon\Test\Behat\Configurati
      * @param $properties
      * @throws \Exception
      */
-    public function setProperties($properties)
+    public function setProperties($properties): void
     {
         if (isset($properties['macros'])) {
             $macros['macros'] = $properties['macros'];

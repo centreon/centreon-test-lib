@@ -85,7 +85,7 @@ class ImageListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Synchronize media directory.
      */
-    public function synchronize()
+    public function synchronize(): void
     {
         $this->context->assertFindLink('Synchronize Media Directory')->click();
     }

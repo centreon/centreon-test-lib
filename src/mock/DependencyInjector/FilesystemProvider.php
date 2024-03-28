@@ -26,12 +26,12 @@ class FilesystemProvider implements ServiceProviderInterface
         $this->filesystem = $filesystem;
     }
 
-    public function register(\Pimple\Container $container)
+    public function register(\Pimple\Container $container): void
     {
         $container['filesystem'] = $this->filesystem;
     }
 
-    public function terminate(\Pimple\Container $container)
+    public function terminate(\Pimple\Container $container): void
     {
         $container['filesystem'] = null;
     }

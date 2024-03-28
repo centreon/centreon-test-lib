@@ -148,7 +148,7 @@ class ACLResourceConfigurationPage extends \Centreon\Test\Behat\ConfigurationPag
     /*
      * Select all action access
      */
-    public function selectAll()
+    public function selectAll(): void
     {
         $properties = array();
         foreach ($this->properties as $name => $parameters) {

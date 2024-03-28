@@ -165,7 +165,7 @@ class CentreonAPIContext extends CentreonContext
      * @Given I have a running instance of Centreon API
      * @throws \Exception
      */
-    public function iHaveRunningAPI()
+    public function iHaveRunningAPI(): void
     {
         $base_url = $this->getMinkParameter('api_base');
         if (is_null($base_url)) {
@@ -186,7 +186,7 @@ class CentreonAPIContext extends CentreonContext
     /**
      * @Given /^the response has a "([^"]*)" property$/
      */
-    public function responseHasProperty($property)
+    public function responseHasProperty($property): void
     {
         $data = json_decode($this->getResponse()->getBody(true));
         if (!empty($data)) {
@@ -201,7 +201,7 @@ class CentreonAPIContext extends CentreonContext
     /**
      * @Given /^the property "([^"]*)" has value$/
      */
-    public function responseHasKeys($property, PyStringNode $propVal)
+    public function responseHasKeys($property, PyStringNode $propVal): void
     {
         $data = json_decode($this->getResponse()->getBody(true), true);
         if (!isset($data[$property])) {
@@ -224,7 +224,7 @@ class CentreonAPIContext extends CentreonContext
     /**
      * @Given /^the property "([^"]*)" has value matched to the pattern$/
      */
-    public function responseHasKeysByWildcard($property, PyStringNode $propVal)
+    public function responseHasKeysByWildcard($property, PyStringNode $propVal): void
     {
         $data = json_decode($this->getResponse()->getBody(true), true);
         if (!isset($data[$property])) {
@@ -247,7 +247,7 @@ class CentreonAPIContext extends CentreonContext
     /**
      * @Given /^the response matched to the pattern$/
      */
-    public function responseByWildcard(PyStringNode $propVal)
+    public function responseByWildcard(PyStringNode $propVal): void
     {
         $data = json_decode($this->getResponse()->getBody(true), true);
 
@@ -263,7 +263,7 @@ class CentreonAPIContext extends CentreonContext
     /**
      * @Given I use request payload
      */
-    public function iUseRequestPayload(PyStringNode $requestPayload)
+    public function iUseRequestPayload(PyStringNode $requestPayload): void
     {
         $this->setRequestPayload($requestPayload);
     }
@@ -271,7 +271,7 @@ class CentreonAPIContext extends CentreonContext
     /**
      * @Given I use attach files
      */
-    public function iAttachFiles(TableNode $filesTable)
+    public function iAttachFiles(TableNode $filesTable): void
     {
 
         $files = [];
@@ -287,7 +287,7 @@ class CentreonAPIContext extends CentreonContext
     /**
      * @When /^I make a GET request to "([^"]*)"$/
      */
-    public function makeGetRequest($uri)
+    public function makeGetRequest($uri): void
     {
         $jsonPayload = !empty($this->getRequestPayload())
             ? ['json' => json_decode($this->getRequestPayload()->getRaw(), true)]
@@ -300,7 +300,7 @@ class CentreonAPIContext extends CentreonContext
     /**
      * @When /^I make a DELETE request to "([^"]*)"$/
      */
-    public function makeDeleteRequest($uri)
+    public function makeDeleteRequest($uri): void
     {
         $jsonPayload = !empty($this->getRequestPayload())
             ? ['json' => json_decode($this->getRequestPayload()->getRaw(), true)]
@@ -313,7 +313,7 @@ class CentreonAPIContext extends CentreonContext
     /**
      * @When /^I make a POST request to "([^"]*)"$/
      */
-    public function makePostRequest($uri)
+    public function makePostRequest($uri): void
     {
         $jsonPayload = !empty($this->getRequestPayload())
             ? ['json' => json_decode($this->getRequestPayload()->getRaw(), true)]
@@ -326,7 +326,7 @@ class CentreonAPIContext extends CentreonContext
     /**
      * @When /^I make a PUT request to "([^"]*)"$/
      */
-    public function makePutRequest($uri)
+    public function makePutRequest($uri): void
     {
         $jsonPayload = !empty($this->getRequestPayload())
             ? ['json' => json_decode($this->getRequestPayload()->getRaw(), true)]
@@ -341,7 +341,7 @@ class CentreonAPIContext extends CentreonContext
      * @throws \Exception
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function makeMultipartRequest($uri)
+    public function makeMultipartRequest($uri): void
     {
         $files = $this->getFiles();
         $this->validateFiles($files);
@@ -358,7 +358,7 @@ class CentreonAPIContext extends CentreonContext
      * @Then /^the response code should be (\d+)$/
      * @throws \Exception
      */
-    public function theResponseCodeShouldBe($code)
+    public function theResponseCodeShouldBe($code): void
     {
         if ((string) $this->getResponse()->getStatusCode() !== $code) {
             throw new \Exception('HTTP response code does not match '.$code.
@@ -369,7 +369,7 @@ class CentreonAPIContext extends CentreonContext
     /**
      * @throws \Exception
      */
-    private function authenticateToApi()
+    private function authenticateToApi(): void
     {
         $client = $this->getClient();
         $response = $client->post($this->getMinkParameter('api_base') . '/api/index.php?action=authenticate', [
@@ -389,7 +389,7 @@ class CentreonAPIContext extends CentreonContext
      * Validate files existing
      * @throws \Exception
      */
-    private function validateFiles(array $files)
+    private function validateFiles(array $files): void
     {
         if (!empty($files)) {
             foreach ($files as $file) {

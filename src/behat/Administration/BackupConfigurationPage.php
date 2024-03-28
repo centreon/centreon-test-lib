@@ -114,7 +114,7 @@ class BackupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
      *
      *  @param $days  Array of days.
      */
-    public function setFullBackupDays($days)
+    public function setFullBackupDays($days): void
     {
         for ($i = 0; $i < 7; $i++) {
             $checkbox = $this->context->assertFind('css', 'input[name="backup_database_full[' . $i . ']"]');
@@ -131,7 +131,7 @@ class BackupConfigurationPage extends \Centreon\Test\Behat\ConfigurationPage
      *
      *  @param $days  Array of days.
      */
-    public function setPartialBackupDays($days)
+    public function setPartialBackupDays($days): void
     {
         for ($i = 0; $i < 7; $i++) {
             $checkbox = $this->context->assertFind('css', 'input[name="backup_database_partial[' . $i . ']"]');

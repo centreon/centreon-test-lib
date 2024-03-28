@@ -99,7 +99,7 @@ class DowntimeConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      *  display downtime cycle.
      *
      */
-    public function displayDowntimeCycle()
+    public function displayDowntimeCycle(): void
     {
         $checkbox = $this->context->assertFind('css', 'input[name="view_downtime_cycle"]');
         $this->checkCheckbox($checkbox);
@@ -113,7 +113,7 @@ class DowntimeConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      * @param bool $select
      * @throws \Exception
      */
-    public function selectEntry($entry, $select = true)
+    public function selectEntry($entry, $select = true): void
     {
         $elements = $this->context->getSession()->getPage()->findAll('css', '.list_one,.list_two');
         if (!array_key_exists($entry, $elements)) {
@@ -130,7 +130,7 @@ class DowntimeConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Cancel selected downtimes.
      */
-    public function cancel()
+    public function cancel(): void
     {
         $this->context->setConfirmBox(true);
         $this->context->assertFind('css', 'input[name="submit2"]')->click();

@@ -26,12 +26,12 @@ class FinderProvider implements ServiceProviderInterface
         $this->finder = $finder;
     }
 
-    public function register(\Pimple\Container $container)
+    public function register(\Pimple\Container $container): void
     {
         $container['finder'] = $this->finder;
     }
 
-    public function terminate(\Pimple\Container $container)
+    public function terminate(\Pimple\Container $container): void
     {
         $container['finder'] = null;
     }

@@ -81,7 +81,7 @@ class PollerConfigurationExportPage extends ConfigurationPage
     /**
      *  Export configuration.
      */
-    public function export()
+    public function export(): void
     {
         $this->context->assertFind('css', '#exportBtn')->click();
 
@@ -107,7 +107,7 @@ class PollerConfigurationExportPage extends ConfigurationPage
      *
      * @param $pollers  Array of pollers.
      */
-    public function setPollers($pollers)
+    public function setPollers($pollers): void
     {
         $pollers = !is_array($pollers) ? [$pollers] : $pollers;
 

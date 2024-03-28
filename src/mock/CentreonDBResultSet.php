@@ -59,7 +59,7 @@ class CentreonDBResultSet extends CentreonDBStatement
     /**
      * Execute the callback comes from the test case object
      */
-    public function executeCallback($values = null)
+    public function executeCallback($values = null): void
     {
         if ($this->callback !== null) {
             call_user_func($this->callback, $values);
@@ -106,7 +106,7 @@ class CentreonDBResultSet extends CentreonDBStatement
     /**
      * Reset the position of resultset
      */
-    public function resetResultSet()
+    public function resetResultSet(): void
     {
         $this->pos = 0;
     }

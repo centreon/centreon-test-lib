@@ -365,7 +365,7 @@ class HostTemplateConfigurationPage extends \Centreon\Test\Behat\ConfigurationPa
      * @param $properties
      * @throws \Exception
      */
-    public function setProperties($properties)
+    public function setProperties($properties): void
     {
         if (isset($properties['macros'])) {
             $macros['macros'] = $properties['macros'];

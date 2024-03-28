@@ -128,7 +128,7 @@ abstract class ListingPage extends Page implements Interfaces\ListingPage
      * @param type $action The action to choose: Duplicate, Enable, Disable...
      * @throws \Exception
      */
-    public function selectMoreAction($object, $action)
+    public function selectMoreAction($object, $action): void
     {
         if (!empty($object) && !empty($action)) {
             $checkbox = $this->context->assertFind(

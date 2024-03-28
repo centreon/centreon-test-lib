@@ -28,7 +28,7 @@ class CentreonCommand extends BaseObject
         return $this->getIncrementedId();
     }
 
-    public function insert($parameters)
+    public function insert($parameters): void
     {
         $this->incrementalId++;
     }

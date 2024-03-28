@@ -67,7 +67,7 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      * @param $poller  Poller name.
      * @param $enable  True to enable, false to disable.
      */
-    public function enableEntry($poller, $enable = true)
+    public function enableEntry($poller, $enable = true): void
     {
         $label = $enable ? 'Enabled' : 'Disabled';
         $this->context->assertFind(
@@ -83,7 +83,7 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      * @param $pollerName  Poller name.
      * @param $select  True to check, false to uncheck.
      */
-    public function selectEntry($pollerName, $select = true)
+    public function selectEntry($pollerName, $select = true): void
     {
         $poller = $this->getEntry($pollerName);
         $checkbox = $this->context->assertFind('css', 'input[type="checkbox"][name="select[' . $poller['id'] . ']"]');
@@ -113,7 +113,7 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      *  method effectively.
      *
      */
-    public function duplicateAction()
+    public function duplicateAction(): void
     {
         $this->context->assertFind('css', 'button[name="duplicate_action"]')->click();
     }
@@ -125,7 +125,7 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      *  method effectively.
      *
      */
-    public function deleteAction()
+    public function deleteAction(): void
     {
         $this->context->assertFind('css', 'button[name="delete_action"]')->click();
     }

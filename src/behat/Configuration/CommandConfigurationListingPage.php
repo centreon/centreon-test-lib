@@ -85,7 +85,7 @@ class CommandConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Wait until page is valid or timeout occurs.
      */
-    public function waitForValidPage()
+    public function waitForValidPage(): void
     {
         $mythis = $this;
         $this->context->spin(
@@ -101,7 +101,7 @@ class CommandConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      *
      * @param string $commandName Command name to select.
      */
-    public function setCommandFilter($commandName)
+    public function setCommandFilter($commandName): void
     {
         $filterField = $this->context->assertFind('named', array('id_or_name', 'searchC'));
         $filterField->setValue($commandName);
@@ -123,7 +123,7 @@ class CommandConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
     /**
      *  Search with the command filter.
      */
-    public function search()
+    public function search(): void
     {
         $this->context->assertFindButton('Search', 'Button Search not found')->click();
     }
@@ -133,7 +133,7 @@ class CommandConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      *
      * @param string $limit The value of limit in page limit dropdown.
      */
-    public function setListingLimit($limit)
+    public function setListingLimit($limit): void
     {
         $page = $this->context->getSession()->getPage();
         $toolbar_pagelimit = $page->find('css', '.Toolbar_pagelimit');

@@ -52,7 +52,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
     /**
      * Set Service Status Filter to All
      */
-    public function setFilterByAllService()
+    public function setFilterByAllService(): void
     {
         $this->listServices();
         $this->ctx->selectInList('select#statusService', 'All');
@@ -63,7 +63,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
      *
      * @param string hostname Hostame to select.
      */
-    public function setFilterbyHostname($hostname)
+    public function setFilterbyHostname($hostname): void
     {
         $this->ctx->assertFind('named', array('id', 'host_search'))->setValue(trim($hostname));
     }
@@ -73,7 +73,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
      *
      * @param string servicename Service to select.
      */
-    public function setFilterbyService($servicename)
+    public function setFilterbyService($servicename): void
     {
         $this->ctx->assertFind('named', array('id', 'input_search'))->setValue(trim($servicename));
     }
@@ -83,7 +83,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
      *
      * @param string limit The value of limit in page limit dropdown
      */
-    public function setPageLimitTo($limit)
+    public function setPageLimitTo($limit): void
     {
         $page = $this->ctx->getSession()->getPage();
 
@@ -94,7 +94,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
     /**
      * Wait service list page
      */
-    public function waitForServiceListPage()
+    public function waitForServiceListPage(): void
     {
         $this->ctx->spin(
             function ($context) {
@@ -103,7 +103,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
         );
     }
 
-    public function listServices()
+    public function listServices(): void
     {
         // Go to : Monitoring > Status Details > Services
         $this->ctx->visit('/main.php?p=20201');
@@ -168,7 +168,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
      * @param string servicename Service to select.
      * @param string action_label Label of action to select. Action by default is do no action.
      */
-    public function doActionOn($hostname, $servicename, $action_label = 'More actions...')
+    public function doActionOn($hostname, $servicename, $action_label = 'More actions...'): void
     {
         // Go to : Monitoring > Status Details > Services
         $this->listServices();
@@ -202,7 +202,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
      * @param string hostname Hostname to select.
      * @param string service Service to select.
      */
-    public function scheduleImmediateCheckOnService($hostname, $service)
+    public function scheduleImmediateCheckOnService($hostname, $service): void
     {
         $this->doActionOn($hostname, $service, 'Schedule immediate check');
     }
@@ -213,7 +213,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
      * @param string hostname Hostname to select.
      * @param string service Service to select.
      */
-    public function scheduleImmediateCheckForcedOnService($hostname, $service)
+    public function scheduleImmediateCheckForcedOnService($hostname, $service): void
     {
         $this->doActionOn($hostname, $service, 'Schedule immediate check (Forced)');
     }
@@ -240,7 +240,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
         $isPersistent,
         $doForceCheck,
         $url
-    ) {
+    ): void {
         // The code below cannot work right now in the context of the
         // hosts monitoring page as PhantomJS does not support XSLT.
         // As a workaround will we use direct Ajax call to add the
@@ -279,7 +279,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
      * @param string hostname Hostname to select.
      * @param string service Service to select.
      */
-    public function disacknowledgeOnService($hostname, $service)
+    public function disacknowledgeOnService($hostname, $service): void
     {
         $this->doActionOn($hostname, $service, 'Services : Disacknowledge');
     }
@@ -290,7 +290,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
      * @param string hostname Hostname to select.
      * @param string service Service to select.
      */
-    public function enableNotificationOnService($hostname, $service)
+    public function enableNotificationOnService($hostname, $service): void
     {
         $this->doActionOn($hostname, $service, 'Services : Enable Notification');
     }
@@ -301,7 +301,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
      * @param string hostname Hostname to select.
      * @param string service Service to select.
      */
-    public function disableNotificationOnService($hostname, $service)
+    public function disableNotificationOnService($hostname, $service): void
     {
         $this->doActionOn($hostname, $service, 'Services : Disable Notification');
     }
@@ -312,7 +312,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
      * @param string hostname Hostname to select.
      * @param string service Service to select.
      */
-    public function enableCheckOnService($hostname, $service)
+    public function enableCheckOnService($hostname, $service): void
     {
         $this->doActionOn($hostname, $service, 'Services : Enable Check');
     }
@@ -323,7 +323,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
      * @param string hostname Hostname to select.
      * @param string service Service to select.
      */
-    public function disableCheckOnService($hostname, $service)
+    public function disableCheckOnService($hostname, $service): void
     {
         $this->doActionOn($hostname, $service, 'Services : Disable Check');
     }
@@ -353,7 +353,7 @@ class MonitoringServicesPage extends \Centreon\Test\Behat\Page
         $duration,
         $duration_scale,
         $comment
-    ) {
+    ): void {
 
         // Prepare the downtime of the service (of the hostname)
         $this->doActionOn($hostname, $servicename, 'Services : Set Downtime');
