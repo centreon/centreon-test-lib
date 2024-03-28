@@ -25,7 +25,7 @@ namespace Centreon\PhpCsFixer;
 
 class PhpCsFixerLicense
 {
-    private const YEAR = 2023;
+    private const YEAR = 2024;
     private const LICENSE_APACHE = 'apache';
     private const LICENSE_PRIVATE = 'private';
     private const LICENSES = [
