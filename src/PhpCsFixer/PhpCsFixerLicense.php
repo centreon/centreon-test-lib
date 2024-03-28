@@ -25,7 +25,6 @@ namespace Centreon\PhpCsFixer;
 
 class PhpCsFixerLicense
 {
-    private const YEAR = 2024;
     private const LICENSE_APACHE = 'apache';
     private const LICENSE_PRIVATE = 'private';
     private const LICENSES = [
@@ -107,7 +106,7 @@ class PhpCsFixerLicense
             default => '',
         };
 
-        return str_replace('{YEAR}', (string) self::YEAR, $content);
+        return str_replace('{YEAR}', (string) (new DateTime())->format('Y'), $content);
     }
 
     /**
