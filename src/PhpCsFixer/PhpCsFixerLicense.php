@@ -106,7 +106,7 @@ class PhpCsFixerLicense
             default => '',
         };
 
-        return str_replace('{YEAR}', (string) (new DateTime())->format('Y'), $content);
+        return str_replace('{YEAR}', (string) (new \DateTime())->format('Y'), $content);
     }
 
     /**
