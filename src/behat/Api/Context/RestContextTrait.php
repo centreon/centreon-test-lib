@@ -115,20 +115,14 @@ Trait RestContextTrait
     {
         $docDirectory = getcwd() . '/doc/API';
 
-        if ($version === null) {  // get latest documentation version
-            $version = '21.10';
-
-            $files = scandir($docDirectory);
-            foreach ($files as $file) {
-                if (preg_match('/centreon-api-v(.+)\.yaml/', $file, $matches)) {
-                    if (version_compare($matches[1], $version) >= 0) {
-                        $version = $matches[1];
-                    }
-                }
-            }
+        if (
+            $version !== null
+            && file_exists($docDirectory . '/centreon-api-v' . $version . '.yaml')
+        ) {
+            $docFilePath = $docDirectory . '/centreon-api-v' . $version . '.yaml';
+        } else {
+            $docFilePath = $docDirectory . '/centreon-api.yaml';
         }
-
-        $docFilePath = $docDirectory . '/centreon-api-v' . $version . '.yaml';
 
         if (!file_exists($docFilePath)) {
             throw new \InvalidArgumentException('API documentation not found');
