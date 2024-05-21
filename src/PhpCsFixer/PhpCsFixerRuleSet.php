@@ -178,17 +178,6 @@ class PhpCsFixerRuleSet
             'whitespace_after_comma_in_array' => true,
         ];
 
-        // Set the header dynamically based on the current detected project name.
-        $projectLicense = PhpCsFixerLicense::detectCentreonProjectLicense(__DIR__);
-        if ($phpLicenseHeader = PhpCsFixerLicense::getLicenseHeaderAsText($projectLicense)) {
-            $rules += [
-                'header_comment' => [
-                    'location' => 'after_open',
-                    'header' => $phpLicenseHeader,
-                ],
-            ];
-        }
-
         return $rules;
     }
 
