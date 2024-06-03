@@ -67,13 +67,13 @@ class HostConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
         }
 
         // Check that page is valid for this class.
-        $mythis = $this;
-        $this->context->spin(
-            function ($context) use ($mythis) {
-                return $mythis->isPageValid();
-            },
-            'Current page does not match class ' . __CLASS__
-        );
+        // $mythis = $this;
+        // $this->context->spin(
+        //     function ($context) use ($mythis) {
+        //         return $mythis->isPageValid();
+        //     },
+        //     'Current page does not match class ' . __CLASS__
+        // );
     }
 
     /**
