@@ -43,7 +43,8 @@ class QueryControllerTemplate extends FileTemplate
         public string $name,
         public QueryUseCaseTemplate $useCase,
         public PresenterInterfaceTemplate $presenter,
-        public bool $exists = false
+        public bool $exists = false,
+        public string $useCaseType,
     ) {
         parent::__construct();
     }
@@ -67,15 +68,15 @@ class QueryControllerTemplate extends FileTemplate
             namespace {$this->namespace};
 
             use {$useCaseNamespace};
-            use {$presenterNamespace};
 
-            final class {$this->name}
+            final class {$this->useCaseType}{$this->name}Controller
             {
                 public function __invoke(
                     {$this->useCase} $$useCaseVariable,
-                    {$this->presenter} $$presenterVariable
+                    {$this->useCaseType}{$this->name}Presenter $$presenterVariable,
+                    int \${$this->name}Id,
                 ): object {
-                    $$useCaseVariable($$presenterVariable);
+                    $$useCaseVariable(\${$this->name}Id,$$presenterVariable);
 
                     return $$show;
                 }

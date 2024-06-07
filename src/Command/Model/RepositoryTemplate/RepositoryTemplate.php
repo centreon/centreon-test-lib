@@ -62,10 +62,10 @@ class RepositoryTemplate extends FileTemplate
             namespace {$this->namespace};
 
             use Centreon\Infrastructure\DatabaseConnection;
-            use Centreon\Infrastructure\Repository\AbstractRepositoryDRB;
+            use Core\Common\Infrastructure\Repository\AbstractRepositoryRDB;
             use {$interfaceNamespace};
 
-            class {$this->name} extends AbstractRepositoryDRB implements {$interfaceName}
+            class {$this->name} extends AbstractRepositoryRDB implements {$interfaceName}
             {
                 /**
                  * @param DatabaseConnection $$databaseVariable

@@ -23,15 +23,16 @@ declare(strict_types=1);
 
 namespace Centreon\Command\Model\UseCaseTemplate;
 
-use Centreon\Command\Model\{
-    DtoTemplate\RequestDtoTemplate,
+use Centreon\Command\Model\{DtoTemplate\RequestDtoTemplate,
+    ExceptionTemplate\ExceptionTemplate,
     FileTemplate,
     PresenterTemplate\PresenterInterfaceTemplate,
-    RepositoryTemplate\RepositoryInterfaceTemplate
-};
+    RepositoryTemplate\RepositoryInterfaceTemplate};
+use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 
 class CommandUseCaseTemplate extends FileTemplate implements \Stringable
 {
+
     /**
      * @param string $filePath
      * @param string $namespace
@@ -44,11 +45,13 @@ class CommandUseCaseTemplate extends FileTemplate implements \Stringable
     public function __construct(
         public string $filePath,
         public string $namespace,
-        public string $name,
+        public string $useCaseType,
+        public string $modelName,
         public PresenterInterfaceTemplate $presenter,
         public RequestDtoTemplate $request,
         public RepositoryInterfaceTemplate $repository,
-        public bool $exists = false
+        public bool $exists = false,
+        public string $name,
     ) {
         parent::__construct();
     }
@@ -75,20 +78,39 @@ class CommandUseCaseTemplate extends FileTemplate implements \Stringable
         $repositoryVariable = 'repository';
         $presenterVariable = 'presenter';
         $requestVariable = 'request';
+        $exception = 'exception';
+        $methodName = ExceptionTemplate::getMethodeName($this->useCaseType);
+        $presentResponseVariable = 'presentResponse';
 
+        if ($this->useCaseType === "Delete")
+        {
+            $phpDoc = " @param int $" . lcfirst($this->modelName) . "Id,\n     *  @param PresenterInterface $$presenterVariable,";
+            $settingValue = "int $" . lcfirst($this->modelName) . "Id,\n        PresenterInterface $$presenterVariable,";
+            $presenterNameSpace = "use Core\Application\Common\UseCase\PresenterInterface;";
+            $presentResponseVariable = "setResponseStatus";
+        }else {
+            $phpDoc = " @param " . $requestName . ' $' . $requestVariable . ",\n     *  @param " . $presenterInterfaceName . ' $presenter';
+            $settingValue = $requestName . ' $' . $requestVariable . ",\n        $presenterInterfaceName $$presenterVariable";
+            $presenterNameSpace = "use Core\\{$this->modelName}\Infrastructure\API\\{$this->useCaseType}{$this->modelName}\\{$this->useCaseType}{$this->modelName}Presenter;";
+        }
         return <<<EOF
             <?php
+            
             {$this->licenceHeader}
+            
             declare(strict_types=1);
 
             namespace {$this->namespace};
-
-            use {$presenterInterfaceNamespace};
-            use {$requestNamespace};
+            
+            $presenterNameSpace
             use {$repositoryNamespace};
+            use Core\Application\Common\UseCase\ErrorResponse;
+            use Core\\{$this->modelName}\Application\Exception\\{$this->modelName}Exception;
+            use Centreon\Domain\Log\LoggerTrait;
 
-            class {$this->name}
+            final class {$this->useCaseType}{$this->modelName}
             {
+                use LoggerTrait;
                 /**
                  * @param {$repositoryName} $$repositoryVariable
                  */
@@ -97,16 +119,20 @@ class CommandUseCaseTemplate extends FileTemplate implements \Stringable
                 }
 
                 /**
-                 * @param {$presenterInterfaceName} $$presenterVariable
-                 * @param {$requestName} $$requestVariable
+                 * $phpDoc
                  */
                 public function __invoke(
-                    {$presenterInterfaceName} $$presenterVariable,
-                    {$requestName} $$requestVariable
+                    $settingValue
                 ): void {
+                    try {
+                    } catch (\\Throwable \$exception) {
+                        \$presenter->{$presentResponseVariable}(
+                            new ErrorResponse({$this->modelName}Exception::{$methodName}())
+                        );
+                        \$this->error((string) \$exception);    
+                    }
                 }
             }
-
             EOF;
     }
 }

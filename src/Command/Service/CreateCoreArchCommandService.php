@@ -86,6 +86,7 @@ class CreateCoreArchCommandService
         $questionModelName = new Question('For which model is this use case intended ? ');
         /** @var string */
         $modelName = $questionHelper->ask($input, $output, $questionModelName);
+        $modelName = ucfirst($modelName);
         $output->writeln('<info>You have selected: [' . $modelName . '] Model.</info>');
         $output->writeln('');
         // Search for already existing models.
@@ -226,6 +227,9 @@ class CreateCoreArchCommandService
         $filePath = $this->srcPath . '/../tests/php' . DIRECTORY_SEPARATOR
             . preg_replace('/\\\\/', DIRECTORY_SEPARATOR, $fileTemplate->namespace)
             . DIRECTORY_SEPARATOR . $className . '.php';
+        var_dump($fileTemplate->name);
+        var_dump(($fileTemplate->namespace));
+        var_dump($className);
         if (! file_exists($filePath)) {
             preg_match('/^(.+).' . $className . '\.php$/', $filePath, $matches);
             $dirLocation = $matches[1];

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Centreon\Command\Model\PresenterTemplate;
 
+use Centreon\Command\CreateCoreArchCommand;
 use Centreon\Command\Model\FileTemplate;
 
 class PresenterInterfaceTemplate extends FileTemplate implements \Stringable
@@ -31,15 +32,15 @@ class PresenterInterfaceTemplate extends FileTemplate implements \Stringable
      * @param string $filePath
      * @param string $namespace
      * @param string $name
-     * @param bool $exists
      */
     public function __construct(
         public string $filePath,
         public string $namespace,
         public string $name,
-        public bool $exists = false
+        public string $useCaseType
     ) {
         parent::__construct();
+        var_dump('construct', $name, $useCaseType);
     }
 
     /**
@@ -57,6 +58,13 @@ class PresenterInterfaceTemplate extends FileTemplate implements \Stringable
     {
         preg_match('/^(.+)PresenterInterface/', $this->name, $matches);
         $useCase = $matches[1];
+        $setting = '';
+        if ($this->useCaseType === CreateCoreArchCommand::COMMAND_ADD ){
+            $setting = "Add" . $this->name . "Response | ";
+        }elseif ($this->useCaseType === CreateCoreArchCommand::COMMAND_FIND){
+            $setting = $this->useCaseType . $this->name . "Response | " ;
+        }
+        var_dump('generateModelContent', $this->name, $this->useCaseType);
 
         return <<<EOF
             <?php
@@ -67,12 +75,12 @@ class PresenterInterfaceTemplate extends FileTemplate implements \Stringable
 
             use Core\Application\Common\UseCase\ResponseStatusInterface;
 
-            interface {$this->name}
+            interface {$this->useCaseType}{$this->name}PresenterInterface
             {
                 /**
-                 * @param {$useCase}Response|ResponseStatusInterface \$data
+                 * @param {$setting}ResponseStatusInterface \$data
                  */
-                public function presentResponse({$useCase}Response|ResponseStatusInterface \$data): void;
+                public function presentResponse({$setting}ResponseStatusInterface \$data): void;
             }
 
             EOF;

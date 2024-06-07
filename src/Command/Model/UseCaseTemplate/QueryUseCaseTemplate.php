@@ -25,6 +25,7 @@ namespace Centreon\Command\Model\UseCaseTemplate;
 
 use Centreon\Command\Model\DtoTemplate\ResponseDtoTemplate;
 use Centreon\Command\Model\FileTemplate;
+use Centreon\Command\Model\ExceptionTemplate\ExceptionTemplate;
 use Centreon\Command\Model\ModelTemplate\ModelTemplate;
 use Centreon\Command\Model\PresenterTemplate\PresenterInterfaceTemplate;
 use Centreon\Command\Model\RepositoryTemplate\RepositoryInterfaceTemplate;
@@ -45,6 +46,7 @@ class QueryUseCaseTemplate extends FileTemplate implements \Stringable
         public string $filePath,
         public string $namespace,
         public string $name,
+        public string $useCaseType,
         public PresenterInterfaceTemplate $presenter,
         public ResponseDtoTemplate $response,
         public RepositoryInterfaceTemplate $repository,
@@ -79,7 +81,8 @@ class QueryUseCaseTemplate extends FileTemplate implements \Stringable
         $modelNameVariable = lcfirst($this->model->name);
         $modelNamespace = $this->model->namespace . '\\' . $this->model->name;
         $modelName = $this->model->name;
-
+        $methodName = ExceptionTemplate::getMethodeName($this->useCaseType);
+        $lcModelName = lcfirst($modelName);
         return <<<EOF
             <?php
             {$this->licenceHeader}
@@ -87,28 +90,34 @@ class QueryUseCaseTemplate extends FileTemplate implements \Stringable
 
             namespace {$this->namespace};
 
-            use {$presenterInterfaceNamespace};
             use {$repositoryNamespace};
-            use {$responseNamespace};
             use {$modelNamespace};
+            use Centreon\Domain\Log\LoggerTrait;
+            use Core\Application\Common\UseCase\ErrorResponse;
+            use Core\\{$modelName}\Application\Exception\\{$modelName}Exception;
 
-            class {$this->name}
+            final class {$this->name}
             {
+                use loggerTrait; 
                 /**
                  * @param {$repositoryName} $$repositoryVariable
                  */
-                public function __construct(private {$repositoryName} $$repositoryVariable)
+                public function __construct({$repositoryName} $$repositoryVariable)
                 {
                 }
 
                 /**
-                 * @param {$presenterInterfaceName} $$presenterVariable
+                 * @parma int ${lcModelName}Id
+                 * @param {$this->name}PresenterInterface $$presenterVariable
                  */
-                public function __invoke(
-                    {$presenterInterfaceName} $$presenterVariable
-                ): void {
-                }
-
+                public function __invoke(int \${$lcModelName}Id,{$this->name}PresenterInterface $$presenterVariable): void
+                {
+                    try {
+                    } catch (\\Throwable \$ex) {
+                        \$presenter->presentResponse(new ErrorResponse({$modelName}Exception::{$methodName}()));
+                        \$this->error(\$ex->getMessage(), ['trace'=> \$ex->getTraceAsString()]);                        
+                    }
+                }    
                 public function createResponse({$modelName} $$modelNameVariable): {$responseName}
                 {
                     $$responseVariable = new {$responseName}();

@@ -151,15 +151,16 @@ class CreateCoreArchCommand extends Command
             $this->modelTemplate->name,
             self::WRITE_REPOSITORY_TYPE
         );
-        $this->commandArchCommandService->createFactoryIfNotExist(
-            $output,
-            $this->modelTemplate
-        );
         $this->commandArchCommandService->createWriteRepositoryTemplateIfNotExist(
             $output,
             $this->modelTemplate->name,
         );
         $this->commandArchCommandService->createRequestDtoTemplateIfNotExist(
+            $output,
+            $this->modelTemplate->name,
+            $this->useCaseType
+        );
+        $this->commandArchCommandService->createResponseDtoTemplateIfNotExist(
             $output,
             $this->modelTemplate->name,
             $this->useCaseType
@@ -170,6 +171,16 @@ class CreateCoreArchCommand extends Command
             $this->useCaseType
         );
         $this->commandArchCommandService->createPresenterIfNotExist(
+            $output,
+            $this->modelTemplate->name,
+            $this->useCaseType
+        );
+        $this->commandArchCommandService->createExceptionIfNotExist(
+            $output,
+            $this->modelTemplate->name,
+            $this->useCaseType
+        );
+        $this->commandArchCommandService->createRouteIfNotExist(
             $output,
             $this->modelTemplate->name,
             $this->useCaseType
@@ -196,13 +207,14 @@ class CreateCoreArchCommand extends Command
             $this->modelTemplate->name,
             self::READ_REPOSITORY_TYPE
         );
-        $this->queryArchCommandService->createFactoryIfNotExist(
-            $output,
-            $this->modelTemplate
-        );
         $this->queryArchCommandService->createReadRepositoryTemplateIfNotExist(
             $output,
             $this->modelTemplate->name,
+        );
+        $this->queryArchCommandService->createExceptionIfNotExist(
+            $output,
+            $this->modelTemplate->name,
+            $this->useCaseType
         );
         $this->queryArchCommandService->createResponseDtoTemplateIfNotExist(
             $output,
@@ -223,6 +235,11 @@ class CreateCoreArchCommand extends Command
             $output,
             $this->modelTemplate,
             $this->useCaseType,
+        );
+        $this->commandArchCommandService->createRouteIfNotExist(
+            $output,
+            $this->modelTemplate->name,
+            $this->useCaseType
         );
         $this->queryArchCommandService->createControllerIfNotExist(
             $output,

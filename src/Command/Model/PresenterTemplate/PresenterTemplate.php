@@ -31,6 +31,7 @@ class PresenterTemplate extends FileTemplate
      * @param string $filePath
      * @param string $namespace
      * @param string $name
+     * @param string useCase
      * @param PresenterInterfaceTemplate $presenterInterface
      * @param bool $exists
      */
@@ -38,6 +39,7 @@ class PresenterTemplate extends FileTemplate
         public string $filePath,
         public string $namespace,
         public string $name,
+        public string $useCase,
         public PresenterInterfaceTemplate $presenterInterface,
         public bool $exists = false
     ) {
@@ -50,7 +52,52 @@ class PresenterTemplate extends FileTemplate
     public function generateModelContent(): string
     {
         $interfaceNamespace = $this->presenterInterface->namespace . '\\' . $this->presenterInterface->name;
-        $interfaceName = $this->presenterInterface->name;
+        $interfaceName = $this->presenterInterface->name . "Interface";
+        $method = '';
+
+        if($this->useCase === "Add") {
+            $namespaceResponse = "use Core\\{$this->name}\Application\UseCase\\{$this->useCase}{$this->name}\\{$this->useCase}{$this->name}Response;";
+            $method = <<<METHODADD
+            
+                /**
+                * @@inheritDoc
+                */
+                public function presentResponse({$this->useCase}{$this->name}Response|ResponseStatusInterface \$response): void
+                {
+                    if (\$response instanceof ResponseStatusInterface) {
+                        \$this->setResponseStatus(\$response);
+                    } else {
+                    }
+                }          
+            METHODADD;
+        } elseif ($this->useCase === "Find") {
+            $namespaceResponse = "use Core\\{$this->name}\Application\UseCase\\{$this->useCase}{$this->name}\\{$this->useCase}{$this->name}Response;";
+            $method = <<<METHODFIND
+            
+                /**
+                * @@inheritDoc
+                */
+                public function presentResponse(Find{$this->name}Response|ResponseStatusInterface \$response): void
+                {
+                    if (\$response instanceof ResponseStatusInterface) {
+                        \$this->setResponseStatus(\$response);
+                    } else {
+                        \$this->present([]);
+                    }
+                }
+            METHODFIND;
+        } elseif ($this->useCase === "Update") {
+            $method = <<<METHODUPDATE
+            
+                /**
+                * @inheritDoc
+                */
+                public function presentResponse(ResponseStatusInterface \$response): void
+                {
+                    \$this->setResponseStatus(\$response);
+                }
+            METHODUPDATE;
+        }
 
         return <<<EOF
             <?php
@@ -58,12 +105,15 @@ class PresenterTemplate extends FileTemplate
             declare(strict_types=1);
 
             namespace {$this->namespace};
-
-            use {$interfaceNamespace};
+            
+            use Core\Application\Common\UseCase\ResponseStatusInterface;
             use Core\Application\Common\UseCase\AbstractPresenter;
+            use Core\\{$this->name}\Application\UseCase\\{$this->useCase}{$this->name}\\{$this->useCase}{$this->name}PresenterInterface;
+            {$namespaceResponse}
 
-            class {$this->name} extends AbstractPresenter implements {$interfaceName}
+            class {$this->useCase}{$this->name}Presenter extends AbstractPresenter implements {$this->useCase}{$this->name}PresenterInterface
             {
+                {$method}
             }
 
             EOF;

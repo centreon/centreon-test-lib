@@ -23,9 +23,10 @@ declare(strict_types=1);
 
 namespace Centreon\Command\Model\ControllerTemplate;
 
+use Centreon\Command\CreateCoreArchCommand;
 use Centreon\Command\Model\DtoTemplate\RequestDtoTemplate;
 use Centreon\Command\Model\FileTemplate;
-use Centreon\Command\Model\PresenterTemplate\PresenterInterfaceTemplate;
+use Centreon\Command\Model\PresenterTemplate\PresenterTemplate;
 use Centreon\Command\Model\UseCaseTemplate\CommandUseCaseTemplate;
 
 class CommandControllerTemplate extends FileTemplate
@@ -35,7 +36,7 @@ class CommandControllerTemplate extends FileTemplate
      * @param string $namespace
      * @param string $name
      * @param CommandUseCaseTemplate $useCase
-     * @param PresenterInterfaceTemplate $presenter
+     * @param PresenterTemplate $presenter
      * @param RequestDtoTemplate $request
      * @param bool $exists
      */
@@ -44,9 +45,10 @@ class CommandControllerTemplate extends FileTemplate
         public string $namespace,
         public string $name,
         public CommandUseCaseTemplate $useCase,
-        public PresenterInterfaceTemplate $presenter,
+        public PresenterTemplate $presenter,
         public RequestDtoTemplate $request,
-        public bool $exists = false
+        public bool $exists = false,
+        public string $useCaseType,
     ) {
         parent::__construct();
     }
@@ -58,7 +60,7 @@ class CommandControllerTemplate extends FileTemplate
     {
         $useCaseNamespace = $this->useCase->namespace . '\\' . $this->useCase->name;
         $presenterNamespace = $this->presenter->namespace . '\\' . $this->presenter->name;
-        $requestNamespace = $this->request->namespace . '\\' . $this->request->name;
+        $requestNamespace = "use ". $this->request->namespace . '\\' . $this->request->name . ";";
 
         $useCaseVariable = 'useCase';
         $requestVariable = 'request';
@@ -68,6 +70,39 @@ class CommandControllerTemplate extends FileTemplate
         $show = 'presenter->show()';
         $createDto = 'this->create' . $this->request->name . '($request)';
         $requestDataVariable = 'requestData';
+        $typeValue = $this->useCaseType . $this->name . 'Presenter';
+        $defaultPresenterNamespace = '';
+        $nameId ="";
+        $requestMethod = "$". $requestDtoVariable . ' = $' . $createDto . ";";
+        $variableRequestInvoke = "Request $" . $requestVariable. ',';
+
+        $createNameRequest = <<<REQUEST
+
+    public function create{$this->request}(Request $$requestVariable): {$this->request}
+        {
+            $$requestDataVariable = json_decode((string) $$requestGetContent, true);
+            $$requestDtoVariable = new {$this->request}($$requestDataVariable);
+
+            return $$requestDtoVariable;
+        }
+REQUEST;
+
+
+        if ($this->useCaseType === CreateCoreArchCommand::COMMAND_DELETE){
+            $nameId = 'int $' . $this->name .'Id,';
+            $typeValue = "DefaultPresenter";
+            $requestNamespace = '';
+            $defaultPresenterNamespace = "use Core\Infrastructure\Common\Api\DefaultPresenter;";
+            $createNameRequest = '';
+            $requestDataVariable = $nameId;
+            $requestMethod = '';
+            $requestDtoVariable = $this->name . 'Id' ;
+            $variableRequestInvoke = '';
+        }elseif ($this->useCaseType === CreateCoreArchCommand::COMMAND_FIND){
+            $createNameRequest = '';
+            $nameId = 'int $' . $this->name .'Id,';
+            $requestDataVariable = $nameId;
+        }
 
         return <<<EOF
             <?php
@@ -75,32 +110,25 @@ class CommandControllerTemplate extends FileTemplate
             declare(strict_types=1);
 
             namespace {$this->namespace};
-
+            
+            $defaultPresenterNamespace
             use Symfony\Component\HttpFoundation\Request;
-            use {$useCaseNamespace};
-            use {$presenterNamespace};
-            use {$requestNamespace};
+            use Core\\{$this->name}\Application\UseCase\\{$this->useCaseType}{$this->name}\\{$this->useCaseType}{$this->name};
+            {$requestNamespace}
 
-            final class {$this->name}
+            final class {$this->useCaseType}{$this->useCase}Controller
             {
                 public function __invoke(
-                    {$this->useCase} $$useCaseVariable,
-                    Request $$requestVariable,
-                    {$this->presenter} $$presenterVariable
+                    {$this->useCaseType}{$this->name} $$useCaseVariable,
+                    $variableRequestInvoke
+                    $typeValue $$presenterVariable,
+                    $nameId
                 ): object {
-                    $$requestDtoVariable = $$createDto;
-                    $$useCaseVariable($$presenterVariable, $$requestDtoVariable);
+                    $requestMethod
+                    $$useCaseVariable($$requestDtoVariable, $$presenterVariable);
 
                     return $$show;
-                }
-
-                public function create{$this->request}(Request $$requestVariable): {$this->request}
-                {
-                    $$requestDataVariable = json_decode((string) $$requestGetContent, true);
-                    $$requestDtoVariable = new {$this->request}($$requestDataVariable);
-
-                    return $$requestDtoVariable;
-                }
+                }$createNameRequest
             }
 
             EOF;
