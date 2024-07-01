@@ -40,7 +40,6 @@ class PresenterInterfaceTemplate extends FileTemplate implements \Stringable
         public string $useCaseType
     ) {
         parent::__construct();
-        var_dump('construct', $name, $useCaseType);
     }
 
     /**
@@ -57,15 +56,12 @@ class PresenterInterfaceTemplate extends FileTemplate implements \Stringable
     public function generateModelContent(): string
     {
         preg_match('/^(.+)PresenterInterface/', $this->name, $matches);
-        $useCase = $matches[1];
         $setting = '';
         if ($this->useCaseType === CreateCoreArchCommand::COMMAND_ADD ){
             $setting = "Add" . $this->name . "Response | ";
         }elseif ($this->useCaseType === CreateCoreArchCommand::COMMAND_FIND){
             $setting = $this->useCaseType . $this->name . "Response | " ;
         }
-        var_dump('generateModelContent', $this->name, $this->useCaseType);
-
         return <<<EOF
             <?php
             {$this->licenceHeader}

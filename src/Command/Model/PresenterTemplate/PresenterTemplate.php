@@ -51,8 +51,6 @@ class PresenterTemplate extends FileTemplate
      */
     public function generateModelContent(): string
     {
-        $interfaceNamespace = $this->presenterInterface->namespace . '\\' . $this->presenterInterface->name;
-        $interfaceName = $this->presenterInterface->name . "Interface";
         $method = '';
 
         if($this->useCase === "Add") {

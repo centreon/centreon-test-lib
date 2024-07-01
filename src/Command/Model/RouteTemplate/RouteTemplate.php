@@ -24,9 +24,7 @@ declare(strict_types=1);
 namespace Centreon\Command\Model\RouteTemplate;
 
 use Centreon\Command\CreateCoreArchCommand;
-use Centreon\Command\Model\ControllerTemplate\CommandControllerTemplate;
 use Centreon\Command\Model\FileTemplate;
-use Centreon\Command\Model\ModelTemplate\ModelTemplate;
 
 class RouteTemplate extends FileTemplate
 {

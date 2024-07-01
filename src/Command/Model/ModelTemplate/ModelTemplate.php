@@ -50,20 +50,10 @@ class ModelTemplate extends FileTemplate
     public function generateModelContent(): string
     {
         if ($this->isNewFlag === true) {
-            return <<<EOF
-                <?php
-                {$this->licenceHeader}
-                declare(strict_types=1);
-
-                namespace {$this->namespace};
-
-                class New{$this->name}
-                {
-                }
-
-                EOF;
+            $newClass ="New";
+        } else {
+            $newClass = '';
         }
-
         return <<<EOF
             <?php
             {$this->licenceHeader}
@@ -71,7 +61,7 @@ class ModelTemplate extends FileTemplate
 
             namespace {$this->namespace};
 
-            class {$this->name}
+            class $newClass{$this->name}
             {
             }
 

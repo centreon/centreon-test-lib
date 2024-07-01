@@ -423,7 +423,6 @@ class CreateCoreCommandArchCommandService
             );
         } else {
             require ($filePath);
-            $classPath = $namespace . '\\' . $modelName . 'Route';
             $this->commandRouteTemplate = new RouteTemplate(
                 $filePath,
                 $namespace,
@@ -569,7 +568,6 @@ class CreateCoreCommandArchCommandService
                 true,
                 $useCaseName
             );
-
             $output->writeln(
                 '<info>Using Existing Use Case : ' . $this->commandUseCaseTemplate->namespace . '\\'
                     . $this->commandUseCaseTemplate->name . '</info>'
@@ -605,7 +603,6 @@ class CreateCoreCommandArchCommandService
                 $this->commandUseCaseTemplate,
                 $this->commandPresenterTemplate,
                 $this->requestDtoTemplate,
-                false,
                 $useCaseType,
             );
             preg_match('/^(.+).' . $className . '\.php$/', $filePath, $matches);
@@ -630,7 +627,6 @@ class CreateCoreCommandArchCommandService
                 $this->commandUseCaseTemplate,
                 $this->commandPresenterTemplate,
                 $this->requestDtoTemplate,
-                true,
                 $useCaseType
             );
             $output->writeln(

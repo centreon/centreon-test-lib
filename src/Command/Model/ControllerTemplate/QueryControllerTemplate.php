@@ -55,10 +55,8 @@ class QueryControllerTemplate extends FileTemplate
     public function generateModelContent(): string
     {
         $useCaseNamespace = $this->useCase->namespace . '\\' . $this->useCase->name;
-        $presenterNamespace = $this->presenter->namespace . '\\' . $this->presenter->name;
         $useCaseVariable = 'useCase';
         $presenterVariable = 'presenter';
-        $show = 'presenter->show()';
 
         return <<<EOF
             <?php
@@ -76,9 +74,9 @@ class QueryControllerTemplate extends FileTemplate
                     {$this->useCaseType}{$this->name}Presenter $$presenterVariable,
                     int \${$this->name}Id,
                 ): object {
-                    $$useCaseVariable(\${$this->name}Id,$$presenterVariable);
+                    \$useCase(\${$this->name}Id, \$presenter);
 
-                    return $$show;
+                    return \$presenter->show();
                 }
             }
 

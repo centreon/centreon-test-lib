@@ -69,16 +69,14 @@ class CommandUseCaseTemplate extends FileTemplate implements \Stringable
      */
     public function generateModelContent(): string
     {
-        $presenterInterfaceNamespace = $this->presenter->namespace . '\\' . $this->presenter->name;
+
         $presenterInterfaceName = $this->presenter->name;
-        $requestNamespace = $this->request->namespace . '\\' . $this->request->name;
         $requestName = $this->request->name;
         $repositoryNamespace = $this->repository->namespace . '\\' . $this->repository->name;
         $repositoryName = $this->repository->name;
         $repositoryVariable = 'repository';
         $presenterVariable = 'presenter';
         $requestVariable = 'request';
-        $exception = 'exception';
         $methodName = ExceptionTemplate::getMethodeName($this->useCaseType);
         $presentResponseVariable = 'presentResponse';
 
@@ -127,7 +125,7 @@ class CommandUseCaseTemplate extends FileTemplate implements \Stringable
                     try {
                     } catch (\\Throwable \$exception) {
                         \$presenter->{$presentResponseVariable}(
-                            new ErrorResponse({$this->modelName}Exception::{$methodName}())
+                            new ErrorResponse({$this->modelName}Exception::{errorWhile$methodName}())
                         );
                         \$this->error((string) \$exception);    
                     }

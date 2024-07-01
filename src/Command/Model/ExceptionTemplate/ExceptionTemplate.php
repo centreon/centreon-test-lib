@@ -47,53 +47,34 @@ class ExceptionTemplate extends FileTemplate
     {
         return $this->name;
     }
-    public static function getMethodeName(string $choice) :string
+    public static function getActionName(string $choice) :string
     {
+
         if ($choice === CreateCoreArchCommand::COMMAND_ADD) {
-            return "errorWhileAdding";
+            return "Ading";
         } elseif ($choice === CreateCoreArchCommand::COMMAND_DELETE){
-            return "errorWhileDeleting";
+            return "Deleting";
         } elseif ($choice === CreateCoreArchCommand::COMMAND_UPDATE) {
-            return "errorWhileUpdating";
+            return "Updating";
         } elseif ($choice === CreateCoreArchCommand::COMMAND_FIND) {
-            return "errorWhileFinding";
+            return "Finding";
         }
         throw new \InvalidArgumentException("UseCase $choice unknown");
-
     }
-    public function verifErrorWhile(string $choice): string
+    public static function getMethodeName(string $useCase): string
     {
-        $methodeName = $this->getMethodeName($choice);
-        if($choice === CreateCoreArchCommand::COMMAND_ADD) {
+        return "errorWhile" . self::getActionName($useCase);
+    }
+    public function verifErrorWhile(string $useCaseType): string
+    {
+        $methodeName = $this->getMethodeName($useCaseType);
+        $lowCaseActionName = lcfirst(self::getActionName($useCaseType));
             return <<<ADDING
                 public static function $methodeName(): self
                     {
-                        return new self(_('Error while adding a {$this->name}'));
+                        return new self(_('Error while $lowCaseActionName a {$this->name}'));
                     }
                 ADDING;
-        } elseif ($choice == CreateCoreArchCommand::COMMAND_DELETE) {
-            return <<<DELETING
-                public static function $methodeName(): self
-                    {
-                        return new self(_('Error while deleting a {$this->name}'));
-                    }
-                DELETING;
-        } elseif ($choice == CreateCoreArchCommand::COMMAND_UPDATE) {
-            return <<<UPDATING
-                public static function $methodeName(): self
-                    {
-                        return new self(_('Error while updating a {$this->name}'));
-                    }
-                UPDATING;
-        } elseif ($choice == CreateCoreArchCommand::COMMAND_FIND) {
-            return <<<SEARCHING
-                public static function $methodeName(): self
-                    {
-                        return new self(_('Error while searching a {$this->name}'));
-                    }
-                SEARCHING;
-        }
-        return $response = '';
     }
 
     /**
@@ -114,7 +95,6 @@ class ExceptionTemplate extends FileTemplate
             {
                 {$texte}
             }
-
             EOF;
     }
 }

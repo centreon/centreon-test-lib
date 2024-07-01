@@ -69,15 +69,12 @@ class QueryUseCaseTemplate extends FileTemplate implements \Stringable
      */
     public function generateModelContent(): string
     {
-        $presenterInterfaceNamespace = $this->presenter->namespace . '\\' . $this->presenter->name;
-        $presenterInterfaceName = $this->presenter->name;
         $repositoryNamespace = $this->repository->namespace . '\\' . $this->repository->name;
         $repositoryName = $this->repository->name;
         $responseName = $this->response->name;
         $repositoryVariable = 'repository';
         $presenterVariable = 'presenter';
         $responseVariable = 'response';
-        $responseNamespace = $this->response->namespace . '\\' . $this->response->name;
         $modelNameVariable = lcfirst($this->model->name);
         $modelNamespace = $this->model->namespace . '\\' . $this->model->name;
         $modelName = $this->model->name;
@@ -107,14 +104,14 @@ class QueryUseCaseTemplate extends FileTemplate implements \Stringable
                 }
 
                 /**
-                 * @parma int ${lcModelName}Id
+                 * @param int \\${lcModelName}Id
                  * @param {$this->name}PresenterInterface $$presenterVariable
                  */
                 public function __invoke(int \${$lcModelName}Id,{$this->name}PresenterInterface $$presenterVariable): void
                 {
                     try {
                     } catch (\\Throwable \$ex) {
-                        \$presenter->presentResponse(new ErrorResponse({$modelName}Exception::{$methodName}()));
+                        \$presenter->presentResponse(new ErrorResponse({$modelName}Exception::$methodName()));
                         \$this->error(\$ex->getMessage(), ['trace'=> \$ex->getTraceAsString()]);                        
                     }
                 }    
