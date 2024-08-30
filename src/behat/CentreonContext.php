@@ -126,7 +126,7 @@ class CentreonContext extends UtilsContext
             $driver = new PantherDriver($defaultOptions, $kernelOptions, $managerOptions);
             $driver->start();
         } catch (\Exception $e) {
-            throw new \Exception("Cannot instantiate panther driver : " . $e->getTraceAsString(), (int) $e->getCode(), $e);
+            throw new \Exception("Cannot instantiate panther driver : " . $e->getMessage(), (int) $e->getCode(), $e);
         }
 
         try {
