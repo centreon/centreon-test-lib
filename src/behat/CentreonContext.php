@@ -118,6 +118,7 @@ class CentreonContext extends UtilsContext
                 '--password-store=basic',
                 '--use-mock-keychain',
                 '--disable-dev-shm-usage',
+                '--kiosk'
             ];
 
             $defaultOptions = [
