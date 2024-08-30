@@ -251,11 +251,6 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
             self::RELATIONS_TAB
         ),
         // Data tab
-        'obsess_over_host' => array(
-            'radio',
-            'input[name="host_obsess_over_host[host_obsess_over_host]"]',
-            self::DATA_TAB
-        ),
         'acknowledgement_timeout' => array(
             'input',
             'input[name="host_acknowledgement_timeout"]',
@@ -284,31 +279,6 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
         'high_flap_threshold' => array(
             'input',
             'input[name="host_high_flap_threshold"]',
-            self::DATA_TAB
-        ),
-        'retain_status_information' => array(
-            'radio',
-            'input[name="host_retain_status_information[host_retain_status_information]"]',
-            self::DATA_TAB
-        ),
-        'retain_non_status_information' => array(
-            'radio',
-            'input[name="host_retain_nonstatus_information[host_retain_nonstatus_information]"]',
-            self::DATA_TAB
-        ),
-        'stalking_option_on_up' => array(
-            'checkbox',
-            'input[name="host_stalOpts[o]"]',
-            self::DATA_TAB
-        ),
-        'stalking_option_on_down' => array(
-            'checkbox',
-            'input[name="host_stalOpts[d]"]',
-            self::DATA_TAB
-        ),
-        'stalking_option_on_unreachable' => array(
-            'checkbox',
-            'input[name="host_stalOpts[u]"]',
             self::DATA_TAB
         ),
         'event_handler_enabled' => array(
@@ -357,24 +327,9 @@ class MassiveChangeHostConfigurationPage extends \Centreon\Test\Behat\Configurat
             'select#ehi_vrml_image',
             self::EXTENDED_TAB
         ),
-        'status_map_image' => array(
-            'select',
-            'select#ehi_statusmap_image',
-            self::EXTENDED_TAB
-        ),
         'geo_coordinates' => array(
             'input',
             'input[name="geo_coords"]',
-            self::EXTENDED_TAB
-        ),
-        '2d_coords' => array(
-            'input',
-            'input[name="ehi_2d_coords"]',
-            self::EXTENDED_TAB
-        ),
-        '3d_coords' => array(
-            'input',
-            'input[name="ehi_3d_coords"]',
             self::EXTENDED_TAB
         ),
         'severity_level' => array(

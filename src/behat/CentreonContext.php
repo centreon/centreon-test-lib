@@ -33,6 +33,7 @@ use Behat\Gherkin\Node\PyStringNode;
 use Behat\Mink\Mink;
 use Behat\Mink\Session;
 use Behat\Mink\Driver\PantherDriver;
+use Symfony\Component\Panther\PantherTestCase;
 
 class CentreonContext extends UtilsContext
 {
@@ -122,7 +123,7 @@ class CentreonContext extends UtilsContext
             $defaultOptions = [
                 'external_base_uri' => 'http://' . $this->container->getHost() . ':'
                     . $this->container->getPort(80, $this->webService),
-                'browser' => 'chrome',
+                'browser' => PantherTestCase::CHROME,
             ];
 
             $kernelOptions = []; # unused cause we do not extend class KernelTestCase
