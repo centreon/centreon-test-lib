@@ -68,7 +68,7 @@ class PhpCsFixerRuleSet
             'explicit_string_variable' => true,
             'fully_qualified_strict_types' => true,
             'function_typehint_space' => true, // deprecated
-            'general_phpdoc_annotation_remove' => ['annotations' => ['author', 'package', 'subpackage']],
+//            'general_phpdoc_annotation_remove' => ['annotations' => ['author', 'package', 'subpackage']], // FIXME why ??
             'general_phpdoc_tag_rename' => ['case_sensitive' => true, 'replacements' => ['inheritdoc' => 'inheritDoc']],
             'heredoc_indentation' => true,
             'heredoc_to_nowdoc' => true,
@@ -144,7 +144,7 @@ class PhpCsFixerRuleSet
             'phpdoc_scalar' => true,
             'phpdoc_separation' => true,
             'phpdoc_single_line_var_spacing' => true,
-            'phpdoc_summary' => true,
+//            'phpdoc_summary' => true, // FIXME not necessary
             // phpdoc_to_comment is error-prone for inline type-hinting (ex: phpstan, psalm, ...)
             'phpdoc_to_comment' => false,
             'phpdoc_trim' => true,
