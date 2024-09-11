@@ -26,6 +26,42 @@ namespace Centreon\Test\Mock;
  */
 class CentreonUser extends \CentreonUser
 {
+    /** @var mixed */
+    private $user_id;
+    /** @var string */
+    private $name;
+    /** @var string */
+    private $alias;
+    /** @var string */
+    private $email;
+    /** @var mixed */
+    private $lang;
+    /** @var string */
+    private $charset;
+    /** @var mixed */
+    private $passwd;
+    /** @var mixed */
+    private $token;
+    /** @var mixed */
+    private $admin;
+    /** @var int */
+    private $version;
+    /** @var mixed */
+    private $default_page;
+    /** @var mixed */
+    private $gmt;
+    /** @var mixed */
+    private $js_effects;
+    /** @var null */
+    private $is_admin;
+    /** @var mixed */
+    private $theme;
+
+    /**
+     * CentreonUser constructor
+     *
+     * @param $user
+     */
     public function __construct($user)
     {
         $this->user_id = $user["contact_id"];

@@ -12,6 +12,8 @@
   "license": "Apache-2.0",
   "require": {
     "behat/behat": "^3.0",
+    "ext-curl": "*",
+    "ext-pdo": "*",
     "guzzlehttp/guzzle": "^7.3",
     "justinrainbow/json-schema": "^5.2",
     "league/openapi-psr7-validator": "^0.17",

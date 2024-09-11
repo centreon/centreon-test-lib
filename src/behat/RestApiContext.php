@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright 2016-2018 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,21 +19,35 @@ namespace Centreon\Test\Behat;
 
 use Centreon\Test\Behat\CentreonContext;
 use Centreon\Test\Behat\Administration\ImageListingPage;
+use Exception;
 
 if (!defined('DOCKER_REGISTRY')) {
     define('DOCKER_REGISTRY', 'ci.int.centreon.com:5000');
 }
 
+/**
+ * Class
+ *
+ * @class RestApiContext
+ * @package Centreon\Test\Behat
+ */
 class RestApiContext extends CentreonContext
 {
+    /** @var string */
     protected $dockerImage = 'registry.centreon.com/postman/newman_alpine33:latest';
+    /** @var string */
     protected $dockerNetwork = 'webdriver_default';
+    /** @var string */
     protected $postmanEnv = 'Test1';
+    /** @var */
     protected $apiReturnValue;
+    /** @var string */
     protected $apiLogfilePrefix = 'rest_api_log_';
+    /** @var */
+    public $logfile;
 
     /**
-     * Constructor
+     * RestApiContext constructor
      *
      * @param array $parameters The list of parameters given in behat.yml
      */
@@ -44,6 +58,9 @@ class RestApiContext extends CentreonContext
 
     /**
      * @Given a Centreon server with REST API testing data
+     *
+     * @return void
+     * @throws Exception
      */
     public function aCentreonServerWithRestApiTestingData(): void
     {
@@ -78,6 +95,10 @@ class RestApiContext extends CentreonContext
 
     /**
      * @When the REST API :collection is called
+     *
+     * @param $collection
+     *
+     * @return void
      */
     public function theRestApiIsCalled($collection): void
     {
@@ -97,6 +118,9 @@ class RestApiContext extends CentreonContext
 
     /**
      * @Then it replies as per specifications
+     *
+     * @return void
+     * @throws Exception
      */
     public function theyItRepliesAsPerSpecifications(): void
     {
@@ -106,7 +130,7 @@ class RestApiContext extends CentreonContext
                 $this->composeFiles['log_directory'] . '/' . basename($this->logfile) . '.txt'
             );
             unlink($this->logfile);
-            throw new \Exception(
+            throw new Exception(
                 'REST API are not working properly. Check newman log file for more details.'
             );
         }
