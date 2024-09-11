@@ -1,49 +1,65 @@
 {
-    "name": "centreon/centreon-test-lib",
-    "description": "Library using for Behat test and PHPUnit test",
-    "version": "1.0.0",
-    "type": "library",
-    "keywords": ["testing", "centreon", "phpunit", "behat"],
-    "require": {
-        "behat/behat": "^3.0",
-        "guzzlehttp/guzzle": "^7.3",
-        "justinrainbow/json-schema": "^5.2",
-        "league/openapi-psr7-validator": "^0.17",
-        "nyholm/psr7": "^1.3",
-        "psr/http-client": "^1.0",
-        "symfony/http-client": "^6.4.0",
-        "symfony/property-access": "^6.4.0",
-        "webmozart/assert": "^1.9",
-        "phpstan/phpstan": "~1.10.0",
-        "friendsofphp/php-cs-fixer": "^3.10",
-        "symfony/console": "^6.4",
-        "pestphp/pest": "^1.9"
-    },
-    "suggest": {
-        "behat/mink": "Browser controller/emulator abstraction for PHP",
-        "behat/mink-selenium2-driver": "Mink driver using Selenium",
-        "phpstan/phpstan": "PHP static analysis"
-    },
-    "license": "Apache-2.0",
-    "autoload": {
-        "psr-4": {
-            "Centreon\\Test\\Behat\\": "src/behat",
-            "Centreon\\Test\\Mock\\": "src/mock",
-            "Centreon\\Test\\Traits\\": "src/traits",
-            "Centreon\\PHPStan\\": "src/PHPStan",
-            "Centreon\\PhpCsFixer\\": "src/PhpCsFixer",
-            "Centreon\\Command\\": "src/Command"
-        }
-    },
-    "config": {
-        "allow-plugins": {
-            "symfony/flex": true,
-            "pestphp/pest-plugin": true
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\PHPStan\\": "tests/PHPStan"
-        }
+  "name": "centreon/centreon-test-lib",
+  "description": "Library using for Behat test and PHPUnit test",
+  "version": "1.0.0",
+  "type": "library",
+  "keywords": [
+    "testing",
+    "centreon",
+    "phpunit",
+    "behat"
+  ],
+  "license": "Apache-2.0",
+  "require": {
+    "behat/behat": "^3.0",
+    "guzzlehttp/guzzle": "^7.3",
+    "justinrainbow/json-schema": "^5.2",
+    "league/openapi-psr7-validator": "^0.17",
+    "nyholm/psr7": "^1.3",
+    "psr/http-client": "^1.0",
+    "symfony/http-client": "^6.4.0",
+    "symfony/property-access": "^6.4.0",
+    "webmozart/assert": "^1.9",
+    "phpstan/phpstan": "~1.10.0",
+    "friendsofphp/php-cs-fixer": "^3.10",
+    "symfony/console": "^6.4",
+    "pestphp/pest": "^1.9"
+  },
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+    "phpcompatibility/php-compatibility": "^9.3",
+    "rector/rector": "^1.0"
+  },
+  "suggest": {
+    "behat/mink": "Browser controller/emulator abstraction for PHP",
+    "behat/mink-selenium2-driver": "Mink driver using Selenium",
+    "phpstan/phpstan": "PHP static analysis"
+  },
+  "autoload": {
+    "psr-4": {
+      "Centreon\\Test\\Behat\\": "src/behat",
+      "Centreon\\Test\\Mock\\": "src/mock",
+      "Centreon\\Test\\Traits\\": "src/traits",
+      "Centreon\\PHPStan\\": "src/PHPStan",
+      "Centreon\\PhpCsFixer\\": "src/PhpCsFixer",
+      "Centreon\\Command\\": "src/Command"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\PHPStan\\": "tests/PHPStan"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "symfony/flex": true,
+      "pestphp/pest-plugin": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "scripts": {
+    "php:check8.2": "phpcs -p --standard=PHPCompatibility --extensions=php --runtime-set testVersion 8.2 . --ignore=*/vendor/*  --error-severity=1 --warning-severity=8",
+    "rector:check": "rector --dry-run --debug",
+    "rector:exec": "rector --debug"
+  }
 }
