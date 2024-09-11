@@ -39,12 +39,12 @@ class RestApiContext extends CentreonContext
     protected $dockerNetwork = 'webdriver_default';
     /** @var string */
     protected $postmanEnv = 'Test1';
-    /** @var */
+    /** @var int */
     protected $apiReturnValue;
     /** @var string */
     protected $apiLogfilePrefix = 'rest_api_log_';
-    /** @var */
-    public $logfile;
+    /** @var string */
+    protected $logfile;
 
     /**
      * RestApiContext constructor

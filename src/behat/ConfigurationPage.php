@@ -29,7 +29,7 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
 {
 
     /** @var */
-    public $listingClass;
+    protected $listingClass;
 
     /*
     ** $properties should be an array of elements that can be retrieved (getProperties)

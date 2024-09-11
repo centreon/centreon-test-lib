@@ -28,8 +28,8 @@ class RecurrentDowntimeConfigurationPage extends \Centreon\Test\Behat\Configurat
     const CONFIGURATION_TAB = 1;
     const RELATIONS_TAB = 2;
 
-    /** @var */
-    public $nbPeriod;
+    /** @var int */
+    protected $nbPeriod;
     /** @var string */
     protected $validField = 'input#start_period_1';
     /** @var array[] */

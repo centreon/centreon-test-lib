@@ -33,7 +33,7 @@ class ExtensionsPage
     private const REMOVE_CSS_SELECTOR = '[class*="MuiChip-deleteIcon"]';
 
     /** @var Centreon */
-    public $context;
+    protected $context;
     /** @var string */
     protected $validField = 'div[class*="content-wrapper"]';
 

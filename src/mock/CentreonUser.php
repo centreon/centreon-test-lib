@@ -27,35 +27,35 @@ namespace Centreon\Test\Mock;
 class CentreonUser extends \CentreonUser
 {
     /** @var mixed */
-    private $user_id;
+    public $user_id;
     /** @var string */
-    private $name;
+    public $name;
     /** @var string */
-    private $alias;
+    public $alias;
     /** @var string */
-    private $email;
+    public $email;
     /** @var mixed */
-    private $lang;
+    public $lang;
     /** @var string */
-    private $charset;
+    public $charset;
     /** @var mixed */
-    private $passwd;
+    public $passwd;
     /** @var mixed */
-    private $token;
+    public $token;
     /** @var mixed */
-    private $admin;
+    public $admin;
     /** @var int */
-    private $version;
+    public $version;
     /** @var mixed */
-    private $default_page;
+    public $default_page;
     /** @var mixed */
-    private $gmt;
+    public $gmt;
     /** @var mixed */
-    private $js_effects;
+    public $js_effects;
     /** @var null */
-    private $is_admin;
+    public $is_admin;
     /** @var mixed */
-    private $theme;
+    public $theme;
 
     /**
      * CentreonUser constructor

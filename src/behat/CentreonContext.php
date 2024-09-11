@@ -47,16 +47,16 @@ use Throwable;
  */
 class CentreonContext extends UtilsContext
 {
+    /** @var PDO */
+    protected $dbCentreon;
+    /** @var PDO */
+    protected $dbStorage;
     /** @var */
-    public $dbCentreon;
-    /** @var */
-    public $dbStorage;
-    /** @var */
-    public $context;
-    /** @var */
-    public $output;
-    /** @var */
-    public $container;
+    protected $context;
+    /** @var array */
+    protected $output;
+    /** @var Container */
+    protected $container;
     /** @var string the service name of web container in docker compose file */
     protected $webService = 'web';
     /** @var string the service name of db container in docker compose file */

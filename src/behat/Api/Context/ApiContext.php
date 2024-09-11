@@ -45,9 +45,9 @@ class ApiContext implements Context
     public const ROOT_PATH = '/centreon';
 
     /** @var */
-    public $customVariables;
+    protected $customVariables;
     /** @var Container */
-    public $container;
+    protected $container;
     /** @var string the service name of web container in docker compose file */
     protected $webService = 'web';
     /** @var array List of container Compose files. */
