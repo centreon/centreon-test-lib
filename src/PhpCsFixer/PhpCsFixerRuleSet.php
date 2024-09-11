@@ -136,8 +136,8 @@ class PhpCsFixerRuleSet
             'phpdoc_line_span' => ['const' => null, 'property' => 'single'],
             'phpdoc_no_access' => true,
             'phpdoc_no_alias_tag' => true,
-            'phpdoc_no_empty_return' => true,
-            'phpdoc_no_package' => true,
+//            'phpdoc_no_empty_return' => true, // FIXME an important information is removed
+//            'phpdoc_no_package' => true, // FIXME an important information is removed
             'phpdoc_no_useless_inheritdoc' => true,
             'phpdoc_order' => true,
             'phpdoc_return_self_reference' => ['replacements' => ['this' => 'self', '@this' => 'self']],
