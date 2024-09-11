@@ -26,35 +26,35 @@ namespace Centreon\Test\Mock;
  */
 class CentreonUser extends \CentreonUser
 {
-    /** @var mixed */
+    /** @var mixed|null */
     public $user_id;
-    /** @var string */
+    /** @var string|null */
     public $name;
-    /** @var string */
+    /** @var string|null */
     public $alias;
-    /** @var string */
+    /** @var string|null */
     public $email;
-    /** @var mixed */
+    /** @var mixed|null */
     public $lang;
     /** @var string */
     public $charset;
-    /** @var mixed */
+    /** @var mixed|null */
     public $passwd;
-    /** @var mixed */
+    /** @var mixed|null */
     public $token;
-    /** @var mixed */
+    /** @var mixed|null */
     public $admin;
     /** @var int */
     public $version;
-    /** @var mixed */
+    /** @var mixed|null */
     public $default_page;
-    /** @var mixed */
+    /** @var mixed|null */
     public $gmt;
-    /** @var mixed */
+    /** @var mixed|null */
     public $js_effects;
     /** @var null */
     public $is_admin;
-    /** @var mixed */
+    /** @var mixed|null */
     public $theme;
 
     /**
@@ -64,20 +64,23 @@ class CentreonUser extends \CentreonUser
      */
     public function __construct($user)
     {
-        $this->user_id = $user["contact_id"];
-        $this->name = html_entity_decode($user["contact_name"], ENT_QUOTES, "UTF-8");
-        $this->alias = html_entity_decode($user["contact_alias"], ENT_QUOTES, "UTF-8");
-        $this->email = html_entity_decode($user["contact_email"], ENT_QUOTES, "UTF-8");
-        $this->lang = $user["contact_lang"];
+        $this->user_id = $user["contact_id"] ?? null;
+        $this->name = isset($user["contact_name"]) ?
+            html_entity_decode($user["contact_name"], ENT_QUOTES, "UTF-8") : null;
+        $this->alias = isset($user["contact_alias"]) ?
+            html_entity_decode($user["contact_alias"], ENT_QUOTES, "UTF-8") : null;
+        $this->email = isset($user["contact_email"]) ?
+            html_entity_decode($user["contact_email"], ENT_QUOTES, "UTF-8") : null;
+        $this->lang = $user["contact_lang"] ?? null;
         $this->charset = "UTF-8";
-        $this->passwd = $user["contact_passwd"];
-        $this->token = $user['contact_autologin_key'];
-        $this->admin = $user["contact_admin"];
+        $this->passwd = $user["contact_passwd"] ?? null;
+        $this->token = $user['contact_autologin_key'] ?? null;
+        $this->admin = $user["contact_admin"] ?? null;
         $this->version = 3;
-        $this->default_page = $user["default_page"];
-        $this->gmt = $user["contact_location"];
-        $this->js_effects = $user["contact_js_effects"];
+        $this->default_page = $user["default_page"] ?? null;
+        $this->gmt = $user["contact_location"] ?? null;
+        $this->js_effects = $user["contact_js_effects"] ?? null;
         $this->is_admin = null;
-        $this->theme = $user['contact_theme'];
+        $this->theme = $user['contact_theme'] ?? null;
     }
 }
