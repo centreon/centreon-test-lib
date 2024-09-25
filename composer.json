@@ -64,13 +64,6 @@
     }
   },
   "scripts": {
-    "test": "pest --do-not-cache-result",
-    "test:ci": "@test --log-junit ./build/phpunit.xml --coverage-clover ./build/coverage-be.xml --no-interaction",
-    "phpcs": "php-cs-fixer fix --config=.php-cs-fixer.dist.php --verbose --dry-run --diff",
-    "phpcs:exec": "php-cs-fixer fix --config=.php-cs-fixer.dist.php --verbose --diff",
-    "phpcs:ci": "@phpcs",
-    "phpstan": "phpstan analyse -c phpstan.neon --level=1 --memory-limit=512M --debug",
-    "phpstan:ci": "@phpstan --no-progress",
     "php:check8.2": "phpcs -p --standard=PHPCompatibility --extensions=php --runtime-set testVersion 8.2 . --ignore=*/vendor/*  --error-severity=1 --warning-severity=8",
     "rector:check": "rector --dry-run --debug",
     "rector:exec": "rector --debug"
