@@ -24,6 +24,7 @@ namespace Centreon\Test\Behat\Api\Context;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\AfterStepScope;
+use Exception;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpClient\HttpClient;
@@ -31,7 +32,11 @@ use Centreon\Test\Behat\Container;
 use Centreon\Test\Behat\SpinTrait;
 
 /**
- * This context class contains the main definitions of the steps used by contexts to validate API
+ * Class
+ *
+ * @class ApiContext
+ * @package Centreon\Test\Behat\Api\Context
+ * @description This context class contains the main definitions of the steps used by contexts to validate API
  */
 class ApiContext implements Context
 {
@@ -39,51 +44,30 @@ class ApiContext implements Context
 
     public const ROOT_PATH = '/centreon';
 
-    /**
-     * @var Container
-     */
-    public $container;
-
-    /**
-     * @var string the service name of web container in docker compose file
-     */
+    /** @var */
+    protected $customVariables;
+    /** @var Container */
+    protected $container;
+    /** @var string the service name of web container in docker compose file */
     protected $webService = 'web';
-
-    /**
-     * @var array List of container Compose files.
-     */
+    /** @var array List of container Compose files. */
     protected $composeFiles;
-
-    /**
-     * @var HttpClientInterface
-     */
+    /** @var HttpClientInterface */
     protected $httpClient;
-
-    /**
-     * @var array
-     */
+    /**  @var array */
     protected $httpHeaders = [];
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $baseUri;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $token;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $phpSessionId;
-
-    /**
-     * @var ResponseInterface
-     */
+    /** @var ResponseInterface */
     protected $httpResponse;
 
+    /**
+     * ApiContext constructor
+     */
     public function __construct()
     {
         $this->setHttpClient(HttpClient::create());
@@ -246,12 +230,12 @@ class ApiContext implements Context
      *
      * @param string $name
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getCustomVariable(string $name)
     {
         if (!isset($this->customVariables[$name])) {
-            throw new \Exception('Variable "' . $name . '" is not stored');
+            throw new Exception('Variable "' . $name . '" is not stored');
         }
 
         return $this->customVariables[$name];
@@ -261,7 +245,9 @@ class ApiContext implements Context
      * Replace custom variables
      *
      * @param string $value
+     *
      * @return string
+     * @throws Exception
      */
     protected function replaceCustomVariables(string $value): string
     {
@@ -283,12 +269,17 @@ class ApiContext implements Context
     }
 
     /**
-     *  Get a container Compose file.
+     * Get a container Compose file
+     *
+     * @param $name
+     *
+     * @return mixed
+     * @throws Exception
      */
     public function getContainerComposeFile($name)
     {
         if (empty($this->composeFiles[$name])) {
-            throw new \Exception("Can't get container compose file of " . $name);
+            throw new Exception("Can't get container compose file of " . $name);
         }
         return $this->composeFiles[$name];
     }
@@ -299,13 +290,15 @@ class ApiContext implements Context
      * @AfterStep
      *
      * @param AfterStepScope $scope
+     *
+     * @throws Exception
      */
     public function afterStep(AfterStepScope $scope): void
     {
         if (isset($this->container)) {
             $containerLogs = $this->container->getLogs();
             if (preg_match_all('/(php (?:warning|fatal|notice|deprecated).+$)/mi', $containerLogs, $matches)) {
-                throw new \Exception('PHP log issues: ' . implode(', ', $matches[0]));
+                throw new Exception('PHP log issues: ' . implode(', ', $matches[0]));
             }
         }
     }
@@ -317,6 +310,11 @@ class ApiContext implements Context
      *  this context if one was launched.
      *
      * @AfterScenario
+     *
+     * @param AfterScenarioScope $scope
+     *
+     * @return void
+     * @throws Exception
      */
     public function unsetContainer(AfterScenarioScope $scope): void
     {
@@ -474,7 +472,7 @@ class ApiContext implements Context
      * @param string $composeBehatProperty Bind property to docker-compose.yml path
      * @param string[] $profiles docker-compose profiles to activate
      * @param array<string,string|int|boolean> $envVars docker composer environment variables
-     * @throws \Exception
+     * @throws Exception
      */
     public function launchCentreonWebContainer(
         string $composeBehatProperty,
@@ -488,7 +486,7 @@ class ApiContext implements Context
         }
 
         if (!isset($this->composeFiles[$composeBehatProperty])) {
-            throw new \Exception('Property "' . $composeBehatProperty . '" does not exist in behat.yml');
+            throw new Exception('Property "' . $composeBehatProperty . '" does not exist in behat.yml');
         }
 
         $this->container = new Container($this->composeFiles[$composeBehatProperty], $profiles, $envVars);
@@ -506,7 +504,7 @@ class ApiContext implements Context
                     // it means symfony router is up and do not handle this route
                     return true;
                 } else {
-                    throw new \Exception(
+                    throw new Exception(
                         'Centreon web container seems not started. '
                         . 'Cannot request "' . $requestUri . '" '
                         . '(http code : ' . $response->getStatusCode() . ', '
@@ -521,8 +519,10 @@ class ApiContext implements Context
 
     /**
      * launch Centreon Web container
-     *
      * @Given a running instance of Centreon Web API
+     *
+     * @return void
+     * @throws Exception
      */
     public function aRunningInstanceOfCentreonApi(): void
     {
@@ -531,8 +531,9 @@ class ApiContext implements Context
 
     /**
      * Log in API
-     *
      * @Given I am logged in
+     *
+     * @return void
      */
     public function iAmLoggedIn(): void
     {
@@ -556,8 +557,10 @@ class ApiContext implements Context
 
     /**
      * Internal login
-     *
      * @Given I am logged in with local provider
+     *
+     * @return void
+     * @throws Exception
      */
     public function iAmLoggedInWithLocalProvider(): void
     {
@@ -574,15 +577,17 @@ class ApiContext implements Context
         if (preg_match('/PHPSESSID=(\S+)/', $this->getHttpResponse()->getHeader('set-cookie')[0], $matches)) {
             $this->setPhpSessionId($matches[1]);
         } else {
-            throw new \Exception('Php session id not found in cookies');
+            throw new Exception('Php session id not found in cookies');
         }
     }
 
     /**
      * Wait x seconds
+     * @Given /^I wait (\d+) seconds$/
+     *
      * @param int $seconds
      *
-     * @Given /^I wait (\d+) seconds$/
+     * @return void
      */
     public function iWaitXSeconds(int $seconds = 5): void
     {
@@ -591,8 +596,13 @@ class ApiContext implements Context
 
     /**
      * Wait host to be monitored
-     *
      * @Given /^I wait until host "(\S+)" is monitored(?: \(tries: (\d+)\))?$/
+     *
+     * @param string $host
+     * @param int $tries
+     *
+     * @return mixed|null
+     * @throws Exception
      */
     public function iWaitUntilHostIsMonitored(string $host, int $tries = 15)
     {
@@ -618,8 +628,14 @@ class ApiContext implements Context
 
     /**
      * Wait service to be monitored
-     *
      * @Given /^I wait until service "(\S+)" from host "(\S+)" is monitored(?: \(tries: (\d+)\))?$/
+     *
+     * @param string $service
+     * @param string $host
+     * @param int $tries
+     *
+     * @return array
+     * @throws Exception
      */
     public function iWaitUntilServiceIsMonitored(string $service, string $host, int $tries = 15)
     {
@@ -650,12 +666,14 @@ class ApiContext implements Context
 
     /**
      * Wait hostgroup to be monitored
+     * @Given /^I wait until hostgroup "(\S+)" is monitored(?: \(tries: (\d+)\))?$/
      *
      * @param string $hostgroup the hostgroup name to search
      * @param int $tries Count of tries
+     *
      * @return int|null the hostgroup id if found
      *
-     * @Given /^I wait until hostgroup "(\S+)" is monitored(?: \(tries: (\d+)\))?$/
+     * @throws Exception
      */
     public function iWaitUntilHostGroupIsMonitored(string $hostgroup, int $tries = 15): ?int
     {
@@ -681,13 +699,14 @@ class ApiContext implements Context
 
     /**
      * Wait to get some results from a listing endpoint
+     * @Given /^I wait to get (\d+) results? from ['"](\S+)['"](?: \(tries: (\d+)\))?$/
      *
      * @param int $count expected count of results
      * @param string $url the listing endpoint
      * @param int $tries Count of tries
-     * @return int the count of results
      *
-     * @Given /^I wait to get (\d+) results? from ['"](\S+)['"](?: \(tries: (\d+)\))?$/
+     * @return int the count of results
+     * @throws Exception
      */
     public function iWaitToGetSomeResultsFrom(int $count, string $url, int $tries = 15): int
     {
@@ -713,9 +732,11 @@ class ApiContext implements Context
 
     /**
      * Sleep to be able to connect to the instantiated container while test is running
-     *
      * @Then I wait for :time seconds
+     *
      * @param int $time
+     *
+     * @return void
      */
     public function iWaitForNSeconds(int $time): void
     {
@@ -723,8 +744,12 @@ class ApiContext implements Context
     }
 
     /**
-     *
      * @Given /^I want to generate the monitoring server configuration #(\d+)$/
+     *
+     * @param int $monitoringServerId
+     *
+     * @return void
+     * @throws Exception
      */
     public function iWantToGenerateTheMonitoringServerConfiguration(int $monitoringServerId): void
     {
@@ -742,8 +767,12 @@ class ApiContext implements Context
     }
 
     /**
-     *
      * @Given /^I want to reload the monitoring server configuration #(\d+)$/
+     *
+     * @param int $monitoringServerId
+     *
+     * @return void
+     * @throws Exception
      */
     public function iWantToReloadTheMonitoringServerConfiguration(int $monitoringServerId): void
     {
@@ -762,6 +791,11 @@ class ApiContext implements Context
 
     /**
      * @Given I am logged in with :username\/:password
+     *
+     * @param string $username
+     * @param string $password
+     *
+     * @return void
      */
     public function iAmLoggedInWith(string $username, string $password): void
     {

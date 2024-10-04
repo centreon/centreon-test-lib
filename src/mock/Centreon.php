@@ -28,6 +28,14 @@ use Centreon\Test\Mock\CentreonUser;
  */
 class Centreon extends \Centreon
 {
+    /** @var \Centreon\Test\Mock\CentreonUser */
+    public $user;
+
+    /**
+     * Centreon constructor
+     *
+     * @param $userInfos
+     */
     public function __construct($userInfos = null)
     {
         $userInfos = [
@@ -47,7 +55,10 @@ class Centreon extends \Centreon
 
         $this->user = new CentreonUser($userInfos);
     }
-    
+
+    /**
+     * @return void
+     */
     public function generateSession() : void {
         $_SESSION['centreon'] = $this;
     }

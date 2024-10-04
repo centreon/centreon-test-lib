@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright 2016-2017 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,8 +17,20 @@
 
 namespace Centreon\Test\Behat;
 
+use Exception;
+
+/**
+ * Class
+ *
+ * @class ConfigurationPage
+ * @package Centreon\Test\Behat
+ */
 abstract class ConfigurationPage extends Page implements Interfaces\ConfigurationPage
 {
+
+    /** @var */
+    protected $listingClass;
+
     /*
     ** $properties should be an array of elements that can be retrieved (getProperties)
     ** and set (setProperties). This associative array associates a property name
@@ -52,13 +64,16 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
     ** Proper field type is required for the getProperties() and setProperties()
     ** methods to work properly, as navigator control can be tricky.
     */
+    /** @var array */
     protected $properties = array();
 
     /**
      * Get properties
      *
+     * @param $properties
+     *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getProperties($properties = array())
     {
@@ -78,7 +93,7 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
      * Set properties
      *
      * @param $properties
-     * @throws \Exception
+     * @throws Exception
      */
     public function setProperties($properties): void
     {
@@ -88,7 +103,7 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
         foreach ($properties as $property => $value) {
             // Check that property exist.
             if (!array_key_exists($property, $this->properties)) {
-                throw new \Exception('Unknown property ' . $property . '.');
+                throw new Exception('Unknown property ' . $property . '.');
             }
 
             // Set property meta-data in variables.
@@ -119,11 +134,11 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
                         try {
                             // if the parent is td tag then doesn't throw exception
                             if (!in_array($checkbox->getParent()->getTagName(), ['div', 'span'])) {
-                                throw new \Exception('Parent of the checkbox is not div');
+                                throw new Exception('Parent of the checkbox is not div');
                             }
 
                             $checkbox->getParent()->click(); // material design checkbox
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             $checkbox->click(); // native checkbox
                         }
                     }
@@ -140,11 +155,11 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
                     try {
                         // if the parent is td tag then doesn't throw exception
                         if (!in_array($radio->getParent()->getTagName(), ['div', 'span'])) {
-                            throw new \Exception('Parent of the radio button is not div');
+                            throw new Exception('Parent of the radio button is not div');
                         }
 
                         $radio->getParent()->click(); // material design radio
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         $radio->click(); // native radio
                     }
                     break;
@@ -161,7 +176,7 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
                     }
                     break;
                 default:
-                    throw new \Exception(
+                    throw new Exception(
                         'Unknown property type ' . $propertyType
                         . ' found while setting property ' . $property . '.'
                     );
@@ -172,13 +187,15 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
     /**
      * Get property
      *
-     * @return string
-     * @throws \Exception
+     * @param $propertyName
+     *
+     * @return array|string
+     * @throws Exception
      */
     public function getProperty($propertyName)
     {
         if (!isset($this->properties[$propertyName])) {
-            throw new \Exception('Unknow property name : ' . $propertyName);
+            throw new Exception('Unknow property name : ' . $propertyName);
         }
 
         $metadata = $this->properties[$propertyName];
@@ -235,14 +252,14 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
                     $property = $this->context->assertFind('css', $propertyLocator)->getText();
                     break;
                 default:
-                    throw new \Exception(
+                    throw new Exception(
                         'Unknown property type ' . $propertyType
                         . ' found while retrieving properties.'
                     );
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($mandatory) {
-                throw new \Exception($e);
+                throw new Exception($e);
             } else {
                 $property = '';
             }
@@ -257,7 +274,9 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
     /**
      *  Switch between tabs.
      *
-     * @param $tab  Tab ID.
+     * @param $tab
+     *
+     * @return void
      */
     public function switchTab($tab): void
     {
@@ -266,6 +285,8 @@ abstract class ConfigurationPage extends Page implements Interfaces\Configuratio
 
     /**
      *  Save the current configuration page.
+     *
+     * @return mixed|void
      */
     public function save()
     {

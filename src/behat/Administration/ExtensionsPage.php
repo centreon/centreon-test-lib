@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright 2016-2019 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,12 @@
 
 namespace Centreon\Test\Behat\Administration;
 
+/**
+ * Class
+ *
+ * @class ExtensionsPage
+ * @package Centreon\Test\Behat\Administration
+ */
 class ExtensionsPage
 {
     const MODULE_TYPE = 'module';
@@ -26,10 +32,13 @@ class ExtensionsPage
     private const UPGRADE_CSS_SELECTOR = 'div[class*="MuiChip-deletable"][style="background-color:rgb(255,154,19)"]';
     private const REMOVE_CSS_SELECTOR = '[class*="MuiChip-deleteIcon"]';
 
+    /** @var Centreon */
+    protected $context;
+    /** @var string */
     protected $validField = 'div[class*="content-wrapper"]';
 
     /**
-     *  Extensions page.
+     * ExtensionsPage constructor
      *
      * @param $context  Centreon context class.
      * @param $visit    True to navigate to page.

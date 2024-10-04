@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright 2016-2018 Centreon
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,32 +33,39 @@ use Behat\Gherkin\Node\PyStringNode;
 use Behat\Mink\Mink;
 use Behat\Mink\Session;
 use Behat\Mink\Driver\PantherDriver;
+use Exception;
+use Exception\SpinStopException;
+use PDO;
 use Symfony\Component\Panther\PantherTestCase;
+use Throwable;
 
+/**
+ * Class
+ *
+ * @class CentreonContext
+ * @package Centreon\Test\Behat
+ */
 class CentreonContext extends UtilsContext
 {
-    /**
-     * @var
-     */
-    public $container;
-
-    /**
-     * @var string the service name of web container in docker compose file
-     */
+    /** @var PDO */
+    protected $dbCentreon;
+    /** @var PDO */
+    protected $dbStorage;
+    /** @var */
+    protected $context;
+    /** @var array */
+    protected $output;
+    /** @var Container */
+    protected $container;
+    /** @var string the service name of web container in docker compose file */
     protected $webService = 'web';
-
-    /**
-     * @var string the service name of db container in docker compose file
-     */
+    /** @var string the service name of db container in docker compose file */
     protected $dbService = 'db';
-
-    /**
-     * @var \Centreon\Test\Behat\Configuration\PollerConfigurationExportPage
-     */
+    /** @var PollerConfigurationExportPage */
     protected $pollerConfigurationPage;
 
     /**
-     * Constructor
+     * CentreonContext constructor
      *
      * @param array $parameters The list of parameters given in behat.yml
      */
@@ -69,6 +76,9 @@ class CentreonContext extends UtilsContext
 
     /**
      *  Properly set WebDriver driver.
+     *
+     * @return void
+     * @throws Exception
      */
     public function setContainerWebDriver(): void
     {
@@ -142,8 +152,8 @@ class CentreonContext extends UtilsContext
 
             $driver = new PantherDriver($defaultOptions, $kernelOptions, $managerOptions);
             $driver->start();
-        } catch (\Exception $e) {
-            throw new \Exception("Cannot instantiate panther driver : " . $e->getMessage(), (int) $e->getCode(), $e);
+        } catch (Exception $e) {
+            throw new Exception("Cannot instantiate panther driver : " . $e->getMessage(), (int) $e->getCode(), $e);
         }
 
         try {
@@ -153,8 +163,8 @@ class CentreonContext extends UtilsContext
             ]);
             $mink->setDefaultSessionName('panther');
             $this->setMink($mink);
-        } catch (\Throwable $e) {
-            throw new \Exception("Cannot register mink session.\n" . $e->getMessage(), (int) $e->getCode(), $e);
+        } catch (Throwable $e) {
+            throw new Exception("Cannot register mink session.\n" . $e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -164,6 +174,8 @@ class CentreonContext extends UtilsContext
      * @AfterStep
      *
      * @param AfterStepScope $scope
+     *
+     * @throws Exception
      */
     public function afterStep(AfterStepScope $scope): void
     {
@@ -172,7 +184,7 @@ class CentreonContext extends UtilsContext
         if (isset($this->container)) {
             $containerLogs = $this->container->getLogs();
             if (preg_match_all('/(php (?:warning|fatal|notice|deprecated).+$)/mi', $containerLogs, $matches)) {
-                throw new \Exception('PHP log issues: ' . implode(', ', $matches[0]));
+                throw new Exception('PHP log issues: ' . implode(', ', $matches[0]));
             }
         }
     }
@@ -181,6 +193,7 @@ class CentreonContext extends UtilsContext
      * Take a screenshot on error
      *
      * @param AfterStepScope $scope
+     * @return void
      */
     private function takeScreenshotOnError(AfterStepScope $scope): void
     {
@@ -223,6 +236,10 @@ class CentreonContext extends UtilsContext
      *  this context if one was launched.
      *
      * @AfterScenario
+     *
+     * @param AfterScenarioScope $scope
+     *
+     * @return void
      */
     public function unsetContainer(AfterScenarioScope $scope): void
     {
@@ -240,7 +257,7 @@ class CentreonContext extends UtilsContext
             file_put_contents($filename, $this->container->getLogs(), FILE_APPEND);
 
             $driver = $this->getSession()->getDriver();
-            if ($driver instanceof \Behat\Mink\Driver\PantherDriver) {
+            if ($driver instanceof PantherDriver) {
                 $logTitle = "\n"
                     . "########################\n"
                     . "# Browser console logs #\n"
@@ -389,6 +406,9 @@ class CentreonContext extends UtilsContext
 
     /**
      * @Given a Centreon server
+     *
+     * @return void
+     * @throws Exception
      */
     public function aCentreonServer(): void
     {
@@ -397,6 +417,9 @@ class CentreonContext extends UtilsContext
 
     /**
      * @Given a freshly installed Centreon server
+     *
+     * @return void
+     * @throws Exception
      */
     public function aFreshlyInstalledCentreonServer(): void
     {
@@ -407,6 +430,9 @@ class CentreonContext extends UtilsContext
      * Login to Centreon
      *
      * @Given I am logged in
+     *
+     * @return void
+     * @throws Exception
      */
     public function iAmLoggedIn(): void
     {
@@ -433,6 +459,7 @@ class CentreonContext extends UtilsContext
 
     /**
      * @param bool $confirm
+     * @return void
      */
     public function enableNewFeature($confirm = true): void
     {
@@ -471,6 +498,9 @@ class CentreonContext extends UtilsContext
      * Make sure we have a Centreon server and log in.
      *
      * @Given I am logged in a Centreon server
+     *
+     * @return void
+     * @throws Exception
      */
     public function iAmLoggedInACentreonServer(): void
     {
@@ -482,6 +512,11 @@ class CentreonContext extends UtilsContext
      * Log in a Centreon server and set timezone
      *
      * @Given /^I am logged in a Centreon server located at "(.+)"$/
+     *
+     * @param $timezone
+     *
+     * @return void
+     * @throws Exception
      */
     public function iAmLoggedInACentreonServerLocatedAt($timezone): void
     {
@@ -497,8 +532,11 @@ class CentreonContext extends UtilsContext
     }
 
     /**
-    * @Given I am logged in a Centreon server with a configured proxy
-    */
+     * @Given I am logged in a Centreon server with a configured proxy
+     *
+     * @return void
+     * @throws Exception
+     */
     public function iAmLoggedInACentreonServerWithAConfiguredProxy(): void
     {
         $this->launchCentreonWebContainer('docker_compose_web', ['squid-simple']);
@@ -508,6 +546,9 @@ class CentreonContext extends UtilsContext
 
     /**
      * @Given I am logged in a Centreon server with a configured ldap
+     *
+     * @return void
+     * @throws Exception
      */
     public function iAmLoggedInACentreonServerWithAConfiguredLdap(): void
     {
@@ -537,6 +578,9 @@ class CentreonContext extends UtilsContext
 
     /**
      * @Given I am logged in a Centreon server with configured metrics
+     *
+     * @return void
+     * @throws Exception
      */
     public function iAmLoggedInACentreonServerWithConfiguredMetrics(): void
     {
@@ -549,6 +593,9 @@ class CentreonContext extends UtilsContext
      * Make sure we have a freshly installed Centreon server and log in.
      *
      * @Given I am logged in a freshly installed Centreon server
+     *
+     * @return void
+     * @throws Exception
      */
     public function iAmLoggedInAFreshlyInstalledCentreonServer(): void
     {
@@ -584,12 +631,12 @@ class CentreonContext extends UtilsContext
         if (!isset($this->dbCentreon)) {
             $dsn = 'mysql:dbname=centreon;host=' . $this->container->getHost() . ';port=' .
                 $this->container->getPort(3306, $this->dbService);
-            $this->dbCentreon = new \PDO(
+            $this->dbCentreon = new PDO(
                 $dsn,
                 'root',
                 'centreon'
             );
-            $this->dbCentreon->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $this->dbCentreon->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         return $this->dbCentreon;
     }
@@ -604,12 +651,12 @@ class CentreonContext extends UtilsContext
         if (!isset($this->dbStorage)) {
             $dsn = 'mysql:dbname=centreon_storage;host=' . $this->container->getHost() . ';port=' .
                 $this->container->getPort(3306, $this->dbService);
-            $this->dbStorage = new \PDO(
+            $this->dbStorage = new PDO(
                 $dsn,
                 'root',
                 'centreon'
             );
-            $this->dbStorage->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $this->dbStorage->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         return $this->dbStorage;
     }
@@ -620,7 +667,7 @@ class CentreonContext extends UtilsContext
      * @param string $composeBehatProperty Bind property to docker-compose.yml path
      * @param string[] $profiles docker-compose profiles to activate
      * @param array<string,string|int|boolean> $envVars docker composer environment variables
-     * @throws \Exception
+     * @throws Exception
      */
     public function launchCentreonWebContainer(
         string $composeBehatProperty,
@@ -634,7 +681,7 @@ class CentreonContext extends UtilsContext
         }
 
         if (!isset($this->composeFiles[$composeBehatProperty])) {
-            throw new \Exception('Property "' . $composeBehatProperty . '" does not exist in behat.yml');
+            throw new Exception('Property "' . $composeBehatProperty . '" does not exist in behat.yml');
         }
 
         $this->container = new Container($this->composeFiles[$composeBehatProperty], $profiles, $envVars);
@@ -677,7 +724,7 @@ class CentreonContext extends UtilsContext
         }
 
         if (time() >= $limit) {
-            throw new \Exception(
+            throw new Exception(
                 'Centreon Web did not respond within a 60 seconds time frame (API authentication test).'
             );
         }
@@ -685,6 +732,9 @@ class CentreonContext extends UtilsContext
 
     /**
      * Set a proxy URL and port
+     *
+     * @return void
+     * @throws Exception
      */
     public function setConfiguredProxy(): void
     {
@@ -699,10 +749,12 @@ class CentreonContext extends UtilsContext
     /**
      * Submit a passive result for a host (and wait)
      *
-     * @param string hostname
-     * @param checkResult
-     * @param string checkOutput
-     * @param string performanceData
+     * @param string $hostname
+     * @param string $checkResult
+     * @param string $checkOutput
+     * @param string $performanceData
+     *
+     * @return void
      */
     public function submitHostResult($hostname, $checkResult, $checkOutput = '', $performanceData = ''): void
     {
@@ -737,6 +789,7 @@ class CentreonContext extends UtilsContext
      * @param $checkResult
      * @param string $checkOutput
      * @param string $performanceData
+     * @return void
      */
     public function submitServiceResult(
         $hostname,
@@ -773,6 +826,9 @@ class CentreonContext extends UtilsContext
 
     /**
      *  Restart all pollers.
+     *
+     * @return void
+     * @throws SpinStopException
      */
     public function restartAllPollers(): void
     {
@@ -790,6 +846,9 @@ class CentreonContext extends UtilsContext
 
     /**
      *  Reload all pollers.
+     *
+     * @return void
+     * @throws SpinStopException
      */
     public function reloadAllPollers(): void
     {
@@ -835,6 +894,8 @@ class CentreonContext extends UtilsContext
 
     /**
      *  Run yum update centreon-web in the container.
+     *
+     * @return void
      */
     public function yumUpdateCentreonWeb(): void
     {
@@ -850,6 +911,8 @@ class CentreonContext extends UtilsContext
 
     /**
      * Get polling state in top counter
+     *
+     * @return bool
      */
     public function getPollingState()
     {
@@ -862,6 +925,8 @@ class CentreonContext extends UtilsContext
 
     /**
      * Reload ACL with command line
+     *
+     * @return void
      */
     public function reloadACL(): void
     {
@@ -873,7 +938,8 @@ class CentreonContext extends UtilsContext
     }
 
     /**
-     *
+     * @return void
+     * @throws Exception
      */
     public function getServiceWithSeveralMetrics(): void
     {
@@ -937,10 +1003,11 @@ class CentreonContext extends UtilsContext
     }
 
     /**
-     *
-     * @param string $metricName
      * @param string $hostname
      * @param string $serviceDescription
+     * @param string $metricName
+     *
+     * @throws Exception
      */
     public function checkForMetricAvaibility($hostname, $serviceDescription, $metricName): void
     {
@@ -956,9 +1023,8 @@ class CentreonContext extends UtilsContext
     }
 
     /**
-     *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     private function getRrdPath()
     {
@@ -968,15 +1034,14 @@ class CentreonContext extends UtilsContext
         $stmt->execute();
         $res = $stmt->fetch();
         if ($res === false) {
-            throw new \Exception('Cannot get RRD path in database.');
+            throw new Exception('Cannot get RRD path in database.');
         }
         return $res['RRDdatabase_path'];
     }
 
     /**
-     *
      * @param string $rrdMetricFile
-     * @return boolean
+     * @return bool
      */
     private function checkRrdFilesAreAvalaible($rrdMetricFile)
     {
@@ -996,7 +1061,7 @@ class CentreonContext extends UtilsContext
      * @param string $hostname
      * @param string $serviceDescription
      * @return int
-     * @throws \Exception
+     * @throws Exception
      */
     private function getMetricId($hostname, $serviceDescription, $metricName)
     {
@@ -1009,13 +1074,13 @@ class CentreonContext extends UtilsContext
             . "AND m.index_id = i.id";
 
         $stmt = $this->getStorageDatabase()->prepare($query);
-        $stmt->bindParam(':hostname', $hostname, \PDO::PARAM_STR);
-        $stmt->bindParam(':servicedescription', $serviceDescription, \PDO::PARAM_STR);
-        $stmt->bindParam(':metricname', $metricName, \PDO::PARAM_STR);
+        $stmt->bindParam(':hostname', $hostname, PDO::PARAM_STR);
+        $stmt->bindParam(':servicedescription', $serviceDescription, PDO::PARAM_STR);
+        $stmt->bindParam(':metricname', $metricName, PDO::PARAM_STR);
         $stmt->execute();
         $res = $stmt->fetch();
          if ($res === false) {
-            throw new \Exception('Cannot get metric id in database.');
+            throw new Exception('Cannot get metric id in database.');
         }
 
         return $res['metric_id'];
@@ -1023,6 +1088,9 @@ class CentreonContext extends UtilsContext
 
     /**
      * @When I generate configuration files without export
+     *
+     * @return void
+     * @throws SpinStopException
      */
     public function exportConfigurationFiles(): void
     {
@@ -1037,11 +1105,17 @@ class CentreonContext extends UtilsContext
 
     /**
      * @Then use the page object :pageObject and set the properties below
+     *
+     * @param string $pageObject
+     * @param TableNode $table
+     *
+     * @return void
+     * @throws Exception
      */
     public function usePageObjectAndSetProperties(string $pageObject, TableNode $table): void
     {
         if (!class_exists($pageObject)) {
-            throw new \Exception("Page object didn't exists {$pageObject}");
+            throw new Exception("Page object didn't exists {$pageObject}");
         }
 
         $data = [];
@@ -1058,8 +1132,8 @@ class CentreonContext extends UtilsContext
                 $page = new $pageObject($this);
                 $page->setProperties($properties);
                 $page->save();
-            } catch (\Exception $e) {
-                throw new \Exception('Failure when trying to save page object "'
+            } catch (Exception $e) {
+                throw new Exception('Failure when trying to save page object "'
                     . $pageObject.'" with the properties '
                     . json_encode($properties), $e->getCode(), $e);
             }
@@ -1068,6 +1142,11 @@ class CentreonContext extends UtilsContext
 
     /**
      * @When execute in console of service :service
+     *
+     * @param string $service
+     * @param PyStringNode $command
+     *
+     * @return void
      */
     public function executeInConsole(string $service, PyStringNode $command): void
     {
@@ -1076,25 +1155,35 @@ class CentreonContext extends UtilsContext
 
     /**
      * @Then the expected result have to be
+     *
+     * @param PyStringNode $result
+     *
+     * @return void
+     * @throws Exception
      */
     public function theExpectedResultHaveToBe(PyStringNode $result): void
     {
         $output = $this->output['output'] ?? '';
 
         if ($result->getRaw() !== $output) {
-            throw new \Exception("The result doesn't match: {$output}");
+            throw new Exception("The result doesn't match: {$output}");
         }
     }
 
     /**
      * @Then the expected result matched to the pattern
+     *
+     * @param PyStringNode $result
+     *
+     * @return void
+     * @throws Exception
      */
     public function theExpectedResultMatchedToThePattern(PyStringNode $result): void
     {
         $output = $this->output['output'] ?? '';
 
         if (!fnmatch($result->getRaw(), $output)) {
-            throw new \Exception("The result doesn't match: {$output}");
+            throw new Exception("The result doesn't match: {$output}");
         }
     }
 
@@ -1103,7 +1192,7 @@ class CentreonContext extends UtilsContext
      *
      * @param ConfigurationPage $currentPage
      * @param array $expectedProperties
-     * @throws \Exception
+     * @throws Exception
      */
     protected function comparePageProperties(ConfigurationPage $currentPage, array $expectedProperties): void
     {
@@ -1123,7 +1212,7 @@ class CentreonContext extends UtilsContext
                 }
 
                 if (!empty($wrongProperties)) {
-                    throw new \Exception(
+                    throw new Exception(
                         "Some properties are not being updated : " . implode(',', array_unique($wrongProperties))
                     );
                 }
