@@ -1231,7 +1231,7 @@ class CentreonContext extends UtilsContext
     protected function waitServiceIsMonitored(string $hostName, string $serviceName): void
     {
         $this->spin(
-            function ($context) {
+            function ($context) use ($hostName, $serviceName) {
                 $monitored = false;
 
                 $storageDb = $context->getStorageDatabase();
