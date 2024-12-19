@@ -1226,7 +1226,6 @@ class CentreonContext extends UtilsContext
 
     /**
      * @return void
-     * @throws Exception
      */
     protected function waitServiceIsMonitored(string $hostName, string $serviceName): void
     {
