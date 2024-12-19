@@ -1223,4 +1223,39 @@ class CentreonContext extends UtilsContext
             60
         );
     }
+
+    /**
+     * @return string
+     * @throws Exception
+     */
+    protected function waitServiceIsMonitored(string $hostName, string $serviceName): void
+    {
+        $this->spin(
+            function ($context) {
+                $monitored = false;
+
+                $storageDb = $context->getStorageDatabase();
+                $res = $storageDb->prepare(
+                    <<<'SQL'
+                        SELECT s.service_id
+                        FROM hosts h, services s
+                        WHERE s.host_id = h.host_id
+                        AND h.name = :host_name
+                        AND s.description = :service_description
+                        SQL
+                );
+                $res->bindValue(':host_name', $hostName, PDO::PARAM_STR);
+                $res->bindValue(':service_description', $serviceName, PDO::PARAM_STR);
+                $res->execute();
+
+                if ($res->fetch()) {
+                    $monitored = true;
+                }
+
+                return $monitored;
+            },
+            'Service ' . $hostName . ' / ' . $serviceName . ' is not monitored.',
+            60
+        );
+    }
 }
