@@ -1268,7 +1268,7 @@ class CentreonContext extends UtilsContext
 
                 $storageDb->query(
                     <<<SQL
-                        SELECT h.name, s.descritpion
+                        SELECT h.name, s.description
                         FROM hosts h, services s
                         WHERE s.host_id = h.host_id
                         SQL
