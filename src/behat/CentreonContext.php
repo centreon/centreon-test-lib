@@ -1238,7 +1238,7 @@ class CentreonContext extends UtilsContext
 
                 $storageDb = $context->getStorageDatabase();
                 $res = $storageDb->prepare(
-                    <<<'SQL'
+                    <<<SQL
                         SELECT s.service_id
                         FROM hosts h, services s
                         WHERE s.host_id = h.host_id
@@ -1246,11 +1246,12 @@ class CentreonContext extends UtilsContext
                         AND s.description = :service_description
                         SQL
                 );
-                $res->bindValue(':host_name', $hostName, PDO::PARAM_STR);
-                $res->bindValue(':service_description', $serviceName, PDO::PARAM_STR);
-                $res->execute();
+                $res->execute([
+                    'host_name' => $hostName,
+                    'service_description' => $serviceName
+                ]);
 
-                if ($res->fetch()) {
+                if ($res->fetch() !== false) {
                     $monitored = true;
                 }
 
