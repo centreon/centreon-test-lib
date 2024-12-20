@@ -1225,7 +1225,10 @@ class CentreonContext extends UtilsContext
     }
 
     /**
+     * @param string $hostName the host name to check
+     * @param string $serviceName the service name to check (column description)
      * @return void
+     * @throws \Exception
      */
     protected function waitServiceIsMonitored(string $hostName, string $serviceName): void
     {
