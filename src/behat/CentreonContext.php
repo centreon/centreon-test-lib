@@ -1247,8 +1247,6 @@ class CentreonContext extends UtilsContext
     {
         $this->spin(
             function ($context) use ($hostName, $serviceName) {
-                $monitored = false;
-
                 $storageDb = $context->getStorageDatabase();
                 $res = $storageDb->prepare(
                     <<<SQL
@@ -1260,15 +1258,27 @@ class CentreonContext extends UtilsContext
                         SQL
                 );
                 $res->execute([
-                    'host_name' => $hostName,
-                    'service_description' => $serviceName
+                    ':host_name' => $hostName,
+                    ':service_description' => $serviceName
                 ]);
 
                 if ($res->fetch() !== false) {
-                    $monitored = true;
+                    return true;
                 }
 
-                return $monitored;
+                $storageDb->query(
+                    <<<SQL
+                        SELECT h.name, s.descritpion
+                        FROM hosts h, services s
+                        WHERE s.host_id = h.host_id
+                        SQL
+                );
+                $services = [];
+                while ($row = $res->fetch()) {
+                    $services[] = $row['name'] . ' / ' . $row['description'];
+                }
+
+                throw new Exception('Services in database:  ' . implode(', ', $services));
             },
             'Service ' . $hostName . ' / ' . $serviceName . ' is not monitored.',
             60
