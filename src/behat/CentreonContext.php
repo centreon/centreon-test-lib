@@ -248,6 +248,20 @@ class CentreonContext extends UtilsContext
             $filename = $this->composeFiles['log_directory'] . '/'
                 . date('Y-m-d-H-i') . '-' . $scope->getSuite()->getName() . '-' . $scenarioTitle . '.txt';
 
+
+            // Centreon Broker logs.
+            $logTitle = "\n\n"
+                . "#######################\n"
+                . "# central-module.json #\n"
+                . "#######################\n\n";
+            $output = $this->container->execute(
+                'bash -c "cat /etc/centreon-broker/central-module.json 2>/dev/null"',
+                $this->webService,
+                false
+            );
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
             // Container logs.
             $logTitle = ''
                 . "##################\n"
