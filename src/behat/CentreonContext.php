@@ -1278,7 +1278,11 @@ class CentreonContext extends UtilsContext
                     $services[] = $row['name'] . ' / ' . $row['description'];
                 }
 
-                throw new Exception('Services in database:  ' . implode(', ', $services));
+                throw new Exception(
+                    empty($services)
+                        ? 'No service found in database.'
+                        : 'Services in database:  ' . implode(', ', $services)
+                );
             },
             'Service ' . $hostName . ' / ' . $serviceName . ' is not monitored.',
             60
