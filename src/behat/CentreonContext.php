@@ -313,6 +313,19 @@ class CentreonContext extends UtilsContext
 
             // Centreon Broker logs.
             $logTitle = "\n\n"
+                . "################\n"
+                . "# Broker stats #\n"
+                . "################\n\n";
+            $output = $this->container->execute(
+                'bash -c "cat /var/lib/centreon-{engine,broker}/*-stats.json 2>/dev/null | jq . 2>/dev/null"',
+                $this->webService,
+                false
+            );
+            file_put_contents($filename, $logTitle, FILE_APPEND);
+            file_put_contents($filename, $output['output'], FILE_APPEND);
+
+            // Centreon Broker logs.
+            $logTitle = "\n\n"
                 . "#################\n"
                 . "# Gorgone logs #\n"
                 . "#################\n\n";
