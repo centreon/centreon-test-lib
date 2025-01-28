@@ -85,7 +85,14 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      */
     public function selectEntry($pollerName, $select = true)
     {
-        $poller = $this->getEntry($pollerName);
+        $poller = null;
+        $this->context->spin(
+            function ($context) use (&$poller, $pollerName) {
+                $poller = $this->getEntry($pollerName);
+                return true;
+            }
+        );
+
         $checkbox = $this->context->assertFind('css', 'input[type="checkbox"][name="select[' . $poller['id'] . ']"]');
 
         if ($select) {
