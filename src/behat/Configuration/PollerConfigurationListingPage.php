@@ -85,7 +85,14 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      */
     public function selectEntry($pollerName, $select = true)
     {
-        $poller = $this->getEntry($pollerName);
+        $poller = null;
+        $this->context->spin(
+            function ($context) use (&$poller, $pollerName) {
+                $poller = $this->getEntry($pollerName);
+                return true;
+            }
+        );
+
         $checkbox = $this->context->assertFind('css', 'input[type="checkbox"][name="select[' . $poller['id'] . ']"]');
 
         if ($select) {
@@ -102,7 +109,7 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      */
     public function exportConfiguration()
     {
-        $this->context->assertFind('css', 'a#exportConfigurationLink')->click();
+        $this->context->assertFind('css', 'button[name="apply_configuration"]')->click();
         return new PollerConfigurationExportPage($this->context, false);
     }
 
