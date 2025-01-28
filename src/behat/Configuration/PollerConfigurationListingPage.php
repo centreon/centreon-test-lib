@@ -102,7 +102,7 @@ class PollerConfigurationListingPage extends \Centreon\Test\Behat\ListingPage
      */
     public function exportConfiguration()
     {
-        $this->context->assertFind('css', 'button[name="apply_configuration"]')->click();
+        $this->context->assertFind('css', 'a#exportConfigurationLink')->click();
         return new PollerConfigurationExportPage($this->context, false);
     }
 
