@@ -43,6 +43,8 @@ class VariableLengthCustomRule implements Rule
         'db',
         'ex',
         'id',
+        'e'
+        'th',
     ];
 
     public function getNodeType(): string
