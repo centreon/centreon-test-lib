@@ -32,6 +32,7 @@ use PHPStan\Rules\Rule;
 /**
  * This class implements a custom rule for PHPStan to check if a catch block contains
  * Logger trait method call.
+ * Only apply to classes in the Infrastructure namespace.
  *
  * @implements Rule<Node\Stmt\Catch_>
  */
@@ -47,6 +48,10 @@ class LogMethodInCatchCustomRule implements Rule
     public function processNode(Node $node, Scope $scope): array
     {
         $loggerMethods = $this->getLoggerTraitMethods();
+
+        if (! str_contains($scope->getNamespace() ?? '', 'Infrastructure')) {
+            return [];
+        }
 
         foreach ($node->stmts as $stmt) {
             if (! isset($stmt->expr)) {
