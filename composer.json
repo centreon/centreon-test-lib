@@ -25,7 +25,7 @@
     "phpstan/phpstan": "1.12.*",
     "friendsofphp/php-cs-fixer": "3.64.*",
     "symfony/console": "^6.4",
-    "pestphp/pest": "^1.9"
+    "pestphp/pest": "^2.0"
   },
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
