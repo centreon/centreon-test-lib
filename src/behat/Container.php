@@ -279,7 +279,10 @@ class Container
     {
         if ($this->host === null) {
             $docker = getenv('DOCKER_HOST');
+            // Handle both TCP docker listenner or UNIX socket docker listenner
             if (!preg_match('@^(tcp://)?([^:]+)@', $docker, $matches)) {
+                $retval = '127.0.0.1';
+            } elseif (preg_match('@^(unix:///)?([^:]+)@', $docker, $matches)) {
                 $retval = '127.0.0.1';
             } else {
                 $retval = $matches[2];
