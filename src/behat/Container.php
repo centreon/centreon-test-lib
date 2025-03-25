@@ -287,9 +287,9 @@ class Container
             } else {
                 $retval = $matches[2];
             }
+            $this->host = $retval;
         }
 
-        $this->host = $retval;
         return $this->host;
     }
 
