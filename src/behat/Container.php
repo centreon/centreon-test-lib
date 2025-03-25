@@ -289,6 +289,7 @@ class Container
             }
         }
 
+        $this->host = $retval;
         return $this->host;
     }
 
