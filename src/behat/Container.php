@@ -279,6 +279,8 @@ class Container
     {
         if ($this->host === null) {
             $docker = getenv('DOCKER_HOST');
+            // DEBUG
+            var_dump($docker);
             if (!preg_match('@^(tcp://)?([^:]+)@', $docker, $matches)) {
                 $retval = '127.0.0.1';
             } elseif (preg_match('@^(unix://)?([^:]+)@', $docker, $matches)) {
@@ -288,6 +290,7 @@ class Container
             }
             $this->host = $retval;
         }
+        // DEBUG
         var_dump($retval);
         return $this->host;
     }
