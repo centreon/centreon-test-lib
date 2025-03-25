@@ -288,7 +288,7 @@ class Container
             }
             $this->host = $retval;
         }
-
+        var_dump($retval);
         return $this->host;
     }
 
