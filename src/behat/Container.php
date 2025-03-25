@@ -281,15 +281,15 @@ class Container
             $docker = getenv('DOCKER_HOST');
             // DEBUG
             var_dump($docker);
-            if (!preg_match('@^(tcp://)?([^:]+)@', $docker, $matches)) {
-                $retval = '127.0.0.1';
-            } else {
-                $retval = $matches[2];
-            }
+            // if (!preg_match('@^(tcp://)?([^:]+)@', $docker, $matches)) {
+            //     $retval = '127.0.0.1';
+            // } else {
+            //     $retval = $matches[2];
+            // }
+            $retval = '127.0.0.1';
             $this->host = $retval;
         }
-        // DEBUG
-        var_dump($retval);
+
         return $this->host;
     }
 
