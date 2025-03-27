@@ -8,3 +8,6 @@ composer.*              @centreon/owners-php
 .github/**              @centreon/owners-pipelines
 
 *.py                    @centreon/owners-python
+
+.gitleaks.toml          @centreon/owners-security
+.gitleaksignore         @centreon/owners-security
