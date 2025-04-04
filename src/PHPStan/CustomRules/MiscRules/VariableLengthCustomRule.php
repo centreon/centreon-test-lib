@@ -43,7 +43,7 @@ class VariableLengthCustomRule implements Rule
         'db',
         'ex',
         'id',
-        'e'
+        'e',
         'th',
     ];
 
