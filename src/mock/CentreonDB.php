@@ -198,10 +198,10 @@ class CentreonDB extends \CentreonDB
 
     /**
      *
-     * @param type $enable
-     * @return type
+     * @param bool $enable
+     * @return void
      */
-    public function autoCommit($enable)
+    public function autoCommit($enable): void
     {
         return;
     }
