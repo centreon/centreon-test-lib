@@ -25,10 +25,6 @@
     "symfony/property-access": "7.3.*",
     "webmozart/assert": "^1.9"
   },
-  "require-dev": {
-    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-    "phpcompatibility/php-compatibility": "9.3.*"
-  },
   "suggest": {
     "behat/mink": "Browser controller/emulator abstraction for PHP",
     "behat/mink-selenium2-driver": "Mink driver using Selenium",
@@ -56,8 +52,7 @@
     },
     "allow-plugins": {
       "symfony/flex": true,
-      "pestphp/pest-plugin": true,
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "pestphp/pest-plugin": true
     }
   },
   "scripts": {
