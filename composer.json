@@ -1,12 +1,9 @@
 {
   "name": "centreon/centreon-test-lib",
-  "description": "Library using for Behat test and PHPUnit test",
+  "description": "Library using for Behat test",
   "version": "1.0.0",
   "type": "library",
   "keywords": [
-    "testing",
-    "centreon",
-    "phpunit",
     "behat"
   ],
   "license": "Apache-2.0",
