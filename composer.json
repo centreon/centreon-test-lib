@@ -27,6 +27,7 @@
   },
   "autoload": {
     "psr-4": {
+      "Centreon\\Test\\Behat\\": "src/behat",
       "Centreon\\Command\\": "src/Command"
     }
   },
