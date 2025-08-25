@@ -1,12 +1,9 @@
 {
   "name": "centreon/centreon-test-lib",
-  "description": "Library using for Behat test and PHPUnit test",
+  "description": "Library using for Behat test",
   "version": "1.0.0",
   "type": "library",
   "keywords": [
-    "testing",
-    "centreon",
-    "phpunit",
     "behat"
   ],
   "license": "Apache-2.0",
@@ -19,7 +16,6 @@
     "justinrainbow/json-schema": "5.3.*",
     "league/openapi-psr7-validator": "0.17.*",
     "nyholm/psr7": "1.8.*",
-    "pestphp/pest": "2.36.*",
     "psr/http-client": "1.0.*",
     "symfony/http-client": "7.3.*",
     "symfony/property-access": "7.3.*",
@@ -32,8 +28,6 @@
   "autoload": {
     "psr-4": {
       "Centreon\\Test\\Behat\\": "src/behat",
-      "Centreon\\Test\\Mock\\": "src/mock",
-      "Centreon\\Test\\Traits\\": "src/traits",
       "Centreon\\Command\\": "src/Command"
     }
   },
@@ -43,8 +37,7 @@
       "php": "8.2"
     },
     "allow-plugins": {
-      "symfony/flex": true,
-      "pestphp/pest-plugin": true
+      "symfony/flex": false
     }
   }
 }
