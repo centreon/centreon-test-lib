@@ -11,3 +11,5 @@ composer.*              @centreon/owners-php
 
 .gitleaks.toml          @centreon/owners-security
 .gitleaksignore         @centreon/owners-security
+.githooks/pre-commit    @centreon/owners-security
+**/secu-*.yml           @centreon/owners-security
