@@ -17,8 +17,8 @@
     "league/openapi-psr7-validator": "0.17.*",
     "nyholm/psr7": "1.8.*",
     "psr/http-client": "1.0.*",
-    "symfony/http-client": "7.3.*",
-    "symfony/property-access": "7.3.*",
+    "symfony/http-client": "7.4.*",
+    "symfony/property-access": "7.4.*",
     "webmozart/assert": "1.11.*"
   },
   "suggest": {
