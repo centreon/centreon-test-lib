@@ -5,11 +5,14 @@ composer.*              @centreon/owners-php
 
 *.sh                    @centreon/owners-bash
 
-.github/**              @centreon/owners-pipelines
-
 *.py                    @centreon/owners-python
 
-.gitleaks.toml          @centreon/owners-security
-.gitleaksignore         @centreon/owners-security
-.githooks/pre-commit    @centreon/owners-security
-**/secu-*.yml           @centreon/owners-security
+# Pipelines Codeowners rules
+.github/**                    @centreon/owners-pipelines
+.yamlfix.toml                 @centreon/owners-pipelines
+
+# Security Codeowners rules
+.gitleaks.toml                @centreon/owners-security
+.gitleaksignore               @centreon/owners-security
+.githooks/pre-commit          @centreon/owners-security
+**/secu-*.yml                 @centreon/owners-security
