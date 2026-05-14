@@ -111,7 +111,7 @@ Trait RestContextTrait
      *
      * @Given /^the endpoints are described in Centreon Web API documentation(?: \(version: (\S+)\))?$/
      */
-    public function theCentreonApiDocumentation(string $version = null): void
+    public function theCentreonApiDocumentation(?string $version = null): void
     {
         $docDirectory = getcwd() . '/doc/API';
 
