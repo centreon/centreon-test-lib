@@ -13,7 +13,6 @@
     "ext-pdo": "*",
     "guzzlehttp/guzzle": "7.9.*",
     "justinrainbow/json-schema": "5.3.*",
-    "league/openapi-psr7-validator": "0.17.*",
     "nyholm/psr7": "1.8.*",
     "psr/http-client": "1.0.*",
     "symfony/http-client": "8.1.*",
