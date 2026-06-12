@@ -17,8 +17,8 @@
     "league/openapi-psr7-validator": "0.17.*",
     "nyholm/psr7": "1.8.*",
     "psr/http-client": "1.0.*",
-    "symfony/http-client": "7.4.*",
-    "symfony/property-access": "7.4.*",
+    "symfony/http-client": "8.1.*",
+    "symfony/property-access": "8.1.*",
     "webmozart/assert": "1.11.*"
   },
   "suggest": {
@@ -34,7 +34,7 @@
   "config": {
     "sort-packages": true,
     "platform": {
-      "php": "8.4"
+      "php": "8.4.1"
     },
     "allow-plugins": {
       "symfony/flex": false
