@@ -11,7 +11,6 @@
     "php": "8.4.*",
     "ext-curl": "*",
     "ext-pdo": "*",
-    "behat/behat": "3.23.*",
     "guzzlehttp/guzzle": "7.9.*",
     "justinrainbow/json-schema": "5.3.*",
     "league/openapi-psr7-validator": "0.17.*",
